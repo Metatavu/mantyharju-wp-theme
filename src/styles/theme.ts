@@ -6,16 +6,16 @@ theme = responsiveFontSizes(theme);
 export default createMuiTheme({
   palette: {
     primary: {
-      main: "#F5EFEA",
+      main: "#082b45",
       dark: "#26201E"
     },
     secondary: { main: "#C24A49" },
     background: {
-      default: "#26201E",
+      default: "#ffffff",
       paper: "#F5EFEA"
     },
     text: {
-      primary: "#F5EFEA",
+      primary: "#000000",
       secondary: "#26201E",
       disabled: "#ddd",
       hint: "#eee"

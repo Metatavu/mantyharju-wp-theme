@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   version: "1.0"
-  title: localhost:1234
+  title: localhost
 paths:
   /menus/v1/menus:
     get:
@@ -973,6 +973,20 @@ paths:
               - embed
               - edit
             default: view
+        - name: categories
+          in: query
+          description: Limit result set to all items that have the specified term assigned in the categories taxonomy.
+          schema:
+            type: integer
+            items:
+              type: integer
+        - name: taxonomy_academy
+          in: query
+          description: Page categories
+          schema:
+            type: integer
+            items:
+              type: integer
         - name: page
           in: query
           description: Current page of the collection.
@@ -4540,8 +4554,34 @@ paths:
               schema:
                 $ref: "#/components/schemas/error"
       operationId: GetWpV2Themes
+  "/wp/v2/taxonomy/{name}":
+    get:
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - cookieAuth: []
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/custom_taxonomy"
+        default:
+          description: error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error"
+      operationId: GetWpV2CustomTaxonomy
 servers:
-  - url: http://localhost:1234/index.php/wp-json
+  - url: http://localhost/index.php/wp-json
 components:
   securitySchemes:
     cookieAuth:
@@ -5106,9 +5146,19 @@ components:
           description: Meta fields.
           type: object
           properties: {}
+        categories:
+          description: Page categories
+          type: integer
+          items:
+            type: integer
         template:
           description: The theme file to use to display the object.
           type: string
+        taxonomy/academy:
+          description: Object academy.
+          type: array
+          items:
+            type: integer
     page-revision:
       type: object
       properties:
@@ -5532,6 +5582,44 @@ components:
         slug:
           description: An alphanumeric identifier for the status.
           type: string
+    custom_taxonomy:
+      type: object
+      properties: 
+        id:
+          description: Unique identifier for the term.
+          type: integer
+        count:
+          description: Number of published posts for the term.
+          type: integer
+        description:
+          description: HTML description of the term.
+          type: string
+        link:
+          description: URL of the term.
+          type: string
+          format: uri
+        name:
+          description: HTML title for the term.
+          type: string
+        slug:
+          description: An alphanumeric identifier for the term unique to its type.
+          type: string
+        taxonomy:
+          description: Type attribution for the term.
+          type: string
+          enum:
+            - category
+            - post_tag
+            - nav_menu
+            - link_category
+            - post_format
+        parent:
+          description: The parent term ID.
+          type: integer
+        meta:
+          description: Meta fields.
+          type: object
+          properties: {}
     taxonomy:
       type: object
       properties:

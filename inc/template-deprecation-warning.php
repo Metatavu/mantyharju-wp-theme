@@ -1,7 +1,7 @@
 <div class="wrapper">
   <p>
     Huomasimme, että käytätte vanhentunutta Internet Explorer selainta, jota sivustomme ei valitettavasti tue. 
-    Pyydämme teitä ystävällisesti vaihtamaan tuettuun Microsoft Edge selaimeen sivuston käytön jatkamiseksi.
+    Pyydämme teitä ytävällisesti vaihtamaan tuettuun Microsoft Edge selaimeen sivuston käytön jatkamiseksi.
   </p>
   <p>
     Microsoft Edgen saa ladattua ilmaiseksi osoitteesta <a href="https://www.microsoft.com/edge">https://www.microsoft.com/edge</a>
