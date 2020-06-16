@@ -1,69 +1,19 @@
 import { createStyles } from "@material-ui/core";
 import theme from "./theme";
+import headerImage from "../resources/img/headerImage.png";
 
 export default createStyles({
-  root: {
-    height: "100vh"
-  },
-  content: {
-    display: "flex",
-    flexDirection: "column"
-  },
-  appBar: {
+  logoBar: {
     display: "flex",
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    height: 100,
-    padding: "0 20px",
-    backgroundColor: "rgba(45, 45, 45, 0)",
-    borderBottom: "1px solid rgba(255, 255, 255, 0.2)",
-    transition: "height 0.3s ease-out, background-color 0.3s ease-out",
-    [theme.breakpoints.up("md")]: {
-      padding: "0 40px",
-      height: 130,
-    },
-    [theme.breakpoints.up("lg")]: {
-      padding: "0 80px",
-    }
-  },
-  darken: {
-    backgroundColor: "rgba(45, 45, 45, 0.5)"
-  },
-  smallAppBar: {
-    height: 60,
-    backgroundColor: "rgba(45, 45, 45, 0.98)",
-    "& .MuiTypography-h6": {}
-  },
-  headerSection: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
+    justifyContent: "center",
     width: "100%",
-    [theme.breakpoints.down("sm")]: {
-      justifyContent: "space-between",
-    }
+    marginBottom: 50
   },
-  logo: {
-    height: 60,
-    transition: "height 0.3s ease-out",
-    [theme.breakpoints.up("md")]: {
-      height: 80,
-    }
-  },
-  smallLogo: {
-    height: 40
-  },
-  menuButton: {
-    [theme.breakpoints.up("md")]: {
-      display: "none",
-    }
-  },
-  localeMenu: {
-    display: "flex",
-    flexDirection: "row",
-    alignContent: "center",
-    justifyContent: "space-between"
+  headerImage: {
+    backgroundImage: `url(${headerImage})`,
+    backgroundRepeat: "no-repeat",
+    height: "298px"
   },
   nav: {
     display: "flex",
@@ -98,31 +48,35 @@ export default createStyles({
     }
   },
   topNavDesktop: {
-    display: "flex"
+    position: "relative",
+    textAlign: "center"
   },
-  donate: {
+  social: {
+    width: "15%",
+    minWidth: "10%",
+    marginLeft: 15
+  },
+  searchSection: {
     display: "flex",
-    justifyContent: "space-between",
+    flexDirection: "row",
+    alignItems: "center",
+    marginLeft: "55%"
+  },
+  logo: {
+    width: 200,
+    display: "flex",
+    marginLeft: 60
+  },
+  titleContainer: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     width: "auto",
-    borderRadius: 0,
-    boxShadow: "0 0 0 transparent",
-    color: "#fff",
-    textTransform: "initial",
-    marginRight: theme.spacing(2),
-    backgroundColor: theme.palette.secondary.main,
-    "&:hover": {
-      backgroundColor: "#b53e3d"
-    },
-    "&:active": {
-      backgroundColor: "#b53e3d",
-    },
-    "&:focus": {
-      boxShadow: "0 0 0 0.2rem rgba(255, 255 ,255 , 0.5)",
-    },
-    [theme.breakpoints.up("md")]: {},
-    [theme.breakpoints.up("lg")]: {
-      width: 200,
-      marginRight: theme.spacing(5),
-    },
-  }
+    height: "100%",
+    paddingLeft: "2.5rem",
+    paddingRight: "2.5rem",
+    backgroundColor: "green",
+    color: "white",
+    fontSize: "3rem",
+  },
 });
