@@ -1,6 +1,5 @@
 import { createStyles } from "@material-ui/core";
 import theme from "./theme";
-import checkIcon from "../resources/svg/check-24px.svg"
 
 export default createStyles({
   /**
@@ -37,6 +36,18 @@ export default createStyles({
         maxWidth: "960px"
       }
     }
+  },
+  logoBar: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    height: 200,
+    marginBottom: 25,
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "center center",
+    backgroundSize: "cover"
   },
   hero: {
     paddingTop: 130,
@@ -113,11 +124,8 @@ export default createStyles({
   content: {
     backgroundColor: theme.palette.background.paper,
     color: theme.palette.primary.dark,
-    marginTop: 100,
-    [theme.breakpoints.up("md")]: {
-      marginTop: 130,
-    },
     display: "flex",
+    marginTop: 0,
     flexDirection: "column"
   },
   contentWithHero: {
@@ -130,40 +138,40 @@ export default createStyles({
   title: {
     fontFamily: theme.typography.h1.fontFamily,
     fontWeight: "normal",
-    fontSize: "2.5rem",
+    fontSize: "1.5rem",
     lineHeight: 1,
     [theme.breakpoints.up(360)]: {
-      fontSize: "2.75rem"
+      fontSize: "1.75rem"
     },
     [theme.breakpoints.up(413)]: {
-      fontSize: "3rem"
+      fontSize: "2rem"
     },
     [theme.breakpoints.up("sm")]: {
-      fontSize: "4rem"
+      fontSize: "3rem"
     },
     [theme.breakpoints.up("md")]: {
-      fontSize: "4rem"
+      fontSize: "3rem"
     },
     // Media queries require single quotes
     // tslint:disable-next-line: quotemark
     '@media only screen and (max-width:1280px) and (min-width:960px) and (max-height:750px)': {
-      fontSize: "3.5rem"
+      fontSize: "1.5rem"
     },
     [theme.breakpoints.up("lg")]: {
-      fontSize: "4rem"
+      fontSize: "2rem"
     },
     [theme.breakpoints.up(1367)]: {
-      fontSize: "4.5rem"
+      fontSize: "2.5rem"
     },
     [theme.breakpoints.up(1600)]: {
-      fontSize: "5rem"
+      fontSize: "3rem"
     },
     [theme.breakpoints.up("xl")]: {
-      fontSize: "6rem",
-      lineHeight: "6.75rem",
+      fontSize: "4rem",
+      lineHeight: "4.75rem",
     },
     [theme.breakpoints.up(2000)]: {
-      fontSize: "7rem"
+      fontSize: "5rem"
     },
     "&.article": {
       textAlign: "left",
@@ -242,6 +250,32 @@ export default createStyles({
     "&:first-letter": {
       textTransform: "uppercase"
     }
+  },
+  wrapper: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "center"
+  },
+  pageContent: {
+    maxWidth: "1200px"
+  },
+  breadcrumb: {
+    width: "100%",
+    marginBottom: "3rem"
+  },
+  columns: {
+    display: "flex"
+  },
+  navigation: {
+    flex: 1, padding: "2rem"
+  },
+  contentarea: {
+    flex: 3
+  },
+  sidebar: {
+    flex: 1,
+    backgroundColor: "#edeef2",
+    padding: "2rem"
   },
   htmlContainer: {
     display: "flex",
@@ -322,7 +356,6 @@ export default createStyles({
       },
       [theme.breakpoints.up("xl")]: {
         width: "75%",
-        marginTop: theme.spacing(5),
         marginBottom: theme.spacing(5),
       },
       "&.address-heading": {
@@ -337,7 +370,7 @@ export default createStyles({
       margin: theme.spacing(2),
       marginRight: 0,
       marginLeft: 0,
-      fontSize: "2.25rem",
+      fontSize: "1.5rem",
       fontFamily: theme.typography.h3.fontFamily,
       lineHeight: 1.2,
       fontWeight: "normal",
@@ -352,7 +385,7 @@ export default createStyles({
         marginRight: 0
       },
       [theme.breakpoints.up("md")]: {
-        fontSize: "2.25rem",
+        fontSize: "1.5rem",
         lineHeight: 1.2,
         marginTop: theme.spacing(2),
         marginBottom: theme.spacing(2),
@@ -379,34 +412,6 @@ export default createStyles({
     },
     // Heading end
 
-    // Block quote
-    "& .wp-block-quote": {
-      [theme.breakpoints.up("sm")]: {
-        width: "80%",
-        alignSelf: "center",
-      },
-      [theme.breakpoints.up("xl")]: {
-        width: "75%",
-        alignSelf: "center",
-      },
-      marginLeft: 0,
-      marginRight: 0,
-      marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(2),
-      [theme.breakpoints.up("md")]: {
-        marginTop: theme.spacing(5),
-        marginBottom: theme.spacing(5),
-      },
-      "& p": {
-        fontFamily: theme.typography.h1.fontFamily,
-        fontSize: "1.6rem",
-        color: theme.palette.secondary.main,
-        margin: 0,
-        [theme.breakpoints.up("md")]: {
-          fontSize: "2rem",
-        }
-      }
-    },
     // Paragraph
     "& p": {
       "&:empty": {
@@ -447,16 +452,8 @@ export default createStyles({
     "& strong": {},
     // Lists
     "& ul": {
-      [theme.breakpoints.up("sm")]: {
-        width: "80%",
-        alignSelf: "center",
-      },
-      [theme.breakpoints.up("xl")]: {
-        width: "75%",
-        alignSelf: "center",
-      },
-      listStyleImage: `url(${ checkIcon })`,
-      paddingLeft: 20
+      listStyle: "none",
+      padding: 0
     },
     // Separator
     "& hr": {
@@ -506,7 +503,23 @@ export default createStyles({
         },
       },
       "& .wp-block-quote": {
-        width: "100%"
+        marginLeft: 0,
+        marginRight: 0,
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2),
+        [theme.breakpoints.up("md")]: {
+          marginTop: theme.spacing(5),
+          marginBottom: theme.spacing(5),
+        },
+        "& p": {
+          fontFamily: theme.typography.h1.fontFamily,
+          fontSize: "1.6rem",
+          color: theme.palette.secondary.main,
+          margin: 0,
+          [theme.breakpoints.up("md")]: {
+            fontSize: "2rem",
+          }
+        }
       },
       "& .wp-block-media-text": {
         marginTop: theme.spacing(5),
@@ -604,6 +617,7 @@ export default createStyles({
               flex: 1
             },
             "& .highlight-content": {
+              position: "absolute",
               padding: theme.spacing(5),
               [theme.breakpoints.up("md")]: {
                 padding: theme.spacing(5),
@@ -614,18 +628,16 @@ export default createStyles({
               [theme.breakpoints.up("xl")]: {
                 padding: theme.spacing(8),
               },
+              bottom: 0,
+              right: 0,
+              left: 0,
               zIndex: 1,
-              alignSelf: "flex-end",
               width: "100%",
               "& h3": {
                 margin: 0,
                 color: "#fff",
                 fontSize: "1.5rem",
-                [theme.breakpoints.up("sm")]: {
-                  fontSize: "2rem",
-                  lineHeight: 1.2
-                },
-                [theme.breakpoints.up("lg")]: {
+                [theme.breakpoints.up("md")]: {
                   fontSize: "2.5rem",
                   lineHeight: 1.2
                 },
@@ -634,16 +646,7 @@ export default createStyles({
                 textShadow: "1px 1px 1px rgba(0,0,0,0.5)",
               },
               "& .MuiButton-outlinedPrimary": {
-                width: "100%",
-                [theme.breakpoints.down(414)]: {
-                  width: "100%"
-                },
-                [theme.breakpoints.down(960)]: {
-                  width: 300
-                },
-                [theme.breakpoints.up("lg")]: {
-                  width: 300
-                },
+                width: 300,
                 borderColor: "rgba(245, 239, 234, 0.8)",
                 color: "#F5EFEA",
                 "&:hover": {
@@ -653,18 +656,7 @@ export default createStyles({
               "& ~ figure.wp-block-image": {
                 opacity: 0.6,
                 margin: 0,
-                width: "100%",
-                position: "absolute",
-                top: 0,
-                bottom: 0,
-                left: 0,
-                right: 0,
-                "& img": {
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  zIndex: -1
-                }
+                width: "100%"
               }
             }
           }
