@@ -1,18 +1,18 @@
 import * as React from "react";
 import BasicLayout from "../BasicLayout";
-import { Container, WithStyles, withStyles, Button } from "@material-ui/core";
+import { Container, WithStyles, withStyles, Button, Breadcrumbs, Link, Typography } from "@material-ui/core";
 import styles from "../../styles/page-content";
 import ApiUtils from "../../../src/utils/ApiUtils";
-import { Page, Post } from "../../../src/generated/client/src";
+import { Page, Post, MenuLocationData, PostTitle } from "../../../src/generated/client/src";
 import ReactHtmlParser, { convertNodeToElement } from "react-html-parser";
 import { DomElement } from "domhandler";
 import strings from "../../localization/strings";
 import ArrowIcon from "@material-ui/icons/ArrowForwardRounded";
 import * as classNames from "classnames";
 import * as moment from "moment";
-import "../../styles/feed.css";
-import MetaTags from "react-meta-tags";
-import { AttachmentDescription } from '../../generated/client/src/models/AttachmentDescription';
+import "../../../node_modules/react-simple-tree-menu/dist/main.css";
+import TreeView from "../generic/TreeView";
+import RightSideBar from "../generic/RightSideBar";
 
 /**
  * Interface representing component properties
@@ -20,23 +20,31 @@ import { AttachmentDescription } from '../../generated/client/src/models/Attachm
 interface Props extends WithStyles<typeof styles> {
   slug: string
   lang: string
+  mainPageSlug: string
 }
-
-type PageTemplate = "basic" | "fullscreen" | "dangerous" | "smallgutter";
 
 /**
  * Interface representing component state
  */
 interface State {
-  page?: Page
-  template: PageTemplate
-  post?: Post
-  loading: boolean
-  isArticle: boolean
-  heroBanner?: React.ReactElement
-  heroContent?: React.ReactElement
-  featuredImage?: string
-  pageDescription?: string
+  page?: Page;
+  post?: Post;
+  loading: boolean;
+  isArticle: boolean;
+  heroBanner?: React.ReactElement;
+  heroContent?: React.ReactElement;
+  nav?: MenuLocationData;
+  breadcrumb: Breadcrumb[];
+  pageTitle?: PostTitle;
+  title: string;
+}
+
+/**
+ * Interface for breadcrumb items
+ */
+interface Breadcrumb {
+  label?: string;
+  link?: string;
 }
 
 /**
@@ -52,9 +60,10 @@ class PostPage extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      template: "basic",
       isArticle: false,
-      loading: false
+      loading: false,
+      breadcrumb: [],
+      title: ""
     };
   }
 
@@ -66,18 +75,8 @@ class PostPage extends React.Component<Props, State> {
   }
 
   /**
-   * Component will mount life-cycle handler
+   * Component did update life-cycle handler
    */
-  public componentWillMount = () => {
-    this.setTemplate();
-  }
-
-  public componentWillUpdate = (prevProps: Props) => {
-    if (prevProps.slug !== this.props.slug) {
-      this.setTemplate();
-    }
-  }
-
   public componentDidUpdate = (prevProps: Props) => {
     if (prevProps.slug !== this.props.slug) {
       this.loadContent();
@@ -88,53 +87,69 @@ class PostPage extends React.Component<Props, State> {
    * Component render method
    */
   public render() {
-    const { classes, lang } = this.props;
-    const pageTitle = this.state.loading ? "" : this.setTitleSource();
+    const { classes, lang, slug } = this.props;
+    const { title } = this.state;
 
     return (
-      <BasicLayout lang={lang}>
-        { this.state.heroBanner &&
-          <div className={ classes.hero }>
-            <div className={ classes.heroContentContainer }>
-              <h1 className={ classes.heroTitle }>{ pageTitle }</h1>
-              { this.state.heroContent }
+      <BasicLayout lang={ lang } title={ this.setTitleSource() }>
+        <div className={ classes.wrapper }>
+          <div className={ classes.pageContent }>
+            <div className={ classes.breadcrumb }>
+              <Breadcrumbs separator=">">
+                <Link color="inherit" href="/" onClick={() => {}}>
+                  Etusivu
+                </Link>
+                { this.state.breadcrumb && this.renderBreadcrumb() }
+              </Breadcrumbs>
             </div>
-            { this.state.heroBanner }
+            <div className={ classes.columns }>
+              <div className={ classes.sidebar }>
+                <Typography variant="h5">{ title }</Typography>
+                <TreeView lang={ lang } slug={ slug } />
+              </div>
+              <div className={ classes.contentarea }>
+                { this.renderContent() }
+              </div>
+              <div className={ classes.sidebar }>
+                <RightSideBar />
+              </div>
+            </div>
           </div>
-        }
-        {
-          this.renderMetatags( pageTitle )
-        }
-        <div className={ this.state.heroBanner ? classes.contentWithHero : classes.content }>
-          { this.renderContent(pageTitle) }
         </div>
       </BasicLayout>
     );
   }
 
   /**
-   * Render content method
+   * Renders breadcrumb
    */
-  private renderContent = (pageTitle: string) => {
-    const { classes } = this.props;
-    if (this.state.template === "fullscreen") {
-      return this.renderPostContent(pageTitle);
-    }
-
-    return (
-      <Container className={ classNames( classes.root, this.state.isArticle && "article") }>
-        { this.renderPostContent(pageTitle) }
-      </Container>
-    );
-
-  }
-
-  private setTemplate = () => {
-    this.setState({
-      template: this.getTemplate()
+  private renderBreadcrumb = () => {
+    const { breadcrumb } = this.state;
+    return breadcrumb.map((crumb) => {
+      return (
+        <Link color="inherit" href={ crumb.link } onClick={() => {}}>
+          { crumb.label }
+        </Link>
+      );
     });
   }
 
+  /**
+   * Render content method
+   */
+  private renderContent = () => {
+    const { classes } = this.props;
+
+    return (
+      <Container className={ classNames( classes.root, this.state.isArticle && "article") }>
+        { this.renderPostContent() }
+      </Container>
+    );
+  }
+
+  /**
+   * Loads page or post content
+   */
   private loadContent = async () => {
     this.setState({
       loading: true
@@ -151,58 +166,77 @@ class PostPage extends React.Component<Props, State> {
     const api = ApiUtils.getApi();
 
     const apiCalls = await Promise.all([
-      api.getWpV2Pages({ lang: [ lang ], slug: [slug] }),
-      api.getWpV2Posts({ lang: [ lang ], slug: [slug] })
+      api.getWpV2Pages({ lang: [ lang ], slug: [ slug ] }),
+      api.getWpV2Posts({ lang: [ lang ], slug: [ slug ] }),
+      api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
+      api.getWpV2Pages({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
+      api.getWpV2Posts({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
+      api.getWpV2Pages({ per_page: 100 })
     ]);
 
     const page = apiCalls[0][0];
     const post = apiCalls[1][0];
-
-    const featuredMediaId = page ? page.featured_media : (post ? post.featured_media : undefined);
-    const excerpt = page ? page.excerpt : (post ? post.excerpt : undefined);
-
-    try {
-      const featuredMedia = await api.getWpV2MediaById({ id: `${ featuredMediaId }` });
-      const featuredImage = featuredMedia.source_url;
-      const excerptContent = excerpt ? (excerpt.rendered ? excerpt.rendered.replace(/<p>/, "").replace(/<\/p>/, "") : undefined) : "";
-      this.setState({
-        featuredImage: featuredImage,
-        pageDescription: excerptContent
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    const nav = apiCalls[2];
+    const pageTitle = apiCalls[3][0].title || apiCalls[4][0].title;
+    const pages = apiCalls[5];
 
     this.setState({
       page: page,
       post: post,
       isArticle: !!post,
-      loading: false
+      loading: false,
+      nav: nav,
+      pageTitle: pageTitle
     });
 
+    this.breadcrumbPath(pages);
     this.hidePageLoader();
+  }
+
+  /**
+   * Initializes building a breadcrumb
+   *
+   * @param pages page array
+   */
+  private breadcrumbPath = (pages: Page[]) => {
+    const mainPages = pages.filter(item => item.parent === 0);
+    this.buildPath(mainPages, pages);
+  }
+
+  /**
+   * Recursively builds breadcrumb
+   * 
+   * @param children child pages array
+   * @param pages all pages array
+   * @param path collected breadcumbs
+   */
+  private buildPath = (children: Page[], pages: Page[], path?: Breadcrumb[]) => {
+    const { page } = this.state;
+    children.forEach(childPage => {
+      const childPages = pages.filter(item => item.parent === childPage.id);     
+      if (page && (page.id === childPage.id) && childPage.title) {
+        this.setState({
+          title: childPage.title.rendered || "",
+          breadcrumb: path ? [...path, { label: childPage.title.rendered || "", link: childPage.link || "" }] : [{ label: childPage.title.rendered || "", link: childPage.link || "" }]
+        });
+      } else if (childPages && childPage.title) {
+        this.buildPath(childPages, pages, path ? [...path, { label: childPage.title.rendered || "", link: childPage.link || "" }] : [{ label: childPage.title.rendered || "", link: childPage.link || "" }]);
+      }
+    });
   }
 
   /**
    * Render post content method
    */
-  private renderPostContent = (pageTitle: string) => {
+  private renderPostContent = () => {
     const { classes, lang } = this.props;
     moment.locale(lang);
     return (
       <div className={
         classNames(classes.htmlContainer,
-        this.state.isArticle && "article",
-        this.state.template === "fullscreen" ? "fullscreen" : "",
-        this.state.template === "smallgutter" ? "smallgutter" : "")
+        this.state.isArticle && "article")
         }
       >
-      { !this.state.heroBanner &&
-        <>
-          { this.state.post ? <p className={ classes.date }>{ moment(this.state.post.date).format("dddd, DD. MMMM YYYY") }</p> : "" }
-          <h1 className={ classNames(classes.title, this.state.isArticle && "article") }>{ pageTitle }</h1>
-        </>
-      }
       { !this.state.loading &&
         this.getPageOrPostContent()
       }
@@ -255,10 +289,6 @@ class PostPage extends React.Component<Props, State> {
       return undefinedContentError;
     }
 
-    if (this.state.template === "dangerous") {
-      return <div dangerouslySetInnerHTML={{__html:renderedContent}} />;
-    }
-
     return ReactHtmlParser(renderedContent, { transform: this.transformContent });
 
   }
@@ -280,15 +310,16 @@ class PostPage extends React.Component<Props, State> {
    * Set html source for page content
    */
   private setTitleSource = () => {
+    const { pageTitle, loading } = this.state;
     const noContentError = `${ strings.whoops }`;
     const undefinedContentError = `${ strings.error }`;
 
-    if (this.state.page && this.state.page.title) {
-      return this.state.page.title.rendered || undefinedContentError;
-    } else if (this.state.post && this.state.post.title) {
-      return this.state.post.title.rendered || undefinedContentError;
-    } else {
+    if (pageTitle) {
+      return pageTitle.rendered || undefinedContentError;
+    } else if (!loading) {
       return noContentError;
+    } else {
+      return "";
     }
   }
 
@@ -302,34 +333,14 @@ class PostPage extends React.Component<Props, State> {
     const { classes } = this.props;
     const classNames = this.getElementClasses(node);
 
-    // Find hero banner and set it to state
-    if (classNames.indexOf("hero") > -1) {
-      if (!this.state.heroBanner) {
-        this.setState({
-          heroBanner: convertNodeToElement(node, index, this.transformContent)
-        });
-      }
-      return null;
-    }
-
-    // Find hero content and set it to state
-    if (classNames.indexOf("hero-content") > -1) {
-      if (!this.state.heroContent) {
-        this.setState({
-          heroContent: convertNodeToElement(node, index, this.transformContent)
-        });
-      }
-      return null;
-    }
-
     // Find any buttons and replace them with Material UI button
     if (classNames.indexOf("wp-block-button") > -1) {
       const childNode = node.children && node.children.length ? node.children[0] : null;
       if (childNode) {
         return (
-          <a href={this.getLinkHref(childNode)} style={{ textDecoration: "none" }}>
+          <a href={ this.getLinkHref(childNode) } style={{ textDecoration: "none" }}>
             <Button className={ classes.button } color="primary" variant="outlined" endIcon={ <ArrowIcon /> }>
-              {this.getElementTextContent(childNode)}
+              { this.getElementTextContent(childNode) }
             </Button>
           </a>
         );
@@ -337,34 +348,6 @@ class PostPage extends React.Component<Props, State> {
     }
 
     return convertNodeToElement(node, index, this.transformContent);
-  }
-
-  /**
-   * Renders og: metatags for fb link sharing
-   */
-  private renderMetatags = ( pageTitle: string ) => {
-    const { featuredImage, pageDescription } = this.state;
-    return (
-      <MetaTags>
-        { featuredImage &&
-          <meta property="og:image" content={ featuredImage } />
-        }
-        <meta property="og:title" content={ pageTitle } />
-        { pageDescription && 
-          <meta property="og:description" content={ pageDescription } />
-        }
-      </MetaTags>
-    );
-  }
-
-  /**
-   * Returns current page template from body class
-   *
-   * @returns page template
-   */
-  private getTemplate = (): PageTemplate => {
-    const templateClass = (document.body.className || "").split(" ").find((className) => className.indexOf("template-") === 0);
-    return templateClass ? templateClass.substring(9) as PageTemplate : "basic";
   }
 }
 
