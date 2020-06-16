@@ -1,2 +1,2 @@
-# wordpress-mantyharju-theme
-Wordpress Typescript theme for Mäntyharju
+# pedanet-react-theme
+React TypeScript Wordpress theme for Pedanet project
