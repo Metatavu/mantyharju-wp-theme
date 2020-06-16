@@ -1,2 +1,2 @@
-# wordpress-muisti-theme
-Wordpress Typescript theme for Muisti
+# wordpress-mantyharju-theme
+Wordpress Typescript theme for Mäntyharju
