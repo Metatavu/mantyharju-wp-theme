@@ -6,6 +6,7 @@ import socialNetworks from "../resources/img/social.png";
 import { MenuLocationData, MenuItemData } from "../generated/client/src";
 import ApiUtils from "../utils/ApiUtils";
 import styles from "../styles/basic-layout";
+import Footer from "./generic/Footer";
 
 /**
  * Interface representing component properties
@@ -105,7 +106,8 @@ class BasicLayout extends React.Component<Props, State> {
           }
         </div>
         { this.props.children }
-      </div>
+        <Footer></Footer>
+      </div> 
     );
   }
 
