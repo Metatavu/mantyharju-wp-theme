@@ -48,22 +48,22 @@ class Footer extends React.Component<Props, State> {
 
     return (
       <div className = { classes.footer }>
-        <div className = { classes.footerContent1 }>
+        <div className = { classes.footerLogo}>
           <img alt = "Mäntyharju-logo" className={ classes.logo } src= ""/>
         </div>
 
-        <div className = { classes.footerContent2 }>
+        <div className = { classes.footerAdressInfo}>
           <p className = { classes.footerContentItem }>Mäntyharjun kunta</p>
           <p className = { classes.footerContentItem }>Asematie 3, PL 76</p>
           <p className = { classes.footerContentItem }>52701, Mäntyharju</p>
         </div>
 
-        <div className = { classes.footerContent3 }>
+        <div className = { classes.footerContactInfo }>
           <p className = { classes.footerContentItem }>Puh: +358 (0)44 7707 346</p>
           <p className = { classes.footerContentItem }>email: kirjaamo@mantyharju.fi</p>
         </div>
 
-        <div className = { classes.footerContent4 }>
+        <div className = { classes.footerSocialInfo}>
           <a href = "https://fi-fi.facebook.com/mantyharjussa/" target = "_blank"><img alt = "Linkki Facebookiin" className={ classes.social } src={ socialFb } />
             </a>
           <a href = "https://www.instagram.com/mantyharjunkunta/" target = "_blank"><img alt = "Linkki Instagramiin" className={ classes.social } src={ socialIg } />

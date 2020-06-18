@@ -13,16 +13,16 @@ export default createStyles({
         paddingTop: "2vw",
         width: "100%"
     },
-    footerContent1: {
+    footerLogo: {
         width: "30%"
     },
-    footerContent2: {
+    footerAdressInfo: {
         width: "20%"
     },
-    footerContent3: {
+    footerContactInfo: {
         width: "20%"
     },
-    footerContent4: {
+    footerSocialInfo: {
         width: "30%"
     },
     footerContentItem: {
