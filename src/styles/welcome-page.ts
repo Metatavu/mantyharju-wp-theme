@@ -2,6 +2,12 @@ import { createStyles } from "@material-ui/core";
 import theme from "./theme";
 
 export default createStyles({
+  heroImage: {
+    backgroundColor:"#000000",
+    height:"20vw",
+    maxHeight:"30vw",
+    width:"100%"
+  },
   root: {
     height: "100vh"
   },

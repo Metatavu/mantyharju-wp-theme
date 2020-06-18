@@ -90,11 +90,8 @@ class WelcomePage extends React.Component<Props, State> {
 
     return (
       <BasicLayout lang={ lang }>
-        <div className={ classes.buttonSection }>
-          <Button className={ classes.menuButtonOne }>Varhaiskasvatus ja esiopetus</Button>
-          <Button className={ classes.menuButtonTwo }>Perusopetus</Button>
-          <Button className={ classes.menuButtonThree }>Lukio-opetus</Button>
-          <Button className={ classes.menuButtonFour }>Kansalaisopisto</Button>
+        <div className={ classes.heroImage }>
+          <img alt = "Kuva mäntyharjun maisemista" src = ""/>
         </div>
       </BasicLayout>
     );

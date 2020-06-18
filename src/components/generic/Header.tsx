@@ -1,5 +1,5 @@
 import * as React from 'react';
-import bar from "../../resources/img/headerimage.png";
+import bar from "../../resources/img/headerImage.png";
 import { MenuLocationData, MenuItemData } from "../../generated/client/src";
 import { withStyles, WithStyles, Link, Container } from '@material-ui/core';
 import styles from "../../styles/header-styles";
