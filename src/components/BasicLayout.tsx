@@ -1,8 +1,6 @@
 import * as React from "react";
 import { WithStyles, withStyles, Link, Container } from "@material-ui/core";
-import bar from "../resources/img/bar.png";
-import mikkeliLogo from "../resources/img/mikkeliLogo.png";
-import socialNetworks from "../resources/img/social.png";
+import bar from "../resources/img/headerimage.png";
 import { MenuLocationData, MenuItemData } from "../generated/client/src";
 import ApiUtils from "../utils/ApiUtils";
 import styles from "../styles/basic-layout";
@@ -84,26 +82,22 @@ class BasicLayout extends React.Component<Props, State> {
     return (
       <div>
         <div>
-          <img className={ classes.logoBar } src={ bar } />
+          {/* <img className={ classes.logoBar } src={ bar } /> */}
           <div className={ classes.searchSection }>
-            <input type="text" placeholder="Search.." />
-            <img className={ classes.social } src={ socialNetworks } />
-          </div>
-          <Container maxWidth="lg">
             <a href="/?lang=fi">
-              <img className={ classes.logo } src={ mikkeliLogo } />
+              <img className={ classes.logoBar } src={ bar } />
             </a>
-            <div className={ classes.topNavDesktop }>
-              { this.renderMenu() }
+            <div className={ classes.localeMenu }>
+              { this.renderLocale() }
             </div>
-          </Container>
-        </div>
-        <div className={ `${classes.logoBar} ${classes.headerImage}` }>
-          { this.props.title &&
-            <div className={ classes.titleContainer }>
-              { this.props.title }
+            <div className={ classes.searchBar }>
+              <input type="text" placeholder="Search.." />
+              <button>Go</button>
             </div>
-          }
+          </div>
+          <div className={ classes.mainMenu }>
+            { this.renderMenu() }
+          </div>
         </div>
         { this.props.children }
         <Footer></Footer>
@@ -112,7 +106,7 @@ class BasicLayout extends React.Component<Props, State> {
   }
 
   /**
-   * Render menu method
+   * Render main menu method
    */
   private renderMenu = () => {
     const { mainMenu } = this.state;
@@ -126,6 +120,26 @@ class BasicLayout extends React.Component<Props, State> {
       <div className={ classes.nav }>
         {
           mainMenu.items.map(this.renderMenuItem)
+        }
+      </div>
+    );
+  }
+
+  /**
+   * Render locale menu method
+   */
+  private renderLocale = () => {
+    const { localeMenu } = this.state;
+    const { classes } = this.props;
+
+    if (!localeMenu || !localeMenu.items) {
+      return null;
+    }
+
+    return (
+      <div className={ classes.nav }>
+        {
+          localeMenu.items.map(this.renderMenuItem)
         }
       </div>
     );

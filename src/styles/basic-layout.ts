@@ -1,55 +1,51 @@
 import { createStyles } from "@material-ui/core";
 import theme from "./theme";
-import headerImage from "../resources/img/headerImage.png";
+// import headerImage from "../resources/img/headerImage.png";
 
 export default createStyles({
   logoBar: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    width: "100%",
-    marginBottom: 50
-  },
-  headerImage: {
-    backgroundImage: `url(${headerImage})`,
-    backgroundRepeat: "no-repeat",
-    height: "298px"
+    // display: "flex",
+    // flexDirection: "row",
+    // justifyContent: "center",
+    marginLeft: "10%",
+    width: "50%",
+    // marginBottom: 50
   },
   nav: {
     display: "flex",
     flexDirection: "row",
-    alignContent: "center",
-    [theme.breakpoints.up("lg")]: {
-      marginLeft: 30,
-    },
-    [theme.breakpoints.up("xl")]: {
-      marginLeft: 50,
-    }
   },
   navLink: {
     display: "flex",
-    justifyContent: "center",
+    flexDirection: "row",
     alignItems: "center",
-    marginLeft: 20,
-    whiteSpace: "nowrap",
+    // whiteSpace: "nowrap",
     height: 80,
     textDecoration: "none",
     fontFamily: theme.typography.h3.fontFamily,
     color: theme.palette.primary.main,
     cursor: "pointer",
+    [theme.breakpoints.down("sm")]:{
+      fontSize: "0.75rem",
+    },
     [theme.breakpoints.down("md")]: {
-      fontSize: "1.15rem"
+      fontSize: "0.75rem",
+      marginLeft: 10,
     },
     [theme.breakpoints.up("lg")]: {
-      marginLeft: 30,
+      fontSize: "1rem",
+      marginLeft: 35,
     },
     [theme.breakpoints.up("xl")]: {
-      marginLeft: 40,
+      marginLeft: 45,
     }
   },
-  topNavDesktop: {
-    position: "relative",
-    textAlign: "center"
+  mainMenu: {
+    paddingInlineStart: "100px",
+  },
+  localeMenu: {
+    display: "inline",
+    alignItems: "center",
   },
   social: {
     width: "15%",
@@ -60,7 +56,13 @@ export default createStyles({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    marginLeft: "55%"
+  },
+  searchBar: {
+    display: "flex",
+    flexDirection: "row",
+    height: "40px",
+    marginRight: "10%",
+    alignItems: "right"
   },
   logo: {
     width: 200,
