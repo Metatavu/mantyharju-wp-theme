@@ -1,5 +1,6 @@
 import * as React from "react";
 import BasicLayout from "../BasicLayout";
+import hero from "../../resources/img/headerImage.png";
 import { Post, MenuLocationData } from "../../generated/client/src";
 import ApiUtils from "../../utils/ApiUtils";
 import { WithStyles, withStyles, Button } from "@material-ui/core";
@@ -90,9 +91,20 @@ class WelcomePage extends React.Component<Props, State> {
 
     return (
       <BasicLayout lang={ lang }>
-        <div className={ classes.heroImage }>
-          <img alt = "Kuva mäntyharjun maisemista" src = ""/>
+        <div className={ classes.heroImageDiv } background-image = { hero }>
+          <h1>Mäntyharju.</h1>
+          <h2>Luontoa, kulttuuria ja elämää!</h2>
+          <Button className={ classes.heroButton }>Lorem Ipsum</Button>
         </div>
+        <div className= { classes.contentImageDiv }> 
+          <div className= { classes.contentImage }>
+            <img alt="image" src=""></img>
+          </div>
+          <div className= { classes.contentText }>
+            <img alt="image" src=""></img>
+          </div>
+        </div>
+        
       </BasicLayout>
     );
   }
