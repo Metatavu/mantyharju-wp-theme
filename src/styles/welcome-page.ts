@@ -2,12 +2,45 @@ import { createStyles } from "@material-ui/core";
 import theme from "./theme";
 
 export default createStyles({
-  heroImage: {
-    backgroundColor:"#000000",
-    height:"20vw",
-    maxHeight:"30vw",
+  /**
+   * Mantyharju-theme
+   */
+  heroImageDiv: {
+    backgroundColor:"000000",
+    color: "#fff",
+    height:"30vw",
+    alignContent:"middle",
+    maxHeight:"40vw",
+    paddingLeft: "8vw",
+    paddingRight: "8vw",
+    paddingTop: "8vw",
     width:"100%"
   },
+  heroButton: {
+    backgroundColor: "red"
+  },
+  contentImageDiv: {
+    display:"flex",
+    flexDirection:"row",
+    width: "90%",
+    marginTop: "1vw",
+    marginLeft:"5%",
+    marginRight:"5%",
+    height:"25vw"
+  },
+  contentImage: {
+    width: "50%",
+    backgroundColor:"red",
+    height:"25vw"
+  },
+  contentText: {
+    width: "50%",
+    backgroundColor:"green",
+    height:"25vw"
+  },
+  
+  // Mantyharju-theme ends, rest of the code can be deleted before production
+
   root: {
     height: "100vh"
   },
