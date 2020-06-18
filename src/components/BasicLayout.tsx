@@ -4,6 +4,7 @@ import bar from "../resources/img/headerimage.png";
 import { MenuLocationData, MenuItemData } from "../generated/client/src";
 import ApiUtils from "../utils/ApiUtils";
 import styles from "../styles/basic-layout";
+import Header from "./generic/Header";
 import Footer from "./generic/Footer";
 
 /**
@@ -81,86 +82,13 @@ class BasicLayout extends React.Component<Props, State> {
     
     return (
       <div>
-        <div>
-          {/* <img className={ classes.logoBar } src={ bar } /> */}
-          <div className={ classes.searchSection }>
-            <a href="/?lang=fi">
-              <img className={ classes.logoBar } src={ bar } />
-            </a>
-            <div className={ classes.localeMenu }>
-              { this.renderLocale() }
-            </div>
-            <div className={ classes.searchBar }>
-              <input type="text" placeholder="Search.." />
-              <button>Go</button>
-            </div>
-          </div>
-          <div className={ classes.mainMenu }>
-            { this.renderMenu() }
-          </div>
-        </div>
+        <Header
+        mainMenu={this.state.mainMenu}
+        localeMenu={this.state.localeMenu}>
+        </Header>
         { this.props.children }
         <Footer></Footer>
       </div> 
-    );
-  }
-
-  /**
-   * Render main menu method
-   */
-  private renderMenu = () => {
-    const { mainMenu } = this.state;
-    const { classes } = this.props;
-
-    if (!mainMenu || !mainMenu.items) {
-      return null;
-    }
-
-    return (
-      <div className={ classes.nav }>
-        {
-          mainMenu.items.map(this.renderMenuItem)
-        }
-      </div>
-    );
-  }
-
-  /**
-   * Render locale menu method
-   */
-  private renderLocale = () => {
-    const { localeMenu } = this.state;
-    const { classes } = this.props;
-
-    if (!localeMenu || !localeMenu.items) {
-      return null;
-    }
-
-    return (
-      <div className={ classes.nav }>
-        {
-          localeMenu.items.map(this.renderMenuItem)
-        }
-      </div>
-    );
-  }
-
-  /**
-   * Render menu item method
-   */
-  private renderMenuItem = (item: MenuItemData) => {
-    const { classes } = this.props;
-    return (
-      <Link
-        variant="h6"
-        key={ item.db_id }
-        href={ item.url }
-        className={ classes.navLink }
-      >
-        {
-          item.title
-        }
-      </Link>
     );
   }
 
