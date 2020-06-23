@@ -1,5 +1,6 @@
 import * as React from "react";
 import BasicLayout from "../BasicLayout";
+import hero from "../../resources/img/headerImage.png";
 import { Post, MenuLocationData } from "../../generated/client/src";
 import ApiUtils from "../../utils/ApiUtils";
 import { WithStyles, withStyles, Button } from "@material-ui/core";
@@ -90,12 +91,23 @@ class WelcomePage extends React.Component<Props, State> {
 
     return (
       <BasicLayout lang={ lang }>
-        <div className={ classes.buttonSection }>
-          <Button className={ classes.menuButtonOne }>Varhaiskasvatus ja esiopetus</Button>
-          <Button className={ classes.menuButtonTwo }>Perusopetus</Button>
-          <Button className={ classes.menuButtonThree }>Lukio-opetus</Button>
-          <Button className={ classes.menuButtonFour }>Kansalaisopisto</Button>
+        <div className={ classes.heroImageDiv } background-image = { hero }>
+          <h1>Mäntyharju.</h1>
+          <h2>Luontoa, kulttuuria ja elämää!</h2>
+          <Button className={ classes.heroButton }>Lorem Ipsum</Button>
         </div>
+        <div className= { classes.addEventDiv }> 
+          <div className= { classes.addEventImageDiv }>
+            <img alt="image" src=""></img>
+          </div>
+          <div className= { classes.addEventTextDiv }>
+            <h3>Lisää kesätapahtumasi tapahtumakalenteriin</h3>
+            <p>
+              Lorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem Ipsum
+            </p>
+          </div>
+        </div>
+        
       </BasicLayout>
     );
   }

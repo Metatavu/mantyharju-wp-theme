@@ -2,6 +2,47 @@ import { createStyles } from "@material-ui/core";
 import theme from "./theme";
 
 export default createStyles({
+  /**
+   * Mantyharju-theme
+   */
+  heroImageDiv: {
+    backgroundColor:"000000",
+    color: "#fff",
+    height:"30vw",
+    alignContent:"middle",
+    maxHeight:"40vw",
+    paddingLeft: "8vw",
+    paddingRight: "8vw",
+    paddingTop: "8vw",
+    width:"100%"
+  },
+  heroButton: {
+    backgroundColor: "red"
+  },
+  addEventDiv: {
+    display:"flex",
+    flexDirection:"row",
+    width: "90%",
+    marginTop: "1vw",
+    marginLeft:"5%",
+    marginRight:"5%",
+    height:"25vw"
+  },
+  addEventImageDiv: {
+    width: "50%",
+    backgroundColor:"red",
+    height:"25vw"
+  },
+  addEventTextDiv: {
+    width: "50%",
+    backgroundColor:"blue",
+    height:"25vw",
+    paddingLeft: "5vw",
+    paddingRight: "5vw"
+  },
+  
+  // Mantyharju-theme ends, rest of the code can be deleted before production
+/*
   root: {
     height: "100vh"
   },
@@ -78,5 +119,5 @@ export default createStyles({
     flexDirection: "row",
     alignContent: "center",
     justifyContent: "space-between"
-  },
+  },*/
 });
