@@ -96,12 +96,15 @@ class WelcomePage extends React.Component<Props, State> {
           <h2>Luontoa, kulttuuria ja elämää!</h2>
           <Button className={ classes.heroButton }>Lorem Ipsum</Button>
         </div>
-        <div className= { classes.contentImageDiv }> 
-          <div className= { classes.contentImage }>
+        <div className= { classes.addEventDiv }> 
+          <div className= { classes.addEventImageDiv }>
             <img alt="image" src=""></img>
           </div>
-          <div className= { classes.contentText }>
-            <img alt="image" src=""></img>
+          <div className= { classes.addEventTextDiv }>
+            <h3>Lisää kesätapahtumasi tapahtumakalenteriin</h3>
+            <p>
+              Lorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem Ipsum
+            </p>
           </div>
         </div>
         

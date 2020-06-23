@@ -19,7 +19,7 @@ export default createStyles({
   heroButton: {
     backgroundColor: "red"
   },
-  contentImageDiv: {
+  addEventDiv: {
     display:"flex",
     flexDirection:"row",
     width: "90%",
@@ -28,19 +28,21 @@ export default createStyles({
     marginRight:"5%",
     height:"25vw"
   },
-  contentImage: {
+  addEventImageDiv: {
     width: "50%",
     backgroundColor:"red",
     height:"25vw"
   },
-  contentText: {
+  addEventTextDiv: {
     width: "50%",
-    backgroundColor:"green",
-    height:"25vw"
+    backgroundColor:"blue",
+    height:"25vw",
+    paddingLeft: "5vw",
+    paddingRight: "5vw"
   },
   
   // Mantyharju-theme ends, rest of the code can be deleted before production
-
+/*
   root: {
     height: "100vh"
   },
@@ -117,5 +119,5 @@ export default createStyles({
     flexDirection: "row",
     alignContent: "center",
     justifyContent: "space-between"
-  },
+  },*/
 });
