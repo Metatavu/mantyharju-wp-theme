@@ -1,6 +1,6 @@
 import * as React from "react";
 import BasicLayout from "../BasicLayout";
-import hero from "../../resources/img/headerImage.png";
+import contentImage from "../../resources/img/mantyharju-images/mantyharju-images/hero-front-1600x1080.jpg";
 import { Post, MenuLocationData } from "../../generated/client/src";
 import ApiUtils from "../../utils/ApiUtils";
 import { WithStyles, withStyles, Button } from "@material-ui/core";
@@ -91,14 +91,14 @@ class WelcomePage extends React.Component<Props, State> {
 
     return (
       <BasicLayout lang={ lang }>
-        <div className={ classes.heroImageDiv } background-image = { hero }>
+        <div className={ classes.heroImageDiv }>
           <h1>Mäntyharju.</h1>
           <h2>Luontoa, kulttuuria ja elämää!</h2>
           <Button className={ classes.heroButton }>Lorem Ipsum</Button>
         </div>
         <div className= { classes.addEventDiv }> 
           <div className= { classes.addEventImageDiv }>
-            <img alt="image" src=""></img>
+            <img className= { classes.addEventImage } alt="Lisää tapahtuma: kuvituskuva" src={ contentImage }></img>
           </div>
           <div className= { classes.addEventTextDiv }>
             <h3>Lisää kesätapahtumasi tapahtumakalenteriin</h3>
