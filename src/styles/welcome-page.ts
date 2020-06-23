@@ -1,16 +1,19 @@
 import { createStyles } from "@material-ui/core";
 import theme from "./theme";
+import hero from "../resources/img/mantyharju-images/mantyharju-images/hero-front-1600x1080.jpg";
 
 export default createStyles({
   /**
    * Mantyharju-theme
    */
   heroImageDiv: {
-    backgroundColor:"000000",
+    backgroundImage: `url(${hero})`,
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "center center",
+    backgroundSize: "cover",
     color: "#fff",
-    height:"30vw",
-    alignContent:"middle",
-    maxHeight:"40vw",
+    height:"35vw",
+    maxHeight:"50vw",
     paddingLeft: "8vw",
     paddingRight: "8vw",
     paddingTop: "8vw",
@@ -25,21 +28,25 @@ export default createStyles({
     width: "90%",
     marginTop: "1vw",
     marginLeft:"5%",
+    marginBottom: "5%",
     marginRight:"5%",
     height:"25vw"
   },
   addEventImageDiv: {
     width: "50%",
-    backgroundColor:"red",
     height:"25vw"
   },
   addEventTextDiv: {
-    width: "50%",
-    backgroundColor:"blue",
-    height:"25vw",
+    maxWidth: "50%",
+    backgroundColor:"#00AAAD",
+    maxHeight:"25vw",
     paddingLeft: "5vw",
     paddingRight: "5vw"
   },
+  addEventImage: {
+    width: "100%",
+    height: "25vw"
+  }
   
   // Mantyharju-theme ends, rest of the code can be deleted before production
 /*
