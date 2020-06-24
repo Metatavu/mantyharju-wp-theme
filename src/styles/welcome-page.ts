@@ -52,7 +52,6 @@ export default createStyles({
     display: "flex",
     flexDirection: "row",
     alignItems: "middle",
-    paddi: "10px",
   },
   eventsBottomRow: {
     display: "flex",
