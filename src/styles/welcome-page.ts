@@ -41,6 +41,25 @@ export default createStyles({
     paddingRight: "5vw"
   },
   
+  //LinkedEvents section styles
+
+  eventsContainer: {
+    marginTop: "5vw",
+    width: "100%",
+    alignContent: "center",
+  },
+  eventsTopRow: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "middle",
+  },
+  eventsBottomRow: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "middle",
+    marginInline: "10px",
+  },
+  
   // Mantyharju-theme ends, rest of the code can be deleted before production
 /*
   root: {

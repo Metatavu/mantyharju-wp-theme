@@ -2,6 +2,7 @@ import * as React from "react";
 import BasicLayout from "../BasicLayout";
 import hero from "../../resources/img/headerImage.png";
 import { Post, MenuLocationData } from "../../generated/client/src";
+import ReactHtmlParser, { convertNodeToElement } from "react-html-parser";
 import ApiUtils from "../../utils/ApiUtils";
 import { WithStyles, withStyles, Button } from "@material-ui/core";
 import styles from "../../styles/welcome-page";
@@ -107,9 +108,44 @@ class WelcomePage extends React.Component<Props, State> {
             </p>
           </div>
         </div>
-        
+        <div>
+          { this.renderPosts() }
+        </div>
       </BasicLayout>
     );
+  }
+
+  /**
+   * Render LinkedEvents 4 by 2
+   */
+  private renderPosts = () => {
+    const { classes } = this.props;
+    if (!this.state.posts.length) {
+      return null;
+    } else {
+      return (
+        this.state.posts.map((post) => {
+          if (post.id == 57) {
+            const parsedContent = ReactHtmlParser(post.content ? post.content.rendered || "" : "");
+            const parsedContentSecond = ReactHtmlParser(post.content ? post.content.rendered || "" : "");
+            
+            return(
+              <div className={ classes.eventsContainer }>
+                <div className={ classes.eventsTopRow }>
+                  { parsedContent.splice(0, 4) }
+                </div>
+                <div className={ classes.eventsBottomRow }>
+                  { parsedContentSecond.splice(4, 8) }
+                </div>
+              </div>
+        
+            )
+          } else {
+            return null;
+          }
+        })
+    );
+  }
   }
 
   /**
