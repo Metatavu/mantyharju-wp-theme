@@ -5,6 +5,7 @@ import { Post, MenuLocationData } from "../../generated/client/src";
 import ApiUtils from "../../utils/ApiUtils";
 import { WithStyles, withStyles, Button } from "@material-ui/core";
 import styles from "../../styles/welcome-page";
+import AddIcon from "@material-ui/icons/Add"
 
 /**
  * Interface representing component properties
@@ -92,9 +93,10 @@ class WelcomePage extends React.Component<Props, State> {
     return (
       <BasicLayout lang={ lang }>
         <div className={ classes.heroImageDiv }>
-          <h1>Mäntyharju.</h1>
-          <h2>Luontoa, kulttuuria ja elämää!</h2>
+          <h1>Mäntyharju. -logo</h1>
+          <h2 className={ classes.heroText }>Luontoa, kulttuuria ja elämää!</h2>
           <Button className={ classes.heroButton }>Lorem Ipsum</Button>
+          <Button className={ classes.heroButtonPopularPages } endIcon={ <AddIcon/> }>Suosituimmat sivut</Button>
         </div>
         <div className= { classes.addEventDiv }> 
           <div className= { classes.addEventImageDiv }>
