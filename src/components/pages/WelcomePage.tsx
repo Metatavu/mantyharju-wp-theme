@@ -132,10 +132,10 @@ class WelcomePage extends React.Component<Props, State> {
             return(
               <div className={ classes.eventsContainer }>
                 <div className={ classes.eventsTopRow }>
-                  {parsedContent.splice(0, 4)}
+                  { parsedContent.splice(0, 4) }
                 </div>
                 <div className={ classes.eventsBottomRow }>
-                  {parsedContentSecond.splice(4, 8)}
+                  { parsedContentSecond.splice(4, 8) }
                 </div>
               </div>
         
