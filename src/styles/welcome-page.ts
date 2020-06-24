@@ -6,6 +6,12 @@ export default createStyles({
   /**
    * Mantyharju-theme
    */
+
+   /**
+    * Hero-image as background 
+    * TODO: 
+    * - Improve responsive design for texts and button
+    */
   heroImageDiv: {
     backgroundImage: `url(${hero})`,
     backgroundRepeat: "no-repeat",
@@ -19,9 +25,32 @@ export default createStyles({
     paddingTop: "8vw",
     width:"100%"
   },
-  heroButton: {
-    backgroundColor: "red"
+  heroText: {
+    fontSize: "3.5em",
+    marginTop: "2vw",
+    marginBottom: "2vw",
+    fontWeight: "bold",
+    fontStyle: "italic"
   },
+  heroButton: {
+    color: "black",
+    backgroundColor: "#FFFFFF",
+  },
+  /**
+   * TODO:
+   * - Position bottom right of the parent 
+   */
+  heroButtonPopularPages: {
+    color: "#fff",
+    backgroundColor:"#00AAAD",
+    position: "absolute",
+    bottom: "3.5vw",
+    right: "3vw"
+    },
+
+  /**
+   * Add events -div
+   */
   addEventDiv: {
     display:"flex",
     flexDirection:"row",
@@ -49,6 +78,7 @@ export default createStyles({
   }
   
   // Mantyharju-theme ends, rest of the code can be deleted before production
+
 /*
   root: {
     height: "100vh"
