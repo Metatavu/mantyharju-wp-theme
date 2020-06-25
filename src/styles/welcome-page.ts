@@ -40,6 +40,14 @@ export default createStyles({
     paddingLeft: "5vw",
     paddingRight: "5vw"
   },
+
+  //Announcement post styles
+
+  announcementsContainer: {
+    paddingLeft: "40%",
+    display: "table",
+    alignItems: "middle",
+  },
   
   //LinkedEvents section styles
 
