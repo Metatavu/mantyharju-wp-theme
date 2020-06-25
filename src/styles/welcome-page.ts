@@ -75,7 +75,7 @@ export default createStyles({
   addEventImage: {
     width: "100%",
     height: "25vw"
-  }
+  },
                             
   //Announcement post styles
 
