@@ -1,12 +1,13 @@
 import * as React from "react";
 import BasicLayout from "../BasicLayout";
-import hero from "../../resources/img/headerImage.png";
-import { Post, MenuLocationData, Category } from "../../generated/client/src";
+import contentImage from "../../resources/img/mantyharju-images/mantyharju-images/hero-front-1600x1080.jpg";
+import { Post, MenuLocationData } from "../../generated/client/src";
 import ReactHtmlParser, { convertNodeToElement } from "react-html-parser";
 import ApiUtils from "../../utils/ApiUtils";
 import { WithStyles, withStyles, Button } from "@material-ui/core";
 import styles from "../../styles/welcome-page";
 import * as moment from "moment";
+import AddIcon from "@material-ui/icons/Add"
 
 /**
  * Interface representing component properties
@@ -95,14 +96,15 @@ class WelcomePage extends React.Component<Props, State> {
 
     return (
       <BasicLayout lang={ lang }>
-        <div className={ classes.heroImageDiv } background-image = { hero }>
-          <h1>Mäntyharju.</h1>
-          <h2>Luontoa, kulttuuria ja elämää!</h2>
+        <div className={ classes.heroImageDiv }>
+          <h1>Mäntyharju. -logo</h1>
+          <h2 className={ classes.heroText }>Luontoa, kulttuuria ja elämää!</h2>
           <Button className={ classes.heroButton }>Lorem Ipsum</Button>
+          <Button className={ classes.heroButtonPopularPages } endIcon={ <AddIcon/> }>Suosituimmat sivut</Button>
         </div>
         <div className= { classes.addEventDiv }> 
           <div className= { classes.addEventImageDiv }>
-            <img alt="image" src=""></img>
+            <img className= { classes.addEventImage } alt="Lisää tapahtuma: kuvituskuva" src={ contentImage }></img>
           </div>
           <div className= { classes.addEventTextDiv }>
             <h3>Lisää kesätapahtumasi tapahtumakalenteriin</h3>
