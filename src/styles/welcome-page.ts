@@ -76,6 +76,14 @@ export default createStyles({
     width: "100%",
     height: "25vw"
   }
+                            
+  //Announcement post styles
+
+  announcementsContainer: {
+    paddingLeft: "40%",
+    display: "table",
+    alignItems: "middle",
+  },
   
   //LinkedEvents section styles
 
