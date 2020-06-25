@@ -6,6 +6,7 @@ import ReactHtmlParser, { convertNodeToElement } from "react-html-parser";
 import ApiUtils from "../../utils/ApiUtils";
 import { WithStyles, withStyles, Button } from "@material-ui/core";
 import styles from "../../styles/welcome-page";
+import * as moment from "moment";
 import AddIcon from "@material-ui/icons/Add"
 
 /**
@@ -21,11 +22,12 @@ interface Props extends WithStyles<typeof styles> {
 interface State {
   posts: Post[],
   loading: boolean,
-  mainMenu?: MenuLocationData
-  localeMenu?: MenuLocationData
-  scrollPosition: number
-  siteMenuVisible: boolean
-  siteSearchVisible: boolean
+  mainMenu?: MenuLocationData,
+  localeMenu?: MenuLocationData,
+  scrollPosition: number,
+  siteMenuVisible: boolean,
+  siteSearchVisible: boolean,
+  announcementsCategoryId: number
 }
 
 /**
@@ -45,7 +47,8 @@ class WelcomePage extends React.Component<Props, State> {
       loading: false,
       scrollPosition: 0,
       siteMenuVisible: false,
-      siteSearchVisible: false
+      siteSearchVisible: false,
+      announcementsCategoryId: 9
     };
   }
 
@@ -110,44 +113,79 @@ class WelcomePage extends React.Component<Props, State> {
             </p>
           </div>
         </div>
+        <div className= { classes.announcementsContainer }>
+          <h1>Kuulutukset</h1>
+          { this.renderAnnouncements(this.state.announcementsCategoryId) }
+        </div>
         <div>
-          { this.renderPosts() }
+          { this.renderPosts(57) }
         </div>
       </BasicLayout>
     );
   }
 
   /**
-   * Render LinkedEvents 4 by 2
+   * Render Announcements posts
    */
-  private renderPosts = () => {
+  private renderAnnouncements = (categoryId: number) => {
+    const { classes } = this.props;
+    if (!this.state.posts.length) {
+      return null;
+    } else {
+      return (
+        this.getLimitedPosts(categoryId).map((post) => {
+          const parsedContent = ReactHtmlParser(post.content ? post.content.rendered || "" : "");
+
+            if ((post.categories ? post.categories : new Array()).includes(categoryId)) {
+              const postsArray = new Array();
+              postsArray.concat(post);
+              return(
+                <div>
+                  <div>
+                    <p>{ ReactHtmlParser(!post.date ? "" : moment(post.date).format("DD.MM.YYYY")) }</p>
+                    <p>{ ReactHtmlParser(post.content ? post.content.rendered || "" : "") }</p>
+                  </div>
+                </div>
+              )
+            } else {
+              return null;
+            }
+        })
+      );
+    }
+  }
+
+  /**
+   * Render LinkedEvents posts
+   */
+  private renderPosts = (postId: number) => {
     const { classes } = this.props;
     if (!this.state.posts.length) {
       return null;
     } else {
       return (
         this.state.posts.map((post) => {
-          if (post.id == 57) {
-            const parsedContent = ReactHtmlParser(post.content ? post.content.rendered || "" : "");
-            const parsedContentSecond = ReactHtmlParser(post.content ? post.content.rendered || "" : "");
-            
-            return(
-              <div className={ classes.eventsContainer }>
-                <div className={ classes.eventsTopRow }>
-                  { parsedContent.splice(0, 4) }
+          const postCategories = post.categories;
+          const parsedContent = ReactHtmlParser(post.content ? post.content.rendered || "" : "");
+          const parsedContentSecond = ReactHtmlParser(post.content ? post.content.rendered || "" : "");
+
+            if (post.id == postId) {
+              return(
+                <div className={ classes.eventsContainer }>
+                  <div className={ classes.eventsTopRow }>
+                    { parsedContent.splice(0, 4) }
+                  </div>
+                  <div className={ classes.eventsBottomRow }>
+                    { parsedContentSecond.splice(4, 8) }
+                  </div>
                 </div>
-                <div className={ classes.eventsBottomRow }>
-                  { parsedContentSecond.splice(4, 8) }
-                </div>
-              </div>
-        
-            )
-          } else {
-            return null;
-          }
+              )
+            } else {
+              return null;
+            }
         })
-    );
-  }
+      );
+    }
   }
 
   /**
@@ -171,6 +209,20 @@ class WelcomePage extends React.Component<Props, State> {
     this.setState({
       scrollPosition: currentScrollPos
     });
+  }
+
+  /**
+   * Gets limited posts array
+   */
+  private getLimitedPosts = (categoryId: number) => {
+    const postsArray: Post[] = new Array();
+    this.state.posts.map((post) => {
+      if ((post.categories ? post.categories : new Array()).includes(categoryId)) {
+        postsArray.push(post)
+      }
+    })
+
+    return postsArray.splice(0, 3);
   }
 }
 
