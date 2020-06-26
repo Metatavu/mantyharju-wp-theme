@@ -93,20 +93,21 @@ class WelcomePage extends React.Component<Props, State> {
     return (
       <BasicLayout lang={ lang }>
         <div className={ classes.heroImageDiv }>
-          <h1>Mäntyharju. -logo</h1>
+          <h1 className={ classes.heroText }>Mäntyharju. -logo</h1>
           <h2 className={ classes.heroText }>Luontoa, kulttuuria ja elämää!</h2>
-          <Button className={ classes.heroButton }>Lorem Ipsum</Button>
-          <Button className={ classes.heroButtonPopularPages } endIcon={ <AddIcon/> }>Suosituimmat sivut</Button>
+          <Button className= { `${classes.generalButtonStyle} ${classes.heroButton}`}>Lorem Ipsum</Button>
+          <Button className={ `${classes.heroButtonPopularPages}`} endIcon={ <AddIcon/> }>Suosituimmat sivut</Button>
         </div>
         <div className= { classes.addEventDiv }> 
           <div className= { classes.addEventImageDiv }>
             <img className= { classes.addEventImage } alt="Lisää tapahtuma: kuvituskuva" src={ contentImage }></img>
           </div>
           <div className= { classes.addEventTextDiv }>
-            <h3>Lisää kesätapahtumasi tapahtumakalenteriin</h3>
-            <p>
+            <h3 className= { classes.addEventTextDivHeading }>Lisää kesätapahtumasi tapahtumakalenteriin</h3>
+            <p className= { classes.addEventTextDivParagraph }>
               Lorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem Ipsum
             </p>
+            <Button className={ `${classes.generalButtonStyle} ${classes.addEventButton}`}>Lorem Ipsum</Button>
           </div>
         </div>
         
