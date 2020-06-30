@@ -152,8 +152,34 @@ export default createStyles({
     [theme.breakpoints.down("sm")]:{
       fontSize: "0.5em",
     }
-  }
+  },
+                            
+  //Announcement post styles
+
+  announcementsContainer: {
+    paddingLeft: "40%",
+    display: "table",
+    alignItems: "middle",
+  },
   
+  //LinkedEvents section styles
+
+  eventsContainer: {
+    marginTop: "5vw",
+    width: "100%",
+    alignContent: "center",
+  },
+  eventsTopRow: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "middle",
+  },
+  eventsBottomRow: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "middle",
+    marginInline: "10px",
+  },
   
   // Mantyharju-theme ends, rest of the code can be deleted before production
 
