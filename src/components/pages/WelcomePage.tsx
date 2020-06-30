@@ -4,10 +4,13 @@ import contentImage from "../../resources/img/mantyharju-images/mantyharju-image
 import { Post, MenuLocationData } from "../../generated/client/src";
 import ReactHtmlParser, { convertNodeToElement } from "react-html-parser";
 import ApiUtils from "../../utils/ApiUtils";
-import { WithStyles, withStyles, Button } from "@material-ui/core";
+import { WithStyles, withStyles, Button, Container } from "@material-ui/core";
 import styles from "../../styles/welcome-page";
 import * as moment from "moment";
-import AddIcon from "@material-ui/icons/Add"
+import AddIcon from "@material-ui/icons/Add";
+import CurrenEventsIcon from '@material-ui/icons/QuestionAnswerOutlined';
+import AnnouncementsIcon from '@material-ui/icons/VolumeUp';
+import JobsIcon from '@material-ui/icons/ThumbsUpDown';
 
 /**
  * Interface representing component properties
@@ -114,9 +117,22 @@ class WelcomePage extends React.Component<Props, State> {
             </p>
           </div>
         </div>
-        <div className= { classes.announcementsContainer }>
-          <h1>Kuulutukset</h1>
-          { this.renderAnnouncements(this.state.announcementsCategoryId) }
+        <div className={ classes.postsContainer }>
+          <div className= { classes.postsColumn }>
+            <h1>{ <CurrenEventsIcon/> } Ajankohtaista</h1>
+            { this.renderAnnouncements(this.state.announcementsCategoryId) }
+            <Button className={ classes.postColumnButton }>katso kaikki</Button>
+          </div>
+          <div className= { classes.postsColumn }>
+            <h1>{ <AnnouncementsIcon/> } Kuulutukset</h1>
+            { this.renderAnnouncements(this.state.announcementsCategoryId) }
+            <Button className={ classes.postColumnButton }>katso kaikki</Button>
+          </div>
+          <div className= { classes.postsColumn }>
+            <h1>{ <JobsIcon/> } Työpaikat</h1>
+            { this.renderAnnouncements(this.state.announcementsCategoryId) }
+            <Button className={ classes.postColumnButton }>katso kaikki</Button>
+          </div>
         </div>
         <div>
           { this.renderPosts(57) }
@@ -136,15 +152,16 @@ class WelcomePage extends React.Component<Props, State> {
       return (
         this.getLimitedPosts(categoryId).map((post) => {
           const parsedContent = ReactHtmlParser(post.content ? post.content.rendered || "" : "");
-console.log(this.state.posts)
             if ((post.categories ? post.categories : new Array()).includes(categoryId)) {
               const postsArray = new Array();
               postsArray.concat(post);
               return(
-                <div>
-                  <div>
-                    <p>{ ReactHtmlParser(!post.date ? "" : moment(post.date).format("DD.MM.YYYY")) }</p>
-                    <p>{ ReactHtmlParser(post.content ? post.content.rendered || "" : "") }</p>
+                <div className={ classes.allPosts}>
+                  <div className={ classes.singlePost }>
+                    <p className={ classes.postDate }>{ ReactHtmlParser(!post.date ? "" : moment(post.date).format("DD.MM.YYYY")) }</p>
+                    <div className={ classes.postContent }>
+                      { ReactHtmlParser(post.content ? post.content.rendered || "" : "") }
+                    </div>
                   </div>
                 </div>
               )

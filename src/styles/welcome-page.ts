@@ -76,14 +76,67 @@ export default createStyles({
     width: "100%",
     height: "25vw"
   },
-                            
-  //Announcement post styles
 
-  announcementsContainer: {
-    paddingLeft: "40%",
-    display: "table",
-    alignItems: "middle",
+  /**
+   * Posts section styles
+   */
+  postsContainer: {
+    height: "100vh",
+    width: "100%",
+    paddingRight: "6rem",
+    paddingLeft: "6rem",
+    display: "flex",
+    flexDirection:"row",
+
+    [theme.breakpoints.down("sm")]: {
+      flexDirection:"column",
+      minHeight: "100vh",
+      textAlign: "center"
+    },
   },
+  postsColumn: {
+    minHeight: "90vw",
+    marginRight: "5rem",
+    width: "33.33%",
+    display: "table",
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+      marginBottom: "3rem"
+    },
+  },
+  allPosts: {
+    marginTop: "3rem",
+
+  },
+
+  /**
+   * Nested paragraph comes from wordpress
+   */
+  singlePost: {
+    '& p':{
+      margin: 0,
+      padding:0,
+    },
+    marginBottom: "2rem"
+  },
+  postDate: {
+    color: "#15B1B3",
+    fontSize: "0.8rem",
+    margin: "0"
+  },
+  postContent: {
+    margin: 0,
+    padding:0
+  },
+  postColumnButton: {
+    color: "#fff",
+    backgroundColor:"#00AAAD",
+    marginTop: "2rem",
+    textTransform: "uppercase",
+    paddingLeft: "2rem",
+    paddingRight: "2rem"
+  },
+
   
   //LinkedEvents section styles
 
