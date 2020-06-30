@@ -39,6 +39,7 @@ class WelcomePage extends React.Component<Props, State> {
    * Constructor
    *
    * @param props component properties
+   * Check announcementsCategoryId from wp post categories
    */
   constructor(props: Props) {
     super(props);
@@ -48,7 +49,7 @@ class WelcomePage extends React.Component<Props, State> {
       scrollPosition: 0,
       siteMenuVisible: false,
       siteSearchVisible: false,
-      announcementsCategoryId: 9
+      announcementsCategoryId: 2
     };
   }
 
@@ -135,7 +136,7 @@ class WelcomePage extends React.Component<Props, State> {
       return (
         this.getLimitedPosts(categoryId).map((post) => {
           const parsedContent = ReactHtmlParser(post.content ? post.content.rendered || "" : "");
-
+console.log(this.state.posts)
             if ((post.categories ? post.categories : new Array()).includes(categoryId)) {
               const postsArray = new Array();
               postsArray.concat(post);
@@ -168,7 +169,6 @@ class WelcomePage extends React.Component<Props, State> {
           const postCategories = post.categories;
           const parsedContent = ReactHtmlParser(post.content ? post.content.rendered || "" : "");
           const parsedContentSecond = ReactHtmlParser(post.content ? post.content.rendered || "" : "");
-
             if (post.id == postId) {
               return(
                 <div className={ classes.eventsContainer }>
