@@ -13,8 +13,6 @@ export default createStyles({
     * - Post columns styling
     * - LinkedEvents grid styling
     * - Fonts
-    * 
-    * NOTE: Try using rem instead of em..
     */
 
    /**
@@ -215,12 +213,17 @@ export default createStyles({
   },
 
   
-  //LinkedEvents section styles
+  /**
+   * LinkedEvents section styles
+   */
 
-  eventsContainer: {
-    marginTop: "5vw",
+  linkedEventsContainer: {
+    marginTop: "5rem",
+    padding: "5rem",
     width: "100%",
     alignContent: "center",
+    textAlign: "center",
+    backgroundColor: "#EBEBEB"
   },
   eventsTopRow: {
     display: "flex",
@@ -233,6 +236,23 @@ export default createStyles({
     alignItems: "middle",
     marginInline: "10px",
   },
+  singleEvent: {
+    color: "red"
+  },
+  allEventsButton: {
+    backgroundColor:"#00AAAD",
+    textTransform: "uppercase",
+    marginTop: "2rem",
+    marginRight: "1rem",
+    color: "#fff"
+  },
+  addLinkedEventButton: {
+    backgroundColor:"#00AAAD",
+    textTransform: "uppercase",
+    marginLeft: "1rem",
+    color: "#fff",
+    marginTop: "2rem",
+  }
   
   // Mantyharju-theme ends, rest of the code can be deleted before production
 
