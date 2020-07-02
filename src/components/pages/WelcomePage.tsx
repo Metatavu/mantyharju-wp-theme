@@ -103,8 +103,8 @@ class WelcomePage extends React.Component<Props, State> {
         <div className={ classes.heroImageDiv }>
           <h1 className={ classes.heroText }>Mäntyharju. -logo</h1>
           <h2 className={ classes.heroText }>Luontoa, kulttuuria ja elämää!</h2>
-          <Button className= { `${classes.generalButtonStyle} ${classes.heroButton}`}>Lorem Ipsum</Button>
-          <Button className={ `${classes.heroButtonPopularPages}`} endIcon={ <AddIcon/> }>Suosituimmat sivut</Button>
+          <Button title="Lorem Ipsum" className= { `${classes.generalButtonStyle} ${classes.heroButton}`}>Lorem Ipsum</Button>
+          <Button title="Suosituimmat sivut" className={ `${classes.heroButtonPopularPages}`} endIcon={ <AddIcon/> }>Suosituimmat sivut</Button>
         </div>
         <div className= { classes.addEventDiv }> 
           <div className= { classes.addEventImageDiv }>
@@ -135,8 +135,11 @@ class WelcomePage extends React.Component<Props, State> {
             <Button className={ classes.postColumnButton }>katso kaikki</Button>
           </div>
         </div>
-        <div>
-          { this.renderPosts(57) }
+        <div className = { classes.linkedEventsContainer }>
+          <h1>Tapahtumat</h1>
+          { this.renderPosts(15) }
+          <Button title= "Kaikki tapahtumat" className={ `${classes.generalButtonStyle} ${classes.allEventsButton}`}>Kaikki tapahtumat</Button>
+          <Button title= "Lisää tapahtuma" className={ `${classes.generalButtonStyle} ${classes.addLinkedEventButton}`}>Lisää tapahtuma</Button>
         </div>
       </BasicLayout>
     );
@@ -189,12 +192,12 @@ class WelcomePage extends React.Component<Props, State> {
           const parsedContentSecond = ReactHtmlParser(post.content ? post.content.rendered || "" : "");
             if (post.id == postId) {
               return(
-                <div className={ classes.eventsContainer }>
+                <div className={ classes.singleEvent }>
                   <div className={ classes.eventsTopRow }>
                     { parsedContent.splice(0, 4) }
                   </div>
                   <div className={ classes.eventsBottomRow }>
-                    { parsedContentSecond.splice(4, 8) }
+                    { parsedContentSecond.splice(4, 4) }
                   </div>
                 </div>
               )
