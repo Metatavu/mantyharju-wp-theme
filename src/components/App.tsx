@@ -2,6 +2,7 @@ import * as React from "react";
 import { BrowserRouter, Route } from "react-router-dom";
 import WelcomePage from "./pages/WelcomePage";
 import PostPage from "./pages/PostPage";
+import PostsPage from "./pages/PostsPage";
 import { CssBaseline, responsiveFontSizes } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
 import pedanetTheme from "../styles/theme";
@@ -55,7 +56,7 @@ class App extends React.Component<Props, State> {
             <Route
               path="/:slug"
               render={ (props) => (
-                <PostPage
+                <PostsPage
                   lang={ language }
                   slug={ this.pathToSlug(props.location.pathname) }
                   mainPageSlug={ this.pathToTitle(props.location.pathname) }
