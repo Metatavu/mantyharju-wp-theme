@@ -1,11 +1,10 @@
 import * as React from 'react';
 import ApiUtils from "../../../src/utils/ApiUtils";
-import socialIg from "../../resources/img/ig-logo.png";
-import socialFb from "../../resources/img/fb-logo.png";
+import ReactHtmlParser, { convertNodeToElement } from "react-html-parser";
 import { withStyles, WithStyles, Breadcrumbs, Link } from '@material-ui/core';
 import styles from '../../styles/posts-page';
 import BasicLayout from '../BasicLayout';
-import { Page, Post, MenuLocationData, PostTitle } from 'src/generated/client/src';
+import { Page, Post, MenuLocationData, PostTitle, Attachment } from 'src/generated/client/src';
 
 /**
  * Facebook-logo license: https://commons.wikimedia.org/wiki/File:Facebook_William_Aditya_Sarana.png
@@ -25,15 +24,14 @@ interface Props extends WithStyles<typeof styles> {
  */
 interface State {
   page?: Page;
-  post?: Post;
+  posts: Post[];
   loading: boolean;
-  isArticle: boolean;
-  heroBanner?: React.ReactElement;
-  heroContent?: React.ReactElement;
   nav?: MenuLocationData;
   breadcrumb: Breadcrumb[];
   pageTitle?: PostTitle;
   title: string;
+  secondPageCategoryId: number;
+  media: Attachment[];
 }
 
 /**
@@ -56,10 +54,12 @@ class PostsPage extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      isArticle: false,
+      posts: [],
+      media:[],
       loading: false,
       breadcrumb: [],
-      title: ""
+      title: "",
+      secondPageCategoryId: 12
     };
   }
 
@@ -99,8 +99,47 @@ class PostsPage extends React.Component<Props, State> {
             </Breadcrumbs>
             <p className={ classes.dividerLine }><hr></hr></p>
         </div>
+        <div className={classes.gallery}>
+          { this.renderPosts() }
+        </div>
       </BasicLayout>
     )
+  }
+
+  private renderPosts() {
+    const { classes } = this.props;
+    const limitedPosts = this.getLimitedPosts(this.state.secondPageCategoryId);
+    if (!limitedPosts) {
+      return null;
+    } else {
+      return (
+        limitedPosts.map(post => {
+          console.log("POST FEATURED MEDIA", post.featured_media);
+          return (
+            <div>
+              <div style={{ backgroundImage: `url(${this.getAttachmentForPost(post)})` }} onClick={() => { this.onPostClick(post) }} className={classes.gallery_img} />
+              <h2>{ReactHtmlParser(post.title ? post.title.rendered || "" : "")}</h2>
+            </div>
+          )
+        })
+      )
+    }
+  }
+
+  /**
+   * Returns post featured image URL
+   */
+  private getAttachmentForPost = (post: Post) => {
+    var attachmentUrl = "";
+    if (this.state.media) {
+      this.state.media.map(attachment => {
+        if (attachment.id == post.featured_media) {
+          attachmentUrl = attachment.source_url || "";
+        }
+      })
+    }
+    
+    return attachmentUrl;
   }
 
   /**
@@ -118,31 +157,32 @@ class PostsPage extends React.Component<Props, State> {
       // TODO: handle error
       return;
     }
-
     const api = ApiUtils.getApi();
 
     const apiCalls = await Promise.all([
       api.getWpV2Pages({ lang: [ lang ], slug: [ slug ] }),
-      api.getWpV2Posts({ lang: [ lang ], slug: [ slug ] }),
+      api.getWpV2Posts({ lang: [ lang ] }),
       api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
       api.getWpV2Pages({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
       api.getWpV2Posts({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
-      api.getWpV2Pages({ per_page: 100 })
+      api.getWpV2Pages({ per_page: 100 }),
+      api.getWpV2Media({}),
     ]);
 
     const page = apiCalls[0][0];
-    const post = apiCalls[1][0];
+    const posts = apiCalls[1];
     const nav = apiCalls[2];
     const pageTitle = apiCalls[3][0].title || apiCalls[4][0].title;
     const pages = apiCalls[5];
+    const media = apiCalls[6];
 
     this.setState({
       page: page,
-      post: post,
-      isArticle: !!post,
+      posts: posts,
       loading: false,
       nav: nav,
-      pageTitle: pageTitle
+      pageTitle: pageTitle,
+      media: media,
     });
 
     this.breadcrumbPath(pages);
@@ -209,6 +249,24 @@ class PostsPage extends React.Component<Props, State> {
     }
   }
 
+  private onPostClick(post: Post) {
+    console.log("CLICKED ", post.id);
+    window.location.href = post.link || "";
+  }
+
+  /**
+   * Gets limited posts array for post thumbnails
+   */
+  private getLimitedPosts = (categoryId: number) => {
+    const postsArray: Post[] = new Array();
+    this.state.posts.map((post) => {
+      if ((post.categories ? post.categories : new Array()).includes(categoryId)) {
+        postsArray.push(post)
+      }
+    })
+
+    return postsArray.splice(0, 6);
+  }
 }
 
 export default withStyles(styles)(PostsPage);

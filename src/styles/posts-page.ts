@@ -1,6 +1,7 @@
 import { createStyles } from "@material-ui/core";
 import theme from "./theme";
 import hero from "../resources/img/mantyharju-images/mantyharju-images/hero-image-mantyharju.jpg";
+import { AvRepeat } from "material-ui/svg-icons";
 
 export default createStyles({
   /**
@@ -11,7 +12,6 @@ export default createStyles({
     * TODO: 
     * - Improve responsive design for buttons (small screens)
     * - Post columns styling
-    * - LinkedEvents grid styling
     * - Fonts
     * 
     * NOTE: Try using rem instead of em..
@@ -81,135 +81,39 @@ export default createStyles({
     color: "black",
     opacity: "60%"
   },
-
-//   heroButton: {
-//     color: "black",
-//     fontSize: "1em",
-//     backgroundColor: "#FFFFFF",
-//     textTransform: "uppercase",
-//     [theme.breakpoints.down("sm")]:{
-//       //fontSize: "0.5em",
-//     }
-//   },
-//   heroButtonPopularPages: {
-//     color: "#fff",
-//     backgroundColor:"#00AAAD",
-//     fontSize: "4em",
-//     paddingTop: "0.2em",
-//     paddingBottom: "0.2em",
-//     paddingLeft: "1em",
-//     paddingRight: "1em",
-//     pointerEvents: "none",
-//     textTransform: "uppercase",
-//     position: "absolute",
-//     bottom: "0",
-//     right: "5vw",
-//     [theme.breakpoints.down("sm")]:{
-//       fontSize: "0.5em",
-//     }
-//     },
-
-//   /**
-//    * Add events -div
-//    */
-//   addEventDiv: {
-//     display:"flex",
-//     flexDirection:"row",
-//     width: "90%",
-//     marginTop: "1vw",
-//     marginLeft:"5%",
-//     marginBottom: "5%",
-//     marginRight:"5%",
-//     minHeight:"30vw",
-//     color: "fff"
-//   },
-//   addEventImageDiv: {
-//     width: "50%",
-//     height:"30vw"
-//   },
-//   addEventTextDiv: {
-//     maxWidth: "50%",
-//     backgroundColor:"#00AAAD",
-//     height:"30vw",
-//     paddingLeft: "5vw",
-//     paddingRight: "10vw",
-//     paddingTop: "2vw",
-//     [theme.breakpoints.down("sm")]:{
-//       paddingRight: "0.1vw",
-//       lineHeight: "1.4rem",
-//       fontSize: "0.7rem"
-//     },
-//     [theme.breakpoints.down("xs")]:{
-//       lineHeight: "0.8rem",
-//       fontSize: "0.5rem"
-//     },
-//   },
-//   addEventTextDivParagraph: {
-//     lineHeight: "1.5em",
-//     [theme.breakpoints.down("xs")]:{
-//       lineHeight: "0.5rem",
-//       fontSize: "0.5rem"
-//     },
-//   },
-//   addEventTextDivHeading: {
-//     fontSize: "2.5vw",
-//     marginBottom: "0",
-//     textDecoration: "none"
-//   },
-//   addEventImage: {
-//     width: "100%",
-//     height: "auto"
-//   },
-//   addEventButton: {
-//     color: "black",
-//     backgroundColor: "#FFFFFF",
-//     textTransform: "uppercase",
-//     marginTop: "1em",
-//     [theme.breakpoints.down("sm")]:{
-//       fontSize: "0.5em",
-//     }
-//   },
-                            
-//   //Announcement post styles
-
-//   announcementsContainer: {
-//     paddingLeft: "40%",
-//     display: "table",
-//     alignItems: "middle",
-//   },
-  
-//   //LinkedEvents section styles
-
-//   eventsContainer: {
-//     marginTop: "5vw",
-//     width: "100%",
-//     alignContent: "center",
-//   },
-//   eventsTopRow: {
-//     display: "flex",
-//     flexDirection: "row",
-//     alignItems: "middle",
-//   },
-//   eventsBottomRow: {
-//     display: "flex",
-//     flexDirection: "row",
-//     alignItems: "middle",
-//     marginInline: "10px",
-//   },
-  
-  // Mantyharju-theme ends, rest of the code can be deleted before production
-
-/*
-  root: {
-    height: "100vh"
+  gallery: {
+    display: "grid",
+    gridTemplateColumns: "repeat(3, 1fr)",
+    gridTemplateRows: "repeat(2, 10vw)",
+    gridRowGap: "18rem",
+    gridColumnGap: "0rem",
+    paddingLeft: "12rem",
+    paddingRight: "8rem",
+    height: "100%",
+    [theme.breakpoints.down("md")]:{
+        paddingLeft: "9rem",
+        paddingRight: "5rem"
+    },
+    [theme.breakpoints.down("sm")]:{
+        paddingLeft: "6rem",
+        paddingRight: "3rem"
+    },
   },
-  content: {
-    display: "flex",
-    flexDirection: "column"
+  gallery_img: {
+    width: "90%",
+    height: "15vw",
+    backgroundSize: "cover",
+    [theme.breakpoints.up("xl")]: {
+        width: "90%"
+    },
+    [theme.breakpoints.down("md")]: {
+        width: "90%"
+    },
+    [theme.breakpoints.down("sm")]:{
+        width: "90%",
+    },
+    [theme.breakpoints.down("xs")]:{
+        fontSize: "130%",
+    }
   },
-  buttonSection: {
-    textAlign: "center",
-    opacity: 0.8
-  }
-  */
 });

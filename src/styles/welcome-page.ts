@@ -156,17 +156,19 @@ export default createStyles({
    * Posts section styles
    */
   postsContainer: {
-    height: "100vh",
+    height: "50vh",
     width: "100%",
     paddingRight: "6rem",
     paddingLeft: "6rem",
+    marginLeft: "8vw",
     display: "flex",
     flexDirection:"row",
 
     [theme.breakpoints.down("sm")]: {
       flexDirection:"column",
       minHeight: "100vh",
-      textAlign: "center"
+      textAlign: "center",
+      marginLeft: "0vw",
     },
   },
   postsColumn: {
@@ -219,7 +221,7 @@ export default createStyles({
 
   linkedEventsContainer: {
     marginTop: "5rem",
-    padding: "5rem",
+    padding: "3rem 10rem 3rem 10rem",
     width: "100%",
     alignContent: "center",
     textAlign: "center",
@@ -237,7 +239,9 @@ export default createStyles({
     marginInline: "10px",
   },
   singleEvent: {
-    color: "red"
+    color: "red",
+    width: "100%",
+    objectFit: "cover",
   },
   allEventsButton: {
     backgroundColor:"#00AAAD",
@@ -252,7 +256,18 @@ export default createStyles({
     marginLeft: "1rem",
     color: "#fff",
     marginTop: "2rem",
-  }
+  },
+  wrapper: {
+    display: "grid",
+    gridTemplateColumns: "repeat(4, 1fr)",
+    gridTemplateRows: "repeat(2, 30vw)",
+    gridGap: "0px",
+    width: "100%",
+  },
+  events_item_universal: {
+    backgroundColor: "#FFFFFF",
+    height: "30vh",
+  },
   
   // Mantyharju-theme ends, rest of the code can be deleted before production
 
