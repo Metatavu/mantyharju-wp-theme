@@ -24,13 +24,14 @@ interface Props extends WithStyles<typeof styles> {
  */
 interface State {
   posts: Post[],
+  linkedEventsPost?: Post,
   loading: boolean,
   mainMenu?: MenuLocationData,
   localeMenu?: MenuLocationData,
   scrollPosition: number,
   siteMenuVisible: boolean,
   siteSearchVisible: boolean,
-  announcementsCategoryId: number
+  announcementsCategoryId: number,
 }
 
 /**
@@ -52,7 +53,7 @@ class WelcomePage extends React.Component<Props, State> {
       scrollPosition: 0,
       siteMenuVisible: false,
       siteSearchVisible: false,
-      announcementsCategoryId: 2
+      announcementsCategoryId: 9,
     };
   }
 
@@ -67,11 +68,12 @@ class WelcomePage extends React.Component<Props, State> {
 
     const api = ApiUtils.getApi();
 
-    const [posts, mainMenu, localeMenu] = await Promise.all(
+    const [posts, mainMenu, localeMenu, eventsPost] = await Promise.all(
       [
         api.getWpV2Posts({lang: [ this.props.lang ]}),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
-        api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" })
+        api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }),
+        api.getWpV2PostsById({ id: "57" })
       ]
     )
 
@@ -80,6 +82,7 @@ class WelcomePage extends React.Component<Props, State> {
       loading: false,
       mainMenu: mainMenu,
       localeMenu: localeMenu,
+      linkedEventsPost: eventsPost
     });
 
     this.hidePageLoader();
@@ -137,9 +140,11 @@ class WelcomePage extends React.Component<Props, State> {
         </div>
         <div className = { classes.linkedEventsContainer }>
           <h1>Tapahtumat</h1>
-          { this.renderPosts(15) }
-          <Button title= "Kaikki tapahtumat" className={ `${classes.generalButtonStyle} ${classes.allEventsButton}`}>Kaikki tapahtumat</Button>
-          <Button title= "Lisää tapahtuma" className={ `${classes.generalButtonStyle} ${classes.addLinkedEventButton}`}>Lisää tapahtuma</Button>
+          <div className={ classes.wrapper }>
+            { this.renderPosts(57) }
+          </div>
+          <Button title= "Kaikki tapahtumat" className={ `${classes.generalButtonStyle} ${classes.allEventsButton}` }>Kaikki tapahtumat</Button>
+          <Button title= "Lisää tapahtuma" className={ `${classes.generalButtonStyle} ${classes.addLinkedEventButton}` }>Lisää tapahtuma</Button>
         </div>
       </BasicLayout>
     );
@@ -179,33 +184,26 @@ class WelcomePage extends React.Component<Props, State> {
 
   /**
    * Render LinkedEvents posts
+   * 
+   * TODO: Get linkedEventsPost not by the hardcoded post ID
    */
   private renderPosts = (postId: number) => {
     const { classes } = this.props;
-    if (!this.state.posts.length) {
+    const linkedEventsPost = this.state.linkedEventsPost;
+    var events = new Array();
+    if (!this.state.linkedEventsPost) {
       return null;
     } else {
+      const parsedContent = ReactHtmlParser(this.state.linkedEventsPost.content ? this.state.linkedEventsPost.content.rendered || "" : "");
       return (
-        this.state.posts.map((post) => {
-          const postCategories = post.categories;
-          const parsedContent = ReactHtmlParser(post.content ? post.content.rendered || "" : "");
-          const parsedContentSecond = ReactHtmlParser(post.content ? post.content.rendered || "" : "");
-            if (post.id == postId) {
-              return(
-                <div className={ classes.singleEvent }>
-                  <div className={ classes.eventsTopRow }>
-                    { parsedContent.splice(0, 4) }
-                  </div>
-                  <div className={ classes.eventsBottomRow }>
-                    { parsedContentSecond.splice(4, 4) }
-                  </div>
-                </div>
-              )
-            } else {
-              return null;
-            }
+        parsedContent.splice(0, 8).map(contentItem => {
+          return (
+            <figure className={classes.events_item_universal}>
+              <p>{ contentItem }</p>
+            </figure>
+          )
         })
-      );
+     )
     }
   }
 

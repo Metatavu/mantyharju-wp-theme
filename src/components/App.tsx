@@ -54,7 +54,17 @@ class App extends React.Component<Props, State> {
               )}
             />
             <Route
-              path="/:slug"
+              path="/:posts/:post"
+              render={ (props) => (
+                <PostPage
+                  lang={ language }
+                  slug={ this.pathToSlug(props.location.pathname) }
+                  mainPageSlug={ this.pathToTitle(props.location.pathname) }
+                />
+              )}
+            />
+            <Route
+              path="/sample-page"
               render={ (props) => (
                 <PostsPage
                   lang={ language }

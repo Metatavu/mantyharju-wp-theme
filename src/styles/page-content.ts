@@ -1,5 +1,6 @@
 import { createStyles } from "@material-ui/core";
 import theme from "./theme";
+import hero from "../resources/img/postHeader.png";
 
 export default createStyles({
   /**
@@ -242,6 +243,47 @@ export default createStyles({
     }
   },
   errorText: {},
+  /**
+   * Post page hero styles
+   */
+  heroImageDiv: {
+    backgroundImage: `url(${hero})`,
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "center center",
+    backgroundSize: "cover",
+    backgroundColor: "#1b1a1a",
+    paddingLeft: "8vw",
+    paddingRight: "8vw",
+    paddingTop: "4.5vw",
+    width: "100%",
+    minHeight: "18vw",
+    position: "relative",
+    [theme.breakpoints.down("sm")]:{
+      height: "20vw",
+      paddingTop: "6vw",
+    },
+    [theme.breakpoints.down("xs")]:{
+      height: "20vw",
+      paddingTop: "5vw",
+    }
+  },
+  heroText: {
+    fontSize: "3.5em",
+    marginTop: "2vw",
+    marginBottom: "2vw",
+    fontWeight: "bold",
+    color: "#ffffff",
+    //textShadow: "1px 1px #000000",
+    [theme.breakpoints.down("md")]: {
+      fontSize: "2.00em"
+    },
+    [theme.breakpoints.down("sm")]:{
+      fontSize: "1.75em",
+    },
+    [theme.breakpoints.down("xs")]:{
+      fontSize: "1.25em",
+    }
+  },
   /**
    * HTML Content styles
    */

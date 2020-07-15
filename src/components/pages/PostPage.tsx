@@ -31,8 +31,6 @@ interface State {
   post?: Post;
   loading: boolean;
   isArticle: boolean;
-  heroBanner?: React.ReactElement;
-  heroContent?: React.ReactElement;
   nav?: MenuLocationData;
   breadcrumb: Breadcrumb[];
   pageTitle?: PostTitle;
@@ -92,6 +90,9 @@ class PostPage extends React.Component<Props, State> {
 
     return (
       <BasicLayout lang={ lang } title={ this.setTitleSource() }>
+        <div className={classes.heroImageDiv}>
+          <h1 className={classes.heroText}>Hallinta ja talous</h1>
+        </div>
         <div className={ classes.wrapper }>
           <div className={ classes.pageContent }>
             <div className={ classes.breadcrumb }>
@@ -139,9 +140,10 @@ class PostPage extends React.Component<Props, State> {
    */
   private renderContent = () => {
     const { classes } = this.props;
-
+    const post = this.state.post; 
     return (
       <Container className={ classNames( classes.root, this.state.isArticle && "article") }>
+        <h2>{ post ? ReactHtmlParser(post.title ? post.title.rendered || "" : "") : null }</h2>
         { this.renderPostContent() }
       </Container>
     );

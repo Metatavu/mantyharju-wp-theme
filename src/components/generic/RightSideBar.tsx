@@ -40,7 +40,13 @@ class RightSideBar extends React.Component<Props, State> {
    */
   public render() {
     return (
-      <p>Aiheeseen liittyviä linkkejä</p>
+      <div>
+        <h2>Malliotsikko</h2>
+        <p>Eija Kling markkinointipäällikkö Puh. 040 744 1477</p>
+        <a>Lorem ipsum</a>
+        <a>Lorem ipsum</a>
+        <a>Lorem ipsum</a>
+      </div>
     )
   }
 }
