@@ -32,6 +32,7 @@ interface State {
   title: string;
   secondPageCategoryId: number;
   media: Attachment[];
+  limitedPosts: Post[];
 }
 
 /**
@@ -59,7 +60,8 @@ class PostsPage extends React.Component<Props, State> {
       loading: false,
       breadcrumb: [],
       title: "",
-      secondPageCategoryId: 12
+      secondPageCategoryId: 12,
+      limitedPosts: []
     };
   }
 
@@ -108,13 +110,12 @@ class PostsPage extends React.Component<Props, State> {
 
   private renderPosts() {
     const { classes } = this.props;
-    const limitedPosts = this.getLimitedPosts(this.state.secondPageCategoryId);
-    if (!limitedPosts) {
+    const limitedPosts = this.getLimitedPosts(this.state.secondPageCategoryId, 6);
+    if (!this.state.limitedPosts) {
       return null;
     } else {
       return (
-        limitedPosts.map(post => {
-          console.log("POST FEATURED MEDIA", post.featured_media);
+        this.state.limitedPosts.map(post => {
           return (
             <div>
               <div style={{ backgroundImage: `url(${this.getAttachmentForPost(post)})` }} onClick={() => { this.onPostClick(post) }} className={classes.gallery_img} />
@@ -249,23 +250,27 @@ class PostsPage extends React.Component<Props, State> {
     }
   }
 
+  /**
+   * Redirects to post URL
+   * @param post Post
+   */
   private onPostClick(post: Post) {
-    console.log("CLICKED ", post.id);
     window.location.href = post.link || "";
   }
 
   /**
    * Gets limited posts array for post thumbnails
+   * 
+   * TODO: Decide which is better, passing to State like here OR like in WelcomePage.tsx by comparing all posts with category. Second approach requires some debugging.
    */
-  private getLimitedPosts = (categoryId: number) => {
+  private getLimitedPosts = async (categoryId: number, delimiter: number) => {
+    const api = ApiUtils.getApi();
     const postsArray: Post[] = new Array();
-    this.state.posts.map((post) => {
-      if ((post.categories ? post.categories : new Array()).includes(categoryId)) {
-        postsArray.push(post)
-      }
-    })
+    const categoryPosts = await api.getWpV2Posts({ categories: [ categoryId.toString() ] });
 
-    return postsArray.splice(0, 6);
+    this.setState({
+      limitedPosts: categoryPosts.splice(0, delimiter)
+    })
   }
 }
 

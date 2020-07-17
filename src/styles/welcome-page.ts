@@ -180,10 +180,40 @@ export default createStyles({
       width: "100%",
       marginBottom: "3rem"
     },
+    '& linkedevents-event': {
+      backgroundColor: "black",
+    },
   },
   allPosts: {
     marginTop: "3rem",
 
+  },
+  singleNewsPost: {
+    '& p':{
+      margin: 4,
+      padding:0,
+      color: "#15B1B3",
+      fontSize: "0.8rem",
+    },
+    '& a':{
+      margin: 0,
+      padding:0,
+      color: "black",
+      textDecoration: "blink",
+    },
+    '& hr':{
+      color: "black",
+      opacity: "20%",
+      margin: 2,
+      marginTop: "1rem",
+      width: "24vw",
+      [theme.breakpoints.down("sm")]: {
+        width: "35vw",
+        marginLeft: "20.5vw",
+      },
+    },
+    marginBottom: "2rem",
+    maxHeight: "2.3rem",
   },
 
   /**
@@ -191,10 +221,21 @@ export default createStyles({
    */
   singlePost: {
     '& p':{
-      margin: 0,
+      margin: 4,
       padding:0,
     },
-    marginBottom: "2rem"
+    '& hr':{
+      color: "black",
+      opacity: "20%",
+      marginTop: "1rem",
+      width: "24vw",
+      [theme.breakpoints.down("sm")]: {
+        width: "35vw",
+        marginLeft: "20.5vw",
+      },
+    },
+    marginBottom: "2rem",
+    maxHeight: "2.3rem",
   },
   postDate: {
     color: "#15B1B3",
@@ -260,13 +301,42 @@ export default createStyles({
   wrapper: {
     display: "grid",
     gridTemplateColumns: "repeat(4, 1fr)",
-    gridTemplateRows: "repeat(2, 30vw)",
-    gridGap: "0px",
+    // gridTemplateRows: "repeat(4, 20vw)",
+    gridRowGap: "3vw",
     width: "100%",
+    // [theme.breakpoints.down("lg")]: {
+    //   gridTemplateRows: "repeat(4, 24vw)",
+    // },
+    // [theme.breakpoints.down("md")]: {
+    //   gridTemplateRows: "repeat(4, 28vw)",
+    // },
+    // [theme.breakpoints.down("sm")]: {
+    //   gridTemplateRows: "repeat(4, 32vw)",
+    // },
   },
   events_item_universal: {
     backgroundColor: "#FFFFFF",
+    fontWeight: "bold",
     height: "30vh",
+    '& p':{
+      fontSize: "1.2rem",
+      marginTop: "2rem"
+    },
+    '& hr':{
+      display: "none"
+    },
+    '& a':{
+      margin: 0,
+      padding:0,
+      color: "black",
+      textDecoration: "blink",
+    },
+    '& img':{
+      width: "6vw",
+      height: "5px",
+      marginTop: "0.5vw",
+      marginBottom: "2vw"
+    },
   },
   
   // Mantyharju-theme ends, rest of the code can be deleted before production
