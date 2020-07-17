@@ -32,6 +32,8 @@ interface State {
   siteMenuVisible: boolean,
   siteSearchVisible: boolean,
   announcementsCategoryId: number,
+  newsCategoryId: number,
+  linkedEventsLimitingNumber: number,
 }
 
 /**
@@ -54,6 +56,8 @@ class WelcomePage extends React.Component<Props, State> {
       siteMenuVisible: false,
       siteSearchVisible: false,
       announcementsCategoryId: 9,
+      newsCategoryId: 14,
+      linkedEventsLimitingNumber: 8
     };
   }
 
@@ -124,7 +128,7 @@ class WelcomePage extends React.Component<Props, State> {
         <div className={ classes.postsContainer }>
           <div className= { classes.postsColumn }>
             <h1>{ <CurrenEventsIcon/> } Ajankohtaista</h1>
-            { this.renderAnnouncements(this.state.announcementsCategoryId) }
+            { this.renderNews(this.state.newsCategoryId) }
             <Button className={ classes.postColumnButton }>katso kaikki</Button>
           </div>
           <div className= { classes.postsColumn }>
@@ -141,13 +145,40 @@ class WelcomePage extends React.Component<Props, State> {
         <div className = { classes.linkedEventsContainer }>
           <h1>Tapahtumat</h1>
           <div className={ classes.wrapper }>
-            { this.renderPosts(57) }
+            { this.renderLinkedEvents(57) }
           </div>
-          <Button title= "Kaikki tapahtumat" className={ `${classes.generalButtonStyle} ${classes.allEventsButton}` }>Kaikki tapahtumat</Button>
+          <Button title= "Kaikki tapahtumat" onClick={this.expandLinkedEvents} className={ `${classes.generalButtonStyle} ${classes.allEventsButton}` }>Kaikki tapahtumat</Button>
           <Button title= "Lisää tapahtuma" className={ `${classes.generalButtonStyle} ${classes.addLinkedEventButton}` }>Lisää tapahtuma</Button>
         </div>
       </BasicLayout>
     );
+  }
+
+  /**
+   * Render News posts
+   * 
+   * TODO: Get linkedEventsPost not by the hardcoded post ID
+   */
+  private renderNews = (categoryId: number) => {
+    const { classes } = this.props;
+    const newsPost = this.getLimitedPosts(categoryId, 1)[0];
+    var events = new Array();
+    if (!newsPost) {
+      return null;
+    } else {
+      const parsedContent = ReactHtmlParser(newsPost.content ? newsPost.content.rendered || "" : "");
+      return (
+        parsedContent.splice(0, 4).map(contentItem => {
+          return (
+            <div className={ classes.allPosts}>
+              <div className={ classes.singleNewsPost }>
+                { contentItem }
+              </div>
+            </div>
+          )
+        })
+     )
+    }
   }
 
   /**
@@ -159,8 +190,7 @@ class WelcomePage extends React.Component<Props, State> {
       return null;
     } else {
       return (
-        this.getLimitedPosts(categoryId).map((post) => {
-          const parsedContent = ReactHtmlParser(post.content ? post.content.rendered || "" : "");
+        this.getLimitedPosts(categoryId, 3).map((post) => {
             if ((post.categories ? post.categories : new Array()).includes(categoryId)) {
               const postsArray = new Array();
               postsArray.concat(post);
@@ -171,6 +201,7 @@ class WelcomePage extends React.Component<Props, State> {
                     <div className={ classes.postContent }>
                       { ReactHtmlParser(post.content ? post.content.rendered || "" : "") }
                     </div>
+                    <hr />
                   </div>
                 </div>
               )
@@ -187,7 +218,7 @@ class WelcomePage extends React.Component<Props, State> {
    * 
    * TODO: Get linkedEventsPost not by the hardcoded post ID
    */
-  private renderPosts = (postId: number) => {
+  private renderLinkedEvents = (postId: number) => {
     const { classes } = this.props;
     const linkedEventsPost = this.state.linkedEventsPost;
     var events = new Array();
@@ -196,10 +227,10 @@ class WelcomePage extends React.Component<Props, State> {
     } else {
       const parsedContent = ReactHtmlParser(this.state.linkedEventsPost.content ? this.state.linkedEventsPost.content.rendered || "" : "");
       return (
-        parsedContent.splice(0, 8).map(contentItem => {
+        parsedContent.splice(0, this.state.linkedEventsLimitingNumber).map(contentItem => {
           return (
             <figure className={classes.events_item_universal}>
-              <p>{ contentItem }</p>
+              { contentItem }
             </figure>
           )
         })
@@ -231,9 +262,25 @@ class WelcomePage extends React.Component<Props, State> {
   }
 
   /**
+   * Action handler for "Show more" Linked events button
+   */
+  private expandLinkedEvents = () => {
+    var newLimitingNumber: number;
+    if (this.state.linkedEventsLimitingNumber == 8) {
+      newLimitingNumber = 16
+    } else {
+      newLimitingNumber = 8
+    }
+
+    this.setState({
+      linkedEventsLimitingNumber: newLimitingNumber
+    })
+  }
+
+  /**
    * Gets limited posts array
    */
-  private getLimitedPosts = (categoryId: number) => {
+  private getLimitedPosts = (categoryId: number, delimiter: number) => {
     const postsArray: Post[] = new Array();
     this.state.posts.map((post) => {
       if ((post.categories ? post.categories : new Array()).includes(categoryId)) {
@@ -241,7 +288,7 @@ class WelcomePage extends React.Component<Props, State> {
       }
     })
 
-    return postsArray.splice(0, 3);
+    return postsArray.splice(0, delimiter);
   }
 }
 
