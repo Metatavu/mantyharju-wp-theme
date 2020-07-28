@@ -26,6 +26,12 @@ export default createStyles({
     pointerEvents: "auto",
   },
 
+  loadingIconContainer: {
+    display: "flex",
+    margin: "5rem",
+    justifyContent: "center"
+  },
+
    /**
     * Hero-image as background 
     */

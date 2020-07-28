@@ -1,10 +1,10 @@
 import * as React from "react";
 import BasicLayout from "../BasicLayout";
 import contentImage from "../../resources/img/mantyharju-images/mantyharju-images/hero-front-1600x1080.jpg";
-import { Post, MenuLocationData } from "../../generated/client/src";
+import { Post, MenuLocationData, Customize } from "../../generated/client/src";
 import ReactHtmlParser, { convertNodeToElement } from "react-html-parser";
 import ApiUtils from "../../utils/ApiUtils";
-import { WithStyles, withStyles, Button, Container } from "@material-ui/core";
+import { WithStyles, withStyles, Button, Container, CircularProgress } from "@material-ui/core";
 import styles from "../../styles/welcome-page";
 import * as moment from "moment";
 import AddIcon from "@material-ui/icons/Add";
@@ -34,6 +34,7 @@ interface State {
   announcementsCategoryId: number,
   newsCategoryId: number,
   linkedEventsLimitingNumber: number,
+  customizeFields: Customize
 }
 
 /**
@@ -57,7 +58,8 @@ class WelcomePage extends React.Component<Props, State> {
       siteSearchVisible: false,
       announcementsCategoryId: 9,
       newsCategoryId: 14,
-      linkedEventsLimitingNumber: 8
+      linkedEventsLimitingNumber: 8,
+      customizeFields: {}
     };
   }
 
@@ -72,21 +74,23 @@ class WelcomePage extends React.Component<Props, State> {
 
     const api = ApiUtils.getApi();
 
-    const [posts, mainMenu, localeMenu, eventsPost] = await Promise.all(
+    const [posts, mainMenu, localeMenu, eventsPost, customizeFields] = await Promise.all(
       [
         api.getWpV2Posts({lang: [ this.props.lang ]}),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }),
-        api.getWpV2PostsById({ id: "57" })
+        api.getWpV2PostsById({ id: "57" }),
+        api.getWpV2Customize()
       ]
-    )
+    );
 
     this.setState({
       posts: posts,
       loading: false,
       mainMenu: mainMenu,
       localeMenu: localeMenu,
-      linkedEventsPost: eventsPost
+      linkedEventsPost: eventsPost,
+      customizeFields: customizeFields
     });
 
     this.hidePageLoader();
@@ -104,6 +108,7 @@ class WelcomePage extends React.Component<Props, State> {
    */
   public render() {
     const { lang, classes } = this.props;
+    const { customizeFields } = this.state;
 
     return (
       <BasicLayout lang={ lang }>
@@ -113,18 +118,27 @@ class WelcomePage extends React.Component<Props, State> {
           <Button title="Lorem Ipsum" className= { `${classes.generalButtonStyle} ${classes.heroButton}`}>Lorem Ipsum</Button>
           <Button title="Suosituimmat sivut" className={ `${classes.heroButtonPopularPages}`} endIcon={ <AddIcon/> }>Suosituimmat sivut</Button>
         </div>
-        <div className= { classes.addEventDiv }> 
-          <div className= { classes.addEventImageDiv }>
-            <img className= { classes.addEventImage } alt="Lisää tapahtuma: kuvituskuva" src={ contentImage }></img>
+        { this.state.loading &&
+          <div className={ classes.loadingIconContainer }>
+            <CircularProgress />
           </div>
-          <div className= { classes.addEventTextDiv }>
-            <h3 className= { classes.addEventTextDivHeading }>Lisää kesätapahtumasi tapahtumakalenteriin</h3>
-            <p className= { classes.addEventTextDivParagraph }>
-              Lorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem Ipsum
-            </p>
-            <Button className={ `${classes.generalButtonStyle} ${classes.addEventButton}`}>Lorem Ipsum</Button>
+        }
+        { !this.state.loading &&
+          <div className= { classes.addEventDiv }> 
+            <div className= { classes.addEventImageDiv }>
+              <img className= { classes.addEventImage } alt="Lisää tapahtuma: kuvituskuva" src={ customizeFields.showcase_image || contentImage } />
+            </div>
+            <div className= { classes.addEventTextDiv }>
+              <h3 className= { classes.addEventTextDivHeading }>{ customizeFields.showcase_title }</h3>
+              <p className= { classes.addEventTextDivParagraph }>
+                { customizeFields.showcase_text }
+              </p>
+              <Button onClick={ this.navigateTo(customizeFields.showcase_button_link || "") } className={ `${classes.generalButtonStyle} ${classes.addEventButton}`}>
+                { customizeFields.showcase_button_text }
+              </Button>
+            </div>
           </div>
-        </div>
+        }
         <div className={ classes.postsContainer }>
           <div className= { classes.postsColumn }>
             <h1>{ <CurrenEventsIcon/> } Ajankohtaista</h1>
@@ -177,7 +191,7 @@ class WelcomePage extends React.Component<Props, State> {
             </div>
           )
         })
-     )
+    )
     }
   }
 
@@ -234,8 +248,17 @@ class WelcomePage extends React.Component<Props, State> {
             </figure>
           )
         })
-     )
+    )
     }
+  }
+
+  /**
+   * Navigates to the url
+   *
+   * @param url url
+   */
+  private navigateTo = (url: string) => () => {
+    window.location.href = url;
   }
 
   /**
@@ -284,7 +307,7 @@ class WelcomePage extends React.Component<Props, State> {
     const postsArray: Post[] = new Array();
     this.state.posts.map((post) => {
       if ((post.categories ? post.categories : new Array()).includes(categoryId)) {
-        postsArray.push(post)
+        postsArray.push(post);
       }
     })
 
