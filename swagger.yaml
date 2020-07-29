@@ -4580,22 +4580,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/error"
       operationId: GetWpV2CustomTaxonomy
-  /wp/v2/customize:
-    get:
-      responses:
-        "200":
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/customize"
-        default:
-          description: error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/error"
-      operationId: GetWpV2Customize
 servers:
   - url: http://localhost/index.php/wp-json
 components:
@@ -4606,24 +4590,6 @@ components:
       in: header
       description: Please see http://v2.wp-api.org/guide/authentication/
   schemas:
-    customize:
-      type: object
-      properties:
-        showcase_image:
-          description: Showcase image url.
-          type: string
-        showcase_title:
-          description: Showcase title text.
-          type: string
-        showcase_text:
-          description: Showcase text.
-          type: string
-        showcase_button_text:
-          description: Showcase button text.
-          type: string
-        showcase_button_link:
-          description: Showcase button link.
-          type: string
     error:
       properties:
         code:
