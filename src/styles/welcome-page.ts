@@ -26,12 +26,6 @@ export default createStyles({
     pointerEvents: "auto",
   },
 
-  loadingIconContainer: {
-    display: "flex",
-    margin: "5rem",
-    justifyContent: "center"
-  },
-
    /**
     * Hero-image as background 
     */
@@ -343,6 +337,58 @@ export default createStyles({
       marginTop: "0.5vw",
       marginBottom: "2vw"
     },
+  },
+  bottom_section: {
+    display: "grid",
+    gridTemplateColumns: "repeat(3, 1fr)",
+    gridTemplateRows: "repeat(2, 10vw)",
+    gridRowGap: "18rem",
+    gridColumnGap: "0rem",
+    paddingLeft: "15rem",
+    paddingRight: "12rem",
+    height: "100%",
+    [theme.breakpoints.down("md")]:{
+        paddingLeft: "9rem",
+        paddingRight: "5rem"
+    },
+    [theme.breakpoints.down("sm")]:{
+        paddingLeft: "6rem",
+        paddingRight: "3rem"
+    },
+  },
+  bottom_section_item: {
+    width: "90%",
+    height: "15vw",
+    backgroundSize: "cover",
+    [theme.breakpoints.up("xl")]: {
+        width: "90%"
+    },
+    [theme.breakpoints.down("md")]: {
+        width: "90%"
+    },
+    [theme.breakpoints.down("sm")]:{
+        width: "90%",
+    },
+    [theme.breakpoints.down("xs")]:{
+        fontSize: "130%",
+    },
+    '& p':{
+      fontSize: "2em",
+      marginTop: "6.5vw",
+      textAlign: "center",
+      marginBottom: "2vw",
+      fontWeight: "bold",
+      color: "#FFFFFF",
+      [theme.breakpoints.down("md")]: {
+        fontSize: "1.5em"
+      },
+      [theme.breakpoints.down("sm")]: {
+        fontSize: "1em",
+      },
+      [theme.breakpoints.down("xs")]: {
+        fontSize: "0.5em",
+      }
+    }
   },
   
   // Mantyharju-theme ends, rest of the code can be deleted before production

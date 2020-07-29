@@ -1,7 +1,7 @@
 import * as React from "react";
 import BasicLayout from "../BasicLayout";
 import contentImage from "../../resources/img/mantyharju-images/mantyharju-images/hero-front-1600x1080.jpg";
-import { Post, MenuLocationData, Customize } from "../../generated/client/src";
+import { Post, MenuLocationData, Customize, Attachment } from "../../generated/client/src";
 import ReactHtmlParser, { convertNodeToElement } from "react-html-parser";
 import ApiUtils from "../../utils/ApiUtils";
 import { WithStyles, withStyles, Button, Container, CircularProgress } from "@material-ui/core";
@@ -24,6 +24,7 @@ interface Props extends WithStyles<typeof styles> {
  */
 interface State {
   posts: Post[],
+  media: Attachment[];
   linkedEventsPost?: Post,
   loading: boolean,
   mainMenu?: MenuLocationData,
@@ -52,6 +53,7 @@ class WelcomePage extends React.Component<Props, State> {
     super(props);
     this.state = {
       posts: [],
+      media: [],
       loading: false,
       scrollPosition: 0,
       siteMenuVisible: false,
@@ -74,12 +76,13 @@ class WelcomePage extends React.Component<Props, State> {
 
     const api = ApiUtils.getApi();
 
-    const [posts, mainMenu, localeMenu, eventsPost, customizeFields] = await Promise.all(
+    const [posts, mainMenu, localeMenu, eventsPost, media, customizeFields] = await Promise.all(
       [
-        api.getWpV2Posts({lang: [ this.props.lang ]}),
+        api.getWpV2Posts({per_page: 30}),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }),
         api.getWpV2PostsById({ id: "57" }),
+        api.getWpV2Media({}),
         api.getWpV2Customize()
       ]
     );
@@ -90,6 +93,7 @@ class WelcomePage extends React.Component<Props, State> {
       mainMenu: mainMenu,
       localeMenu: localeMenu,
       linkedEventsPost: eventsPost,
+      media: media,
       customizeFields: customizeFields
     });
 
@@ -164,14 +168,15 @@ class WelcomePage extends React.Component<Props, State> {
           <Button title= "Kaikki tapahtumat" onClick={this.expandLinkedEvents} className={ `${classes.generalButtonStyle} ${classes.allEventsButton}` }>Kaikki tapahtumat</Button>
           <Button title= "Lisää tapahtuma" className={ `${classes.generalButtonStyle} ${classes.addLinkedEventButton}` }>Lisää tapahtuma</Button>
         </div>
+        <div  className={classes.bottom_section}>
+          { this.renderBottomSectionPosts(12) }
+        </div>
       </BasicLayout>
     );
   }
 
   /**
    * Render News posts
-   * 
-   * TODO: Get linkedEventsPost not by the hardcoded post ID
    */
   private renderNews = (categoryId: number) => {
     const { classes } = this.props;
@@ -243,13 +248,52 @@ class WelcomePage extends React.Component<Props, State> {
       return (
         parsedContent.splice(0, this.state.linkedEventsLimitingNumber).map(contentItem => {
           return (
-            <figure className={classes.events_item_universal}>
+            <figure className={ classes.events_item_universal }>
               { contentItem }
             </figure>
           )
         })
     )
     }
+  }
+
+  /**
+   * Render Bottom section posts
+   * 
+   */
+  private renderBottomSectionPosts = (categoryId: number) => {
+    const { classes } = this.props;
+    const linkedEventsPost = this.state.linkedEventsPost;
+    if (!this.state.posts) {
+      return null;
+    } else {
+      return(
+        this.getLimitedPosts(categoryId, 6).map(post => {
+          return (
+            <div style={{ backgroundImage: `url(${this.getAttachmentForPost(post)})` }} className={classes.bottom_section_item}>
+              <p>{ post.title ? post.title.rendered || "" : "" }</p>
+            </div>
+          )
+        })
+      )
+    }
+      
+  }
+
+  /**
+   * Returns post featured image URL
+   */
+  private getAttachmentForPost = (post: Post) => {
+    var attachmentUrl = "";
+    if (this.state.media) {
+      this.state.media.map(attachment => {
+        if (attachment.id == post.featured_media) {
+          attachmentUrl = attachment.source_url || "";
+        }
+      })
+    }
+    
+    return attachmentUrl;
   }
 
   /**
