@@ -1,10 +1,10 @@
 import * as React from "react";
 import BasicLayout from "../BasicLayout";
 import contentImage from "../../resources/img/mantyharju-images/mantyharju-images/hero-front-1600x1080.jpg";
-import { Post, MenuLocationData, Attachment } from "../../generated/client/src";
+import { Post, MenuLocationData, Customize, Attachment } from "../../generated/client/src";
 import ReactHtmlParser, { convertNodeToElement } from "react-html-parser";
 import ApiUtils from "../../utils/ApiUtils";
-import { WithStyles, withStyles, Button, Container } from "@material-ui/core";
+import { WithStyles, withStyles, Button, Container, CircularProgress } from "@material-ui/core";
 import styles from "../../styles/welcome-page";
 import * as moment from "moment";
 import AddIcon from "@material-ui/icons/Add";
@@ -35,6 +35,7 @@ interface State {
   announcementsCategoryId: number,
   newsCategoryId: number,
   linkedEventsLimitingNumber: number,
+  customizeFields: Customize
 }
 
 /**
@@ -59,7 +60,8 @@ class WelcomePage extends React.Component<Props, State> {
       siteSearchVisible: false,
       announcementsCategoryId: 9,
       newsCategoryId: 14,
-      linkedEventsLimitingNumber: 8
+      linkedEventsLimitingNumber: 8,
+      customizeFields: {}
     };
   }
 
@@ -74,15 +76,16 @@ class WelcomePage extends React.Component<Props, State> {
 
     const api = ApiUtils.getApi();
 
-    const [posts, mainMenu, localeMenu, eventsPost, media] = await Promise.all(
+    const [posts, mainMenu, localeMenu, eventsPost, media, customizeFields] = await Promise.all(
       [
         api.getWpV2Posts({per_page: 30}),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }),
         api.getWpV2PostsById({ id: "57" }),
         api.getWpV2Media({}),
+        api.getWpV2Customize()
       ]
-    )
+    );
 
     this.setState({
       posts: posts,
@@ -90,7 +93,8 @@ class WelcomePage extends React.Component<Props, State> {
       mainMenu: mainMenu,
       localeMenu: localeMenu,
       linkedEventsPost: eventsPost,
-      media: media
+      media: media,
+      customizeFields: customizeFields
     });
 
     this.hidePageLoader();
@@ -108,6 +112,7 @@ class WelcomePage extends React.Component<Props, State> {
    */
   public render() {
     const { lang, classes } = this.props;
+    const { customizeFields } = this.state;
 
     return (
       <BasicLayout lang={ lang }>
@@ -117,18 +122,27 @@ class WelcomePage extends React.Component<Props, State> {
           <Button title="Lorem Ipsum" className= { `${classes.generalButtonStyle} ${classes.heroButton}`}>Lorem Ipsum</Button>
           <Button title="Suosituimmat sivut" className={ `${classes.heroButtonPopularPages}`} endIcon={ <AddIcon/> }>Suosituimmat sivut</Button>
         </div>
-        <div className= { classes.addEventDiv }> 
-          <div className= { classes.addEventImageDiv }>
-            <img className= { classes.addEventImage } alt="Lisää tapahtuma: kuvituskuva" src={ contentImage }></img>
+        { this.state.loading &&
+          <div className={ classes.loadingIconContainer }>
+            <CircularProgress />
           </div>
-          <div className= { classes.addEventTextDiv }>
-            <h3 className= { classes.addEventTextDivHeading }>Lisää kesätapahtumasi tapahtumakalenteriin</h3>
-            <p className= { classes.addEventTextDivParagraph }>
-              Lorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem IpsumLorem Ipsum
-            </p>
-            <Button className={ `${classes.generalButtonStyle} ${classes.addEventButton}`}>Lorem Ipsum</Button>
+        }
+        { !this.state.loading &&
+          <div className= { classes.addEventDiv }> 
+            <div className= { classes.addEventImageDiv }>
+              <img className= { classes.addEventImage } alt="Lisää tapahtuma: kuvituskuva" src={ customizeFields.showcase_image || contentImage } />
+            </div>
+            <div className= { classes.addEventTextDiv }>
+              <h3 className= { classes.addEventTextDivHeading }>{ customizeFields.showcase_title }</h3>
+              <p className= { classes.addEventTextDivParagraph }>
+                { customizeFields.showcase_text }
+              </p>
+              <Button onClick={ this.navigateTo(customizeFields.showcase_button_link || "") } className={ `${classes.generalButtonStyle} ${classes.addEventButton}`}>
+                { customizeFields.showcase_button_text }
+              </Button>
+            </div>
           </div>
-        </div>
+        }
         <div className={ classes.postsContainer }>
           <div className= { classes.postsColumn }>
             <h1>{ <CurrenEventsIcon/> } Ajankohtaista</h1>
@@ -182,7 +196,7 @@ class WelcomePage extends React.Component<Props, State> {
             </div>
           )
         })
-     )
+    )
     }
   }
 
@@ -239,7 +253,7 @@ class WelcomePage extends React.Component<Props, State> {
             </figure>
           )
         })
-     )
+    )
     }
   }
 
@@ -251,16 +265,13 @@ class WelcomePage extends React.Component<Props, State> {
     const { classes } = this.props;
     const linkedEventsPost = this.state.linkedEventsPost;
     if (!this.state.posts) {
-      console.log("NO POSTS");
       return null;
     } else {
-      console.log("ALL POSTS ARE ", this.state.posts);
       return(
         this.getLimitedPosts(categoryId, 6).map(post => {
-          console.log("BOTTOM SECTION POST IS: ", post.title);
           return (
             <div style={{ backgroundImage: `url(${this.getAttachmentForPost(post)})` }} className={classes.bottom_section_item}>
-              <p>{ReactHtmlParser(post.title ? post.title.rendered || "" : "")}</p>
+              <p>{ post.title ? post.title.rendered || "" : "" }</p>
             </div>
           )
         })
@@ -283,6 +294,15 @@ class WelcomePage extends React.Component<Props, State> {
     }
     
     return attachmentUrl;
+  }
+
+  /**
+   * Navigates to the url
+   *
+   * @param url url
+   */
+  private navigateTo = (url: string) => () => {
+    window.location.href = url;
   }
 
   /**
@@ -331,7 +351,7 @@ class WelcomePage extends React.Component<Props, State> {
     const postsArray: Post[] = new Array();
     this.state.posts.map((post) => {
       if ((post.categories ? post.categories : new Array()).includes(categoryId)) {
-        postsArray.push(post)
+        postsArray.push(post);
       }
     })
 
