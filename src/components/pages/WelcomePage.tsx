@@ -26,6 +26,7 @@ interface State {
   posts: Post[],
   linkedEventsPost?: Post,
   loading: boolean,
+  popularPages: Page[],
   mainMenu?: MenuLocationData,
   localeMenu?: MenuLocationData,
   scrollPosition: number,
@@ -53,6 +54,7 @@ class WelcomePage extends React.Component<Props, State> {
     this.state = {
       posts: [],
       loading: false,
+      popularPages: [],
       scrollPosition: 0,
       siteMenuVisible: false,
       siteSearchVisible: false,
@@ -74,21 +76,25 @@ class WelcomePage extends React.Component<Props, State> {
 
     const api = ApiUtils.getApi();
 
-    const [posts, mainMenu, localeMenu, eventsPost, customizeFields] = await Promise.all(
+    const [posts, mainMenu, localeMenu, popularCategory, eventsPost, customizeFields] = await Promise.all(
       [
         api.getWpV2Posts({lang: [ this.props.lang ]}),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }),
+        api.getWpV2Categories({ slug: [ "popular" ] }),
         api.getWpV2PostsById({ id: "57" }),
         api.getWpV2Customize()
       ]
     );
+
+    const popularPages = await api.getWpV2Pages({ categories: [ popularCategory[0].id || 0 ] });
 
     this.setState({
       posts: posts,
       loading: false,
       mainMenu: mainMenu,
       localeMenu: localeMenu,
+      popularPages: popularPages,
       linkedEventsPost: eventsPost,
       customizeFields: customizeFields
     });
@@ -191,7 +197,7 @@ class WelcomePage extends React.Component<Props, State> {
             </div>
           )
         })
-    )
+      )
     }
   }
 
