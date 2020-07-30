@@ -23,7 +23,7 @@ export default createStyles({
     paddingBottom: "0.4em",
     paddingLeft: "1em",
     paddingRight: "1em",
-    pointerEvents: "auto",
+    userSelect: "none"
   },
 
   loadingIconContainer: {
@@ -87,7 +87,7 @@ export default createStyles({
     paddingBottom: "0.2em",
     paddingLeft: "1em",
     paddingRight: "1em",
-    pointerEvents: "none",
+    cursor: "pointer",
     textTransform: "uppercase",
     position: "absolute",
     bottom: "0",
