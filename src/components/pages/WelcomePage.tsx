@@ -148,7 +148,7 @@ class WelcomePage extends React.Component<Props, State> {
               <p className= { classes.addEventTextDivParagraph }>
                 { customizeFields.showcase_text }
               </p>
-              <Button onClick={ this.navigateTo(customizeFields.showcase_button_link || "") } className={ `${classes.generalButtonStyle} ${classes.addEventButton}`}>
+              <Button className={ `${classes.generalButtonStyle} ${classes.addEventButton}`}>
                 { customizeFields.showcase_button_text }
               </Button>
             </div>
