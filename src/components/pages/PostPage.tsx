@@ -29,12 +29,14 @@ interface Props extends WithStyles<typeof styles> {
 interface State {
   page?: Page;
   post?: Post;
+  title: string;
   loading: boolean;
   isArticle: boolean;
+  pageTitle?: PostTitle;
   nav?: MenuLocationData;
   breadcrumb: Breadcrumb[];
-  pageTitle?: PostTitle;
-  title: string;
+  mainContent?: React.ReactElement;
+  sideContent?: React.ReactElement;
 }
 
 /**
@@ -49,6 +51,8 @@ interface Breadcrumb {
  * PostPage component
  */
 class PostPage extends React.Component<Props, State> {
+
+  private contentParsed: boolean;
 
   /**
    * Constructor
@@ -86,7 +90,7 @@ class PostPage extends React.Component<Props, State> {
    */
   public render() {
     const { classes, lang, slug } = this.props;
-    const { title } = this.state;
+    const { title, sideContent } = this.state;
 
     return (
       <BasicLayout lang={ lang } title={ this.setTitleSource() }>
@@ -111,9 +115,11 @@ class PostPage extends React.Component<Props, State> {
               <div className={ classes.contentarea }>
                 { this.renderContent() }
               </div>
-              <div className={ classes.sidebar }>
-                <RightSideBar />
-              </div>
+                { sideContent &&
+                  <div className={ classes.sidebar }>
+                    <RightSideBar content={ sideContent } />
+                  </div>
+                }
             </div>
           </div>
         </div>
@@ -140,7 +146,7 @@ class PostPage extends React.Component<Props, State> {
    */
   private renderContent = () => {
     const { classes } = this.props;
-    const post = this.state.post; 
+    const post = this.state.post;
     return (
       <Container className={ classNames( classes.root, this.state.isArticle && "article") }>
         <h2>{ post ? ReactHtmlParser(post.title ? post.title.rendered || "" : "") : null }</h2>
@@ -232,6 +238,8 @@ class PostPage extends React.Component<Props, State> {
    */
   private renderPostContent = () => {
     const { classes, lang } = this.props;
+    const { mainContent } = this.state;
+    const content = this.getPageOrPostContent();
     moment.locale(lang);
     return (
       <div className={
@@ -239,8 +247,11 @@ class PostPage extends React.Component<Props, State> {
         this.state.isArticle && "article")
         }
       >
+      { !this.state.loading && !mainContent &&
+        content
+      }
       { !this.state.loading &&
-        this.getPageOrPostContent()
+        mainContent
       }
     </div>
     );
@@ -292,7 +303,6 @@ class PostPage extends React.Component<Props, State> {
     }
 
     return ReactHtmlParser(renderedContent, { transform: this.transformContent });
-
   }
 
   /**
@@ -326,6 +336,16 @@ class PostPage extends React.Component<Props, State> {
   }
 
   /**
+   * transform without changes
+   *
+   * @param node DomElement
+   * @param index DomElement index
+   */
+  private transform = (node: DomElement, index: number) => {
+    return convertNodeToElement(node, index, this.transform);
+  }
+
+  /**
    * transform html source content before it is rendered
    *
    * @param node DomElement
@@ -334,6 +354,16 @@ class PostPage extends React.Component<Props, State> {
   private transformContent = (node: DomElement, index: number) => {
     const { classes } = this.props;
     const classNames = this.getElementClasses(node);
+
+    if (classNames.indexOf("wp-block-columns") > -1 && node.children && node.children.length > 3 && !this.contentParsed) {
+      this.contentParsed = true;
+      const mainContent = convertNodeToElement(node.children[1], index, this.transform);
+      const sideContent = convertNodeToElement(node.children[3], index, this.transform);
+      this.setState({
+        mainContent: mainContent,
+        sideContent: sideContent
+      });
+    }
 
     // Find any buttons and replace them with Material UI button
     if (classNames.indexOf("wp-block-button") > -1) {
