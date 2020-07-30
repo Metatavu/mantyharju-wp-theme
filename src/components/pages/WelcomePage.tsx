@@ -2,9 +2,9 @@ import * as React from "react";
 import BasicLayout from "../BasicLayout";
 import contentImage from "../../resources/img/mantyharju-images/mantyharju-images/hero-front-1600x1080.jpg";
 import { Post, MenuLocationData, Customize, Attachment, Page } from "../../generated/client/src";
-import ReactHtmlParser, { convertNodeToElement } from "react-html-parser";
+import ReactHtmlParser from "react-html-parser";
 import ApiUtils from "../../utils/ApiUtils";
-import { WithStyles, withStyles, Button, Container, CircularProgress } from "@material-ui/core";
+import { WithStyles, withStyles, Button, CircularProgress } from "@material-ui/core";
 import styles from "../../styles/welcome-page";
 import * as moment from "moment";
 import AddIcon from "@material-ui/icons/Add";
@@ -259,9 +259,9 @@ class WelcomePage extends React.Component<Props, State> {
             <figure className={classes.events_item_universal}>
               { contentItem }
             </figure>
-          )
+          );
         })
-    )
+      );
     }
   }
 
@@ -285,7 +285,6 @@ class WelcomePage extends React.Component<Props, State> {
         })
       )
     }
-      
   }
 
   /**
@@ -298,7 +297,7 @@ class WelcomePage extends React.Component<Props, State> {
         if (attachment.id == post.featured_media) {
           attachmentUrl = attachment.source_url || "";
         }
-      })
+      });
     }
     
     return attachmentUrl;
