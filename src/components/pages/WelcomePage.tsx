@@ -1,7 +1,6 @@
 import * as React from "react";
 import BasicLayout from "../BasicLayout";
 import contentImage from "../../resources/img/mantyharju-images/mantyharju-images/hero-front-1600x1080.jpg";
-import { Post, MenuLocationData, Customize, Attachment, GetWpV2PostsOrderbyEnum, GetWpV2PostsOrderEnum } from "../../generated/client/src";
 import ReactHtmlParser from "react-html-parser";
 import ApiUtils from "../../utils/ApiUtils";
 import { WithStyles, withStyles, Button, CircularProgress } from "@material-ui/core";
@@ -11,6 +10,7 @@ import AddIcon from "@material-ui/icons/Add";
 import CurrenEventsIcon from '@material-ui/icons/QuestionAnswerOutlined';
 import AnnouncementsIcon from '@material-ui/icons/VolumeUp';
 import JobsIcon from '@material-ui/icons/ThumbsUpDown';
+import { Post, MenuLocationData, Customize, Attachment, GetWpV2PostsOrderbyEnum, GetWpV2PostsOrderEnum } from "../../generated/client/src";
 
 /**
  * Interface representing component properties
