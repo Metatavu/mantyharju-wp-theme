@@ -1,10 +1,10 @@
 import * as React from "react";
 import BasicLayout from "../BasicLayout";
 import contentImage from "../../resources/img/mantyharju-images/mantyharju-images/hero-front-1600x1080.jpg";
-import { Post, MenuLocationData, Customize, Attachment } from "../../generated/client/src";
-import ReactHtmlParser, { convertNodeToElement } from "react-html-parser";
+import { Post, MenuLocationData, Customize, Attachment, Page, GetWpV2PostsOrderbyEnum, GetWpV2PostsOrderEnum } from "../../generated/client/src";
+import ReactHtmlParser from "react-html-parser";
 import ApiUtils from "../../utils/ApiUtils";
-import { WithStyles, withStyles, Button, Container, CircularProgress } from "@material-ui/core";
+import { WithStyles, withStyles, Button, CircularProgress } from "@material-ui/core";
 import styles from "../../styles/welcome-page";
 import * as moment from "moment";
 import AddIcon from "@material-ui/icons/Add";
@@ -27,6 +27,7 @@ interface State {
   media: Attachment[],
   linkedEventsPost?: Post,
   loading: boolean,
+  popularPosts: Post[],
   mainMenu?: MenuLocationData,
   localeMenu?: MenuLocationData,
   scrollPosition: number,
@@ -55,6 +56,7 @@ class WelcomePage extends React.Component<Props, State> {
       posts: [],
       media: [],
       loading: false,
+      popularPosts: [],
       scrollPosition: 0,
       siteMenuVisible: false,
       siteSearchVisible: false,
@@ -75,23 +77,28 @@ class WelcomePage extends React.Component<Props, State> {
     });
 
     const api = ApiUtils.getApi();
-
-    const [posts, mainMenu, localeMenu, eventsPost, media, customizeFields] = await Promise.all(
+    const [posts, mainMenu, localeMenu, popularCategory, eventsPost, media, customizeFields] = await Promise.all(
       [
         api.getWpV2Posts({per_page: 30}),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }),
+        api.getWpV2Categories({ slug: ["popular"] }),
         api.getWpV2PostsById({ id: "57" }),
         api.getWpV2Media({}),
         api.getWpV2Customize()
       ]
     );
 
+    const categoryIdArray = [(popularCategory.length > 0 ? popularCategory[0].id || -1 : -1).toString()];
+
+    const popularPosts = await api.getWpV2Posts({ categories: categoryIdArray, per_page: 6, orderby: GetWpV2PostsOrderbyEnum.Date, order: GetWpV2PostsOrderEnum.Desc });
+
     this.setState({
       posts: posts,
       loading: false,
       mainMenu: mainMenu,
       localeMenu: localeMenu,
+      popularPosts: popularPosts,
       linkedEventsPost: eventsPost,
       media: media,
       customizeFields: customizeFields
@@ -128,7 +135,7 @@ class WelcomePage extends React.Component<Props, State> {
           </div>
         }
         { !this.state.loading &&
-          <div className= { classes.addEventDiv }> 
+          <div className= { classes.addEventDiv }>
             <div className= { classes.addEventImageDiv }>
               <img className= { classes.addEventImage } alt="Lisää tapahtuma: kuvituskuva" src={ customizeFields.showcase_image || contentImage } />
             </div>
@@ -169,7 +176,9 @@ class WelcomePage extends React.Component<Props, State> {
           <Button title= "Lisää tapahtuma" className={ `${classes.generalButtonStyle} ${classes.addLinkedEventButton}` }>Lisää tapahtuma</Button>
         </div>
         <div className={ classes.bottom_section }>
-          { this.renderBottomSectionPosts(12) }
+          {
+            this.renderBottomSectionPosts()
+          }
         </div>
       </BasicLayout>
     );
@@ -198,7 +207,7 @@ class WelcomePage extends React.Component<Props, State> {
             </div>
           )
         })
-    )
+      )
     }
   }
 
@@ -242,7 +251,7 @@ class WelcomePage extends React.Component<Props, State> {
   private renderLinkedEvents = (postId: number) => {
     const { classes } = this.props;
     const linkedEventsPost = this.state.linkedEventsPost;
-    var events = new Array();
+    const events = new Array();
     if (!this.state.linkedEventsPost) {
       return null;
     } else {
@@ -261,38 +270,30 @@ class WelcomePage extends React.Component<Props, State> {
 
   /**
    * Render Bottom section posts
-   * 
    */
-  private renderBottomSectionPosts = (categoryId: number) => {
+  private renderBottomSectionPosts = () => {
     const { classes } = this.props;
-    const linkedEventsPost = this.state.linkedEventsPost;
-    if (!this.state.posts) {
-      return null;
-    } else {
-      return(
-        this.getLimitedPosts(categoryId, 6).map(post => {
-          return (
-            <div style={{ backgroundImage: `url(${this.getAttachmentForPost(post)})` }} className={classes.bottom_section_item}>
-              <p>{ post.title ? post.title.rendered || "" : "" }</p>
-            </div>
-          )
-        })
-      )
-    }
-      
+    const { popularPosts } = this.state;
+    return popularPosts.map(post => {
+      return (
+        <div onClick={ this.navigateTo(post.link || window.location.href) } style={{ backgroundImage: `url(${ this.getAttachmentForPost(post) })` }} className={classes.bottom_section_item}>
+          <p>{ post.title ? post.title.rendered || "" : "" }</p>
+        </div>
+      );
+    });
   }
 
   /**
    * Returns post featured image URL
    */
   private getAttachmentForPost = (post: Post) => {
-    var attachmentUrl = "";
+    let attachmentUrl = "";
     if (this.state.media) {
       this.state.media.map(attachment => {
         if (attachment.id == post.featured_media) {
           attachmentUrl = attachment.source_url || "";
         }
-      })
+      });
     }
     
     return attachmentUrl;

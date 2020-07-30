@@ -60,7 +60,7 @@ class PostsPage extends React.Component<Props, State> {
       loading: false,
       breadcrumb: [],
       title: "",
-      secondPageCategoryId: 12,
+      secondPageCategoryId: 7,
       limitedPosts: []
     };
   }
