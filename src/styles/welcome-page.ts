@@ -347,7 +347,7 @@ export default createStyles({
   bottom_section: {
     display: "grid",
     gridTemplateColumns: "repeat(3, 1fr)",
-    gridTemplateRows: "repeat(2, 10vw)",
+    gridTemplateRows: "repeat(2, 2vw)",
     gridRowGap: "18rem",
     gridColumnGap: "0rem",
     paddingLeft: "15rem",
@@ -365,6 +365,7 @@ export default createStyles({
   bottom_section_item: {
     width: "90%",
     height: "15vw",
+    cursor: "pointer",
     backgroundSize: "cover",
     [theme.breakpoints.up("xl")]: {
         width: "90%"
