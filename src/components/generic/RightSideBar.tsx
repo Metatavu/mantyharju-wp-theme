@@ -6,6 +6,7 @@ import styles from '../../styles/right-side-bar';
  * Component props
  */
 interface Props extends WithStyles<typeof styles> {
+  content: React.ReactElement;
 }
 
 /**
@@ -21,8 +22,8 @@ class RightSideBar extends React.Component<Props, State> {
 
   /**
    * Component constructor
-   * 
-   * @param props 
+   *
+   * @param props
    */
   constructor(props: Props) {
     super(props);
@@ -39,15 +40,8 @@ class RightSideBar extends React.Component<Props, State> {
    * Component render
    */
   public render() {
-    return (
-      <div>
-        <h2>Malliotsikko</h2>
-        <p>Eija Kling markkinointipäällikkö Puh. 040 744 1477</p>
-        <a>Lorem ipsum</a>
-        <a>Lorem ipsum</a>
-        <a>Lorem ipsum</a>
-      </div>
-    )
+    const { content } = this.props;
+    return content;
   }
 }
 

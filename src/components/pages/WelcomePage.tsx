@@ -1,7 +1,7 @@
 import * as React from "react";
 import BasicLayout from "../BasicLayout";
 import contentImage from "../../resources/img/mantyharju-images/mantyharju-images/hero-front-1600x1080.jpg";
-import { Post, MenuLocationData, Customize, Attachment, Page, GetWpV2PostsOrderbyEnum, GetWpV2PostsOrderEnum } from "../../generated/client/src";
+import { Post, MenuLocationData, Customize, Attachment, GetWpV2PostsOrderbyEnum, GetWpV2PostsOrderEnum } from "../../generated/client/src";
 import ReactHtmlParser from "react-html-parser";
 import ApiUtils from "../../utils/ApiUtils";
 import { WithStyles, withStyles, Button, CircularProgress } from "@material-ui/core";
@@ -262,9 +262,9 @@ class WelcomePage extends React.Component<Props, State> {
             <figure className={classes.events_item_universal}>
               { contentItem }
             </figure>
-          )
+          );
         })
-    )
+      );
     }
   }
 
