@@ -7,18 +7,18 @@ export default createStyles({
    * Mantyharju-theme front page styles
    */
 
-   /**
-    * TODO: 
-    * - Improve responsive design for buttons (small screens)
-    * - Post columns styling
-    * - LinkedEvents grid styling
-    * - Fonts
-    */
+  /**
+   * TODO:
+   * - Improve responsive design for buttons (small screens)
+   * - Post columns styling
+   * - LinkedEvents grid styling
+   * - Fonts
+   */
 
-   /**
-    * General front page styles
-    */
-   generalButtonStyle: {
+  /**
+   * General front page styles
+   */
+  generalButtonStyle: {
     paddingTop: "0.4em",
     paddingBottom: "0.4em",
     paddingLeft: "1em",
@@ -32,9 +32,9 @@ export default createStyles({
     justifyContent: "center"
   },
 
-   /**
-    * Hero-image as background 
-    */
+  /**
+   * Hero-image as background
+   */
   heroImageDiv: {
     backgroundImage: `url(${hero})`,
     backgroundRepeat: "no-repeat",
@@ -166,10 +166,8 @@ export default createStyles({
     width: "100%",
     paddingRight: "6rem",
     paddingLeft: "6rem",
-    marginLeft: "8vw",
     display: "flex",
-    flexDirection:"row",
-
+    flexDirection: "row",
     [theme.breakpoints.down("sm")]: {
       flexDirection:"column",
       minHeight: "100vh",
