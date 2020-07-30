@@ -44,6 +44,8 @@ interface State {
  */
 class WelcomePage extends React.Component<Props, State> {
 
+  popularPagesSection: React.RefObject<HTMLDivElement>;
+
   /**
    * Constructor
    *
@@ -65,6 +67,8 @@ class WelcomePage extends React.Component<Props, State> {
       linkedEventsLimitingNumber: 8,
       customizeFields: {}
     };
+
+    this.popularPagesSection = React.createRef();
   }
 
   /**
@@ -127,7 +131,7 @@ class WelcomePage extends React.Component<Props, State> {
           <h1 className={ classes.heroText }>Mäntyharju. -logo</h1>
           <h2 className={ classes.heroText }>Luontoa, kulttuuria ja elämää!</h2>
           <Button title="Lorem Ipsum" className= { `${classes.generalButtonStyle} ${classes.heroButton}`}>Lorem Ipsum</Button>
-          <Button title="Suosituimmat sivut" className={ `${classes.heroButtonPopularPages}`} endIcon={ <AddIcon/> }>Suosituimmat sivut</Button>
+          <Button onClick={ this.scrollDownToPopularPages } title="Suosituimmat sivut" className={ `${classes.heroButtonPopularPages}`} endIcon={ <AddIcon/> }>Suosituimmat sivut</Button>
         </div>
         { this.state.loading &&
           <div className={ classes.loadingIconContainer }>
@@ -144,7 +148,7 @@ class WelcomePage extends React.Component<Props, State> {
               <p className= { classes.addEventTextDivParagraph }>
                 { customizeFields.showcase_text }
               </p>
-              <Button onClick={ this.navigateTo(customizeFields.showcase_button_link || "") } className={ `${classes.generalButtonStyle} ${classes.addEventButton}`}>
+              <Button className={ `${classes.generalButtonStyle} ${classes.addEventButton}`}>
                 { customizeFields.showcase_button_text }
               </Button>
             </div>
@@ -175,7 +179,7 @@ class WelcomePage extends React.Component<Props, State> {
           <Button title= "Kaikki tapahtumat" onClick={this.expandLinkedEvents} className={ `${classes.generalButtonStyle} ${classes.allEventsButton}` }>Kaikki tapahtumat</Button>
           <Button title= "Lisää tapahtuma" className={ `${classes.generalButtonStyle} ${classes.addLinkedEventButton}` }>Lisää tapahtuma</Button>
         </div>
-        <div className={ classes.bottom_section }>
+        <div ref={ this.popularPagesSection } className={ classes.bottom_section }>
           {
             this.renderBottomSectionPosts()
           }
@@ -306,6 +310,16 @@ class WelcomePage extends React.Component<Props, State> {
    */
   private navigateTo = (url: string) => () => {
     window.location.href = url;
+  }
+
+  /**
+   * Scrolls down to popular pages
+   */
+  private scrollDownToPopularPages = () => {
+    const { current } = this.popularPagesSection;
+    if (current) {
+      current.scrollIntoView();
+    }
   }
 
   /**
