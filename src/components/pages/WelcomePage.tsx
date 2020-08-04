@@ -62,8 +62,8 @@ class WelcomePage extends React.Component<Props, State> {
       scrollPosition: 0,
       siteMenuVisible: false,
       siteSearchVisible: false,
-      announcementsCategoryId: 3,
-      newsCategoryId: 5,
+      announcementsCategoryId: 4,
+      newsCategoryId: 8,
       linkedEventsLimitingNumber: 8,
       customizeFields: {}
     };
@@ -87,7 +87,7 @@ class WelcomePage extends React.Component<Props, State> {
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }),
         api.getWpV2Categories({ slug: ["popular"] }),
-        api.getWpV2PostsById({ id: "64" }),
+        api.getWpV2PostsById({ id: "23" }),
         api.getWpV2Media({}),
         api.getWpV2Customize()
       ]
@@ -174,7 +174,7 @@ class WelcomePage extends React.Component<Props, State> {
         <div className = { classes.linkedEventsContainer }>
           <h1>Tapahtumat</h1>
           <div className={ classes.wrapper }>
-            { this.renderLinkedEvents(64) }
+            { this.renderLinkedEvents(23) }
           </div>
           <Button title= "Kaikki tapahtumat" onClick={this.expandLinkedEvents} className={ `${classes.generalButtonStyle} ${classes.allEventsButton}` }>Kaikki tapahtumat</Button>
           <Button title= "Lisää tapahtuma" className={ `${classes.generalButtonStyle} ${classes.addLinkedEventButton}` }>Lisää tapahtuma</Button>
