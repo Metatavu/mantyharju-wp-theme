@@ -174,7 +174,7 @@ class WelcomePage extends React.Component<Props, State> {
         <div className = { classes.linkedEventsContainer }>
           <h1>Tapahtumat</h1>
           <div className={ classes.wrapper }>
-            { this.renderLinkedEvents(57) }
+            { this.renderLinkedEvents(64) }
           </div>
           <Button title= "Kaikki tapahtumat" onClick={this.expandLinkedEvents} className={ `${classes.generalButtonStyle} ${classes.allEventsButton}` }>Kaikki tapahtumat</Button>
           <Button title= "Lisää tapahtuma" className={ `${classes.generalButtonStyle} ${classes.addLinkedEventButton}` }>Lisää tapahtuma</Button>
