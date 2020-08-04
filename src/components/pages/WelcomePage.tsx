@@ -194,6 +194,7 @@ class WelcomePage extends React.Component<Props, State> {
   private renderNews = (categoryId: number) => {
     const { classes } = this.props;
     const newsPost = this.getLimitedPosts(categoryId, 1)[0];
+    console.log("Posts are: ", this.state.posts);
     var events = new Array();
     if (!newsPost) {
       return null;
