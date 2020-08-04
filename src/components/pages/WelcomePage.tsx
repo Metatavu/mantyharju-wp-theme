@@ -81,13 +81,12 @@ class WelcomePage extends React.Component<Props, State> {
     });
 
     const api = ApiUtils.getApi();
-    const [posts, mainMenu, localeMenu, popularCategory, eventsPost, media, customizeFields] = await Promise.all(
+    const [posts, mainMenu, localeMenu, popularCategory, media, customizeFields] = await Promise.all(
       [
         api.getWpV2Posts({per_page: 40}),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }),
         api.getWpV2Categories({ slug: ["popular"] }),
-        api.getWpV2PostsById({ id: "23" }),
         api.getWpV2Media({}),
         api.getWpV2Customize()
       ]
@@ -103,7 +102,6 @@ class WelcomePage extends React.Component<Props, State> {
       mainMenu: mainMenu,
       localeMenu: localeMenu,
       popularPosts: popularPosts,
-      linkedEventsPost: eventsPost,
       media: media,
       customizeFields: customizeFields
     });
