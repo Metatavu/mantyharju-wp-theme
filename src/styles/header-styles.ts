@@ -41,7 +41,13 @@ export default createStyles({
     }
   },
   mainMenu: {
-    paddingInlineStart: "100px",
+    display: "flex",
+    alignItems: "center",
+    marginLeft: "8vw"
+  },
+  mainMenuItem: {
+    padding: "0 20px 0 20px",
+    cursor: "pointer",
   },
   localeMenu: {
     display: "inline",
