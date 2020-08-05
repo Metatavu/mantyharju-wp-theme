@@ -64,7 +64,7 @@ class WelcomePage extends React.Component<Props, State> {
       siteSearchVisible: false,
       announcementsCategoryId: 4,
       newsCategoryId: 5,
-      linkedEventsCategoryId: 3,
+      linkedEventsCategoryId: 8,
       linkedEventsLimitingNumber: 8,
       customizeFields: {}
     };
