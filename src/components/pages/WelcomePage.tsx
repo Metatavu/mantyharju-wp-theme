@@ -1,7 +1,6 @@
 import * as React from "react";
 import BasicLayout from "../BasicLayout";
 import contentImage from "../../resources/img/mantyharju-images/mantyharju-images/hero-front-1600x1080.jpg";
-import { Post, MenuLocationData, Customize, Attachment, GetWpV2PostsOrderbyEnum, GetWpV2PostsOrderEnum } from "../../generated/client/src";
 import ReactHtmlParser from "react-html-parser";
 import ApiUtils from "../../utils/ApiUtils";
 import { WithStyles, withStyles, Button, CircularProgress } from "@material-ui/core";
@@ -11,6 +10,7 @@ import AddIcon from "@material-ui/icons/Add";
 import CurrenEventsIcon from '@material-ui/icons/QuestionAnswerOutlined';
 import AnnouncementsIcon from '@material-ui/icons/VolumeUp';
 import JobsIcon from '@material-ui/icons/ThumbsUpDown';
+import { Post, MenuLocationData, Customize, Attachment, GetWpV2PostsOrderbyEnum, GetWpV2PostsOrderEnum } from "../../generated/client/src";
 
 /**
  * Interface representing component properties
@@ -62,9 +62,9 @@ class WelcomePage extends React.Component<Props, State> {
       scrollPosition: 0,
       siteMenuVisible: false,
       siteSearchVisible: false,
-      announcementsCategoryId: 9,
-      newsCategoryId: 14,
-      linkedEventsCategoryId: 8,
+      announcementsCategoryId: 4,
+      newsCategoryId: 5,
+      linkedEventsCategoryId: 3,
       linkedEventsLimitingNumber: 8,
       customizeFields: {}
     };
@@ -84,7 +84,7 @@ class WelcomePage extends React.Component<Props, State> {
     const api = ApiUtils.getApi();
     const [posts, mainMenu, localeMenu, popularCategory, media, customizeFields] = await Promise.all(
       [
-        api.getWpV2Posts({per_page: 100}),
+        api.getWpV2Posts({per_page: 90}),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }),
         api.getWpV2Categories({ slug: ["popular"] }),
@@ -176,7 +176,7 @@ class WelcomePage extends React.Component<Props, State> {
             { this.renderLinkedEvents(this.state.linkedEventsCategoryId) }
           </div>
           <Button title= "Kaikki tapahtumat" onClick={this.expandLinkedEvents} className={ `${classes.generalButtonStyle} ${classes.allEventsButton}` }>Kaikki tapahtumat</Button>
-          <Button title= "Lisää tapahtuma" className={ `${classes.generalButtonStyle} ${classes.addLinkedEventButton}` }>Lisää tapahtuma</Button>
+          <Button title= "Lisää tapahTuma" className={ `${classes.generalButtonStyle} ${classes.addLinkedEventButton}` }>Lisää tapahtuma</Button>
         </div>
         <div ref={ this.popularPagesSection } className={ classes.bottom_section }>
           {
