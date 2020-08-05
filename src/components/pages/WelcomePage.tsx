@@ -1,7 +1,6 @@
 import * as React from "react";
 import BasicLayout from "../BasicLayout";
 import contentImage from "../../resources/img/mantyharju-images/mantyharju-images/hero-front-1600x1080.jpg";
-import { Post, MenuLocationData, Customize, Attachment, GetWpV2PostsOrderbyEnum, GetWpV2PostsOrderEnum } from "../../generated/client/src";
 import ReactHtmlParser from "react-html-parser";
 import ApiUtils from "../../utils/ApiUtils";
 import { WithStyles, withStyles, Button, CircularProgress } from "@material-ui/core";
@@ -11,6 +10,7 @@ import AddIcon from "@material-ui/icons/Add";
 import CurrenEventsIcon from '@material-ui/icons/QuestionAnswerOutlined';
 import AnnouncementsIcon from '@material-ui/icons/VolumeUp';
 import JobsIcon from '@material-ui/icons/ThumbsUpDown';
+import { Post, MenuLocationData, Customize, Attachment, GetWpV2PostsOrderbyEnum, GetWpV2PostsOrderEnum } from "../../generated/client/src";
 
 /**
  * Interface representing component properties
@@ -25,7 +25,6 @@ interface Props extends WithStyles<typeof styles> {
 interface State {
   posts: Post[],
   media: Attachment[],
-  linkedEventsPost?: Post,
   loading: boolean,
   popularPosts: Post[],
   mainMenu?: MenuLocationData,
@@ -35,6 +34,7 @@ interface State {
   siteSearchVisible: boolean,
   announcementsCategoryId: number,
   newsCategoryId: number,
+  linkedEventsCategoryId: number,
   linkedEventsLimitingNumber: number,
   customizeFields: Customize
 }
@@ -43,6 +43,8 @@ interface State {
  * WelcomePage component
  */
 class WelcomePage extends React.Component<Props, State> {
+
+  popularPagesSection: React.RefObject<HTMLDivElement>;
 
   /**
    * Constructor
@@ -60,11 +62,14 @@ class WelcomePage extends React.Component<Props, State> {
       scrollPosition: 0,
       siteMenuVisible: false,
       siteSearchVisible: false,
-      announcementsCategoryId: 9,
-      newsCategoryId: 14,
+      announcementsCategoryId: 4,
+      newsCategoryId: 5,
+      linkedEventsCategoryId: 8,
       linkedEventsLimitingNumber: 8,
       customizeFields: {}
     };
+
+    this.popularPagesSection = React.createRef();
   }
 
   /**
@@ -77,13 +82,12 @@ class WelcomePage extends React.Component<Props, State> {
     });
 
     const api = ApiUtils.getApi();
-    const [posts, mainMenu, localeMenu, popularCategory, eventsPost, media, customizeFields] = await Promise.all(
+    const [posts, mainMenu, localeMenu, popularCategory, media, customizeFields] = await Promise.all(
       [
-        api.getWpV2Posts({per_page: 30}),
+        api.getWpV2Posts({per_page: 90}),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }),
         api.getWpV2Categories({ slug: ["popular"] }),
-        api.getWpV2PostsById({ id: "57" }),
         api.getWpV2Media({}),
         api.getWpV2Customize()
       ]
@@ -99,7 +103,6 @@ class WelcomePage extends React.Component<Props, State> {
       mainMenu: mainMenu,
       localeMenu: localeMenu,
       popularPosts: popularPosts,
-      linkedEventsPost: eventsPost,
       media: media,
       customizeFields: customizeFields
     });
@@ -127,7 +130,7 @@ class WelcomePage extends React.Component<Props, State> {
           <h1 className={ classes.heroText }>Mäntyharju. -logo</h1>
           <h2 className={ classes.heroText }>Luontoa, kulttuuria ja elämää!</h2>
           <Button title="Lorem Ipsum" className= { `${classes.generalButtonStyle} ${classes.heroButton}`}>Lorem Ipsum</Button>
-          <Button title="Suosituimmat sivut" className={ `${classes.heroButtonPopularPages}`} endIcon={ <AddIcon/> }>Suosituimmat sivut</Button>
+          <Button onClick={ this.scrollDownToPopularPages } title="Suosituimmat sivut" className={ `${classes.heroButtonPopularPages}`} endIcon={ <AddIcon/> }>Suosituimmat sivut</Button>
         </div>
         { this.state.loading &&
           <div className={ classes.loadingIconContainer }>
@@ -144,7 +147,7 @@ class WelcomePage extends React.Component<Props, State> {
               <p className= { classes.addEventTextDivParagraph }>
                 { customizeFields.showcase_text }
               </p>
-              <Button onClick={ this.navigateTo(customizeFields.showcase_button_link || "") } className={ `${classes.generalButtonStyle} ${classes.addEventButton}`}>
+              <Button onClick={ this.navigateTo(customizeFields.showcase_button_link || window.location.href) } className={ `${classes.generalButtonStyle} ${classes.addEventButton}`}>
                 { customizeFields.showcase_button_text }
               </Button>
             </div>
@@ -170,12 +173,12 @@ class WelcomePage extends React.Component<Props, State> {
         <div className = { classes.linkedEventsContainer }>
           <h1>Tapahtumat</h1>
           <div className={ classes.wrapper }>
-            { this.renderLinkedEvents(57) }
+            { this.renderLinkedEvents(this.state.linkedEventsCategoryId) }
           </div>
           <Button title= "Kaikki tapahtumat" onClick={this.expandLinkedEvents} className={ `${classes.generalButtonStyle} ${classes.allEventsButton}` }>Kaikki tapahtumat</Button>
-          <Button title= "Lisää tapahtuma" className={ `${classes.generalButtonStyle} ${classes.addLinkedEventButton}` }>Lisää tapahtuma</Button>
+          <Button title= "Lisää tapahTuma" className={ `${classes.generalButtonStyle} ${classes.addLinkedEventButton}` }>Lisää tapahtuma</Button>
         </div>
-        <div className={ classes.bottom_section }>
+        <div ref={ this.popularPagesSection } className={ classes.bottom_section }>
           {
             this.renderBottomSectionPosts()
           }
@@ -248,14 +251,14 @@ class WelcomePage extends React.Component<Props, State> {
    * 
    * TODO: Get linkedEventsPost not by the hardcoded post ID
    */
-  private renderLinkedEvents = (postId: number) => {
+  private renderLinkedEvents = (categoryId: number) => {
     const { classes } = this.props;
-    const linkedEventsPost = this.state.linkedEventsPost;
+    const linkedEventsPost = this.getLimitedPosts(categoryId, 1)[0];
     const events = new Array();
-    if (!this.state.linkedEventsPost) {
+    if (!linkedEventsPost) {
       return null;
     } else {
-      const parsedContent = ReactHtmlParser(this.state.linkedEventsPost.content ? this.state.linkedEventsPost.content.rendered || "" : "");
+      const parsedContent = ReactHtmlParser(linkedEventsPost.content ? linkedEventsPost.content.rendered || "" : "");
       return (
         parsedContent.splice(0, this.state.linkedEventsLimitingNumber).map(contentItem => {
           return (
@@ -306,6 +309,16 @@ class WelcomePage extends React.Component<Props, State> {
    */
   private navigateTo = (url: string) => () => {
     window.location.href = url;
+  }
+
+  /**		
+    * Scrolls down to popular pages		
+    */		
+   private scrollDownToPopularPages = () => {		
+    const { current } = this.popularPagesSection;		
+    if (current) {		
+      current.scrollIntoView();		
+    }		
   }
 
   /**
