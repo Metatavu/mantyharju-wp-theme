@@ -1,8 +1,9 @@
 import * as React from 'react';
 import bar from "../../resources/img/headerImage.png";
-import { MenuLocationData, MenuItemData, Category } from "../../generated/client/src";
-import { withStyles, WithStyles, Link, Container } from '@material-ui/core';
+import { MenuLocationData, MenuItemData, Page } from "../../generated/client/src";
+import { withStyles, WithStyles, Link } from '@material-ui/core';
 import styles from "../../styles/header-styles";
+import ReactHtmlParser from "react-html-parser";
 
 /**
  * Facebook-logo license: https://commons.wikimedia.org/wiki/File:Facebook_William_Aditya_Sarana.png
@@ -12,10 +13,9 @@ import styles from "../../styles/header-styles";
  * Component props
  */
 interface Props extends WithStyles<typeof styles> {
-  mainMenu?: MenuLocationData
   localeMenu?: MenuLocationData
-  categories: Category[]
-  topMenuCategoryId?: number
+  parentPage?: number
+  pages: Page[]
 }
 
 /**
@@ -23,7 +23,7 @@ interface Props extends WithStyles<typeof styles> {
  */
 interface State {
   menuVisibility: boolean,
-  menuItemCurrent?: MenuItemData
+  menuItemCurrent?: Page,
 }
 
 /**
@@ -38,7 +38,7 @@ class Header extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      menuVisibility: false
+      menuVisibility: false,
     };
   }
 
@@ -69,84 +69,16 @@ class Header extends React.Component<Props, State> {
             <button>Go</button>
           </div>
         </div>
-        <div className={classes.mainMenu}>
-          { this.renderMenu() }
-        </div>
-        <div className={classes.mainMenu}>
-          { this.renderSubmenu() }
+        <div onMouseLeave={() => { this.onMouseLeave() }}>
+          <div className={classes.mainMenu}>
+            {this.renderMenu()}
+          </div>
+          <div className={classes.mainMenu}>
+            {this.renderSubmenu()}
+          </div>
         </div>
       </div>
     )
-  }
-
-  /**
-   * Render Top Menu bar
-   */
-  private renderTopMenuBar = () => {
-    const { classes } = this.props;
-    const { categories, topMenuCategoryId } = this.props;
-    if (!categories) {
-      return null;
-    } else {
-      return categories.map(category => {
-        if (category.parent == topMenuCategoryId) {
-          return (
-            <h3 className={classes.mainMenuItem} onClick={() => { this.onMenuItemClick(category) }}>{ category.name ? category.name || "" : "" }</h3>
-          );
-        } else {
-          return null;
-        }
-      });
-    }
-    
-  }
-
-  private onMenuItemClick = (category: Category) => {
-    
-  }
-
-  /**
-   * Render Main top menu method
-   */
-  private renderTopMenu = () => {
-    const { mainMenu } = this.props;
-    const { classes } = this.props;
-
-    if (!mainMenu || !mainMenu.items) {
-      return null;
-    }
-
-    mainMenu.items.map(item => {
-      item.child_items
-    })
-
-    return (
-      mainMenu.items.map(item => {
-        if (item.child_items && this.state.menuVisibility) {
-          
-        }
-      })
-    );
-  }
-
-  /**
-   * Render main menu method
-   */
-  private renderMenu = () => {
-    const { mainMenu } = this.props;
-    const { classes } = this.props;
-
-    if (!mainMenu || !mainMenu.items) {
-      return null;
-    }
-
-    return (
-      <div className={ classes.nav }>
-        {
-          mainMenu.items.map(this.renderSubmenuHeaders)
-        }
-      </div>
-    );
   }
 
   /**
@@ -163,7 +95,7 @@ class Header extends React.Component<Props, State> {
     return (
       <div className={ classes.nav }>
         {
-          localeMenu.items.map(this.renderMenuItem)
+          localeMenu.items.map(this.renderLocaleMenuItem)
         }
       </div>
     );
@@ -172,7 +104,7 @@ class Header extends React.Component<Props, State> {
   /**
    * Render menu item method
    */
-  private renderMenuItem = (item: MenuItemData) => {
+  private renderLocaleMenuItem = (item: MenuItemData) => {
     const { classes } = this.props;
     return (
       <Link
@@ -189,13 +121,40 @@ class Header extends React.Component<Props, State> {
   }
 
   /**
+   * Render main menu method
+   */
+  private renderMenu = () => {
+    const { classes } = this.props;
+    let menuHeaderItems = this.getChildMenuPages(this.props.parentPage || -1);
+    if (!menuHeaderItems) {
+      return null;
+    } else {
+      return (
+        <div className={classes.nav}>
+          {
+            menuHeaderItems.map(this.renderSubmenuHeaders)
+          }
+        </div>
+      );
+    }
+  }
+
+  /**
    * Render submenu headers
    */
-  private renderSubmenuHeaders = (item: MenuItemData) => {
+  private renderSubmenuHeaders = (page: Page) => {
     const { classes } = this.props;
     return (
       <div>
-        <h2 onClick={() => { this.onClick(item) }} className={ classes.navLink }>{ item.title }</h2>
+        <h2
+          onMouseEnter={() => { this.onMouseEnter(page) }}
+          onClick={() => { this.onPageClick(page) }}
+          className={ classes.navLink }
+        >
+          {
+            ReactHtmlParser(page.title ? page.title.rendered || "" : "")
+          }
+        </h2>
       </div>
     );
   }
@@ -207,14 +166,13 @@ class Header extends React.Component<Props, State> {
     const { classes } = this.props;
     const { menuVisibility, menuItemCurrent } = this.state;
     if (menuItemCurrent && menuVisibility) {
-      console.log("Menu item current: ", menuItemCurrent);
+      let childMenuPages = this.getChildMenuPages(menuItemCurrent.id ? menuItemCurrent.id : -1);
       return (
-        (menuItemCurrent.child_items ? menuItemCurrent.child_items : new Array()).map((childItem: MenuItemData) => {
-          console.log("Child child: ", childItem);
+        (childMenuPages ? childMenuPages : new Array()).map((childPage: Page) => {
           return (
-            <div className={ classes.navLink }>
-              <h3>{ childItem.title }</h3>
-              { this.renderPostLinks(childItem) }
+            <div className={ classes.menuItems }>
+              <h3 onClick={() => { this.onPageClick(childPage) }}>{ ReactHtmlParser(childPage.title ? childPage.title.rendered || "" : "") }</h3>
+              { this.renderLowLevelMenuPages(childPage) }
             </div>
           )
         })
@@ -227,39 +185,74 @@ class Header extends React.Component<Props, State> {
   /**
    * Render topmenu post links
    */
-  private renderPostLinks = (childItem: MenuItemData) => {
-    const { classes } = this.props;
-    const { menuVisibility, menuItemCurrent } = this.state;
+  private renderLowLevelMenuPages = (parentPage: Page) => {
+    let childPages = this.getChildMenuPages(parentPage.id ? parentPage.id : -1);
+    if (childPages == null) {
+      return null;
+    } else {
       return (
-        (childItem.child_items ? childItem.child_items : new Array()).map(childItem => {
+        childPages.map(childPage => {
           return (
-            <h5>{ childItem.title }</h5>
+            <h5 onClick={() => { this.onPageClick(childPage) }}>{ ReactHtmlParser(childPage.title ? childPage.title.rendered || "" : "") }</h5>
           )
         })
       )
+    } 
   }
 
   /**
-   * Render submenu
+   * Redirects to page URL
+   * @param page Page
    */
-  private onClick = (item: MenuItemData) => {
-    const { classes } = this.props;
-    let visibility = this.state.menuVisibility ? false : true;
+  private onPageClick = (page: Page) => {
+    console.log("Clicked, page is: ", page.title);
+    window.location.href = page.link || "";
+  }
+
+  /**
+   * Mouse enter event handler
+   */
+  private onMouseEnter = (page: Page) => {
+    let currentPage = this.state.menuItemCurrent;
+
     this.setState({
-      menuItemCurrent: item,
-      menuVisibility: visibility,
+      menuVisibility: true,
     });
-    console.log("States: ", this.state.menuItemCurrent, " and ", this.state.menuVisibility);
-    // return (
-    //   (item.child_items ? item.child_items : new Array()).map(childItem => {
-    //     console.log("CHILD ITEM IS: ", childItem);
-    //     return (
-    //       <div>
-    //         <h3 className={ classes.navLink }>{ childItem.title }</h3>
-    //       </div>
-    //     )
-    //   })
-    // );
+
+    if (currentPage != page) {
+
+      this.setState({
+        menuItemCurrent: page,
+      });
+    }
+  }
+
+  /**
+   * Mouse enter event handler
+   */
+  private onMouseLeave = () => {
+
+    this.setState({
+      menuVisibility: false,
+    });
+  }
+
+  /**
+   * 
+   */
+  private getChildMenuPages = (parentPageId: number) => {
+    const { pages } = this.props;
+    let menuPagesArray: Page[] = new Array();
+    if (!pages) {
+      return null;
+    } else {
+      pages.map(page => {
+        if (page.parent == parentPageId) {
+          menuPagesArray.push(page);
+        }
+      })
+      return menuPagesArray;
+    }
   }
 }
 

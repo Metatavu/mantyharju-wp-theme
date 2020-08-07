@@ -1,7 +1,7 @@
 import * as React from "react";
 import { WithStyles, withStyles, Link, Container } from "@material-ui/core";
 import bar from "../resources/img/headerimage.png";
-import { MenuLocationData, MenuItemData, Category } from "../generated/client/src";
+import { MenuLocationData, Page } from "../generated/client/src";
 import ApiUtils from "../utils/ApiUtils";
 import styles from "../styles/basic-layout";
 import Header from "./generic/Header";
@@ -20,11 +20,10 @@ interface Props extends WithStyles<typeof styles> {
  */
 interface State {
   loading: boolean,
-  mainMenu?: MenuLocationData,
   localeMenu?: MenuLocationData,
   scrollPosition: number,
-  categories: Category[],
-  topMenuCategoryId?: number
+  pages: Page[],
+  parentPage?: number
 }
 
 /**
@@ -39,9 +38,9 @@ class BasicLayout extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      categories: [],
       loading: false,
       scrollPosition: 0,
+      pages: [],
     };
   }
 
@@ -56,23 +55,21 @@ class BasicLayout extends React.Component<Props, State> {
 
     const api = ApiUtils.getApi();
 
-    const [mainMenu, localeMenu, categories, topMenuCategory] = await Promise.all(
+    const [localeMenu, pages, parentPage] = await Promise.all(
       [
-        api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }),
-        api.getWpV2Categories({ per_page: 30 }),
-        api.getWpV2Categories({ slug: [ "top-menu" ] })
+        api.getWpV2Pages({ per_page: 50 }),
+        api.getWpV2Pages({ slug: [ "sivut" ] }),
       ]
     );
 
-    const topMenuCategoryId = (topMenuCategory.length > 0 ? topMenuCategory[0].id || -1 : -1);
+    const parentPageId = (parentPage.length > 0 ? parentPage[0].id || -1 : -1);
 
     this.setState({
       loading: false,
-      mainMenu: mainMenu,
       localeMenu: localeMenu,
-      categories: categories,
-      topMenuCategoryId: topMenuCategoryId
+      pages: pages,
+      parentPage: parentPageId
     });
   }
 
@@ -92,10 +89,10 @@ class BasicLayout extends React.Component<Props, State> {
     return (
       <div>
         <Header
-        mainMenu={ this.state.mainMenu }
         localeMenu={ this.state.localeMenu }
-        categories={ this.state.categories }
-        topMenuCategoryId={ this.state.topMenuCategoryId }>
+        pages={ this.state.pages }
+        parentPage={ this.state.parentPage }
+        >
         </Header>
         { this.props.children }
         <Footer></Footer>
