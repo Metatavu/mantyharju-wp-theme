@@ -141,6 +141,7 @@ class Header extends React.Component<Props, State> {
 
   /**
    * Render submenu headers
+   * @param page Page
    */
   private renderSubmenuHeaders = (page: Page) => {
     const { classes } = this.props;
@@ -184,6 +185,7 @@ class Header extends React.Component<Props, State> {
 
   /**
    * Render topmenu post links
+   * @param page Page
    */
   private renderLowLevelMenuPages = (parentPage: Page) => {
     let childPages = this.getChildMenuPages(parentPage.id ? parentPage.id : -1);
@@ -211,6 +213,7 @@ class Header extends React.Component<Props, State> {
 
   /**
    * Mouse enter event handler
+   * @param page Page
    */
   private onMouseEnter = (page: Page) => {
     let currentPage = this.state.menuItemCurrent;
@@ -238,7 +241,9 @@ class Header extends React.Component<Props, State> {
   }
 
   /**
-   * 
+   * Return array of page's child pages
+   * @param parentPageId number
+   * @returns Page[]
    */
   private getChildMenuPages = (parentPageId: number) => {
     const { pages } = this.props;
