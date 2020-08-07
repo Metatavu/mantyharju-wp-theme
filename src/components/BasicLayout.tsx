@@ -1,7 +1,7 @@
 import * as React from "react";
 import { WithStyles, withStyles, Link, Container } from "@material-ui/core";
 import bar from "../resources/img/headerimage.png";
-import { MenuLocationData, MenuItemData } from "../generated/client/src";
+import { MenuLocationData, Page } from "../generated/client/src";
 import ApiUtils from "../utils/ApiUtils";
 import styles from "../styles/basic-layout";
 import Header from "./generic/Header";
@@ -19,10 +19,11 @@ interface Props extends WithStyles<typeof styles> {
  * Interface representing component state
  */
 interface State {
-  loading: boolean
-  mainMenu?: MenuLocationData
-  localeMenu?: MenuLocationData
-  scrollPosition: number
+  loading: boolean,
+  localeMenu?: MenuLocationData,
+  scrollPosition: number,
+  pages: Page[],
+  parentPage?: number
 }
 
 /**
@@ -39,6 +40,7 @@ class BasicLayout extends React.Component<Props, State> {
     this.state = {
       loading: false,
       scrollPosition: 0,
+      pages: [],
     };
   }
 
@@ -53,17 +55,21 @@ class BasicLayout extends React.Component<Props, State> {
 
     const api = ApiUtils.getApi();
 
-    const [mainMenu, localeMenu] = await Promise.all(
+    const [localeMenu, pages, parentPage] = await Promise.all(
       [
-        api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
-        api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" })
+        api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }),
+        api.getWpV2Pages({ per_page: 50 }),
+        api.getWpV2Pages({ slug: [ "sivut" ] }),
       ]
-    )
+    );
+
+    const parentPageId = (parentPage.length > 0 ? parentPage[0].id || -1 : -1);
 
     this.setState({
       loading: false,
-      mainMenu: mainMenu,
       localeMenu: localeMenu,
+      pages: pages,
+      parentPage: parentPageId
     });
   }
 
@@ -83,8 +89,10 @@ class BasicLayout extends React.Component<Props, State> {
     return (
       <div>
         <Header
-        mainMenu={this.state.mainMenu}
-        localeMenu={this.state.localeMenu}>
+        localeMenu={ this.state.localeMenu }
+        pages={ this.state.pages }
+        parentPage={ this.state.parentPage }
+        >
         </Header>
         { this.props.children }
         <Footer></Footer>

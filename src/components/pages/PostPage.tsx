@@ -135,7 +135,7 @@ class PostPage extends React.Component<Props, State> {
     return breadcrumb.map((crumb) => {
       return (
         <Link color="inherit" href={ crumb.link } onClick={() => {}}>
-          { crumb.label }
+          { ReactHtmlParser(crumb.label ? crumb.label || "" : "") }
         </Link>
       );
     });
