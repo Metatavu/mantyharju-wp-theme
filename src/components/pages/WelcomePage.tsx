@@ -124,6 +124,7 @@ class WelcomePage extends React.Component<Props, State> {
   public render() {
     const { lang, classes } = this.props;
     const { customizeFields } = this.state;
+    let addEventImageStyle = {backgroundImage: `url(${ customizeFields.showcase_image })`};
 
     return (
       <BasicLayout lang={ lang }>
@@ -140,8 +141,7 @@ class WelcomePage extends React.Component<Props, State> {
         }
         { !this.state.loading &&
           <div className= { classes.addEventDiv }>
-            <div className= { classes.addEventImageDiv }>
-              <img className= { classes.addEventImage } alt="Lisää tapahtuma: kuvituskuva" src={ customizeFields.showcase_image || contentImage } />
+            <div className= { classes.addEventImageDiv } style={addEventImageStyle}>
             </div>
             <div className= { classes.addEventTextDiv }>
               <h3 className= { classes.addEventTextDivHeading }>{ customizeFields.showcase_title }</h3>

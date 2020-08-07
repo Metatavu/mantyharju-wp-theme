@@ -108,15 +108,16 @@ export default createStyles({
     marginLeft:"5%",
     marginBottom: "5%",
     marginRight:"5%",
-    minHeight:"30vw",
     color: "fff"
   },
   addEventImageDiv: {
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "center center",
+    backgroundSize: "cover",
     width: "50%",
-    height:"30vw"
   },
   addEventTextDiv: {
-    maxWidth: "50%",
+    width: "50%",
     backgroundColor:"#00AAAD",
     height:"30vw",
     paddingLeft: "5vw",
@@ -162,23 +163,20 @@ export default createStyles({
    * Posts section styles
    */
   postsContainer: {
-    height: "50vh",
     width: "100%",
-    paddingRight: "6rem",
-    paddingLeft: "6rem",
     display: "flex",
     flexDirection: "row",
+    justifyContent: "center",
     [theme.breakpoints.down("sm")]: {
       flexDirection:"column",
-      minHeight: "100vh",
+      justifyContent: "center",
       textAlign: "center",
-      marginLeft: "0vw",
+      margin: "0px"
     },
   },
   postsColumn: {
-    minHeight: "90vw",
-    marginRight: "5rem",
-    width: "33.33%",
+    padding: "3rem",
+    maxWidth: "250px",
     display: "table",
     [theme.breakpoints.down("sm")]: {
       width: "100%",
@@ -210,11 +208,6 @@ export default createStyles({
       opacity: "20%",
       margin: 2,
       marginTop: "1rem",
-      width: "24vw",
-      [theme.breakpoints.down("sm")]: {
-        width: "35vw",
-        marginLeft: "20.5vw",
-      },
     },
     marginBottom: "2rem",
     maxHeight: "2.3rem",
@@ -232,11 +225,6 @@ export default createStyles({
       color: "black",
       opacity: "20%",
       marginTop: "1rem",
-      width: "24vw",
-      [theme.breakpoints.down("sm")]: {
-        width: "35vw",
-        marginLeft: "20.5vw",
-      },
     },
     marginBottom: "2rem",
     maxHeight: "2.3rem",
