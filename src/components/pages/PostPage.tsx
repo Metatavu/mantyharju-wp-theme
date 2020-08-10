@@ -13,6 +13,7 @@ import * as moment from "moment";
 import "../../../node_modules/react-simple-tree-menu/dist/main.css";
 import TreeView from "../generic/TreeView";
 import RightSideBar from "../generic/RightSideBar";
+import LeftSideBar from "../generic/LeftSideBar";
 
 /**
  * Interface representing component properties
@@ -21,13 +22,15 @@ interface Props extends WithStyles<typeof styles> {
   slug: string
   lang: string
   mainPageSlug: string
+  locationPath: string
 }
 
 /**
  * Interface representing component state
  */
 interface State {
-  page?: Page;
+  currentPage?: Page;
+  parentPage?: Page;
   post?: Post;
   title: string;
   loading: boolean;
@@ -37,6 +40,9 @@ interface State {
   breadcrumb: Breadcrumb[];
   mainContent?: React.ReactElement;
   sideContent?: React.ReactElement;
+  pages: Page[];
+  sideMenuParentPage?: Page;
+  leftMenuCurrentTopPage?: Page;
 }
 
 /**
@@ -65,7 +71,8 @@ class PostPage extends React.Component<Props, State> {
       isArticle: false,
       loading: false,
       breadcrumb: [],
-      title: ""
+      title: "",
+      pages: [],
     };
   }
 
@@ -89,13 +96,15 @@ class PostPage extends React.Component<Props, State> {
    * Component render method
    */
   public render() {
-    const { classes, lang, slug } = this.props;
-    const { title, sideContent } = this.state;
-
+    const { classes, lang, locationPath } = this.props;
+    const { sideContent, currentPage, parentPage, pages, leftMenuCurrentTopPage } = this.state;
+    const loactionPathnameArrayRaw = (locationPath ? locationPath.replace(/\//g, " ") || "" : "").split(" ");
+    const loacationPathnameArray = loactionPathnameArrayRaw.splice(1, (loactionPathnameArrayRaw.length -1 ) - 1);
+    console.log("Location PATHNAME array is: ", loacationPathnameArray);
     return (
       <BasicLayout lang={ lang } title={ this.setTitleSource() }>
         <div className={classes.heroImageDiv}>
-          <h1 className={classes.heroText}>Hallinta ja talous</h1>
+          <h1 className={classes.heroText}>{ currentPage ? ReactHtmlParser(currentPage.title ? currentPage.title.rendered || "" : "") : null }</h1>
         </div>
         <div className={ classes.wrapper }>
           <div className={ classes.pageContent }>
@@ -109,8 +118,7 @@ class PostPage extends React.Component<Props, State> {
             </div>
             <div className={ classes.columns }>
               <div className={ classes.sidebar }>
-                <Typography variant="h5">{ title }</Typography>
-                <TreeView lang={ lang } slug={ slug } />
+                <LeftSideBar pages={ pages } currentPage={ currentPage } parentPage={ parentPage } locationPathArray={ loacationPathnameArray } leftMenuCurrentTopPage={ leftMenuCurrentTopPage }></LeftSideBar>
               </div>
               <div className={ classes.contentarea }>
                 { this.renderContent() }
@@ -146,10 +154,10 @@ class PostPage extends React.Component<Props, State> {
    */
   private renderContent = () => {
     const { classes } = this.props;
-    const post = this.state.post;
+    const page = this.state.currentPage;
     return (
       <Container className={ classNames( classes.root, this.state.isArticle && "article") }>
-        <h2>{ post ? ReactHtmlParser(post.title ? post.title.rendered || "" : "") : null }</h2>
+        <h2>{ page ? ReactHtmlParser(page.title ? page.title.rendered || "" : "") : null }</h2>
         { this.renderPostContent() }
       </Container>
     );
@@ -163,6 +171,9 @@ class PostPage extends React.Component<Props, State> {
       loading: true
     });
 
+    const { locationPath } = this.props;
+    const loactionPathnameArrayRaw = (locationPath ? locationPath.replace(/\//g, " ") || "" : "").split(" ");
+    const loacationPathnameArray = loactionPathnameArrayRaw.splice(1, (loactionPathnameArrayRaw.length -1 ) - 1);
     const lang = this.props.lang;
     const slugParts = this.props.slug.split("/");
     const slug = slugParts.pop() || slugParts.pop();
@@ -179,22 +190,29 @@ class PostPage extends React.Component<Props, State> {
       api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
       api.getWpV2Pages({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
       api.getWpV2Posts({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
-      api.getWpV2Pages({ per_page: 100 })
+      api.getWpV2Pages({ per_page: 100 }),
+      api.getWpV2Pages({ slug: [ "sivut" ] }),
+      api.getWpV2Pages({ slug: [ loacationPathnameArray[1] ] }),
     ]);
 
-    const page = apiCalls[0][0];
+    const currentPage = apiCalls[0][0];
     const post = apiCalls[1][0];
     const nav = apiCalls[2];
     const pageTitle = apiCalls[3][0].title || apiCalls[4][0].title;
     const pages = apiCalls[5];
+    const parentPage = apiCalls[6][0];
+    const leftMenuCurrentTopPage = apiCalls[7][0];
 
     this.setState({
-      page: page,
+      currentPage: currentPage,
       post: post,
       isArticle: !!post,
       loading: false,
       nav: nav,
-      pageTitle: pageTitle
+      pageTitle: pageTitle,
+      pages: pages,
+      parentPage: parentPage,
+      leftMenuCurrentTopPage: leftMenuCurrentTopPage
     });
 
     this.breadcrumbPath(pages);
@@ -219,10 +237,10 @@ class PostPage extends React.Component<Props, State> {
    * @param path collected breadcumbs
    */
   private buildPath = (children: Page[], pages: Page[], path?: Breadcrumb[]) => {
-    const { page } = this.state;
+    const { currentPage } = this.state;
     children.forEach(childPage => {
       const childPages = pages.filter(item => item.parent === childPage.id);     
-      if (page && (page.id === childPage.id) && childPage.title) {
+      if (currentPage && (currentPage.id === childPage.id) && childPage.title) {
         this.setState({
           title: childPage.title.rendered || "",
           breadcrumb: path ? [...path, { label: childPage.title.rendered || "", link: childPage.link || "" }] : [{ label: childPage.title.rendered || "", link: childPage.link || "" }]
@@ -289,15 +307,15 @@ class PostPage extends React.Component<Props, State> {
    * Set html source for page content
    */
   private getPageOrPostContent = () => {
-    const {page, post} = this.state;
+    const {currentPage, post} = this.state;
 
     const noContentError = <h2 className="error-text">{ strings.pageNotFound }</h2>;
     const undefinedContentError = <h2 className="error-text">{ strings.somethingWentWrong }</h2>;
-    if (!page && !post) {
+    if (!currentPage && !post) {
       return noContentError;
     }
 
-    const renderedContent = page && page.content ? page.content.rendered : post && post.content ? post.content.rendered : undefined;
+    const renderedContent = currentPage && currentPage.content ? currentPage.content.rendered : post && post.content ? post.content.rendered : undefined;
     if (!renderedContent) {
       return undefinedContentError;
     }

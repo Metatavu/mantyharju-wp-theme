@@ -60,6 +60,7 @@ class App extends React.Component<Props, State> {
                   lang={ language }
                   slug={ this.pathToSlug(props.location.pathname) }
                   mainPageSlug={ this.pathToTitle(props.location.pathname) }
+                  locationPath={ props.location.pathname }
                 />
               )}
             />
