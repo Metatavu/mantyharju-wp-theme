@@ -87,24 +87,6 @@ class LeftSideBar extends React.Component<Props, State> {
   }
 
   /**
-   * Returns menu items array based on the current page level
-   */
-  private menuItemsArrayProvider = () => {
-    const { parentPage, leftMenuCurrentTopPage } = this.props;
-    let parentPageId = parentPage ? parentPage.id || -2 : -2;
-    let leftMenuCurrentTopPageParent = leftMenuCurrentTopPage ? leftMenuCurrentTopPage.parent || -1 : -1;
-    let leftMenuCurrentTopPageId = leftMenuCurrentTopPage ? leftMenuCurrentTopPage.id || -1 : -1;
-
-    if (leftMenuCurrentTopPageParent == parentPageId) {
-        return (
-            this.getChildMenuPages(leftMenuCurrentTopPageId)
-        )
-    } else {
-        return null;
-    }
-  }
-
-  /**
    * Render menu headers
    * @param page Page
    */
@@ -173,6 +155,25 @@ class LeftSideBar extends React.Component<Props, State> {
   private onPageClick = (page: Page) => {
     console.log("Clicked, page is: ", page.title);
     window.location.href = page.link || "";
+  }
+
+  /**
+   * Returns menu items array based on the current page level
+   * @returns Page[]
+   */
+  private menuItemsArrayProvider = () => {
+    const { parentPage, leftMenuCurrentTopPage } = this.props;
+    let parentPageId = parentPage ? parentPage.id || -2 : -2;
+    let leftMenuCurrentTopPageParent = leftMenuCurrentTopPage ? leftMenuCurrentTopPage.parent || -1 : -1;
+    let leftMenuCurrentTopPageId = leftMenuCurrentTopPage ? leftMenuCurrentTopPage.id || -1 : -1;
+
+    if (leftMenuCurrentTopPageParent == parentPageId) {
+        return (
+            this.getChildMenuPages(leftMenuCurrentTopPageId)
+        )
+    } else {
+        return null;
+    }
   }
 
   /**
