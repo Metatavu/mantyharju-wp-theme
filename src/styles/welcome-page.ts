@@ -43,6 +43,7 @@ export default createStyles({
     color: "#fff",
     height:"35vw",
     maxHeight:"50vw",
+    minHeight:"400px",
     paddingLeft: "8vw",
     paddingRight: "8vw",
     paddingTop: "8vw",
@@ -92,44 +93,59 @@ export default createStyles({
     position: "absolute",
     bottom: "0",
     right: "5vw",
-    [theme.breakpoints.down("sm")]:{
-      fontSize: "0.5em",
-    }
     },
 
   /**
    * Add events -div
    */
   addEventDiv: {
-    display:"flex",
+    display:"grid",
+    gridTemplateColumns: "50% 50%",
     flexDirection:"row",
     width: "90%",
+    minHeight: "300px",
     marginTop: "1vw",
     marginLeft:"5%",
     marginBottom: "5%",
     marginRight:"5%",
-    minHeight:"30vw",
-    color: "fff"
+    color: "fff",
+    [theme.breakpoints.down("sm")]:{
+      width: "100%",
+      gridTemplateRows: "50% 50%",
+      margin: "20px 0px 0px 0px"
+    }
   },
   addEventImageDiv: {
-    width: "50%",
-    height:"30vw"
+    gridColumnStart: "1",
+    gridColumnEnd: "1", 
+    width: "100%",
+    float: "left",
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "center center",
+    backgroundSize: "cover",
+    [theme.breakpoints.down("sm")]:{
+      paddingRight: "0.1vw",
+      minHeight: "200px",
+      width: "100%",
+      gridColumnStart: "1",
+      gridColumnEnd: "3", 
+    }
   },
   addEventTextDiv: {
-    maxWidth: "50%",
+    gridColumnStart: "2",
+    gridColumnEnd: "2", 
+    width: "100%",
+    float: "left",
     backgroundColor:"#00AAAD",
-    height:"30vw",
     paddingLeft: "5vw",
     paddingRight: "10vw",
     paddingTop: "2vw",
     [theme.breakpoints.down("sm")]:{
       paddingRight: "0.1vw",
-      lineHeight: "1.4rem",
-      fontSize: "0.7rem"
-    },
-    [theme.breakpoints.down("xs")]:{
-      lineHeight: "0.8rem",
-      fontSize: "0.5rem"
+      minHeight: "200px",
+      width: "100%",
+      gridColumnStart: "1",
+      gridColumnEnd: "3", 
     },
   },
   addEventTextDivParagraph: {
@@ -140,7 +156,6 @@ export default createStyles({
     },
   },
   addEventTextDivHeading: {
-    fontSize: "2.5vw",
     marginBottom: "0",
     textDecoration: "none"
   },
@@ -162,27 +177,23 @@ export default createStyles({
    * Posts section styles
    */
   postsContainer: {
-    height: "50vh",
     width: "100%",
-    paddingRight: "6rem",
-    paddingLeft: "6rem",
     display: "flex",
     flexDirection: "row",
+    justifyContent: "space-evenly",
     [theme.breakpoints.down("sm")]: {
+      display: "grid",
       flexDirection:"column",
-      minHeight: "100vh",
       textAlign: "center",
-      marginLeft: "0vw",
+      justifyContent: "center",
     },
   },
   postsColumn: {
-    minHeight: "90vw",
-    marginRight: "5rem",
-    width: "33.33%",
+    padding: "3rem",
+    maxWidth: "250px",
     display: "table",
     [theme.breakpoints.down("sm")]: {
       width: "100%",
-      marginBottom: "3rem"
     },
     '& linkedevents-event': {
       backgroundColor: "black",
@@ -210,11 +221,6 @@ export default createStyles({
       opacity: "20%",
       margin: 2,
       marginTop: "1rem",
-      width: "24vw",
-      [theme.breakpoints.down("sm")]: {
-        width: "35vw",
-        marginLeft: "20.5vw",
-      },
     },
     marginBottom: "2rem",
     maxHeight: "2.3rem",
@@ -232,11 +238,6 @@ export default createStyles({
       color: "black",
       opacity: "20%",
       marginTop: "1rem",
-      width: "24vw",
-      [theme.breakpoints.down("sm")]: {
-        width: "35vw",
-        marginLeft: "20.5vw",
-      },
     },
     marginBottom: "2rem",
     maxHeight: "2.3rem",
@@ -389,9 +390,6 @@ export default createStyles({
       },
       [theme.breakpoints.down("sm")]: {
         fontSize: "1em",
-      },
-      [theme.breakpoints.down("xs")]: {
-        fontSize: "0.5em",
       }
     }
   },
