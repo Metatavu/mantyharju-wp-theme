@@ -92,7 +92,6 @@ class LeftSideBar extends React.Component<Props, State> {
    */
   private renderMenuHeaders = (page: Page) => {
     const { classes } = this.props;
-    console.log("Recieved page is: ", page);
     return (
       <div>
         <h2
@@ -153,7 +152,6 @@ class LeftSideBar extends React.Component<Props, State> {
    * @param page Page
    */
   private onPageClick = (page: Page) => {
-    console.log("Clicked, page is: ", page.title);
     window.location.href = page.link || "";
   }
 
