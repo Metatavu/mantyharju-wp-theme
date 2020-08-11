@@ -1,6 +1,5 @@
 import { createStyles } from "@material-ui/core";
 import theme from "./theme";
-// import headerImage from "../resources/img/headerImage.png";
 
 export default createStyles({
   logoBar: {
@@ -19,20 +18,6 @@ export default createStyles({
     fontFamily: theme.typography.h2.fontFamily,
     color: "#00AAAD",
     cursor: "pointer",
-    // [theme.breakpoints.down("sm")]:{
-    //   fontSize: "0.75rem",
-    // },
-    // [theme.breakpoints.down("md")]: {
-    //   fontSize: "0.75rem",
-    //   marginLeft: 10,
-    // },
-    // [theme.breakpoints.up("lg")]: {
-    //   fontSize: "1rem",
-    //   marginLeft: 35,
-    // },
-    // [theme.breakpoints.up("xl")]: {
-    //   marginLeft: 45,
-    // }
   },
   menuItems: {
     display: "flex",
@@ -42,20 +27,6 @@ export default createStyles({
     textDecoration: "none",
     fontFamily: theme.typography.h3.fontFamily,
     color: theme.palette.primary.main,
-    // [theme.breakpoints.down("sm")]:{
-    //   fontSize: "0.75rem",
-    // },
-    // [theme.breakpoints.down("md")]: {
-    //   fontSize: "0.75rem",
-    //   marginLeft: 10,
-    // },
-    // [theme.breakpoints.up("lg")]: {
-    //   fontSize: "1rem",
-    //   marginLeft: 35,
-    // },
-    // [theme.breakpoints.up("xl")]: {
-    //   marginLeft: 45,
-    // }
   },
   mainMenu: {
     display: "flex",
