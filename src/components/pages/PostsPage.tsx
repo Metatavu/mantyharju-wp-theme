@@ -4,7 +4,10 @@ import ReactHtmlParser, { convertNodeToElement } from "react-html-parser";
 import { withStyles, WithStyles, Breadcrumbs, Link } from '@material-ui/core';
 import styles from '../../styles/posts-page';
 import BasicLayout from '../BasicLayout';
+import { DomElement } from "domhandler";
 import { Page, Post, MenuLocationData, PostTitle, Attachment } from 'src/generated/client/src';
+import strings from "../../localization/strings";
+import * as moment from "moment";
 
 /**
  * Facebook-logo license: https://commons.wikimedia.org/wiki/File:Facebook_William_Aditya_Sarana.png
@@ -17,6 +20,7 @@ interface Props extends WithStyles<typeof styles> {
     slug: string
     lang: string
     mainPageSlug: string
+    locationKey?: string
 }
 
 /**
@@ -33,6 +37,10 @@ interface State {
   secondPageCategoryId: number;
   media: Attachment[];
   limitedPosts: Post[];
+  pages: Page[];
+  parentPage?: Page;
+  mainContent?: React.ReactElement;
+  sideContent?: React.ReactElement;
 }
 
 /**
@@ -48,6 +56,8 @@ interface Breadcrumb {
  */
 class PostsPage extends React.Component<Props, State> {
 
+  private contentParsed: boolean;
+
   /**
    * Constructor
    * @param props component properties
@@ -61,7 +71,8 @@ class PostsPage extends React.Component<Props, State> {
       breadcrumb: [],
       title: "",
       secondPageCategoryId: 6,
-      limitedPosts: []
+      limitedPosts: [],
+      pages: [],
     };
   }
 
@@ -101,6 +112,9 @@ class PostsPage extends React.Component<Props, State> {
             </Breadcrumbs>
             <p className={ classes.dividerLine }><hr></hr></p>
         </div>
+        <div>
+          { this.renderPostContent() }
+        </div>
         <div className={classes.gallery}>
           { this.renderPosts() }
         </div>
@@ -109,17 +123,19 @@ class PostsPage extends React.Component<Props, State> {
   }
 
   private renderPosts() {
-    const { classes } = this.props;
-    const limitedPosts = this.getLimitedPosts(this.state.secondPageCategoryId, 6);
-    if (!this.state.limitedPosts) {
+    const { classes, locationKey } = this.props;
+    const { page } = this.state;
+    let displayPages = this.getChildMenuPages(page ? page.id || -1 : -1);
+    if (!displayPages) {
       return null;
     } else {
+      displayPages = displayPages.length > 6 ? displayPages.splice(0, 6) : displayPages;
       return (
-        this.state.limitedPosts.map(post => {
+        displayPages.map(page => {
           return (
             <div>
-              <div style={{ backgroundImage: `url(${this.getAttachmentForPost(post)})` }} onClick={() => { this.onPostClick(post) }} className={classes.gallery_img} />
-              <h2>{ReactHtmlParser(post.title ? post.title.rendered || "" : "")}</h2>
+              <div style={{ backgroundImage: `url(${this.getAttachmentForPost(page)})` }} onClick={() => { this.onPostClick(page) }} className={classes.gallery_img} />
+              <h2>{ReactHtmlParser(page.title ? page.title.rendered || "" : "")}</h2>
             </div>
           )
         })
@@ -128,13 +144,33 @@ class PostsPage extends React.Component<Props, State> {
   }
 
   /**
+   * Render post content method
+   */
+  private renderPostContent = () => {
+    const { classes, lang } = this.props;
+    const { mainContent, sideContent } = this.state;
+    const content = this.getPageOrPostContent();
+    moment.locale(lang);
+    return (
+      <div className={classes.topPageContent}>
+        <div>
+          <h2>{mainContent}</h2>
+        </div>
+        <div>
+          {sideContent}
+        </div>
+      </div>
+    );
+  }
+
+  /**
    * Returns post featured image URL
    */
-  private getAttachmentForPost = (post: Post) => {
+  private getAttachmentForPost = (page: Page) => {
     var attachmentUrl = "";
     if (this.state.media) {
       this.state.media.map(attachment => {
-        if (attachment.id == post.featured_media) {
+        if (attachment.id == page.featured_media) {
           attachmentUrl = attachment.source_url || "";
         }
       })
@@ -168,6 +204,7 @@ class PostsPage extends React.Component<Props, State> {
       api.getWpV2Posts({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
       api.getWpV2Pages({ per_page: 100 }),
       api.getWpV2Media({}),
+      api.getWpV2Pages({ slug: [ "sivut" ] }),
     ]);
 
     const page = apiCalls[0][0];
@@ -176,6 +213,7 @@ class PostsPage extends React.Component<Props, State> {
     const pageTitle = apiCalls[3][0].title || apiCalls[4][0].title;
     const pages = apiCalls[5];
     const media = apiCalls[6];
+    const parentPage = apiCalls[7][0];
 
     this.setState({
       page: page,
@@ -184,6 +222,8 @@ class PostsPage extends React.Component<Props, State> {
       nav: nav,
       pageTitle: pageTitle,
       media: media,
+      pages: pages,
+      parentPage: parentPage,
     });
 
     this.breadcrumbPath(pages);
@@ -231,10 +271,24 @@ class PostsPage extends React.Component<Props, State> {
     return breadcrumb.map((crumb) => {
       return (
         <Link className={ classes.currentPageLink } href={ crumb.link } onClick={() => {}}>
-          { crumb.label }
+          { ReactHtmlParser(crumb.label ? crumb.label || "" : "") }
         </Link>
       );
     });
+  }
+
+  /**
+   * Set html source for page content
+   */
+  private getPageOrPostContent = () => {
+    const { page } = this.state;
+    const undefinedContentError = <h2 className="error-text">{ strings.somethingWentWrong }</h2>;
+    const renderedContent = page && page.content ? page.content.rendered : undefined;
+    if (!renderedContent) {
+      return undefinedContentError;
+    }
+
+    return ReactHtmlParser(renderedContent, { transform: this.transformContent });
   }
 
   /**
@@ -254,23 +308,72 @@ class PostsPage extends React.Component<Props, State> {
    * Redirects to post URL
    * @param post Post
    */
-  private onPostClick(post: Post) {
-    window.location.href = post.link || "";
+  private onPostClick(page: Page) {
+    window.location.href = page.link || "";
   }
 
   /**
-   * Gets limited posts array for post thumbnails
-   * 
-   * TODO: Decide which is better, passing to State like here OR like in WelcomePage.tsx by comparing all posts with category. Second approach requires some debugging.
+   * Return array of page's child pages
+   * @returns Page[]
    */
-  private getLimitedPosts = async (categoryId: number, delimiter: number) => {
-    const api = ApiUtils.getApi();
-    const postsArray: Post[] = new Array();
-    const categoryPosts = await api.getWpV2Posts({ categories: [ categoryId.toString() ] });
+  private getChildMenuPages = (parentPageId: number) => {
+    const { pages, page } = this.state;
+    let menuPagesArray: Page[] = new Array();
+    if (!pages || !parentPageId) {
+      return null;
+    } else {
+      pages.map(page => {
+        if (page.parent == parentPageId) {
+          menuPagesArray.push(page);
+        }
+      })
+      return menuPagesArray;
+    }
+  }
 
-    this.setState({
-      limitedPosts: categoryPosts.splice(0, delimiter)
-    })
+  /**
+   * transform without changes
+   *
+   * @param node DomElement
+   * @param index DomElement index
+   */
+  private transform = (node: DomElement, index: number) => {
+    return convertNodeToElement(node, index, this.transform);
+  }
+
+  /**
+   * get html element classes
+   *
+   * @param node DomElement
+   */
+  private getElementClasses = (node: DomElement): string[] => {
+    const classString = node.attribs ? node.attribs.class : "";
+    if (node.attribs && node.attribs.class) {
+      return classString.split(" ");
+    }
+
+    return [];
+  }
+
+  /**
+   * transform html source content before it is rendered
+   *
+   * @param node DomElement
+   * @param index DomElement index
+   */
+  private transformContent = (node: DomElement, index: number) => {
+    const { classes } = this.props;
+    const classNames = this.getElementClasses(node);
+
+    if (classNames.indexOf("wp-block-columns") > -1 && node.children && node.children.length > 3 && !this.contentParsed) {
+      this.contentParsed = true;
+      const mainContent = convertNodeToElement(node.children[1], index, this.transform);
+      const sideContent = convertNodeToElement(node.children[3], index, this.transform);
+      this.setState({
+        mainContent: mainContent,
+        sideContent: sideContent
+      });
+    }
   }
 }
 
