@@ -207,7 +207,6 @@ class Header extends React.Component<Props, State> {
    * @param page Page
    */
   private onPageClick = (page: Page) => {
-    console.log("Clicked, page is: ", page.title);
     window.location.href = page.link || "";
   }
 
