@@ -54,7 +54,7 @@ class App extends React.Component<Props, State> {
               )}
             />
             <Route
-              path="/:posts/:post"
+              path="/:pages/:page/:pages"
               render={ (props) => (
                 <PostPage
                   lang={ language }
@@ -65,12 +65,14 @@ class App extends React.Component<Props, State> {
               )}
             />
             <Route
-              path="/sample-page"
+              path="/sivut/:page"
+              exact={ true }
               render={ (props) => (
                 <PostsPage
                   lang={ language }
                   slug={ this.pathToSlug(props.location.pathname) }
                   mainPageSlug={ this.pathToTitle(props.location.pathname) }
+                  locationKey={ props.location.key }
                 />
               )}
             />

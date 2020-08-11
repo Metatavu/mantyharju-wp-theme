@@ -312,6 +312,8 @@ export default createStyles({
     flex: 1, padding: "2rem"
   },
   contentarea: {
+    display: "flex",
+    flexDirection: "column",
     flex: 3
   },
   sidebar: {

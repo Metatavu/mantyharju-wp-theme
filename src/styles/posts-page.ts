@@ -116,4 +116,10 @@ export default createStyles({
         fontSize: "130%",
     }
   },
+  topPageContent: {
+    display: "grid",
+    gridTemplateColumns: "repeat(2, 1fr)",
+    margin: "0vw 8vw 4vw 12vw",
+    height: "fit-content"
+  }
 });
