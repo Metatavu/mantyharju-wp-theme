@@ -100,7 +100,6 @@ class PostPage extends React.Component<Props, State> {
     const { sideContent, currentPage, parentPage, pages, leftMenuCurrentTopPage } = this.state;
     const loactionPathnameArrayRaw = (locationPath ? locationPath.replace(/\//g, " ") || "" : "").split(" ");
     const loacationPathnameArray = loactionPathnameArrayRaw.splice(1, (loactionPathnameArrayRaw.length -1 ) - 1);
-    console.log("Location PATHNAME array is: ", loacationPathnameArray);
     return (
       <BasicLayout lang={ lang } title={ this.setTitleSource() }>
         <div className={classes.heroImageDiv}>
