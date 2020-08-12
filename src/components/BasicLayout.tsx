@@ -1,6 +1,5 @@
 import * as React from "react";
-import { WithStyles, withStyles, Link, Container } from "@material-ui/core";
-import bar from "../resources/img/headerimage.png";
+import { WithStyles, withStyles } from "@material-ui/core";
 import { MenuLocationData, Page } from "../generated/client/src";
 import ApiUtils from "../utils/ApiUtils";
 import styles from "../styles/basic-layout";
@@ -58,7 +57,7 @@ class BasicLayout extends React.Component<Props, State> {
     const [localeMenu, pages, parentPage] = await Promise.all(
       [
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }),
-        api.getWpV2Pages({ per_page: 50 }),
+        api.getWpV2Pages({ per_page: 100 }),
         api.getWpV2Pages({ slug: [ "sivut" ] }),
       ]
     );

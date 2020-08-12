@@ -1,8 +1,8 @@
 import * as React from 'react';
 import bar from "../../resources/img/headerImage.png";
+import styles from "../../styles/header-styles";
 import { MenuLocationData, MenuItemData, Page } from "../../generated/client/src";
 import { withStyles, WithStyles, Link } from '@material-ui/core';
-import styles from "../../styles/header-styles";
 import ReactHtmlParser from "react-html-parser";
 
 /**
