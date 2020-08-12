@@ -1,6 +1,5 @@
 import * as React from "react";
-import { WithStyles, withStyles, Link, Container } from "@material-ui/core";
-import bar from "../resources/img/headerimage.png";
+import { WithStyles, withStyles } from "@material-ui/core";
 import { MenuLocationData, Page } from "../generated/client/src";
 import ApiUtils from "../utils/ApiUtils";
 import styles from "../styles/basic-layout";
