@@ -30,7 +30,6 @@ export default createStyles({
   },
   mainMenu: {
     display: "flex",
-    marginLeft: "8vw",
     paddingBottom: "10px",
   },
   menuExpandedArrow: {
