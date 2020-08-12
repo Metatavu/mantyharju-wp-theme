@@ -707,6 +707,7 @@ export default createStyles({
         }
       },
       "& .wp-block-column": {
+        display: "contents",
         margin: 0
       },
       "& .widget_flex-posts-list": {
@@ -837,7 +838,6 @@ export default createStyles({
     },
     // Single column
     "& .wp-block-column": {
-      display: "flex",
       [theme.breakpoints.up("md")]: {
         marginLeft: theme.spacing(2),
         marginRight: theme.spacing(2),
