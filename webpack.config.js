@@ -1,5 +1,8 @@
 const path = require('path');
 const webpack = require('webpack');
+const dotenv = require('dotenv').config({
+  path: path.join(__dirname, '.env')
+});
 
 module.exports = {
   mode: "production",
@@ -13,6 +16,11 @@ module.exports = {
   },
   module: {
     rules: [
+      {
+        parser: {
+          amd: false
+        }
+      },
       {
         test: /\.tsx?$/, 
         loader: 'awesome-typescript-loader'
@@ -56,6 +64,9 @@ module.exports = {
     ]
   },
   plugins: [
-    new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en|fi/)
+    new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en|fi/),
+    new webpack.DefinePlugin({
+      "process.env": dotenv.parsed
+    })
   ]
 }

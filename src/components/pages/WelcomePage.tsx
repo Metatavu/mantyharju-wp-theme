@@ -3,14 +3,20 @@ import BasicLayout from "../BasicLayout";
 import contentImage from "../../resources/img/mantyharju-images/mantyharju-images/hero-front-1600x1080.jpg";
 import ReactHtmlParser from "react-html-parser";
 import ApiUtils from "../../utils/ApiUtils";
-import { WithStyles, withStyles, Button, CircularProgress } from "@material-ui/core";
+import { WithStyles, withStyles, Button, CircularProgress, Icon, Dialog } from "@material-ui/core";
 import styles from "../../styles/welcome-page";
 import * as moment from "moment";
 import AddIcon from "@material-ui/icons/Add";
 import CurrenEventsIcon from '@material-ui/icons/QuestionAnswerOutlined';
 import AnnouncementsIcon from '@material-ui/icons/VolumeUp';
 import JobsIcon from '@material-ui/icons/ThumbsUpDown';
-import { Post, MenuLocationData, Customize, Attachment, GetWpV2PostsOrderbyEnum, GetWpV2PostsOrderEnum } from "../../generated/client/src";
+import { Post, MenuLocationData, Attachment, GetWpV2PostsOrderbyEnum, GetWpV2PostsOrderEnum, CustomizeField } from "../../generated/client/src";
+import { Metaform, MetaformField } from "../../metaform/models/api";
+import { MetaformComponent, IconName, FieldValue } from "../../metaform";
+import LinkedeventsClient from "linkedevents-client";
+import DatePicker, { registerLocale } from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import fi from "date-fns/esm/locale/fi";
 
 /**
  * Interface representing component properties
@@ -24,6 +30,8 @@ interface Props extends WithStyles<typeof styles> {
  */
 interface State {
   posts: Post[],
+  form: Metaform,
+  formValues: Dictionary<string | number | null>
   media: Attachment[],
   linkedEventsPost?: Post,
   loading: boolean,
@@ -36,7 +44,12 @@ interface State {
   announcementsCategoryId: number,
   newsCategoryId: number,
   linkedEventsLimitingNumber: number,
-  customizeFields: Customize
+  customizeFields: CustomizeField[],
+  modalOpen: boolean
+}
+
+interface Dictionary<T> {
+  [Key: string]: T;
 }
 
 /**
@@ -44,7 +57,7 @@ interface State {
  */
 class WelcomePage extends React.Component<Props, State> {
 
-  popularPagesSection: React.RefObject<HTMLDivElement>;
+  private popularPagesSection: React.RefObject<HTMLDivElement>;
 
   /**
    * Constructor
@@ -57,6 +70,8 @@ class WelcomePage extends React.Component<Props, State> {
     this.state = {
       posts: [],
       media: [],
+      form: {},
+      formValues: {},
       loading: false,
       popularPosts: [],
       scrollPosition: 0,
@@ -65,10 +80,12 @@ class WelcomePage extends React.Component<Props, State> {
       announcementsCategoryId: 9,
       newsCategoryId: 14,
       linkedEventsLimitingNumber: 8,
-      customizeFields: {}
+      customizeFields: [],
+      modalOpen: false
     };
 
     this.popularPagesSection = React.createRef();
+    registerLocale('fi', fi);
   }
 
   /**
@@ -97,8 +114,11 @@ class WelcomePage extends React.Component<Props, State> {
 
     const popularPosts = await api.getWpV2Posts({ categories: categoryIdArray, per_page: 6, orderby: GetWpV2PostsOrderbyEnum.Date, order: GetWpV2PostsOrderEnum.Desc });
 
+    const form = require("../../metaform-json/index.json");
+
     this.setState({
       posts: posts,
+      form: form,
       loading: false,
       mainMenu: mainMenu,
       localeMenu: localeMenu,
@@ -123,7 +143,11 @@ class WelcomePage extends React.Component<Props, State> {
    */
   public render() {
     const { lang, classes } = this.props;
-    const { customizeFields } = this.state;
+    const showcaseText = this.getCustomizerFieldValue("showcase_text");
+    const showcaseImage = this.getCustomizerFieldValue("showcase_image");
+    const showcaseTitle = this.getCustomizerFieldValue("showcase_title");
+    const showcaseButtonText = this.getCustomizerFieldValue("showcase_button_text");
+    const showcaseButtonLink = this.getCustomizerFieldValue("showcase_button_link");
 
     return (
       <BasicLayout lang={ lang }>
@@ -141,15 +165,15 @@ class WelcomePage extends React.Component<Props, State> {
         { !this.state.loading &&
           <div className= { classes.addEventDiv }>
             <div className= { classes.addEventImageDiv }>
-              <img className= { classes.addEventImage } alt="Lisää tapahtuma: kuvituskuva" src={ customizeFields.showcase_image || contentImage } />
+              <img className= { classes.addEventImage } alt="Lisää tapahtuma: kuvituskuva" src={ showcaseImage || contentImage } />
             </div>
             <div className= { classes.addEventTextDiv }>
-              <h3 className= { classes.addEventTextDivHeading }>{ customizeFields.showcase_title }</h3>
+              <h3 className= { classes.addEventTextDivHeading }>{ showcaseTitle }</h3>
               <p className= { classes.addEventTextDivParagraph }>
-                { customizeFields.showcase_text }
+                { showcaseText }
               </p>
-              <Button onClick={ this.navigateTo(customizeFields.showcase_button_link || window.location.href) } className={ `${classes.generalButtonStyle} ${classes.addEventButton}`}>
-                { customizeFields.showcase_button_text }
+              <Button onClick={ this.navigateTo(showcaseButtonLink || window.location.href) } className={ `${classes.generalButtonStyle} ${classes.addEventButton}`}>
+                { showcaseButtonText }
               </Button>
             </div>
           </div>
@@ -177,15 +201,253 @@ class WelcomePage extends React.Component<Props, State> {
             { this.renderLinkedEvents(57) }
           </div>
           <Button title= "Kaikki tapahtumat" onClick={this.expandLinkedEvents} className={ `${classes.generalButtonStyle} ${classes.allEventsButton}` }>Kaikki tapahtumat</Button>
-          <Button title= "Lisää tapahtuma" className={ `${classes.generalButtonStyle} ${classes.addLinkedEventButton}` }>Lisää tapahtuma</Button>
+          <Button title= "Lisää tapahtuma" onClick={ this.openModal } className={ `${classes.generalButtonStyle} ${classes.addLinkedEventButton}` }>Lisää tapahtuma</Button>
         </div>
         <div ref={ this.popularPagesSection } className={ classes.bottom_section }>
           {
             this.renderBottomSectionPosts()
           }
         </div>
+        <Dialog
+          className={ classes.dialog }
+          onClose={ this.closeModal }
+          open={ this.state.modalOpen }
+          scroll={ 'paper' }
+        >
+          {
+            this.renderForm()
+          }
+        </Dialog>
       </BasicLayout>
     );
+  }
+
+  /**
+   * Sets modal state to open
+   */
+  private openModal = () => {
+    this.setState({
+      modalOpen: true
+    });
+  }
+
+  /**
+   * Sets modal state to closed
+   */
+  private closeModal = () => {
+    this.setState({
+      modalOpen: false,
+      formValues: {}
+    });
+  }
+
+  /**
+   * Returns found customizer field value or undefined
+   *
+   * @param key key of the customizer field
+   */
+  private getCustomizerFieldValue = (key: string) => {
+    const { customizeFields } = this.state;
+    const field = customizeFields.find(field => field.key === key);
+    if (field) {
+      return field.value;
+    }
+    return undefined;
+  }
+
+  /**
+   * Render single form
+   */
+  private renderForm = () => {
+    const { form } = this.state;
+    const { classes } = this.props;
+    return (
+      <div className={ classes.paper }>
+        <MetaformComponent
+          form={ form }
+          formReadOnly={ false }
+          getFieldValue={ this.getFieldValue }
+          setFieldValue={ this.setFieldValue }
+          datePicker={ this.datePicker }
+          datetimePicker={ this.datetimePicker }
+          uploadFile={ this.uploadFile }
+          setAutocompleteOptions={ this.setAutocompleteOptions }
+          renderIcon={ this.renderIcon }
+          onSubmit={ this.onSubmit }
+        />
+      </div>
+    );
+  }
+
+  /**
+   * Method for getting field value
+   *
+   * @param fieldName field name
+   */
+  private getFieldValue = (fieldName: string): FieldValue => {
+    return this.state.formValues[fieldName];
+  }
+
+  /**
+   * Method for setting field value
+   *
+   * @param fieldName field name
+   * @param fieldValue field value
+   */
+  private setFieldValue = (fieldName: string, fieldValue: FieldValue) => {
+    const { formValues } = this.state;
+    formValues[fieldName] = fieldValue;
+    this.setState({
+      formValues: formValues
+    });
+  }
+
+  /**
+   * Method for setting date
+   *
+   * @param onChange on change callback for setting date
+   */
+  private datePicker = (fieldName: string, onChange: (date: Date) => void) => {
+    const value = this.getFieldValue(fieldName);
+    return (
+      <DatePicker
+        selected={ value ? new Date(value) : null }
+        onChange={ onChange }
+        dateFormat="dd.MM.yyyy"
+        locale="fi"
+      />
+    );
+  }
+
+  /**
+   * Method for setting datetime
+   *
+   * @param onChange on change callback for setting datetime
+   */
+  private datetimePicker = (fieldName: string, onChange: (date: Date) => void) => {
+    const value = this.getFieldValue(fieldName);
+    return (
+      <DatePicker
+        selected={ value ? new Date(value) : null }
+        onChange={ onChange }
+        dateFormat="dd.MM.yyyy"
+        showTimeSelect
+        timeFormat="HH:mm"
+        timeIntervals={ 15 }
+        locale="fi"
+      />
+    );
+  }
+
+  /**
+   * Method for uploading a file
+   *
+   * @param file file
+   * @param path path
+   */
+  private uploadFile = (fieldName: string, files: FileList | File, path: string) => {
+    console.log(fieldName, files, path);
+  }
+
+  /**
+   * Method for setting autocomplete options
+   *
+   * @param path path
+   */
+  private setAutocompleteOptions = (path: string) => {
+    return new Promise<string[]>((resolve, reject) => {
+      resolve([ "moi", "hei" ]);
+    });
+  }
+
+  /**
+   * Method for rendering form icons
+   *
+   * @param icon icon name
+   * @param key key
+   */
+  private renderIcon = (icon: IconName, key: string): React.ReactNode => {
+    return <Icon className={ icon } />;
+  }
+
+  /**
+   * Method for submitting form
+   *
+   * @param source submit input info
+   */
+  private onSubmit = (source: MetaformField) => {
+    const { formValues } = this.state;
+    console.log(this.validateForm());
+    console.log(Object.keys(formValues));
+    try {
+      const client = LinkedeventsClient.ApiClient.instance;
+      client.basePath = process.env.REACT_APP_LINKED_EVENTS_API_URL;
+      client.defaultHeaders = {
+        apiKey: process.env.REACT_APP_LINKED_EVENTS_API_URL
+      };
+      const eventApi = new LinkedeventsClient.EventApi();
+      const datasource = process.env.REACT_APP_LINKED_EVENTS_DATASOURCE;
+      const publisher = process.env.REACT_APP_LINKED_EVENTS_PUBLISHER_ORGANIZATION;
+      const linkedEventsUrl = process.env.REACT_APP_LINKED_EVENTS_API_URL;
+
+      const keywordIds: string[] = [];
+      const keywords = keywordIds.map(keywordId => {
+        return { "@id": `${linkedEventsUrl}/keyword/${keywordId}/` };
+      });
+
+      const imageUrls: string[] = [];
+      const images = await Promise.all(imageUrls.map(url => createEventImage(url)));
+      
+    } catch (error) {
+      //console.log(error);
+    }
+  }
+
+  /**
+   * Returns boolean depending on wether form is valid or not
+   */
+  private validateForm = () => {
+    const { formValues } = this.state;
+    if (
+      (
+        (
+          formValues["language-fi"] &&
+          (formValues["name-fi"] && ((formValues["has-price"] && formValues["price-fi"]) || !formValues["has-price"]) && formValues["description-fi"]) &&
+          ((formValues["is-registration"] && formValues["no-registration-fi"]) || !formValues["is-registration"]) ||
+          (!formValues["language-fi"] && (formValues["language-sv"] || formValues["language-en"]))
+        ) &&
+        (
+          formValues["language-sv"] &&
+          (formValues["name-sv"] && ((formValues["has-price"] && formValues["price-sv"]) || !formValues["has-price"]) && formValues["description-sv"]) &&
+          ((formValues["is-registration"] && formValues["no-registration-sv"]) || !formValues["is-registration"]) ||
+          (!formValues["language-sv"] && (formValues["language-fi"] || formValues["language-en"]))
+        ) &&
+        (
+          formValues["language-en"] &&
+          (formValues["name-en"] && ((formValues["has-price"] && formValues["price-en"]) || !formValues["has-price"]) && formValues["description-en"]) &&
+          ((formValues["is-registration"] && formValues["no-registration-en"]) || !formValues["is-registration"]) ||
+          (!formValues["language-en"] && (formValues["language-sv"] || formValues["language-fi"]))
+        )
+      ) &&
+      (
+        (formValues["start-date-time"] && formValues["end-date-time"]) ||
+        (formValues["start-date"] && formValues["end-date"])
+      ) &&
+      (
+        (formValues["show-default-images"] && formValues["default-image-url"]) ||
+        (formValues["image"] || formValues["image-url"])
+      ) &&
+      (
+        formValues["location"] &&
+        formValues["provider"] &&
+        formValues["responsible"] &&
+        formValues["responsible-phone-number"] &&
+        formValues["responsible-email-address"]
+      )
+    ) {
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -196,7 +458,7 @@ class WelcomePage extends React.Component<Props, State> {
   private renderNews = (categoryId: number) => {
     const { classes } = this.props;
     const newsPost = this.getLimitedPosts(categoryId, 1)[0];
-    var events = new Array();
+    let events = new Array();
     if (!newsPost) {
       return null;
     } else {
@@ -225,23 +487,23 @@ class WelcomePage extends React.Component<Props, State> {
     } else {
       return (
         this.getLimitedPosts(categoryId, 3).map((post) => {
-            if ((post.categories ? post.categories : new Array()).includes(categoryId)) {
-              const postsArray = new Array();
-              postsArray.concat(post);
-              return(
-                <div className={ classes.allPosts}>
-                  <div className={ classes.singlePost }>
-                    <p className={ classes.postDate }>{ ReactHtmlParser(!post.date ? "" : moment(post.date).format("DD.MM.YYYY")) }</p>
-                    <div className={ classes.postContent }>
-                      { ReactHtmlParser(post.content ? post.content.rendered || "" : "") }
-                    </div>
-                    <hr />
+          if ((post.categories ? post.categories : new Array()).includes(categoryId)) {
+            const postsArray = new Array();
+            postsArray.concat(post);
+            return(
+              <div className={ classes.allPosts}>
+                <div className={ classes.singlePost }>
+                  <p className={ classes.postDate }>{ ReactHtmlParser(!post.date ? "" : moment(post.date).format("DD.MM.YYYY")) }</p>
+                  <div className={ classes.postContent }>
+                    { ReactHtmlParser(post.content ? post.content.rendered || "" : "") }
                   </div>
+                  <hr />
                 </div>
-              )
-            } else {
-              return null;
-            }
+              </div>
+            )
+          } else {
+            return null;
+          }
         })
       );
     }
@@ -249,7 +511,7 @@ class WelcomePage extends React.Component<Props, State> {
 
   /**
    * Render LinkedEvents posts
-   * 
+   *
    * TODO: Get linkedEventsPost not by the hardcoded post ID
    */
   private renderLinkedEvents = (postId: number) => {
@@ -280,10 +542,24 @@ class WelcomePage extends React.Component<Props, State> {
     const { popularPosts } = this.state;
     return popularPosts.map(post => {
       return (
-        <div onClick={ this.navigateTo(post.link || window.location.href) } style={{ backgroundImage: `url(${ this.getAttachmentForPost(post) })` }} className={classes.bottom_section_item}>
+        <div onClick={ this.navigateTo(post.link || window.location.href) } style={{ backgroundImage: `url(${ this.getAttachmentForPost(post) })` }} className={ classes.bottom_section_item }>
           <p>{ post.title ? post.title.rendered || "" : "" }</p>
         </div>
       );
+    });
+  }
+
+  /**
+   * Creates an event image from url
+   *
+   * @param url url
+   */
+  private createEventImage = (url: string) => {
+    const imageApi = Common.getLinkedEventsImagesApi(config);
+    return imageApi.imageCreate({
+      imageObject: {
+        url: url
+      }
     });
   }
 
@@ -294,12 +570,11 @@ class WelcomePage extends React.Component<Props, State> {
     let attachmentUrl = "";
     if (this.state.media) {
       this.state.media.map(attachment => {
-        if (attachment.id == post.featured_media) {
+        if (attachment.id === post.featured_media) {
           attachmentUrl = attachment.source_url || "";
         }
       });
     }
-    
     return attachmentUrl;
   }
 
@@ -349,7 +624,7 @@ class WelcomePage extends React.Component<Props, State> {
    * Action handler for "Show more" Linked events button
    */
   private expandLinkedEvents = () => {
-    var newLimitingNumber: number;
+    let newLimitingNumber: number;
     if (this.state.linkedEventsLimitingNumber == 8) {
       newLimitingNumber = 16
     } else {
@@ -358,7 +633,7 @@ class WelcomePage extends React.Component<Props, State> {
 
     this.setState({
       linkedEventsLimitingNumber: newLimitingNumber
-    })
+    });
   }
 
   /**

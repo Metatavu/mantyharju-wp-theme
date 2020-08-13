@@ -26,6 +26,18 @@ export default createStyles({
     userSelect: "none"
   },
 
+  dialog: {
+    display: 'flex',
+    padding: theme.spacing(1),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  paper: {
+    backgroundColor: "#fff",
+    padding: theme.spacing(2, 4, 3),
+  },
+
   loadingIconContainer: {
     display: "flex",
     margin: "5rem",

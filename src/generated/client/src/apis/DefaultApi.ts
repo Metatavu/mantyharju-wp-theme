@@ -26,9 +26,9 @@ import {
     CustomTaxonomy,
     CustomTaxonomyFromJSON,
     CustomTaxonomyToJSON,
-    Customize,
-    CustomizeFromJSON,
-    CustomizeToJSON,
+    CustomizeField,
+    CustomizeFieldFromJSON,
+    CustomizeFieldToJSON,
     Menu,
     MenuFromJSON,
     MenuToJSON,
@@ -1940,7 +1940,7 @@ export class DefaultApi extends runtime.BaseAPI {
 
     /**
      */
-    async getWpV2CustomizeRaw(): Promise<runtime.ApiResponse<Customize>> {
+    async getWpV2CustomizeRaw(): Promise<runtime.ApiResponse<Array<CustomizeField>>> {
         const queryParameters: runtime.HTTPQuery = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -1952,12 +1952,12 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => CustomizeFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(CustomizeFieldFromJSON));
     }
 
     /**
      */
-    async getWpV2Customize(): Promise<Customize> {
+    async getWpV2Customize(): Promise<Array<CustomizeField>> {
         const response = await this.getWpV2CustomizeRaw();
         return await response.value();
     }

@@ -108,11 +108,26 @@
         $showcase_button_text = get_option( 'showcase_button_text' );
         $showcase_button_link = get_option( 'showcase_button_link' );
         return array(
-          'showcase_image' => "$showcase_image",
-          'showcase_title' => "$showcase_title",
-          'showcase_text' => "$showcase_text",
-          'showcase_button_text' => "$showcase_button_text",
-          'showcase_button_link' => "$showcase_button_link"
+          array(
+            'key' => 'showcase_image',
+            'value' => "$showcase_image"
+          ),
+          array(
+            'key' => 'showcase_title',
+            'value' => "$showcase_title"
+          ),
+          array(
+            'key' => 'showcase_text',
+            'value' => "$showcase_text"
+          ),
+          array(
+            'key' => 'showcase_button_text',
+            'value' => "$showcase_button_text"
+          ),
+          array(
+            'key' => 'showcase_button_link',
+            'value' => "$showcase_button_link"
+          )
         );
       },
     ) );

@@ -15,28 +15,28 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface Customize
+ * @interface CustomizeField
  */
-export interface Customize {
+export interface CustomizeField {
     /**
      * 
      * @type {string}
-     * @memberof Customize
+     * @memberof CustomizeField
      */
     key?: string;
     /**
      * 
      * @type {string}
-     * @memberof Customize
+     * @memberof CustomizeField
      */
     value?: string;
 }
 
-export function CustomizeFromJSON(json: any): Customize {
-    return CustomizeFromJSONTyped(json, false);
+export function CustomizeFieldFromJSON(json: any): CustomizeField {
+    return CustomizeFieldFromJSONTyped(json, false);
 }
 
-export function CustomizeFromJSONTyped(json: any, ignoreDiscriminator: boolean): Customize {
+export function CustomizeFieldFromJSONTyped(json: any, ignoreDiscriminator: boolean): CustomizeField {
     if ((json === undefined) || (json === null)) {
         return json;
     }
@@ -47,7 +47,7 @@ export function CustomizeFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     };
 }
 
-export function CustomizeToJSON(value?: Customize | null): any {
+export function CustomizeFieldToJSON(value?: CustomizeField | null): any {
     if (value === undefined) {
         return undefined;
     }

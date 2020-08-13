@@ -4588,7 +4588,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/customize"
+                type: array
+                items:
+                  $ref: "#/components/schemas/customizeField"
         default:
           description: error
           content:
@@ -4606,23 +4608,11 @@ components:
       in: header
       description: Please see http://v2.wp-api.org/guide/authentication/
   schemas:
-    customize:
-      type: object
+    customizeField:
       properties:
-        showcase_image:
-          description: Showcase image url.
+        key:
           type: string
-        showcase_title:
-          description: Showcase title text.
-          type: string
-        showcase_text:
-          description: Showcase text.
-          type: string
-        showcase_button_text:
-          description: Showcase button text.
-          type: string
-        showcase_button_link:
-          description: Showcase button link.
+        value:
           type: string
     error:
       properties:
