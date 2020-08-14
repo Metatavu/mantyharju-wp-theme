@@ -1,6 +1,5 @@
 import * as React from "react";
 import BasicLayout from "../BasicLayout";
-import contentImage from "../../resources/img/mantyharju-images/mantyharju-images/hero-front-1600x1080.jpg";
 import ReactHtmlParser from "react-html-parser";
 import ApiUtils from "../../utils/ApiUtils";
 import { WithStyles, withStyles, Button, CircularProgress } from "@material-ui/core";
@@ -10,7 +9,7 @@ import AddIcon from "@material-ui/icons/Add";
 import CurrenEventsIcon from '@material-ui/icons/QuestionAnswerOutlined';
 import AnnouncementsIcon from '@material-ui/icons/VolumeUp';
 import JobsIcon from '@material-ui/icons/ThumbsUpDown';
-import { Post, MenuLocationData, Customize, Attachment, GetWpV2PostsOrderbyEnum, GetWpV2PostsOrderEnum } from "../../generated/client/src";
+import { Post, MenuLocationData, CustomizeField, Attachment, GetWpV2PostsOrderbyEnum, GetWpV2PostsOrderEnum } from "../../generated/client/src";
 
 /**
  * Interface representing component properties
@@ -36,7 +35,7 @@ interface State {
   newsCategoryId: number,
   linkedEventsCategoryId: number,
   linkedEventsLimitingNumber: number,
-  customizeFields: Customize
+  customizeFields: CustomizeField[]
 }
 
 /**
@@ -66,7 +65,7 @@ class WelcomePage extends React.Component<Props, State> {
       newsCategoryId: 5,
       linkedEventsCategoryId: 8,
       linkedEventsLimitingNumber: 8,
-      customizeFields: {}
+      customizeFields: []
     };
 
     this.popularPagesSection = React.createRef();
@@ -122,8 +121,13 @@ class WelcomePage extends React.Component<Props, State> {
    */
   public render() {
     const { lang, classes } = this.props;
-    const { customizeFields } = this.state;
-    let addEventImageStyle = {backgroundImage: `url(${ customizeFields.showcase_image })`};
+    
+    let addEventImageStyle = {backgroundImage: `url(${ showcase_image })`};
+    const showcase_image = this.getCustomizerValue("showcase_image");
+    const showcase_title = this.getCustomizerValue("showcase_title");
+    const showcase_text = this.getCustomizerValue("showcase_text");
+    const showcase_button_link = this.getCustomizerValue("showcase_button_link");
+    const showcase_button_text = this.getCustomizerValue("showcase_button_text");
 
     return (
       <BasicLayout lang={ lang }>
@@ -143,12 +147,12 @@ class WelcomePage extends React.Component<Props, State> {
             <div className= { classes.addEventImageDiv } style={addEventImageStyle}>
             </div>
             <div className= { classes.addEventTextDiv }>
-              <h3 className= { classes.addEventTextDivHeading }>{ customizeFields.showcase_title }</h3>
+              <h3 className= { classes.addEventTextDivHeading }>{ showcase_title }</h3>
               <p className= { classes.addEventTextDivParagraph }>
-                { customizeFields.showcase_text }
+                { showcase_text }
               </p>
-              <Button onClick={ this.navigateTo(customizeFields.showcase_button_link || window.location.href) } className={ `${classes.generalButtonStyle} ${classes.addEventButton}`}>
-                { customizeFields.showcase_button_text }
+              <Button onClick={ this.navigateTo(showcase_button_link || window.location.href) } className={ `${classes.generalButtonStyle} ${classes.addEventButton}`}>
+                { showcase_button_text }
               </Button>
             </div>
           </div>
@@ -185,6 +189,19 @@ class WelcomePage extends React.Component<Props, State> {
         </div>
       </BasicLayout>
     );
+  }
+
+  /**
+   * Method for getting customizer field value
+   * 
+   * @param key field key
+   * @returns string
+   */
+  private getCustomizerValue = (key: string) => {
+    const { customizeFields } = this.state;
+    const field = customizeFields.find(field => field.key === key);
+    const value = field ? field.value : "";
+    return value;
   }
 
   /**

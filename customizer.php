@@ -1,6 +1,6 @@
 <?php
 
-  function custom_customizer_register( $wp_customize ) { 
+  function custom_customizer_register( $wp_customize ) {
 
     $wp_customize->add_section(
 			'showcase_section',
@@ -102,17 +102,18 @@
     register_rest_route( 'wp/v2', '/customize', array(
       'methods' => 'GET',
       'callback' => function (WP_REST_Request $request) {
-        $showcase_image = get_option( 'showcase_image' );
-        $showcase_title = get_option( 'showcase_title' );
-        $showcase_text = get_option( 'showcase_text' );
-        $showcase_button_text = get_option( 'showcase_button_text' );
-        $showcase_button_link = get_option( 'showcase_button_link' );
+        $showcase_image = get_option('showcase_image');
+        $showcase_title = get_option('showcase_title');
+        $showcase_text = get_option('showcase_text');
+        $showcase_button_text = get_option('showcase_button_text');
+        $showcase_button_link = get_option('showcase_button_link');
         return array(
-          'showcase_image' => "$showcase_image",
-          'showcase_title' => "$showcase_title",
-          'showcase_text' => "$showcase_text",
-          'showcase_button_text' => "$showcase_button_text",
-          'showcase_button_link' => "$showcase_button_link"
+          array('key' => 'showcase_image', 'value' => "$showcase_image"),
+          array('key' => 'showcase_title', 'value' => "$showcase_title"),
+          array('key' => 'showcase_text', 'value' => "$showcase_text"),
+          array('key' => 'showcase_title', 'value' => "$showcase_title"),
+          array('key' => 'showcase_button_text', 'value' => "$showcase_button_text"),
+          array('key' => 'showcase_button_link', 'value' => "$showcase_button_link"),
         );
       },
     ) );
