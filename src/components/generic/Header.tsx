@@ -1,9 +1,11 @@
 import * as React from 'react';
 import bar from "../../resources/img/headerImage.png";
 import styles from "../../styles/header-styles";
-import { MenuLocationData, MenuItemData, Page } from "../../generated/client/src";
-import { withStyles, WithStyles, Link } from '@material-ui/core';
+import { MenuLocationData, MenuItemData, Page, SearchResult, GetWpV2SearchTypeEnum } from "../../generated/client/src";
+import { withStyles, WithStyles, Link, TextField } from '@material-ui/core';
 import ReactHtmlParser from "react-html-parser";
+import ApiUtils from '../../utils/ApiUtils';
+import * as Autocomplete from 'react-autocomplete';
 
 /**
  * Facebook-logo license: https://commons.wikimedia.org/wiki/File:Facebook_William_Aditya_Sarana.png
@@ -24,6 +26,8 @@ interface Props extends WithStyles<typeof styles> {
 interface State {
   menuVisibility: boolean,
   menuItemCurrent?: Page,
+  searchString: string,
+  results: SearchResult[]
 }
 
 /**
@@ -39,6 +43,8 @@ class Header extends React.Component<Props, State> {
     super(props);
     this.state = {
       menuVisibility: false,
+      searchString: "",
+      results: []
     };
   }
 
@@ -53,6 +59,19 @@ class Header extends React.Component<Props, State> {
    */
   public render() {
     const { classes } = this.props;
+    const { searchString, results } = this.state;
+
+    const menuStyle: React.CSSProperties = {
+      borderRadius: '3px',
+      boxShadow: '0 2px 12px rgba(0, 0, 0, 0.1)',
+      background: 'rgba(255, 255, 255, 0.9)',
+      padding: '2px 0',
+      fontSize: '90%',
+      position: 'absolute',
+      overflow: 'auto',
+      maxHeight: '50%',
+      zIndex: 10
+    };
 
     return (
       <div>
@@ -65,8 +84,15 @@ class Header extends React.Component<Props, State> {
             {this.renderLocale()}
           </div>
           <div className={classes.searchBar}>
-            <input type="text" placeholder="Search.." />
-            <button>Go</button>
+          <Autocomplete
+            getItemValue={ this.getItemValue }
+            items={ results }
+            renderItem={ this.renderItem }
+            value={ searchString }
+            onChange={ this.setSearchString }
+            onSelect={ this.selectItem }
+            menuStyle={ menuStyle }
+          />
           </div>
         </div>
         <div onMouseLeave={() => { this.onMouseLeave() }}>
@@ -196,10 +222,67 @@ class Header extends React.Component<Props, State> {
         childPages.map(childPage => {
           return (
             <h5 onClick={() => { this.onPageClick(childPage) }}>{ ReactHtmlParser(childPage.title ? childPage.title.rendered || "" : "") }</h5>
-          )
+          );
         })
-      )
-    } 
+      );
+    }
+  }
+
+  /**
+   * Method for rendering list item
+   * 
+   * @param item item
+   * @param isHighlighted boolean
+   */
+  private renderItem = (item: any, isHighlighted: boolean) => {
+    return (
+      <div style={{ background: isHighlighted ? 'lightgray' : 'white', cursor: "pointer" }}>
+        {item.title}
+      </div>
+    );
+  }
+
+  /**
+   * Method for getting item value
+   * 
+   * @param item item
+   * @returns string
+   */
+  private getItemValue = (item: any) => {
+    return item.title;
+  }
+
+  /**
+   * Method for selecting item
+   *
+   * @param value item value
+   * @param item item
+   */
+  private selectItem = (value: string, item: any) => {
+    window.location.href = item.url;
+  }
+
+  /**
+   * Method for setting search string
+   * 
+   * @param event event object
+   */
+  private setSearchString = async (event: any) => {
+    const { value } = event.target;
+    const api = ApiUtils.getApi();
+    this.setState({
+      searchString: value
+    });
+    if (value) {
+      const results = await api.getWpV2Search({ search: value, type: GetWpV2SearchTypeEnum.Post, subtype: "post" });
+      this.setState({
+        results: results
+      });
+    } else {
+      this.setState({
+        results: []
+      });
+    }
   }
 
   /**
@@ -221,7 +304,7 @@ class Header extends React.Component<Props, State> {
       menuVisibility: true,
     });
 
-    if (currentPage != page) {
+    if (currentPage !== page) {
 
       this.setState({
         menuItemCurrent: page,
