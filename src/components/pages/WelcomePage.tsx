@@ -86,11 +86,16 @@ class WelcomePage extends React.Component<Props, State> {
       customizeFields: customizeFields
     });
 
-    const posts = await api.getWpV2Posts({per_page: 90});
-    const mainMenu = await api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" });
-    const localeMenu = await api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" });
-    const popularCategory = await api.getWpV2Categories({ slug: ["suosittu"] });
-    const media = await api.getWpV2Media({per_page: 50});
+    const [posts, mainMenu, localeMenu, popularCategory, media] = await Promise.all(
+      [
+        api.getWpV2Posts({per_page: 90}),
+        api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
+        api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }),
+        api.getWpV2Categories({ slug: ["suosittu"] }),
+        api.getWpV2Media({}),
+        api.getWpV2Customize()
+      ]
+    );
 
     const categoryIdArray = [(popularCategory.length > 0 ? popularCategory[0].id || -1 : -1)];
 
