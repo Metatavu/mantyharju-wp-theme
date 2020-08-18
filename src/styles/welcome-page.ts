@@ -36,7 +36,6 @@ export default createStyles({
    * Hero-image as background
    */
   heroImageDiv: {
-    backgroundImage: `url(${hero})`,
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center center",
     backgroundSize: "cover",

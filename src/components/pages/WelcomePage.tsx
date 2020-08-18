@@ -9,7 +9,7 @@ import AddIcon from "@material-ui/icons/Add";
 import CurrenEventsIcon from '@material-ui/icons/QuestionAnswerOutlined';
 import AnnouncementsIcon from '@material-ui/icons/VolumeUp';
 import JobsIcon from '@material-ui/icons/ThumbsUpDown';
-import { Post, MenuLocationData, CustomizeField, Attachment, GetWpV2PostsOrderbyEnum, GetWpV2PostsOrderEnum } from "../../generated/client/src";
+import { Post, MenuLocationData, CustomizeField, Attachment, GetWpV2PostsOrderbyEnum, GetWpV2PostsOrderEnum, Page } from "../../generated/client/src";
 
 /**
  * Interface representing component properties
@@ -25,7 +25,7 @@ interface State {
   posts: Post[],
   media: Attachment[],
   loading: boolean,
-  popularPosts: Post[],
+  popularPages: Page[],
   mainMenu?: MenuLocationData,
   localeMenu?: MenuLocationData,
   scrollPosition: number,
@@ -57,13 +57,13 @@ class WelcomePage extends React.Component<Props, State> {
       posts: [],
       media: [],
       loading: false,
-      popularPosts: [],
+      popularPages: [],
       scrollPosition: 0,
       siteMenuVisible: false,
       siteSearchVisible: false,
       announcementsCategoryId: 4,
       newsCategoryId: 5,
-      linkedEventsCategoryId: 8,
+      linkedEventsCategoryId: 14,
       linkedEventsLimitingNumber: 8,
       customizeFields: []
     };
@@ -75,35 +75,39 @@ class WelcomePage extends React.Component<Props, State> {
    * Component did mount life-cycle handler
    */
   public componentDidMount = async () => {
-    window.addEventListener("scroll", this.handleScroll);
     this.setState({
       loading: true
     });
-
     const api = ApiUtils.getApi();
-    const [posts, mainMenu, localeMenu, popularCategory, media, customizeFields] = await Promise.all(
+
+    const customizeFields = await api.getWpV2Customize();
+
+    this.setState({
+      customizeFields: customizeFields
+    });
+
+    const [posts, mainMenu, localeMenu, popularCategory, media] = await Promise.all(
       [
         api.getWpV2Posts({per_page: 90}),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }),
-        api.getWpV2Categories({ slug: ["popular"] }),
+        api.getWpV2Categories({ slug: ["suosittu"] }),
         api.getWpV2Media({}),
         api.getWpV2Customize()
       ]
     );
 
-    const categoryIdArray = [(popularCategory.length > 0 ? popularCategory[0].id || -1 : -1).toString()];
+    const categoryIdArray = [(popularCategory.length > 0 ? popularCategory[0].id || -1 : -1)];
 
-    const popularPosts = await api.getWpV2Posts({ categories: categoryIdArray, per_page: 6, orderby: GetWpV2PostsOrderbyEnum.Date, order: GetWpV2PostsOrderEnum.Desc });
+    const popularPages = await api.getWpV2Pages({ categories: categoryIdArray, per_page: 6});
 
     this.setState({
       posts: posts,
       loading: false,
       mainMenu: mainMenu,
       localeMenu: localeMenu,
-      popularPosts: popularPosts,
-      media: media,
-      customizeFields: customizeFields
+      popularPages: popularPages,
+      media: media
     });
 
     this.hidePageLoader();
@@ -121,28 +125,34 @@ class WelcomePage extends React.Component<Props, State> {
    */
   public render() {
     const { lang, classes } = this.props;
-    
-    let addEventImageStyle = {backgroundImage: `url(${ showcase_image })`};
     const showcase_image = this.getCustomizerValue("showcase_image");
     const showcase_title = this.getCustomizerValue("showcase_title");
     const showcase_text = this.getCustomizerValue("showcase_text");
     const showcase_button_link = this.getCustomizerValue("showcase_button_link");
     const showcase_button_text = this.getCustomizerValue("showcase_button_text");
+    const hero_image = this.getCustomizerValue("hero_image");
+    const hero_logo_image = this.getCustomizerValue("hero_logo_image");
+    const hero_title = this.getCustomizerValue("hero_title");
+    const hero_button_link = this.getCustomizerValue("hero_button_link");
+    const hero_button_text = this.getCustomizerValue("hero_button_text");
+    const footer_image = this.getCustomizerValue("footer_image");
+    const footer_title = this.getCustomizerValue("footer_title");
+    const footer_text = this.getCustomizerValue("footer_text");
+    const footer_button_link = this.getCustomizerValue("footer_button_link");
+    const footer_button_text = this.getCustomizerValue("footer_button_text");
+
+    let heroBackgroundImage = {backgroundImage: `url(${ hero_image })`};
+    let addEventImageStyle = {backgroundImage: `url(${ showcase_image })`};
 
     return (
       <BasicLayout lang={ lang }>
-        <div className={ classes.heroImageDiv }>
-          <h1 className={ classes.heroText }>Mäntyharju. -logo</h1>
-          <h2 className={ classes.heroText }>Luontoa, kulttuuria ja elämää!</h2>
-          <Button title="Lorem Ipsum" className= { `${classes.generalButtonStyle} ${classes.heroButton}`}>Lorem Ipsum</Button>
+        <div className={ classes.heroImageDiv } style={heroBackgroundImage}>
+          <h1 className={ classes.heroText }><img src={hero_logo_image} /></h1>
+          <h2 className={ classes.heroText }>{hero_title}</h2>
+          <Button title="Lorem Ipsum" className= { `${classes.generalButtonStyle} ${classes.heroButton}`}>{hero_button_link}</Button>
           <Button onClick={ this.scrollDownToPopularPages } title="Suosituimmat sivut" className={ `${classes.heroButtonPopularPages}`} endIcon={ <AddIcon/> }>Suosituimmat sivut</Button>
         </div>
-        { this.state.loading &&
-          <div className={ classes.loadingIconContainer }>
-            <CircularProgress />
-          </div>
-        }
-        { !this.state.loading &&
+        
           <div className= { classes.addEventDiv }>
             <div className= { classes.addEventImageDiv } style={addEventImageStyle}>
             </div>
@@ -156,24 +166,51 @@ class WelcomePage extends React.Component<Props, State> {
               </Button>
             </div>
           </div>
-        }
         <div className={ classes.postsContainer }>
           <div className= { classes.postsColumn }>
             <h1>{ <CurrenEventsIcon/> } Ajankohtaista</h1>
-            { this.renderNews(this.state.newsCategoryId) }
+            { this.state.loading &&
+              <div className={ classes.loadingIconContainer }>
+                <CircularProgress />
+              </div>
+            }
+            {!this.state.loading &&
+              <div>
+                { this.renderNews(this.state.newsCategoryId) }
+              </div>
+            }
             <Button className={ classes.postColumnButton }>katso kaikki</Button>
           </div>
           <div className= { classes.postsColumn }>
             <h1>{ <AnnouncementsIcon/> } Kuulutukset</h1>
-            { this.renderAnnouncements(this.state.announcementsCategoryId) }
+            { this.state.loading &&
+              <div className={ classes.loadingIconContainer }>
+                <CircularProgress />
+              </div>
+            }
+            {!this.state.loading &&
+              <div>
+                { this.renderAnnouncements(this.state.announcementsCategoryId) }
+              </div>
+            }
             <Button className={ classes.postColumnButton }>katso kaikki</Button>
           </div>
           <div className= { classes.postsColumn }>
             <h1>{ <JobsIcon/> } Työpaikat</h1>
-            { this.renderAnnouncements(this.state.announcementsCategoryId) }
+            { this.state.loading &&
+              <div className={ classes.loadingIconContainer }>
+                <CircularProgress />
+              </div>
+            }
+            { !this.state.loading &&
+              <div>
+                { this.renderAnnouncements(this.state.announcementsCategoryId) }
+              </div>
+            }
             <Button className={ classes.postColumnButton }>katso kaikki</Button>
           </div>
         </div>
+
         <div className = { classes.linkedEventsContainer }>
           <h1>Tapahtumat</h1>
           <div className={ classes.wrapper }>
@@ -293,24 +330,24 @@ class WelcomePage extends React.Component<Props, State> {
    */
   private renderBottomSectionPosts = () => {
     const { classes } = this.props;
-    const { popularPosts } = this.state;
-    return popularPosts.map(post => {
+    const { popularPages } = this.state;
+    return popularPages.map(page => {
       return (
-        <div onClick={ this.navigateTo(post.link || window.location.href) } style={{ backgroundImage: `url(${ this.getAttachmentForPost(post) })` }} className={classes.bottom_section_item}>
-          <p>{ post.title ? post.title.rendered || "" : "" }</p>
+        <div onClick={ this.navigateTo(page.link || window.location.href) } style={{ backgroundImage: `url(${ this.getAttachmentForPage(page) })` }} className={classes.bottom_section_item}>
+          <p>{ page.title ? page.title.rendered || "" : "" }</p>
         </div>
       );
     });
   }
 
   /**
-   * Returns post featured image URL
+   * Returns page featured image URL
    */
-  private getAttachmentForPost = (post: Post) => {
+  private getAttachmentForPage = (page: Page) => {
     let attachmentUrl = "";
     if (this.state.media) {
       this.state.media.map(attachment => {
-        if (attachment.id == post.featured_media) {
+        if (attachment.id == page.featured_media) {
           attachmentUrl = attachment.source_url || "";
         }
       });

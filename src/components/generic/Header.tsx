@@ -1,5 +1,5 @@
 import * as React from 'react';
-import bar from "../../resources/img/headerImage.png";
+import bar from "../../resources/img/mantyharju-logo-svg.svg";
 import styles from "../../styles/header-styles";
 import { MenuLocationData, MenuItemData, Page, SearchResult, GetWpV2SearchTypeEnum } from "../../generated/client/src";
 import { withStyles, WithStyles, Link, TextField } from '@material-ui/core';
