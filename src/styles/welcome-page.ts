@@ -189,34 +189,31 @@ export default createStyles({
     },
   },
   postsColumn: {
-    padding: "3rem",
-    maxWidth: "250px",
-    display: "table",
+    display: "flex",
+    flexDirection: "column",
     [theme.breakpoints.down("sm")]: {
       width: "100%",
     },
-    '& linkedevents-event': {
+    "& linkedevents-event": {
       backgroundColor: "black",
     },
   },
   allPosts: {
-    marginTop: "3rem",
-
   },
   singleNewsPost: {
-    '& p':{
+    "& p":{
       margin: 4,
       padding:0,
       color: "#15B1B3",
       fontSize: "0.8rem",
     },
-    '& a':{
+    "& a":{
       margin: 0,
       padding:0,
       color: "black",
       textDecoration: "blink",
     },
-    '& hr':{
+    "& hr":{
       color: "black",
       opacity: "20%",
       margin: 2,
@@ -230,11 +227,12 @@ export default createStyles({
    * Nested paragraph comes from wordpress
    */
   singlePost: {
-    '& p':{
+    "& p":{
       margin: 4,
-      padding:0,
+      padding: 0,
+      fontFamily: theme.typography.body1.fontFamily
     },
-    '& hr':{
+    "& hr":{
       color: "black",
       opacity: "20%",
       marginTop: "1rem",
@@ -323,20 +321,20 @@ export default createStyles({
     backgroundColor: "#FFFFFF",
     fontWeight: "bold",
     height: "30vh",
-    '& p':{
+    "& p":{
       fontSize: "1.2rem",
       marginTop: "2rem"
     },
-    '& hr':{
+    "& hr":{
       display: "none"
     },
-    '& a':{
+    "& a":{
       margin: 0,
       padding:0,
       color: "black",
       textDecoration: "blink",
     },
-    '& img':{
+    "& img":{
       width: "6vw",
       height: "5px",
       marginTop: "0.5vw",
@@ -378,7 +376,7 @@ export default createStyles({
     [theme.breakpoints.down("xs")]:{
         fontSize: "130%",
     },
-    '& p':{
+    "& p":{
       fontSize: "2em",
       marginTop: "6.5vw",
       textAlign: "center",

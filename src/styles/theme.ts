@@ -22,101 +22,66 @@ export default createMuiTheme({
     }
   },
   typography: {
-    fontFamily: "tt_norms_proregular",
+    fontFamily: "Open Sans, sans-serif",
     h1: {
-      fontFamily: "tt_norms_promedium",
+      fontFamily: "Open Sans, sans-serif",
       fontWeight: "normal"
     },
     h2: {
-      fontFamily: "tt_norms_promedium",
+      fontFamily: "Open Sans, sans-serif",
       fontWeight: "normal"
     },
     h3: {
-      fontFamily: "tt_norms_promedium",
+      fontFamily: "Open Sans, sans-serif",
       fontWeight: "normal"
     },
     h4: {
-      fontFamily: "tt_norms_promedium",
+      fontFamily: "Open Sans, sans-serif",
       fontWeight: "normal"
     },
     h5: {
-      fontFamily: "tt_norms_promedium",
+      fontFamily: "Open Sans, sans-serif",
       fontWeight: "normal"
     },
     body1: {
-      fontFamily: "tt_norms_proregular",
+      fontFamily: "Rubik, sans-serif",
       fontWeight: "normal"
     },
     body2: {
-      fontFamily: "tt_norms_proregular",
+      fontFamily: "Open Sans, sans-serif",
       fontWeight: "normal"
     },
     subtitle1: {
-      fontFamily: "tt_norms_proregular",
+      fontFamily: "Open Sans, sans-serif",
       fontWeight: "normal"
     },
     subtitle2: {
-      fontFamily: "tt_norms_promedium",
+      fontFamily: "Open Sans, sans-serif",
       fontWeight: "normal"
     }
   },
   overrides: {
     MuiButton: {
+      root: {
+        borderRadius: 0
+      },
       label: {
-        fontSize: "1rem",
-        whiteSpace: "nowrap",
+        fontSize: 20,
+        fontFamily: "Open Sans, sans-serif",
+        fontWeight: 600
       },
       text: {
-        fontFamily: theme.typography.h1.fontFamily,
-        fontSize: theme.typography.h6.fontSize
       },
       outlinedPrimary: {
-        justifyContent: "space-between",
-        textTransform: "initial",
-        height: 55,
-        borderRadius: 0,
-        padding: "5px 15px",
-        border: "1px solid rgba(245, 239, 234, 0.8)",
-        borderWidth: 3,
-        "&:hover": {
-          borderWidth: 3,
-        },
-        "&:active": {
-          borderWidth: 3,
-        }
       }
     },
     MuiInputBase: {
-      input: {
-        fontSize: "2rem"
-      },
     },
     MuiInputLabel: {
-      root: {
-        fontSize: "1.6rem",
-        color: "#F5EFEA"
-      }
     },
     MuiFormLabel: {
-      root: {
-        color: "#F5EFEA",
-        "&$focused": {
-          color: "rgba(245, 239, 234, 0.5)"
-        }
-      }
     },
     MuiInput: {
-      underline: {
-        "&:before": {
-          borderBottom: "3px solid #F5EFEA"
-        },
-        "&:after": {
-          borderBottom: "3px solid rgba(245, 239, 234, 0.8)"
-        },
-        "&:hover:not($disabled):before": {
-          borderBottom: "3px solid rgba(245, 239, 234, 0.2)"
-        },
-      }
     }
   }
 });

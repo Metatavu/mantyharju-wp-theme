@@ -6,9 +6,9 @@ import { WithStyles, withStyles, Button, CircularProgress } from "@material-ui/c
 import styles from "../../styles/welcome-page";
 import * as moment from "moment";
 import AddIcon from "@material-ui/icons/Add";
-import CurrenEventsIcon from '@material-ui/icons/QuestionAnswerOutlined';
-import AnnouncementsIcon from '@material-ui/icons/VolumeUp';
-import JobsIcon from '@material-ui/icons/ThumbsUpDown';
+import CurrenEventsIcon from "@material-ui/icons/QuestionAnswerOutlined";
+import AnnouncementsIcon from "@material-ui/icons/VolumeUp";
+import JobsIcon from "@material-ui/icons/ThumbsUpDown";
 import { Post, MenuLocationData, CustomizeField, Attachment, GetWpV2PostsOrderbyEnum, GetWpV2PostsOrderEnum } from "../../generated/client/src";
 
 /**
@@ -62,8 +62,8 @@ class WelcomePage extends React.Component<Props, State> {
       siteMenuVisible: false,
       siteSearchVisible: false,
       announcementsCategoryId: 4,
-      newsCategoryId: 5,
-      linkedEventsCategoryId: 8,
+      newsCategoryId: 15,
+      linkedEventsCategoryId: 14,
       linkedEventsLimitingNumber: 8,
       customizeFields: []
     };
@@ -121,9 +121,8 @@ class WelcomePage extends React.Component<Props, State> {
    */
   public render() {
     const { lang, classes } = this.props;
-    
-    let addEventImageStyle = {backgroundImage: `url(${ showcase_image })`};
     const showcase_image = this.getCustomizerValue("showcase_image");
+    let addEventImageStyle = {backgroundImage: `url(${ showcase_image })`};
     const showcase_title = this.getCustomizerValue("showcase_title");
     const showcase_text = this.getCustomizerValue("showcase_text");
     const showcase_button_link = this.getCustomizerValue("showcase_button_link");
@@ -135,7 +134,7 @@ class WelcomePage extends React.Component<Props, State> {
           <h1 className={ classes.heroText }>Mäntyharju. -logo</h1>
           <h2 className={ classes.heroText }>Luontoa, kulttuuria ja elämää!</h2>
           <Button title="Lorem Ipsum" className= { `${classes.generalButtonStyle} ${classes.heroButton}`}>Lorem Ipsum</Button>
-          <Button onClick={ this.scrollDownToPopularPages } title="Suosituimmat sivut" className={ `${classes.heroButtonPopularPages}`} endIcon={ <AddIcon/> }>Suosituimmat sivut</Button>
+          <Button onClick={ this.scrollDownToPopularPages } title="Suosituimmat sivut" className={ `${classes.heroButtonPopularPages}`} endIcon={ <AddIcon /> }>Suosituimmat sivut</Button>
         </div>
         { this.state.loading &&
           <div className={ classes.loadingIconContainer }>
@@ -193,7 +192,7 @@ class WelcomePage extends React.Component<Props, State> {
 
   /**
    * Method for getting customizer field value
-   * 
+   *
    * @param key field key
    * @returns string
    */
@@ -206,13 +205,13 @@ class WelcomePage extends React.Component<Props, State> {
 
   /**
    * Render News posts
-   * 
+   *
    * TODO: Get linkedEventsPost not by the hardcoded post ID
    */
   private renderNews = (categoryId: number) => {
     const { classes } = this.props;
     const newsPost = this.getLimitedPosts(categoryId, 1)[0];
-    var events = new Array();
+    let events = new Array();
     if (!newsPost) {
       return null;
     } else {
@@ -225,9 +224,9 @@ class WelcomePage extends React.Component<Props, State> {
                 { contentItem }
               </div>
             </div>
-          )
+          );
         })
-      )
+      );
     }
   }
 
@@ -265,7 +264,7 @@ class WelcomePage extends React.Component<Props, State> {
 
   /**
    * Render LinkedEvents posts
-   * 
+   *
    * TODO: Get linkedEventsPost not by the hardcoded post ID
    */
   private renderLinkedEvents = (categoryId: number) => {
@@ -296,7 +295,11 @@ class WelcomePage extends React.Component<Props, State> {
     const { popularPosts } = this.state;
     return popularPosts.map(post => {
       return (
-        <div onClick={ this.navigateTo(post.link || window.location.href) } style={{ backgroundImage: `url(${ this.getAttachmentForPost(post) })` }} className={classes.bottom_section_item}>
+        <div
+          className={ classes.bottom_section_item }
+          style={{ backgroundImage: `url(${ this.getAttachmentForPost(post) })` }}
+          onClick={ this.navigateTo(post.link || window.location.href) }
+        >
           <p>{ post.title ? post.title.rendered || "" : "" }</p>
         </div>
       );
@@ -310,12 +313,12 @@ class WelcomePage extends React.Component<Props, State> {
     let attachmentUrl = "";
     if (this.state.media) {
       this.state.media.map(attachment => {
-        if (attachment.id == post.featured_media) {
+        if (attachment.id === post.featured_media) {
           attachmentUrl = attachment.source_url || "";
         }
       });
     }
-    
+
     return attachmentUrl;
   }
 
@@ -328,14 +331,14 @@ class WelcomePage extends React.Component<Props, State> {
     window.location.href = url;
   }
 
-  /**		
-    * Scrolls down to popular pages		
-    */		
-   private scrollDownToPopularPages = () => {		
-    const { current } = this.popularPagesSection;		
-    if (current) {		
-      current.scrollIntoView();		
-    }		
+  /**
+   * Scrolls down to popular pages
+   */
+  private scrollDownToPopularPages = () => {
+    const { current } = this.popularPagesSection;
+    if (current) {
+      current.scrollIntoView();
+    }
   }
 
   /**
@@ -365,16 +368,16 @@ class WelcomePage extends React.Component<Props, State> {
    * Action handler for "Show more" Linked events button
    */
   private expandLinkedEvents = () => {
-    var newLimitingNumber: number;
-    if (this.state.linkedEventsLimitingNumber == 8) {
-      newLimitingNumber = 16
+    let newLimitingNumber: number;
+    if (this.state.linkedEventsLimitingNumber === 8) {
+      newLimitingNumber = 16;
     } else {
-      newLimitingNumber = 8
+      newLimitingNumber = 8;
     }
 
     this.setState({
       linkedEventsLimitingNumber: newLimitingNumber
-    })
+    });
   }
 
   /**
@@ -386,7 +389,7 @@ class WelcomePage extends React.Component<Props, State> {
       if ((post.categories ? post.categories : new Array()).includes(categoryId)) {
         postsArray.push(post);
       }
-    })
+    });
 
     return postsArray.splice(0, delimiter);
   }
