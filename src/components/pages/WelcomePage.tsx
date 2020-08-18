@@ -375,7 +375,7 @@ class WelcomePage extends React.Component<Props, State> {
    *
    * @param source submit input info
    */
-  private onSubmit = (source: MetaformField) => {
+  private onSubmit = async (source: MetaformField) => {
     const { formValues } = this.state;
     console.log(this.validateForm());
     console.log(Object.keys(formValues));
@@ -386,6 +386,7 @@ class WelcomePage extends React.Component<Props, State> {
         apiKey: process.env.REACT_APP_LINKED_EVENTS_API_URL
       };
       const eventApi = new LinkedeventsClient.EventApi();
+      const filterApi = new LinkedeventsClient.FilterApi();
       const datasource = process.env.REACT_APP_LINKED_EVENTS_DATASOURCE;
       const publisher = process.env.REACT_APP_LINKED_EVENTS_PUBLISHER_ORGANIZATION;
       const linkedEventsUrl = process.env.REACT_APP_LINKED_EVENTS_API_URL;
@@ -397,10 +398,99 @@ class WelcomePage extends React.Component<Props, State> {
 
       const imageUrls: string[] = [];
       const images = await Promise.all(imageUrls.map(url => createEventImage(url)));
-      
+
+      const eventData = {
+        publication_status: "draft",
+        name: {
+          fi: formValues["name-fi"],
+          sv: formValues["name-sv"],
+          en: formValues["name-en"]
+        },
+        description: {
+          fi: formValues["description-fi"],
+          sv: formValues["description-sv"],
+          en: formValues["description-en"]
+        },
+        short_description: {
+          fi: this.truncateDescription(formValues["description-fi"]),
+          sv: this.truncateDescription(formValues["description-sv"]),
+          en: this.truncateDescription(formValues["description-en"])
+        },
+        custom_data: {
+          "provider-fi": formValues["provider"],
+          "provider-phone": formValues["provider-phone-number"],
+          "provider-email": formValues["provider-email-address"],
+          "responsible-fi": formValues["responsible"],
+          "responsible-phone": formValues["responsible-phone-number"],
+          "responsible-email": formValues["responsible-email-address"],
+          "isRegistration": formValues["is-registration"] || "",
+          "registration-fi": isRegistration ? formValues["registration-fi"] : formValues["no-registration-fi"],
+          "registration-sv": isRegistration ? formValues["registration-sv"] : formValues["no-registration-sv"],
+          "registration-en": isRegistration ? formValues["registration-en"] : formValues["no-registration-en"],
+          "registration_url": formValues["registration-url"]
+        },
+        images: images,
+        keywords: keywords,
+        location: { "@id": `${linkedEventsUrl}/place/${locationId}/` },
+        offers: [
+          {
+            is_free: is_free,
+            price: {
+              fi: is_free ? formValues["price-fi"] : formValues["free-price-fi"],
+              sv: is_free ? formValues["price-sv"] : formValues["free-price-sv"],
+              en: is_free ? formValues["price-en"] : formValues["free-price-en"]
+            },
+            info_url: formValues["price-url"],
+            description: null
+          }
+        ]
+      };
+
+      const payload = {
+        eventObject: client.Event.constructFromObject(
+          Object.assign(
+            {
+              data_source: datasource,
+              publisher: publisher
+            },
+            eventData
+          )
+        )
+      };
+
+      await eventApi.eventCreate(payload);
     } catch (error) {
       //console.log(error);
     }
+  }
+
+  /**
+   * Creates an event image from URL
+   * 
+   * @param url url
+   * @returns promise for created image
+   */
+  private createEventImage = (url: string) => {
+    const apiUrl = process.env.REACT_APP_LINKED_EVENTS_API_URL;
+    const apiKey = process.env.
+    const imageApi = new LinkedeventsClient.ImageApi();
+    return imageApi.imageCreate({
+      imageObject: {
+        url: url
+      }
+    });
+  }
+
+  /**
+   * Truncates description to 150 characters
+   *
+   * @param description description
+   */
+  private truncateDescription = (description: string | number | null) => {
+    if (!(typeof description === "string")) {
+      return description;
+    }
+    return description.substring(0, 149);
   }
 
   /**
