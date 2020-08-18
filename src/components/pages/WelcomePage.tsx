@@ -340,7 +340,6 @@ class WelcomePage extends React.Component<Props, State> {
    */
   private getAttachmentForPage = (page: Page) => {
     let attachmentUrl = "";
-    console.log("URL: ",this.state.media);
     if (this.state.media) {
       this.state.media.map(attachment => {
         if (attachment.id == page.featured_media) {
