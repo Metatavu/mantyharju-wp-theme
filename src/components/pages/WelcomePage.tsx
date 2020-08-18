@@ -197,7 +197,7 @@ class WelcomePage extends React.Component<Props, State> {
                 <CircularProgress />
               </div>
             }
-            {!this.state.loading &&
+            { !this.state.loading &&
               <div>
                 { this.renderAnnouncements(this.state.announcementsCategoryId) }
               </div>
