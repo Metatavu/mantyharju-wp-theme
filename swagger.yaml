@@ -4598,6 +4598,18 @@ paths:
               schema:
                 $ref: "#/components/schemas/error"
       operationId: GetWpV2Customize
+  /wp/v2/linkedeventsEndPoint:
+    post:
+      summary: Add a new pet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/event"
+      responses:
+        "200":
+          description: Created
+      operationId: PostWpV2Event
 servers:
   - url: http://localhost/index.php/wp-json
 components:
@@ -4608,6 +4620,9 @@ components:
       in: header
       description: Please see http://v2.wp-api.org/guide/authentication/
   schemas:
+    event:
+      anyOf:
+        - type: object
     customizeField:
       properties:
         key:

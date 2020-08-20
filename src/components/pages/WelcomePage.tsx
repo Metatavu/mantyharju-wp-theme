@@ -346,7 +346,7 @@ class WelcomePage extends React.Component<Props, State> {
    * @param path path
    */
   private uploadFile = (fieldName: string, files: FileList | File, path: string) => {
-    console.log(fieldName, files, path);
+    console.log("uploadFile: ", fieldName, files, path);
   }
 
   /**
@@ -375,30 +375,21 @@ class WelcomePage extends React.Component<Props, State> {
    *
    * @param source submit input info
    */
-  private onSubmit = async (source: MetaformField) => {
+  private onSubmit = async (source: MetaformField) =>  {
     const { formValues } = this.state;
-    console.log(this.validateForm());
-    console.log(Object.keys(formValues));
+    console.log("ValidateForm: ", this.validateForm());
+    console.log("FormValues: ", Object.keys(formValues));
     try {
-      const client = LinkedeventsClient.ApiClient.instance;
-      client.basePath = process.env.REACT_APP_LINKED_EVENTS_API_URL;
-      client.defaultHeaders = {
-        apiKey: process.env.REACT_APP_LINKED_EVENTS_API_URL
-      };
-      const eventApi = new LinkedeventsClient.EventApi();
-      const filterApi = new LinkedeventsClient.FilterApi();
-      const datasource = process.env.REACT_APP_LINKED_EVENTS_DATASOURCE;
-      const publisher = process.env.REACT_APP_LINKED_EVENTS_PUBLISHER_ORGANIZATION;
-      const linkedEventsUrl = process.env.REACT_APP_LINKED_EVENTS_API_URL;
-
+      const linkedEventsUrl = "";
+      const locationId = "";
       const keywordIds: string[] = [];
       const keywords = keywordIds.map(keywordId => {
         return { "@id": `${linkedEventsUrl}/keyword/${keywordId}/` };
       });
 
       const imageUrls: string[] = [];
-      const images = await Promise.all(imageUrls.map(url => createEventImage(url)));
-
+      const images = await Promise.all(imageUrls.map(url => this.createEventImage(url)));
+      const is_free = formValues["has-price"] == "checked" ? true : false;
       const eventData = {
         publication_status: "draft",
         name: {
@@ -424,9 +415,9 @@ class WelcomePage extends React.Component<Props, State> {
           "responsible-phone": formValues["responsible-phone-number"],
           "responsible-email": formValues["responsible-email-address"],
           "isRegistration": formValues["is-registration"] || "",
-          "registration-fi": isRegistration ? formValues["registration-fi"] : formValues["no-registration-fi"],
-          "registration-sv": isRegistration ? formValues["registration-sv"] : formValues["no-registration-sv"],
-          "registration-en": isRegistration ? formValues["registration-en"] : formValues["no-registration-en"],
+          "registration-fi": formValues["no-registration-fi"],
+          "registration-sv": formValues["no-registration-sv"],
+          "registration-en": formValues["no-registration-en"],
           "registration_url": formValues["registration-url"]
         },
         images: images,
@@ -442,25 +433,18 @@ class WelcomePage extends React.Component<Props, State> {
             },
             info_url: formValues["price-url"],
             description: null
-          }
+          } 
         ]
       };
 
-      const payload = {
-        eventObject: client.Event.constructFromObject(
-          Object.assign(
-            {
-              data_source: datasource,
-              publisher: publisher
-            },
-            eventData
-          )
-        )
-      };
+      const api = ApiUtils.getApi();
 
-      await eventApi.eventCreate(payload);
+      api.postWpV2Event({ event: formValues });
+
+      console.log("Eventdata: ",eventData);
+
     } catch (error) {
-      //console.log(error);
+        console.log("Error: ",error);
     }
   }
 
@@ -471,8 +455,7 @@ class WelcomePage extends React.Component<Props, State> {
    * @returns promise for created image
    */
   private createEventImage = (url: string) => {
-    const apiUrl = process.env.REACT_APP_LINKED_EVENTS_API_URL;
-    const apiKey = process.env.
+    console.log("CreateEventImage pyörähti")
     const imageApi = new LinkedeventsClient.ImageApi();
     return imageApi.imageCreate({
       imageObject: {
@@ -636,20 +619,6 @@ class WelcomePage extends React.Component<Props, State> {
           <p>{ post.title ? post.title.rendered || "" : "" }</p>
         </div>
       );
-    });
-  }
-
-  /**
-   * Creates an event image from url
-   *
-   * @param url url
-   */
-  private createEventImage = (url: string) => {
-    const imageApi = Common.getLinkedEventsImagesApi(config);
-    return imageApi.imageCreate({
-      imageObject: {
-        url: url
-      }
     });
   }
 
