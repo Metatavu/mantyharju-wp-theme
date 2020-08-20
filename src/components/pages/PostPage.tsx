@@ -102,8 +102,8 @@ class PostPage extends React.Component<Props, State> {
     const loacationPathnameArray = loactionPathnameArrayRaw.splice(1, (loactionPathnameArrayRaw.length -1 ) - 1);
     return (
       <BasicLayout lang={ lang } title={ this.setTitleSource() }>
-        <div className={classes.heroImageDiv}>
-          <h1 className={classes.heroText}>{ currentPage ? ReactHtmlParser(currentPage.title ? currentPage.title.rendered || "" : "") : null }</h1>
+        <div className={ classes.heroImageDiv }>
+          <h1 className={ classes.heroText }>{ currentPage ? ReactHtmlParser(currentPage.title ? currentPage.title.rendered || "" : "") : null }</h1>
         </div>
         <div className={ classes.wrapper }>
           <div className={ classes.pageContent }>
@@ -116,9 +116,13 @@ class PostPage extends React.Component<Props, State> {
               </Breadcrumbs>
             </div>
             <div className={ classes.columns }>
-              <div className={ classes.sidebar }>
-                <LeftSideBar pages={ pages } currentPage={ currentPage } parentPage={ parentPage } locationPathArray={ loacationPathnameArray } leftMenuCurrentTopPage={ leftMenuCurrentTopPage }></LeftSideBar>
-              </div>
+              <LeftSideBar
+                pages={ pages }
+                currentPage={ currentPage }
+                parentPage={ parentPage }
+                locationPathArray={ loacationPathnameArray }
+                leftMenuCurrentTopPage={ leftMenuCurrentTopPage }
+              ></LeftSideBar>
               <div className={ classes.contentarea }>
                 { this.renderContent() }
               </div>

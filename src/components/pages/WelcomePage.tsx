@@ -62,7 +62,7 @@ class WelcomePage extends React.Component<Props, State> {
       siteMenuVisible: false,
       siteSearchVisible: false,
       announcementsCategoryId: 4,
-      newsCategoryId: 15,
+      newsCategoryId: 5,
       linkedEventsCategoryId: 14,
       linkedEventsLimitingNumber: 8,
       customizeFields: []
@@ -134,6 +134,7 @@ class WelcomePage extends React.Component<Props, State> {
     const hero_logo_image = this.getCustomizerValue("hero_logo_image");
     const hero_title = this.getCustomizerValue("hero_title");
     const hero_button_link = this.getCustomizerValue("hero_button_link");
+    const hero_button_text = this.getCustomizerValue("hero_button_text");
 
     let heroBackgroundImage = {backgroundImage: `url(${ hero_image })`};
     let addEventImageStyle = {backgroundImage: `url(${ showcase_image })`};
@@ -143,7 +144,7 @@ class WelcomePage extends React.Component<Props, State> {
         <div className={ classes.heroImageDiv } style={ heroBackgroundImage }>
           <h1 className={ classes.heroText }><img src={ hero_logo_image } /></h1>
           <h2 className={ classes.heroText }>{ hero_title }</h2>
-          <Button title="Lorem Ipsum" className= { `${ classes.generalButtonStyle } ${ classes.heroButton }`}>{ hero_button_link }</Button>
+          <Button color="secondary" className= { classes.heroButton } href={ hero_button_link }>{ hero_button_text }</Button>
           <Button
             className={ `${ classes.heroButtonPopularPages }`}
             onClick={ this.scrollDownToPopularPages }
@@ -161,7 +162,7 @@ class WelcomePage extends React.Component<Props, State> {
               <p className= { classes.addEventTextDivParagraph }>
                 { showcase_text }
               </p>
-              <Button onClick={ this.navigateTo(showcase_button_link || window.location.href) } className={ `${classes.generalButtonStyle} ${classes.addEventButton}`}>
+              <Button onClick={ this.navigateTo(showcase_button_link || window.location.href) } className={ classes.addEventButton }>
                 { showcase_button_text }
               </Button>
             </div>
@@ -216,19 +217,21 @@ class WelcomePage extends React.Component<Props, State> {
           <div className={ classes.wrapper }>
             { this.renderLinkedEvents(this.state.linkedEventsCategoryId) }
           </div>
-          <Button
-            className={ `${classes.generalButtonStyle} ${classes.allEventsButton}` }
-            title= "Kaikki tapahtumat" 
-            onClick={this.expandLinkedEvents}
-          >
-              Kaikki tapahtumat
-          </Button>
-          <Button
-            className={ `${classes.generalButtonStyle} ${classes.addLinkedEventButton}` }
-            title= "Lisää tapahTuma"
-          >
-            Lisää tapahtuma
-          </Button>
+          <div className={ classes.eventsButtonRow }>
+            <Button
+              className={ classes.allEventsButton }
+              title= "Kaikki tapahtumat" 
+              onClick={this.expandLinkedEvents}
+              >
+                Kaikki tapahtumat
+            </Button>
+            <Button
+              className={ classes.addLinkedEventButton }
+              title= "Lisää tapahTuma"
+              >
+              Lisää tapahtuma
+            </Button>
+          </div>
         </div>
         <div ref={ this.popularPagesSection } className={ classes.bottom_section }>
           {

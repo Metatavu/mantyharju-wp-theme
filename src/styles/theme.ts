@@ -6,10 +6,13 @@ theme = responsiveFontSizes(theme);
 export default createMuiTheme({
   palette: {
     primary: {
-      main: "#082b45",
-      dark: "#26201E"
+      main: "#00AAAD",
+      dark: "#019698"
     },
-    secondary: { main: "#C24A49" },
+    secondary: { 
+      main: "#fff",
+      dark: "#eee"
+    },
     background: {
       default: "#ffffff",
       paper: "#F5EFEA"
@@ -63,7 +66,12 @@ export default createMuiTheme({
   overrides: {
     MuiButton: {
       root: {
-        borderRadius: 0
+        borderRadius: 0,
+        paddingLeft: "2rem",
+        paddingRight: "2rem",
+        "&:hover": {
+          backgroundColor: "rgba(0, 170, 173, 0.9)"
+        }
       },
       label: {
         fontSize: 20,
@@ -82,6 +90,12 @@ export default createMuiTheme({
     MuiFormLabel: {
     },
     MuiInput: {
+    }
+  },
+  props: {
+    MuiButton: {
+      variant: "contained",
+      color: "primary",
     }
   }
 });

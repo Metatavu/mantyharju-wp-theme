@@ -2,15 +2,14 @@ import { createStyles } from "@material-ui/core";
 import theme from "./theme";
 
 export default createStyles({
-    
     footer: {
         color: "#fff",
-        backgroundColor: "#15B1B3",
+        backgroundColor: theme.palette.primary.main,
         display: "flex",
         flexDirection: "row",
-        height: "10vw",
+        height: 300,
         justifyContent: "center",
-        paddingTop: "2vw",
+        paddingTop: "2rem",
         width: "100%"
     },
     footerLogo: {

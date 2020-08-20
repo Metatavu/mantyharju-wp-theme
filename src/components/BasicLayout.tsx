@@ -84,18 +84,18 @@ class BasicLayout extends React.Component<Props, State> {
    */
   public render() {
     const { classes } = this.props;
-    
+
     return (
-      <div>
+      <div className={ classes.root }>
         <Header
-        localeMenu={ this.state.localeMenu }
-        pages={ this.state.pages }
-        parentPage={ this.state.parentPage }
+          localeMenu={ this.state.localeMenu }
+          pages={ this.state.pages }
+          parentPage={ this.state.parentPage }
         >
         </Header>
         { this.props.children }
-        <Footer></Footer>
-      </div> 
+        <Footer />
+      </div>
     );
   }
 

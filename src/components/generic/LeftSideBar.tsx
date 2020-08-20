@@ -1,6 +1,6 @@
-import * as React from 'react';
+import * as React from "react";
 import { Page } from "../../generated/client/src";
-import { withStyles, WithStyles } from '@material-ui/core';
+import { withStyles, WithStyles } from "@material-ui/core";
 import styles from "../../styles/left-side-bar";
 import ReactHtmlParser from "react-html-parser";
 
@@ -48,8 +48,7 @@ class LeftSideBar extends React.Component<Props, State> {
   /**
    * Component did mount life-cycle handler
    */
-  public componentDidMount() {
-  }
+  public componentDidMount() {}
 
   /**
    * Component render
@@ -58,12 +57,10 @@ class LeftSideBar extends React.Component<Props, State> {
     const { classes } = this.props;
 
     return (
-      <div>
-        <div className={classes.mainMenu}>
-            {this.renderMenu()}
-        </div>
+      <div className={ classes.root }>
+          {this.renderMenu()}
       </div>
-    )
+    );
   }
 
   /**
@@ -95,7 +92,7 @@ class LeftSideBar extends React.Component<Props, State> {
     return (
       <div>
         <h2
-          onClick={() => { this.onPageClick(page) }}
+          onClick={() => { this.onPageClick(page); }}
           className={ classes.navLink }
         >
           {

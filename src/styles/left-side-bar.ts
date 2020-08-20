@@ -2,13 +2,10 @@ import { createStyles } from "@material-ui/core";
 import theme from "./theme";
 
 export default createStyles({
-  logoBar: {
-    marginLeft: "10%",
-    width: "50%",
-  },
-  nav: {
+  root: {
     display: "flex",
-    flexDirection: "row",
+    flex: 1,
+    paddingBottom: "10px",
   },
   navLink: {
     display: "flex",
@@ -27,10 +24,6 @@ export default createStyles({
     textDecoration: "none",
     fontFamily: theme.typography.h3.fontFamily,
     color: theme.palette.primary.main,
-  },
-  mainMenu: {
-    display: "flex",
-    paddingBottom: "10px",
   },
   menuExpandedArrow: {
     marginLeft: "2vw",
