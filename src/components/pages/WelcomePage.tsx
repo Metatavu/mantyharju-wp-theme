@@ -6,10 +6,10 @@ import { WithStyles, withStyles, Button, CircularProgress } from "@material-ui/c
 import styles from "../../styles/welcome-page";
 import * as moment from "moment";
 import AddIcon from "@material-ui/icons/Add";
-import CurrenEventsIcon from '@material-ui/icons/QuestionAnswerOutlined';
-import AnnouncementsIcon from '@material-ui/icons/VolumeUp';
-import JobsIcon from '@material-ui/icons/ThumbsUpDown';
-import { Post, MenuLocationData, CustomizeField, Attachment, GetWpV2PostsOrderbyEnum, GetWpV2PostsOrderEnum, Page } from "../../generated/client/src";
+import CurrenEventsIcon from "@material-ui/icons/QuestionAnswerOutlined";
+import AnnouncementsIcon from "@material-ui/icons/VolumeUp";
+import JobsIcon from "@material-ui/icons/ThumbsUpDown";
+import { Post, MenuLocationData, CustomizeField, Attachment, Page } from "../../generated/client/src";
 
 /**
  * Interface representing component properties
@@ -135,24 +135,25 @@ class WelcomePage extends React.Component<Props, State> {
     const hero_title = this.getCustomizerValue("hero_title");
     const hero_button_link = this.getCustomizerValue("hero_button_link");
     const hero_button_text = this.getCustomizerValue("hero_button_text");
-    const footer_image = this.getCustomizerValue("footer_image");
-    const footer_title = this.getCustomizerValue("footer_title");
-    const footer_text = this.getCustomizerValue("footer_text");
-    const footer_button_link = this.getCustomizerValue("footer_button_link");
-    const footer_button_text = this.getCustomizerValue("footer_button_text");
 
     let heroBackgroundImage = {backgroundImage: `url(${ hero_image })`};
     let addEventImageStyle = {backgroundImage: `url(${ showcase_image })`};
 
     return (
       <BasicLayout lang={ lang }>
-        <div className={ classes.heroImageDiv } style={heroBackgroundImage}>
-          <h1 className={ classes.heroText }><img src={hero_logo_image} /></h1>
-          <h2 className={ classes.heroText }>{hero_title}</h2>
-          <Button title="Lorem Ipsum" className= { `${classes.generalButtonStyle} ${classes.heroButton}`}>{hero_button_link}</Button>
-          <Button onClick={ this.scrollDownToPopularPages } title="Suosituimmat sivut" className={ `${classes.heroButtonPopularPages}`} endIcon={ <AddIcon/> }>Suosituimmat sivut</Button>
+        <div className={ classes.heroImageDiv } style={ heroBackgroundImage }>
+          <h1 className={ classes.heroText }><img src={ hero_logo_image } /></h1>
+          <h2 className={ classes.heroText }>{ hero_title }</h2>
+          <Button color="secondary" className= { classes.heroButton } href={ hero_button_link }>{ hero_button_text }</Button>
+          <Button
+            className={ `${ classes.heroButtonPopularPages }`}
+            onClick={ this.scrollDownToPopularPages }
+            title="Suosituimmat sivut"
+            endIcon={ <AddIcon/> }
+          >
+            Suosituimmat sivut
+          </Button>
         </div>
-        
           <div className= { classes.addEventDiv }>
             <div className= { classes.addEventImageDiv } style={addEventImageStyle}>
             </div>
@@ -161,7 +162,7 @@ class WelcomePage extends React.Component<Props, State> {
               <p className= { classes.addEventTextDivParagraph }>
                 { showcase_text }
               </p>
-              <Button onClick={ this.navigateTo(showcase_button_link || window.location.href) } className={ `${classes.generalButtonStyle} ${classes.addEventButton}`}>
+              <Button onClick={ this.navigateTo(showcase_button_link || window.location.href) } className={ classes.addEventButton }>
                 { showcase_button_text }
               </Button>
             </div>
@@ -216,8 +217,21 @@ class WelcomePage extends React.Component<Props, State> {
           <div className={ classes.wrapper }>
             { this.renderLinkedEvents(this.state.linkedEventsCategoryId) }
           </div>
-          <Button title= "Kaikki tapahtumat" onClick={this.expandLinkedEvents} className={ `${classes.generalButtonStyle} ${classes.allEventsButton}` }>Kaikki tapahtumat</Button>
-          <Button title= "Lisää tapahTuma" className={ `${classes.generalButtonStyle} ${classes.addLinkedEventButton}` }>Lisää tapahtuma</Button>
+          <div className={ classes.eventsButtonRow }>
+            <Button
+              className={ classes.allEventsButton }
+              title= "Kaikki tapahtumat" 
+              onClick={this.expandLinkedEvents}
+              >
+                Kaikki tapahtumat
+            </Button>
+            <Button
+              className={ classes.addLinkedEventButton }
+              title= "Lisää tapahTuma"
+              >
+              Lisää tapahtuma
+            </Button>
+          </div>
         </div>
         <div ref={ this.popularPagesSection } className={ classes.bottom_section }>
           {
@@ -230,7 +244,7 @@ class WelcomePage extends React.Component<Props, State> {
 
   /**
    * Method for getting customizer field value
-   * 
+   *
    * @param key field key
    * @returns string
    */
@@ -243,13 +257,12 @@ class WelcomePage extends React.Component<Props, State> {
 
   /**
    * Render News posts
-   * 
+   *
    * TODO: Get linkedEventsPost not by the hardcoded post ID
    */
   private renderNews = (categoryId: number) => {
     const { classes } = this.props;
     const newsPost = this.getLimitedPosts(categoryId, 1)[0];
-    var events = new Array();
     if (!newsPost) {
       return null;
     } else {
@@ -262,9 +275,9 @@ class WelcomePage extends React.Component<Props, State> {
                 { contentItem }
               </div>
             </div>
-          )
+          );
         })
-      )
+      );
     }
   }
 
@@ -302,13 +315,12 @@ class WelcomePage extends React.Component<Props, State> {
 
   /**
    * Render LinkedEvents posts
-   * 
+   *
    * TODO: Get linkedEventsPost not by the hardcoded post ID
    */
   private renderLinkedEvents = (categoryId: number) => {
     const { classes } = this.props;
     const linkedEventsPost = this.getLimitedPosts(categoryId, 1)[0];
-    const events = new Array();
     if (!linkedEventsPost) {
       return null;
     } else {
@@ -333,7 +345,11 @@ class WelcomePage extends React.Component<Props, State> {
     const { popularPages } = this.state;
     return popularPages.map(page => {
       return (
-        <div onClick={ this.navigateTo(page.link || window.location.href) } style={{ backgroundImage: `url(${ this.getAttachmentForPage(page) })` }} className={classes.bottom_section_item}>
+        <div
+          onClick={ this.navigateTo(page.link || window.location.href) }
+          style={{ backgroundImage: `url(${ this.getAttachmentForPage(page) })` }}
+          className={classes.bottom_section_item}
+        >
           <p>{ page.title ? page.title.rendered || "" : "" }</p>
         </div>
       );
@@ -347,12 +363,12 @@ class WelcomePage extends React.Component<Props, State> {
     let attachmentUrl = "";
     if (this.state.media) {
       this.state.media.map(attachment => {
-        if (attachment.id == page.featured_media) {
+        if (attachment.id === page.featured_media) {
           attachmentUrl = attachment.source_url || "";
         }
       });
     }
-    
+
     return attachmentUrl;
   }
 
@@ -365,14 +381,14 @@ class WelcomePage extends React.Component<Props, State> {
     window.location.href = url;
   }
 
-  /**		
-    * Scrolls down to popular pages		
-    */		
-   private scrollDownToPopularPages = () => {		
-    const { current } = this.popularPagesSection;		
-    if (current) {		
-      current.scrollIntoView();		
-    }		
+  /**
+   * Scrolls down to popular pages
+   */
+  private scrollDownToPopularPages = () => {
+    const { current } = this.popularPagesSection;
+    if (current) {
+      current.scrollIntoView();
+    }
   }
 
   /**
@@ -402,16 +418,16 @@ class WelcomePage extends React.Component<Props, State> {
    * Action handler for "Show more" Linked events button
    */
   private expandLinkedEvents = () => {
-    var newLimitingNumber: number;
-    if (this.state.linkedEventsLimitingNumber == 8) {
-      newLimitingNumber = 16
+    let newLimitingNumber: number;
+    if (this.state.linkedEventsLimitingNumber === 8) {
+      newLimitingNumber = 16;
     } else {
-      newLimitingNumber = 8
+      newLimitingNumber = 8;
     }
 
     this.setState({
       linkedEventsLimitingNumber: newLimitingNumber
-    })
+    });
   }
 
   /**
@@ -423,7 +439,7 @@ class WelcomePage extends React.Component<Props, State> {
       if ((post.categories ? post.categories : new Array()).includes(categoryId)) {
         postsArray.push(post);
       }
-    })
+    });
 
     return postsArray.splice(0, delimiter);
   }

@@ -15,17 +15,6 @@ export default createStyles({
    * - Fonts
    */
 
-  /**
-   * General front page styles
-   */
-  generalButtonStyle: {
-    paddingTop: "0.4em",
-    paddingBottom: "0.4em",
-    paddingLeft: "1em",
-    paddingRight: "1em",
-    userSelect: "none"
-  },
-
   loadingIconContainer: {
     display: "flex",
     margin: "5rem",
@@ -40,46 +29,57 @@ export default createStyles({
     backgroundPosition: "center center",
     backgroundSize: "cover",
     color: "#fff",
-    height:"35vw",
-    maxHeight:"50vw",
-    minHeight:"400px",
-    paddingLeft: "8vw",
-    paddingRight: "8vw",
-    paddingTop: "8vw",
+    height:"40vh",
+    maxHeight:500,
+    paddingLeft: "8rem",
+    paddingRight: "8rem",
+    paddingTop: "8rem",
     width:"100%",
     position: "relative",
-    [theme.breakpoints.down("sm")]:{
-      height: "40vw",
+    overflow: "hidden",
+    [theme.breakpoints.down("sm")]: {
+      height: "40vh",
       fontSize: "1.25em",
+    },
+    "&:after": {
+      zIndex: 1,
+      content: "''",
+      position: "absolute",
+      left: 0,
+      top: 0,
+      width: "100%",
+      height: "100%",
+      backgroundColor: "rgba(0,0,0,0.2)"
     }
   },
   heroText: {
+    position: "relative",
+    zIndex: 2,
     fontSize: "3.5em",
     marginTop: "2vw",
     marginBottom: "2vw",
     fontWeight: "bold",
-    fontStyle: "italic",
-    //textShadow: "1px 1px #000000",
     [theme.breakpoints.down("md")]: {
       fontSize: "2.5em"
     },
-    [theme.breakpoints.down("sm")]:{
+    [theme.breakpoints.down("sm")]: {
       fontSize: "1.25em",
     },
-    [theme.breakpoints.down("xs")]:{
+    [theme.breakpoints.down("xs")]: {
       fontSize: "1em",
     }
   },
   heroButton: {
+    zIndex: 2,
     color: "black",
     fontSize: "1em",
     backgroundColor: "#FFFFFF",
     textTransform: "uppercase",
-    [theme.breakpoints.down("sm")]:{
-      //fontSize: "0.5em",
+    [theme.breakpoints.down("sm")]: {
     }
   },
   heroButtonPopularPages: {
+    zIndex: 2,
     color: "#fff",
     backgroundColor:"#00AAAD",
     fontSize: "4em",
@@ -91,24 +91,21 @@ export default createStyles({
     textTransform: "uppercase",
     position: "absolute",
     bottom: "0",
-    right: "5vw",
+    right: "8rem",
     },
 
   /**
    * Add events -div
    */
   addEventDiv: {
-    display:"grid",
+    color: "#fff",
+    width: "100%",
+    padding: "2rem 8rem",
+    display: "grid",
+    minHeight: 300,
+    flexDirection: "row",
     gridTemplateColumns: "50% 50%",
-    flexDirection:"row",
-    width: "90%",
-    minHeight: "300px",
-    marginTop: "1vw",
-    marginLeft:"5%",
-    marginBottom: "5%",
-    marginRight:"5%",
-    color: "fff",
-    [theme.breakpoints.down("sm")]:{
+    [theme.breakpoints.down("sm")]: {
       width: "100%",
       gridTemplateRows: "50% 50%",
       margin: "20px 0px 0px 0px"
@@ -188,34 +185,31 @@ export default createStyles({
     },
   },
   postsColumn: {
-    padding: "3rem",
-    maxWidth: "250px",
-    display: "table",
+    display: "flex",
+    flexDirection: "column",
     [theme.breakpoints.down("sm")]: {
       width: "100%",
     },
-    '& linkedevents-event': {
+    "& linkedevents-event": {
       backgroundColor: "black",
     },
   },
   allPosts: {
-    marginTop: "3rem",
-
   },
   singleNewsPost: {
-    '& p':{
+    "& p":{
       margin: 4,
       padding:0,
       color: "#15B1B3",
       fontSize: "0.8rem",
     },
-    '& a':{
+    "& a":{
       margin: 0,
       padding:0,
       color: "black",
       textDecoration: "blink",
     },
-    '& hr':{
+    "& hr":{
       color: "black",
       opacity: "20%",
       margin: 2,
@@ -229,11 +223,12 @@ export default createStyles({
    * Nested paragraph comes from wordpress
    */
   singlePost: {
-    '& p':{
+    "& p":{
       margin: 4,
-      padding:0,
+      padding: 0,
+      fontFamily: theme.typography.body1.fontFamily
     },
-    '& hr':{
+    "& hr":{
       color: "black",
       opacity: "20%",
       marginTop: "1rem",
@@ -259,18 +254,27 @@ export default createStyles({
     paddingRight: "2rem"
   },
 
-  
   /**
    * LinkedEvents section styles
    */
 
   linkedEventsContainer: {
+    display: "flex",
+    flexDirection: "column",
     marginTop: "5rem",
     padding: "3rem 10rem 3rem 10rem",
     width: "100%",
     alignContent: "center",
-    textAlign: "center",
-    backgroundColor: "#EBEBEB"
+    justifyContent: "center",
+    backgroundColor: "#EBEBEB",
+    [theme.breakpoints.up("xl")]: {
+      width: "70%"
+    }
+  },
+  eventsButtonRow: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
   eventsTopRow: {
     display: "flex",
@@ -305,37 +309,28 @@ export default createStyles({
   wrapper: {
     display: "grid",
     gridTemplateColumns: "repeat(4, 1fr)",
-    // gridTemplateRows: "repeat(4, 20vw)",
-    gridRowGap: "3vw",
+    gridRowGap: "2rem",
+    gridColumnGap: "1.5rem",
     width: "100%",
-    // [theme.breakpoints.down("lg")]: {
-    //   gridTemplateRows: "repeat(4, 24vw)",
-    // },
-    // [theme.breakpoints.down("md")]: {
-    //   gridTemplateRows: "repeat(4, 28vw)",
-    // },
-    // [theme.breakpoints.down("sm")]: {
-    //   gridTemplateRows: "repeat(4, 32vw)",
-    // },
   },
   events_item_universal: {
     backgroundColor: "#FFFFFF",
-    fontWeight: "bold",
-    height: "30vh",
-    '& p':{
+    padding: "2rem",
+    "& p":{
+      fontWeight: "bold",
       fontSize: "1.2rem",
       marginTop: "2rem"
     },
-    '& hr':{
+    "& hr":{
       display: "none"
     },
-    '& a':{
+    "& a":{
       margin: 0,
       padding:0,
       color: "black",
       textDecoration: "blink",
     },
-    '& img':{
+    "& img":{
       width: "6vw",
       height: "5px",
       marginTop: "0.5vw",
@@ -377,7 +372,7 @@ export default createStyles({
     [theme.breakpoints.down("xs")]:{
         fontSize: "130%",
     },
-    '& p':{
+    "& p":{
       fontSize: "2em",
       marginTop: "6.5vw",
       textAlign: "center",

@@ -3,13 +3,17 @@ import theme from "./theme";
 // import headerImage from "../resources/img/headerImage.png";
 
 export default createStyles({
+  header: {
+    height: 165,
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
+    padding: "1rem 2rem",
+    [theme.breakpoints.up("sm")]: {
+      padding: "2rem 8rem",
+    },
+  },
   logoBar: {
-    // display: "flex",
-    // flexDirection: "row",
-    // justifyContent: "center",
-    marginLeft: "10%",
-    width: "50%",
-    // marginBottom: 50
   },
   nav: {
     display: "flex",
@@ -65,7 +69,6 @@ export default createStyles({
   },
   mainMenu: {
     display: "flex",
-    // alignItems: "center",
     marginLeft: "8vw",
     paddingBottom: "10px",
   },
@@ -81,12 +84,11 @@ export default createStyles({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
+    width: "100%",
+    justifyContent: "space-between"
   },
   searchBar: {
     display: "flex",
     flexDirection: "row",
-    height: "40px",
-    marginRight: "10%",
-    alignItems: "right"
   }
 });

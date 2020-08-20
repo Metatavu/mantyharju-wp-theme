@@ -1,11 +1,11 @@
-import * as React from 'react';
+import * as React from "react";
 import bar from "../../resources/img/mantyharju-logo-svg.svg";
 import styles from "../../styles/header-styles";
 import { MenuLocationData, MenuItemData, Page, SearchResult, GetWpV2SearchTypeEnum } from "../../generated/client/src";
-import { withStyles, WithStyles, Link, TextField } from '@material-ui/core';
+import { withStyles, WithStyles, Link } from "@material-ui/core";
 import ReactHtmlParser from "react-html-parser";
-import ApiUtils from '../../utils/ApiUtils';
-import * as Autocomplete from 'react-autocomplete';
+import ApiUtils from "../../utils/ApiUtils";
+import * as Autocomplete from "react-autocomplete";
 
 /**
  * Facebook-logo license: https://commons.wikimedia.org/wiki/File:Facebook_William_Aditya_Sarana.png
@@ -51,8 +51,7 @@ class Header extends React.Component<Props, State> {
   /**
    * Component did mount life-cycle handler
    */
-  public componentDidMount() {
-  }
+  public componentDidMount() {}
 
   /**
    * Component render
@@ -62,37 +61,37 @@ class Header extends React.Component<Props, State> {
     const { searchString, results } = this.state;
 
     const menuStyle: React.CSSProperties = {
-      borderRadius: '3px',
-      boxShadow: '0 2px 12px rgba(0, 0, 0, 0.1)',
-      background: 'rgba(255, 255, 255, 0.9)',
-      padding: '2px 0',
-      fontSize: '90%',
-      position: 'absolute',
-      overflow: 'auto',
-      maxHeight: '50%',
+      borderRadius: "3px",
+      boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
+      background: "rgba(255, 255, 255, 0.9)",
+      padding: "2px 0",
+      fontSize: "90%",
+      position: "absolute",
+      overflow: "auto",
+      maxHeight: "50%",
       zIndex: 10
     };
 
     return (
-      <div>
-        {/* <img className={ classes.logoBar } src={ bar } /> */}
-        <div className={classes.searchSection}>
+      <div className={ classes.header }>
+        <div className={ classes.searchSection }>
           <a href="/?lang=fi">
-            <img className={classes.logoBar} src={bar} />
+            <img className={ classes.logoBar } src={ bar } />
           </a>
-          <div className={classes.localeMenu}>
+          <div className={ classes.localeMenu }>
             {this.renderLocale()}
           </div>
-          <div className={classes.searchBar}>
-          <Autocomplete
-            getItemValue={ this.getItemValue }
-            items={ results }
-            renderItem={ this.renderItem }
-            value={ searchString }
-            onChange={ this.setSearchString }
-            onSelect={ this.selectItem }
-            menuStyle={ menuStyle }
-          />
+          <div className={ classes.searchBar }>
+            <Autocomplete
+              getItemValue={ this.getItemValue }
+              items={ results }
+              renderItem={ this.renderItem }
+              value={ searchString }
+              onChange={ this.setSearchString }
+              onSelect={ this.selectItem }
+              menuStyle={ menuStyle }
+              wrapperStyle={{ backgroundColor: "#000" }}
+            />
           </div>
         </div>
         <div onMouseLeave={() => { this.onMouseLeave() }}>
@@ -104,7 +103,7 @@ class Header extends React.Component<Props, State> {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   /**
@@ -236,7 +235,7 @@ class Header extends React.Component<Props, State> {
    */
   private renderItem = (item: any, isHighlighted: boolean) => {
     return (
-      <div style={{ background: isHighlighted ? 'lightgray' : 'white', cursor: "pointer" }}>
+      <div style={{ background: isHighlighted ? "lightgray" : "white", cursor: "pointer" }}>
         {item.title}
       </div>
     );

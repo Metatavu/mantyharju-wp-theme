@@ -1,8 +1,9 @@
-import * as React from 'react';
+import * as React from "react";
 import socialIg from "../../resources/img/ig-logo.png";
 import socialFb from "../../resources/img/fb-logo.png";
-import { withStyles, WithStyles } from '@material-ui/core';
-import styles from '../../styles/footer-styles';
+import { withStyles, WithStyles } from "@material-ui/core";
+import styles from "../../styles/footer-styles";
+import logo from "../../resources/img/svg/mantyharju-logo-white.svg";
 
 /**
  * Facebook-logo license: https://commons.wikimedia.org/wiki/File:Facebook_William_Aditya_Sarana.png
@@ -37,8 +38,7 @@ class Footer extends React.Component<Props, State> {
   /**
    * Component did mount life-cycle handler
    */
-  public componentDidMount() {
-  }
+  public componentDidMount() {}
 
   /**
    * Component render
@@ -49,7 +49,7 @@ class Footer extends React.Component<Props, State> {
     return (
       <div className = { classes.footer }>
         <div className = { classes.footerLogo}>
-          <img alt = "Mäntyharju-logo" className={ classes.logo } src= ""/>
+          <img alt = "Mäntyharju-logo" className={ classes.logo } src={ logo }/>
         </div>
 
         <div className = { classes.footerAdressInfo}>
@@ -64,13 +64,15 @@ class Footer extends React.Component<Props, State> {
         </div>
 
         <div className = { classes.footerSocialInfo}>
-          <a href = "https://fi-fi.facebook.com/mantyharjussa/" target = "_blank"><img alt = "Linkki Facebookiin" className={ classes.social } src={ socialFb } />
-            </a>
-          <a href = "https://www.instagram.com/mantyharjunkunta/" target = "_blank"><img alt = "Linkki Instagramiin" className={ classes.social } src={ socialIg } />
-            </a>
+          <a href = "https://fi-fi.facebook.com/mantyharjussa/" target = "_blank">
+            <img alt = "Linkki Facebookiin" className={ classes.social } src={ socialFb } />
+          </a>
+          <a href = "https://www.instagram.com/mantyharjunkunta/" target = "_blank">
+              <img alt = "Linkki Instagramiin" className={ classes.social } src={ socialIg } />
+          </a>
         </div>
       </div>
-    )
+    );
   }
 }
 
