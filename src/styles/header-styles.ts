@@ -164,6 +164,7 @@ export default createStyles({
     display: "flex",
     flexDirection: "row",
     height: 40,
+    marginLeft: "2rem",
     "& input": {
       backgroundColor: "#E6F1F0",
       border: 0,
@@ -201,11 +202,12 @@ export default createStyles({
     display: "flex"
   },
   topMenuItem: {
+    padding: "0.5rem 1rem",
     color: theme.palette.primary.main,
     fontSize: 14,
     textTransform: "uppercase",
-    marginRight: 25,
     "&:hover": {
+      textDecoration: "none",
       backgroundColor: hoverHighlight
     }
   }
