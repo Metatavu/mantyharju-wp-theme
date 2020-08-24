@@ -19,6 +19,7 @@ interface Props extends WithStyles<typeof styles> {
  */
 interface State {
   loading: boolean,
+  topMenu?: MenuLocationData,
   localeMenu?: MenuLocationData,
   scrollPosition: number,
   pages: Page[],
@@ -54,9 +55,10 @@ class BasicLayout extends React.Component<Props, State> {
 
     const api = ApiUtils.getApi();
 
-    const [localeMenu, pages, parentPage] = await Promise.all(
+    const [localeMenu, topMenu, pages, parentPage] = await Promise.all(
       [
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }),
+        api.getMenusV1LocationsById({ lang: this.props.lang, id: "topmenu" }),
         api.getWpV2Pages({ per_page: 100 }),
         api.getWpV2Pages({ slug: [ "sivut" ] }),
       ]
@@ -66,6 +68,7 @@ class BasicLayout extends React.Component<Props, State> {
 
     this.setState({
       loading: false,
+      topMenu: topMenu,
       localeMenu: localeMenu,
       pages: pages,
       parentPage: parentPageId
@@ -88,6 +91,7 @@ class BasicLayout extends React.Component<Props, State> {
     return (
       <div className={ classes.root }>
         <Header
+          topMenu={ this.state.topMenu }
           localeMenu={ this.state.localeMenu }
           pages={ this.state.pages }
           parentPage={ this.state.parentPage }
