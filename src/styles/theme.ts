@@ -59,8 +59,8 @@ export default createMuiTheme({
       fontWeight: "normal"
     },
     subtitle2: {
-      fontFamily: "Open Sans, sans-serif",
-      fontWeight: "normal"
+      fontFamily: "Rubik, sans-serif",
+      fontWeight: 600
     }
   },
   overrides: {

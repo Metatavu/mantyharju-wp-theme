@@ -2,10 +2,14 @@ import * as React from "react";
 import bar from "../../resources/img/mantyharju-logo-svg.svg";
 import styles from "../../styles/header-styles";
 import { MenuLocationData, MenuItemData, Page, SearchResult, GetWpV2SearchTypeEnum } from "../../generated/client/src";
-import { withStyles, WithStyles, Link } from "@material-ui/core";
+import { withStyles, WithStyles, Link, Typography, SvgIcon } from "@material-ui/core";
 import ReactHtmlParser from "react-html-parser";
 import ApiUtils from "../../utils/ApiUtils";
 import * as Autocomplete from "react-autocomplete";
+import * as classNames from "classnames";
+
+// Vector path for search icon
+const searchIconVectorPath = <path d="M23.16,19.07l-1.91-1.9-.87-.87-.45-.45a2.64,2.64,0,0,0-.48-.39A2.9,2.9,0,0,0,17,15.15L16.89,15a9.41,9.41,0,0,0,1.89-5.65A9.41,9.41,0,0,0,9.38,0h0L8.18.08A9.4,9.4,0,1,0,15,16.92l.12.12a2.88,2.88,0,0,0,.71,2.89l3.22,3.22a2.89,2.89,0,1,0,4.09-4.08ZM9.38,16.14h0A6.74,6.74,0,1,1,16.12,9.4,6.76,6.76,0,0,1,9.38,16.14Zm11.9,5.13a.24.24,0,0,1-.33,0l-3.22-3.22a.22.22,0,0,1,0-.32v0a.26.26,0,0,1,.31,0l.51.51.87.87L21.28,21A.22.22,0,0,1,21.28,21.27Z"/>;
 
 /**
  * Facebook-logo license: https://commons.wikimedia.org/wiki/File:Facebook_William_Aditya_Sarana.png
@@ -16,6 +20,7 @@ import * as Autocomplete from "react-autocomplete";
  */
 interface Props extends WithStyles<typeof styles> {
   localeMenu?: MenuLocationData
+  topMenu?: MenuLocationData
   parentPage?: number
   pages: Page[]
 }
@@ -58,48 +63,53 @@ class Header extends React.Component<Props, State> {
    */
   public render() {
     const { classes } = this.props;
-    const { searchString, results } = this.state;
+    const { searchString, results, menuVisibility } = this.state;
 
     const menuStyle: React.CSSProperties = {
-      borderRadius: "3px",
+      borderRadius: "0",
       boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
       background: "rgba(255, 255, 255, 0.9)",
-      padding: "2px 0",
-      fontSize: "90%",
       position: "absolute",
-      overflow: "auto",
-      maxHeight: "50%",
-      zIndex: 10
+      overflowY: "auto",
+      maxHeight: 320,
+      zIndex: 1000,
     };
 
     return (
       <div className={ classes.header }>
-        <div className={ classes.searchSection }>
+        <div className={ classes.topSection }>
           <a href="/?lang=fi">
             <img className={ classes.logoBar } src={ bar } />
           </a>
-          <div className={ classes.localeMenu }>
-            {this.renderLocale()}
-          </div>
-          <div className={ classes.searchBar }>
-            <Autocomplete
-              getItemValue={ this.getItemValue }
-              items={ results }
-              renderItem={ this.renderItem }
-              value={ searchString }
-              onChange={ this.setSearchString }
-              onSelect={ this.selectItem }
-              menuStyle={ menuStyle }
-              wrapperStyle={{ backgroundColor: "#000" }}
-            />
+          <div className={ classes.headerRight }>
+            <div className={ classes.localeMenu }>
+              { this.renderLocale() }
+            </div>
+            { this.renderTopMenu() }
+            <div className={ classes.searchBar }>
+              <Autocomplete
+                getItemValue={ this.getItemValue }
+                items={ results }
+                renderItem={ this.renderItem }
+                value={ searchString }
+                onChange={ this.setSearchString }
+                onSelect={ this.selectItem }
+                menuStyle={ menuStyle }
+              />
+              <div className={ classes.searchIconWrapper }>
+                <SvgIcon color="secondary" >
+                  { searchIconVectorPath }
+                </SvgIcon>
+              </div>
+            </div>
           </div>
         </div>
-        <div onMouseLeave={() => { this.onMouseLeave() }}>
-          <div className={classes.mainMenu}>
-            {this.renderMenu()}
+        <div className={ classes.menuWrapper } onMouseLeave={() => { this.onMouseLeave(); }}>
+          <div className={ classes.mainMenu }>
+            { this.renderMenu() }
           </div>
-          <div className={classes.mainMenu}>
-            {this.renderSubmenu()}
+          <div className={ classNames(classes.subMenu, menuVisibility ? "visible" : "" ) }>
+            { this.renderSubmenu() }
           </div>
         </div>
       </div>
@@ -110,8 +120,7 @@ class Header extends React.Component<Props, State> {
    * Render locale menu method
    */
   private renderLocale = () => {
-    const { localeMenu } = this.props;
-    const { classes } = this.props;
+    const { localeMenu, classes } = this.props;
 
     if (!localeMenu || !localeMenu.items) {
       return null;
@@ -133,10 +142,48 @@ class Header extends React.Component<Props, State> {
     const { classes } = this.props;
     return (
       <Link
+      variant="h6"
+      key={ item.db_id }
+      href={ item.url }
+      className={ classes.navLink }
+      >
+        {
+          item.title
+        }
+      </Link>
+    );
+  }
+
+  /**
+   * Render top menu method
+   */
+  private renderTopMenu = () => {
+    const { topMenu, classes } = this.props;
+
+    if (!topMenu || !topMenu.items) {
+      return null;
+    }
+
+    return (
+      <div className={ classes.topMenu }>
+        {
+          topMenu.items.map(this.renderTopMenuItem)
+        }
+      </div>
+    );
+  }
+
+  /**
+   * Render top menu item method
+   */
+  private renderTopMenuItem = (item: MenuItemData) => {
+    const { classes } = this.props;
+    return (
+      <Link
         variant="h6"
         key={ item.db_id }
         href={ item.url }
-        className={ classes.navLink }
+        className={ classes.topMenuItem }
       >
         {
           item.title
@@ -155,9 +202,9 @@ class Header extends React.Component<Props, State> {
       return null;
     } else {
       return (
-        <div className={classes.nav}>
+        <div className={ classes.nav }>
           {
-            menuHeaderItems.map(this.renderSubmenuHeaders)
+            menuHeaderItems.map(this.renderMenuItems)
           }
         </div>
       );
@@ -168,20 +215,22 @@ class Header extends React.Component<Props, State> {
    * Render submenu headers
    * @param page Page
    */
-  private renderSubmenuHeaders = (page: Page) => {
+  private renderMenuItems = (page: Page) => {
     const { classes } = this.props;
+    const { menuItemCurrent } = this.state;
+    const highlightThisMenuItem = menuItemCurrent === page;
     return (
-      <div>
-        <h2
-          onMouseEnter={() => { this.onMouseEnter(page) }}
-          onClick={() => { this.onPageClick(page) }}
-          className={ classes.navLink }
-        >
-          {
-            ReactHtmlParser(page.title ? page.title.rendered || "" : "")
-          }
-        </h2>
-      </div>
+      <Typography
+        variant="subtitle1"
+        color="textSecondary"
+        onMouseEnter={() => { this.onMouseEnter(page); }}
+        onClick={() => { this.onPageClick(page); }}
+        className={ classNames( classes.navLink, highlightThisMenuItem ? "highlight" : "" )}
+      >
+        {
+          ReactHtmlParser(page.title ? page.title.rendered || "" : "")
+        }
+      </Typography>
     );
   }
 
@@ -192,15 +241,22 @@ class Header extends React.Component<Props, State> {
     const { classes } = this.props;
     const { menuVisibility, menuItemCurrent } = this.state;
     if (menuItemCurrent && menuVisibility) {
-      let childMenuPages = this.getChildMenuPages(menuItemCurrent.id ? menuItemCurrent.id : -1);
+      const childMenuPages = this.getChildMenuPages(menuItemCurrent.id ? menuItemCurrent.id : -1);
       return (
         (childMenuPages ? childMenuPages : new Array()).map((childPage: Page) => {
           return (
             <div className={ classes.menuItems }>
-              <h3 onClick={() => { this.onPageClick(childPage) }}>{ ReactHtmlParser(childPage.title ? childPage.title.rendered || "" : "") }</h3>
+              <Typography
+                variant="body1"
+                color="primary"
+                className={ classes.subMenuLink }
+                onClick={() => { this.onPageClick(childPage); }}
+              >
+                { ReactHtmlParser(childPage.title ? childPage.title.rendered || "" : "") }
+              </Typography>
               { this.renderLowLevelMenuPages(childPage) }
             </div>
-          )
+          );
         })
       );
     } else {
@@ -213,6 +269,7 @@ class Header extends React.Component<Props, State> {
    * @param page Page
    */
   private renderLowLevelMenuPages = (parentPage: Page) => {
+    const { classes } = this.props;
     let childPages = this.getChildMenuPages(parentPage.id ? parentPage.id : -1);
     if (childPages == null) {
       return null;
@@ -220,7 +277,14 @@ class Header extends React.Component<Props, State> {
       return (
         childPages.map(childPage => {
           return (
-            <h5 onClick={() => { this.onPageClick(childPage) }}>{ ReactHtmlParser(childPage.title ? childPage.title.rendered || "" : "") }</h5>
+            <Typography
+              variant="body1"
+              color="textSecondary"
+              className={ classes.lowLevelLink }
+              onClick={() => { this.onPageClick(childPage); }}
+            >
+              { ReactHtmlParser(childPage.title ? childPage.title.rendered || "" : "") }
+            </Typography>
           );
         })
       );
@@ -229,21 +293,22 @@ class Header extends React.Component<Props, State> {
 
   /**
    * Method for rendering list item
-   * 
+   *
    * @param item item
    * @param isHighlighted boolean
    */
   private renderItem = (item: any, isHighlighted: boolean) => {
+    const { classes } = this.props;
     return (
-      <div style={{ background: isHighlighted ? "lightgray" : "white", cursor: "pointer" }}>
-        {item.title}
+      <div className={ classNames( classes.autocompleteItem, isHighlighted ? "" : "" )}>
+        { item.title }
       </div>
     );
   }
 
   /**
    * Method for getting item value
-   * 
+   *
    * @param item item
    * @returns string
    */
@@ -318,6 +383,7 @@ class Header extends React.Component<Props, State> {
 
     this.setState({
       menuVisibility: false,
+      menuItemCurrent: undefined
     });
   }
 
@@ -333,10 +399,10 @@ class Header extends React.Component<Props, State> {
       return null;
     } else {
       pages.map(page => {
-        if (page.parent == parentPageId) {
+        if (page.parent === parentPageId) {
           menuPagesArray.push(page);
         }
-      })
+      });
       return menuPagesArray;
     }
   }
