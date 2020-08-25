@@ -7,9 +7,7 @@ import ReactHtmlParser from "react-html-parser";
 import ApiUtils from "../../utils/ApiUtils";
 import * as Autocomplete from "react-autocomplete";
 import * as classNames from "classnames";
-
-// Vector path for search icon
-const searchIconVectorPath = <path d="M23.16,19.07l-1.91-1.9-.87-.87-.45-.45a2.64,2.64,0,0,0-.48-.39A2.9,2.9,0,0,0,17,15.15L16.89,15a9.41,9.41,0,0,0,1.89-5.65A9.41,9.41,0,0,0,9.38,0h0L8.18.08A9.4,9.4,0,1,0,15,16.92l.12.12a2.88,2.88,0,0,0,.71,2.89l3.22,3.22a2.89,2.89,0,1,0,4.09-4.08ZM9.38,16.14h0A6.74,6.74,0,1,1,16.12,9.4,6.76,6.76,0,0,1,9.38,16.14Zm11.9,5.13a.24.24,0,0,1-.33,0l-3.22-3.22a.22.22,0,0,1,0-.32v0a.26.26,0,0,1,.31,0l.51.51.87.87L21.28,21A.22.22,0,0,1,21.28,21.27Z"/>;
+import { searchIconVectorPath } from "../../resources/icons/svgIcons";
 
 /**
  * Facebook-logo license: https://commons.wikimedia.org/wiki/File:Facebook_William_Aditya_Sarana.png
