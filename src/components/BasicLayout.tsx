@@ -55,22 +55,25 @@ class BasicLayout extends React.Component<Props, State> {
 
     const api = ApiUtils.getApi();
 
-    const [localeMenu, topMenu, pages, parentPage] = await Promise.all(
+    const [localeMenu, topMenu, pages, secondPages, thirdPages, parentPage] = await Promise.all(
       [
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "topmenu" }),
         api.getWpV2Pages({ per_page: 100 }),
+        api.getWpV2Pages({ per_page: 100, offset: 100 }),
+        api.getWpV2Pages({ per_page: 100, offset: 200 }),
         api.getWpV2Pages({ slug: [ "sivut" ] }),
       ]
     );
 
     const parentPageId = (parentPage.length > 0 ? parentPage[0].id || -1 : -1);
+    const allPages = pages.concat(secondPages).concat(thirdPages);
 
     this.setState({
       loading: false,
       topMenu: topMenu,
       localeMenu: localeMenu,
-      pages: pages,
+      pages: allPages,
       parentPage: parentPageId
     });
   }
