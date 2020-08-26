@@ -56,7 +56,9 @@ export default createMuiTheme({
     },
     subtitle1: {
       fontFamily: "Open Sans, sans-serif",
-      fontWeight: "normal"
+      fontWeight: "normal",
+      textTransform: "uppercase",
+      fontSize: "16px"
     },
     subtitle2: {
       fontFamily: "Rubik, sans-serif",

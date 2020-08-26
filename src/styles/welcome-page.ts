@@ -251,12 +251,12 @@ export default createStyles({
    * Nested paragraph comes from wordpress
    */
   singlePost: {
-    "& p":{
+    "& p": {
       margin: 4,
       padding: 0,
       fontFamily: theme.typography.body1.fontFamily
     },
-    "& hr":{
+    "& hr": {
       color: "black",
       opacity: "20%",
       marginTop: "1rem",
@@ -271,15 +271,16 @@ export default createStyles({
   },
   postContent: {
     margin: 0,
-    padding:0
+    padding: 0
   },
   postColumnButton: {
     color: "#fff",
-    backgroundColor:"#00AAAD",
+    backgroundColor: "#00AAAD",
     marginTop: "2rem",
     textTransform: "uppercase",
     paddingLeft: "2rem",
-    paddingRight: "2rem"
+    paddingRight: "2rem",
+    maxWidth: 270
   },
 
   /**
@@ -305,6 +306,24 @@ export default createStyles({
       alignSelf: "center",
       marginBottom: "4rem"
     }
+  },
+  legendWrapper: {
+    alignSelf: "center",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: "4rem"
+  },
+  legend: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    margin: "0 1rem"
+  },
+  legendColor: {
+    height: 8,
+    width: 25,
+    marginRight: "1rem"
   },
   eventsButtonRow: {
     display: "flex",
@@ -333,14 +352,16 @@ export default createStyles({
     textTransform: "uppercase",
     marginTop: "2rem",
     marginRight: "1rem",
-    color: "#fff"
+    color: "#fff",
+    width: 270
   },
   addLinkedEventButton: {
-    backgroundColor:"#00AAAD",
+    backgroundColor: "#00AAAD",
     textTransform: "uppercase",
     marginLeft: "1rem",
     color: "#fff",
     marginTop: "2rem",
+    width: 270
   },
   wrapper: {
     display: "grid",
@@ -351,7 +372,7 @@ export default createStyles({
   },
   events_item_universal: {
     backgroundColor: "#FFFFFF",
-    padding: "2rem",
+    padding: "2rem 2rem 4rem 2rem",
     margin: 0,
     textAlign: "center",
     "& p": {
@@ -363,14 +384,13 @@ export default createStyles({
     },
     "& a": {
       margin: 0,
-      padding:0,
-      color: "black",
+      padding: 0,
+      color: "#000",
       textDecoration: "blink",
     },
     "& img": {
-      width: "50%",
-      height: "5px",
-      marginTop: "2rem",
+      width: "33.33%",
+      height: "6px",
       marginBottom: "2rem"
     },
   },
