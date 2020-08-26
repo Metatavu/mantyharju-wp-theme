@@ -251,12 +251,12 @@ export default createStyles({
    * Nested paragraph comes from wordpress
    */
   singlePost: {
-    "& p":{
+    "& p": {
       margin: 4,
       padding: 0,
       fontFamily: theme.typography.body1.fontFamily
     },
-    "& hr":{
+    "& hr": {
       color: "black",
       opacity: "20%",
       marginTop: "1rem",
@@ -271,15 +271,16 @@ export default createStyles({
   },
   postContent: {
     margin: 0,
-    padding:0
+    padding: 0
   },
   postColumnButton: {
     color: "#fff",
-    backgroundColor:"#00AAAD",
+    backgroundColor: "#00AAAD",
     marginTop: "2rem",
     textTransform: "uppercase",
     paddingLeft: "2rem",
-    paddingRight: "2rem"
+    paddingRight: "2rem",
+    maxWidth: 270
   },
 
   /**
@@ -351,7 +352,8 @@ export default createStyles({
     textTransform: "uppercase",
     marginTop: "2rem",
     marginRight: "1rem",
-    color: "#fff"
+    color: "#fff",
+    width: 270
   },
   addLinkedEventButton: {
     backgroundColor: "#00AAAD",
@@ -359,6 +361,7 @@ export default createStyles({
     marginLeft: "1rem",
     color: "#fff",
     marginTop: "2rem",
+    width: 270
   },
   wrapper: {
     display: "grid",
@@ -387,7 +390,7 @@ export default createStyles({
     },
     "& img": {
       width: "33.33%",
-      height: "5px",
+      height: "6px",
       marginBottom: "2rem"
     },
   },
