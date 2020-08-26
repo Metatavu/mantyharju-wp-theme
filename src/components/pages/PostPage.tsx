@@ -13,7 +13,6 @@ import * as moment from "moment";
 import "../../../node_modules/react-simple-tree-menu/dist/main.css";
 import TreeView from "../generic/TreeView";
 import RightSideBar from "../generic/RightSideBar";
-import LeftSideBar from "../generic/LeftSideBar";
 
 /**
  * Interface representing component properties
@@ -96,7 +95,7 @@ class PostPage extends React.Component<Props, State> {
    * Component render method
    */
   public render() {
-    const { classes, lang, locationPath } = this.props;
+    const { classes, lang, slug, locationPath } = this.props;
     const { sideContent, currentPage, parentPage, pages, leftMenuCurrentTopPage } = this.state;
     const loactionPathnameArrayRaw = (locationPath ? locationPath.replace(/\//g, " ") || "" : "").split(" ");
     const loacationPathnameArray = loactionPathnameArrayRaw.splice(1, (loactionPathnameArrayRaw.length -1 ) - 1);
@@ -116,13 +115,7 @@ class PostPage extends React.Component<Props, State> {
               </Breadcrumbs>
             </div>
             <div className={ classes.columns }>
-              <LeftSideBar
-                pages={ pages }
-                currentPage={ currentPage }
-                parentPage={ parentPage }
-                locationPathArray={ loacationPathnameArray }
-                leftMenuCurrentTopPage={ leftMenuCurrentTopPage }
-              ></LeftSideBar>
+              <TreeView slug={ slug } />
               <div className={ classes.contentarea }>
                 { this.renderContent() }
               </div>
