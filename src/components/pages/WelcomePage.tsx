@@ -227,6 +227,20 @@ class WelcomePage extends React.Component<Props, State> {
 
         <div className = { classes.linkedEventsContainer }>
           <Typography variant="h1">Tapahtumat</Typography>
+          <div className={ classes.legendWrapper }>
+            <div className={ classes.legend }>
+              <div className={ classes.legendColor } style={{ backgroundColor: "#e43e3e" }} />
+              <Typography variant="subtitle1">Menneet</Typography>
+            </div>
+            <div className={ classes.legend }>
+              <div className={ classes.legendColor } style={{ backgroundColor: "#FFCF4E" }} />
+              <Typography variant="subtitle1">Menossa</Typography>
+            </div>
+            <div className={ classes.legend }>
+              <div className={ classes.legendColor } style={{ backgroundColor: "#00AAAD" }} />
+              <Typography variant="subtitle1">Tulossa</Typography>
+            </div>
+          </div>
           <div className={ classes.wrapper }>
             { this.renderLinkedEvents(this.state.linkedEventsCategoryId) }
           </div>

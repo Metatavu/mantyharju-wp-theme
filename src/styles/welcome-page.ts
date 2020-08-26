@@ -306,6 +306,24 @@ export default createStyles({
       marginBottom: "4rem"
     }
   },
+  legendWrapper: {
+    alignSelf: "center",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: "4rem"
+  },
+  legend: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    margin: "0 1rem"
+  },
+  legendColor: {
+    height: 8,
+    width: 25,
+    marginRight: "1rem"
+  },
   eventsButtonRow: {
     display: "flex",
     justifyContent: "center",
@@ -336,7 +354,7 @@ export default createStyles({
     color: "#fff"
   },
   addLinkedEventButton: {
-    backgroundColor:"#00AAAD",
+    backgroundColor: "#00AAAD",
     textTransform: "uppercase",
     marginLeft: "1rem",
     color: "#fff",
@@ -351,7 +369,7 @@ export default createStyles({
   },
   events_item_universal: {
     backgroundColor: "#FFFFFF",
-    padding: "2rem",
+    padding: "2rem 2rem 4rem 2rem",
     margin: 0,
     textAlign: "center",
     "& p": {
@@ -363,14 +381,13 @@ export default createStyles({
     },
     "& a": {
       margin: 0,
-      padding:0,
-      color: "black",
+      padding: 0,
+      color: "#000",
       textDecoration: "blink",
     },
     "& img": {
-      width: "50%",
+      width: "33.33%",
       height: "5px",
-      marginTop: "2rem",
       marginBottom: "2rem"
     },
   },
