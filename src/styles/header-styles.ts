@@ -1,6 +1,7 @@
 import { createStyles } from "@material-ui/core";
 import theme from "./theme";
-// import headerImage from "../resources/img/headerImage.png";
+
+const { breakpoints } = theme;
 
 const hoverHighlight = "rgba(0,0,0,0.1)";
 
@@ -11,17 +12,17 @@ export default createStyles({
     flexDirection: "column",
     width: "100%",
     padding: "1rem",
-    [theme.breakpoints.up("sm")]: {
+    [breakpoints.up("sm")]: {
       height: 50
     },
-    [theme.breakpoints.up("md")]: {
+    [breakpoints.up("md")]: {
       height: "initial",
       padding: "2rem 8rem 0",
     },
   },
   logoBar: {
     width: 120,
-    [theme.breakpoints.up("lg")]: {
+    [breakpoints.up("lg")]: {
       width: "initial"
     }
   },
@@ -42,14 +43,14 @@ export default createStyles({
     paddingBottom: "1rem",
     borderBottom: "4px solid rgba(0,0,0,0)",
     transition: "border-bottom-color 0.2s ease-out",
-    [theme.breakpoints.up("md")]: {
+    [breakpoints.up("md")]: {
       marginLeft: 20,
       fontSize: "12px"
     },
-    [theme.breakpoints.up("lg")]: {
+    [breakpoints.up("lg")]: {
       marginLeft: 25
     },
-    [theme.breakpoints.up("xl")]: {
+    [breakpoints.up("xl")]: {
       marginLeft: 40,
       fontSize: 16,
     },
@@ -65,18 +66,18 @@ export default createStyles({
     fontFamily: theme.typography.body1.fontFamily,
     color: theme.palette.primary.dark,
     fontWeight: theme.typography.body1.fontWeight,
-    [theme.breakpoints.down("sm")]: {
+    [breakpoints.down("sm")]: {
       fontSize: "0.75rem",
     },
-    [theme.breakpoints.down("md")]: {
+    [breakpoints.down("md")]: {
       fontSize: "0.75rem",
       marginLeft: 10,
     },
-    [theme.breakpoints.up("lg")]: {
+    [breakpoints.up("lg")]: {
       fontSize: "1rem",
       marginLeft: 35,
     },
-    [theme.breakpoints.up("xl")]: {
+    [breakpoints.up("xl")]: {
       marginLeft: 45,
     }
   },

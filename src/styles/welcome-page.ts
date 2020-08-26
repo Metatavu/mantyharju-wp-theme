@@ -1,6 +1,8 @@
 import { createStyles } from "@material-ui/core";
 import theme from "./theme";
 
+const { breakpoints } = theme;
+
 const sidePaddingSm = "0 2rem";
 const sidePaddingMd = "0 4rem";
 const sidePaddingLg = "0 6rem";
@@ -38,21 +40,21 @@ export default createStyles({
     width:"100%",
     position: "relative",
     overflow: "hidden",
-    [theme.breakpoints.up("sm")]: {
+    [breakpoints.up("sm")]: {
       padding: sidePaddingMd,
       paddingTop: "4rem",
       height: "50vh",
       fontSize: "1.25em",
     },
-    [theme.breakpoints.up("md")]: {
+    [breakpoints.up("md")]: {
       padding: sidePaddingLg,
       paddingTop: "6rem",
     },
-    [theme.breakpoints.up("lg")]: {
+    [breakpoints.up("lg")]: {
       padding: sidePaddingXl,
       paddingTop: "8rem",
     },
-    [theme.breakpoints.up("xl")]: {
+    [breakpoints.up("xl")]: {
 
     },
     "&:after": {
@@ -69,7 +71,7 @@ export default createStyles({
   heroLogo: {
     position: "relative",
     zIndex: 2,
-    [theme.breakpoints.up("lg")]: {
+    [breakpoints.up("lg")]: {
       width: 500
     },
   },
@@ -79,7 +81,7 @@ export default createStyles({
     fontSize: 20,
     margin: "2rem 0",
     fontWeight: "bold",
-    [theme.breakpoints.up("sm")]: {
+    [breakpoints.up("sm")]: {
       fontSize: 30,
     }
   },
@@ -89,7 +91,7 @@ export default createStyles({
     fontSize: "1em",
     backgroundColor: "#FFFFFF",
     textTransform: "uppercase",
-    [theme.breakpoints.up("sm")]: {
+    [breakpoints.up("sm")]: {
     }
   },
   heroButtonPopularPages: {
@@ -108,7 +110,7 @@ export default createStyles({
     "& .MuiButton-label": {
       fontSize: 16
     },
-      [theme.breakpoints.up("lg")]: {
+      [breakpoints.up("lg")]: {
         right: "8rem",
         width: "initial",
         left: "initial",
@@ -129,7 +131,7 @@ export default createStyles({
     width: "100%",
     minHeight: 300,
     marginTop: "2rem",
-    [theme.breakpoints.up("md")]: {
+    [breakpoints.up("md")]: {
       marginTop: 0,
       padding: "2rem 8rem",
       display: "grid",
@@ -156,7 +158,7 @@ export default createStyles({
     gridColumnEnd: "2",
     width: "100%",
     backgroundColor: "#00AAAD",
-    [theme.breakpoints.up("sm")]: {
+    [breakpoints.up("sm")]: {
       padding: "2rem",
     }
   },
@@ -191,17 +193,17 @@ export default createStyles({
     flexDirection: "column",
     justifyContent: "space-between",
     width: "100%",
-    [theme.breakpoints.up("sm")]: {
+    [breakpoints.up("sm")]: {
       flexDirection: "row",
       padding: sidePaddingSm,
     },
-    [theme.breakpoints.up("md")]: {
+    [breakpoints.up("md")]: {
       padding: sidePaddingLg,
     },
-    [theme.breakpoints.up("lg")]: {
+    [breakpoints.up("lg")]: {
       padding: sidePaddingXl,
     },
-    [theme.breakpoints.up("xl")]: {
+    [breakpoints.up("xl")]: {
       maxWidth: maxPageWidthXl,
     },
   },
@@ -211,15 +213,15 @@ export default createStyles({
     maxWidth: "100%",
     flexDirection: "column",
     marginBottom: "2rem",
-    [theme.breakpoints.up("sm")]: {
+    [breakpoints.up("sm")]: {
       width: "25%",
       margin: "0 1rem"
     },
-    [theme.breakpoints.up("md")]: {
+    [breakpoints.up("md")]: {
       width: "25%",
       margin: "0 2rem"
     },
-    [theme.breakpoints.up("lg")]: {
+    [breakpoints.up("lg")]: {
       marginBottom: 0,
       margin: "0 4rem"
     },
@@ -235,10 +237,10 @@ export default createStyles({
       marginLeft: "1rem",
       fontSize: 26,
       fontWeight: 600,
-      [theme.breakpoints.up("sm")]: {
+      [breakpoints.up("sm")]: {
         fontSize: 26,
       },
-      [theme.breakpoints.up("lg")]: {
+      [breakpoints.up("lg")]: {
         fontSize: 36,
       }
     }
@@ -300,7 +302,7 @@ export default createStyles({
     marginTop: "1rem",
     textTransform: "uppercase",
     maxWidth: 270,
-    [theme.breakpoints.up("sm")]: {
+    [breakpoints.up("sm")]: {
       marginTop: "2rem",
     }
   },
@@ -319,21 +321,21 @@ export default createStyles({
     alignContent: "center",
     justifyContent: "center",
     backgroundColor: "#EBEBEB",
-    [theme.breakpoints.up("sm")]: {
+    [breakpoints.up("sm")]: {
       marginTop: "3rem",
       padding: sidePaddingMd,
       paddingTop: "2rem"
     },
-    [theme.breakpoints.up("md")]: {
+    [breakpoints.up("md")]: {
       marginTop: "5rem",
       padding: sidePaddingLg,
       paddingTop: "2rem"
     },
-    [theme.breakpoints.up("lg")]: {
+    [breakpoints.up("lg")]: {
       padding: sidePaddingXl,
       paddingTop: "3rem"
     },
-    [theme.breakpoints.up("xl")]: {
+    [breakpoints.up("xl")]: {
       padding: "3rem 10rem 3rem 10rem",
       maxWidth: maxPageWidthXl
     },
@@ -342,7 +344,7 @@ export default createStyles({
       fontWeight: 600,
       alignSelf: "center",
       marginBottom: "2rem",
-      [theme.breakpoints.up("xl")]: {
+      [breakpoints.up("xl")]: {
         fontSize: 50,
         marginBottom: "4rem"
       }
@@ -354,7 +356,7 @@ export default createStyles({
     alignItems: "center",
     justifyContent: "space-between",
     marginBottom: "2rem",
-    [theme.breakpoints.up("xl")]: {
+    [breakpoints.up("xl")]: {
       marginBottom: "4rem"
     }
   },
@@ -411,16 +413,16 @@ export default createStyles({
     display: "flex",
     flexDirection: "column",
     width: "100%",
-    [theme.breakpoints.up("sm")]: {
+    [breakpoints.up("sm")]: {
       display: "grid",
       gridTemplateColumns: "repeat(2, 1fr)",
       gridRowGap: "2rem",
       gridColumnGap: "1.5rem",
     },
-    [theme.breakpoints.up("md")]: {
+    [breakpoints.up("md")]: {
       gridTemplateColumns: "repeat(3, 1fr)",
     },
-    [theme.breakpoints.up("lg")]: {
+    [breakpoints.up("lg")]: {
       gridTemplateColumns: "repeat(4, 1fr)",
     }
   },
@@ -432,7 +434,7 @@ export default createStyles({
     cursor: "pointer",
     marginBottom: "1rem",
     transition: "box-shadow 0.2s ease-out",
-    [theme.breakpoints.up("sm")]: {
+    [breakpoints.up("sm")]: {
       marginBottom: 0,
       padding: "2rem 2rem 4rem 2rem",
     },
@@ -468,19 +470,19 @@ export default createStyles({
     gridGap: "2rem",
     padding: sidePaddingSm,
     margin: "2rem 0",
-    [theme.breakpoints.up("sm")]: {
+    [breakpoints.up("sm")]: {
       display: "grid",
       padding: sidePaddingMd,
       gridTemplateColumns: "repeat(2, 1fr)",
       gridTemplateRows: "repeat(3, 1fr)",
     },
-    [theme.breakpoints.up("md")]: {
+    [breakpoints.up("md")]: {
       padding: sidePaddingLg,
       margin: "4rem 0",
       gridTemplateColumns: "repeat(3, 1fr)",
       gridTemplateRows: "repeat(2, 1fr)",
     },
-    [theme.breakpoints.up("lg")]: {
+    [breakpoints.up("lg")]: {
       padding: sidePaddingXl,
     },
   },
@@ -494,7 +496,7 @@ export default createStyles({
     backgroundColor: "rgba(0, 0, 0, 0.3)",
     backgroundBlendMode: "soft-light",
     backgroundSize: "cover",
-    [theme.breakpoints.up("md")]: {
+    [breakpoints.up("md")]: {
       transition: "background-color 0.2s ease-out, box-shadow 0.2s ease-out",
       "&:hover": {
         backgroundColor: "#267b7d",
@@ -508,10 +510,10 @@ export default createStyles({
       textAlign: "center",
       margin: "2rem",
       textShadow: "0 0 20px rgba(0,0,0,0.5)",
-      [theme.breakpoints.up("lg")]: {
+      [breakpoints.up("lg")]: {
         fontSize: 28,
       },
-      [theme.breakpoints.up("xl")]: {
+      [breakpoints.up("xl")]: {
         fontSize: 34,
       },
     }

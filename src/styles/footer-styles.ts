@@ -1,6 +1,8 @@
 import { createStyles } from "@material-ui/core";
 import theme from "./theme";
 
+const { breakpoints } = theme;
+
 const sidePaddingSm = "0 2rem";
 const sidePaddingMd = "0 4rem";
 const sidePaddingLg = "0 6rem";
@@ -14,13 +16,13 @@ export default createStyles({
         flexDirection: "row",
         justifyContent: "center",
         padding: sidePaddingSm,
-        [theme.breakpoints.up("sm")]: {
+        [breakpoints.up("sm")]: {
             padding: sidePaddingMd
         },
-        [theme.breakpoints.up("md")]: {
+        [breakpoints.up("md")]: {
             padding: sidePaddingLg
         },
-        [theme.breakpoints.up("lg")]: {
+        [breakpoints.up("lg")]: {
             padding: sidePaddingXl
         },
     },
@@ -31,19 +33,19 @@ export default createStyles({
         paddingTop: "2rem",
         width: "100%",
         paddingBottom: "8rem",
-        [theme.breakpoints.up("md")]: {
+        [breakpoints.up("md")]: {
             display: "grid",
             gridAutoFlow: "column",
             gridGap: "4rem"
         },
-        [theme.breakpoints.up("xl")]: {
+        [breakpoints.up("xl")]: {
             maxWidth: maxPageWidthXl
         },
     },
     footerLogo: {
         width: "100%",
         marginBottom: "2rem",
-        [theme.breakpoints.up("md")]: {
+        [breakpoints.up("md")]: {
             marginBottom: 0,
         }
     },
@@ -72,7 +74,7 @@ export default createStyles({
         marginTop: "2rem",
         width: 30,
         height: 30,
-        [theme.breakpoints.up("md")]: {
+        [breakpoints.up("md")]: {
             marginTop: 0,
             marginLeft: "2rem"
         }
