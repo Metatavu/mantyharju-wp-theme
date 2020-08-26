@@ -265,20 +265,17 @@ export default createStyles({
   pageContent: {
     display: "flex",
     flexDirection: "column",
+    width: "100%",
     [theme.breakpoints.up("sm")]: {
-      width: "100%",
       padding: "0 2rem 1rem"
     },
     [theme.breakpoints.up("md")]: {
-      width: "100%",
       padding: "0 4rem 2rem"
     },
     [theme.breakpoints.up("lg")]: {
-      width: "100%",
       padding: "0 6rem 2rem"
     },
     [theme.breakpoints.up("xl")]: {
-      width: "70%",
       padding: "0 8rem 2rem"
     },
   },
@@ -292,7 +289,8 @@ export default createStyles({
     display: "flex"
   },
   navigation: {
-    flex: 1, padding: "2rem"
+    flex: 1,
+    padding: "2rem"
   },
   contentarea: {
     display: "flex",

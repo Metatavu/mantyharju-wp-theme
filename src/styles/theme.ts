@@ -64,6 +64,21 @@ export default createMuiTheme({
     }
   },
   overrides: {
+    MuiBreadcrumbs: {
+      li: {
+        fontFamily: "Open Sans, sans-serif",
+        fontSize: 14,
+        color: "#717171",
+        "&:last-child": {
+          color: "#00AAAD"
+        }
+      },
+      separator: {
+        fontFamily: "Open Sans, sans-serif",
+        fontSize: 14,
+        color: "#717171"
+      }
+    },
     MuiButton: {
       root: {
         borderRadius: 0,

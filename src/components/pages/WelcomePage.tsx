@@ -2,14 +2,12 @@ import * as React from "react";
 import BasicLayout from "../BasicLayout";
 import ReactHtmlParser from "react-html-parser";
 import ApiUtils from "../../utils/ApiUtils";
-import { WithStyles, withStyles, Button, CircularProgress } from "@material-ui/core";
+import { WithStyles, withStyles, Button, CircularProgress, Typography, SvgIcon } from "@material-ui/core";
 import styles from "../../styles/welcome-page";
 import * as moment from "moment";
 import AddIcon from "@material-ui/icons/Add";
-import CurrenEventsIcon from "@material-ui/icons/QuestionAnswerOutlined";
-import AnnouncementsIcon from "@material-ui/icons/VolumeUp";
-import JobsIcon from "@material-ui/icons/ThumbsUpDown";
 import { Post, MenuLocationData, CustomizeField, Attachment, Page } from "../../generated/client/src";
+import { jobsIconSvgPath, announcementIconSvgPath, currentNewsIconSvgPath } from "../../resources/icons/svgIcons";
 
 /**
  * Interface representing component properties
@@ -142,7 +140,7 @@ class WelcomePage extends React.Component<Props, State> {
     return (
       <BasicLayout lang={ lang }>
         <div className={ classes.heroImageDiv } style={ heroBackgroundImage }>
-          <h1 className={ classes.heroText }><img src={ hero_logo_image } /></h1>
+          <img className={ classes.heroLogo } src={ hero_logo_image } />
           <h2 className={ classes.heroText }>{ hero_title }</h2>
           <Button color="secondary" className= { classes.heroButton } href={ hero_button_link }>{ hero_button_text }</Button>
           <Button
@@ -169,7 +167,12 @@ class WelcomePage extends React.Component<Props, State> {
           </div>
         <div className={ classes.postsContainer }>
           <div className= { classes.postsColumn }>
-            <h1>{ <CurrenEventsIcon/> } Ajankohtaista</h1>
+            <div className={ classes.postsHeading }>
+              <SvgIcon color="primary" fontSize="large">
+                { currentNewsIconSvgPath }
+              </SvgIcon>
+              <Typography variant="h1">Ajankohtaista</Typography>
+            </div>
             { this.state.loading &&
               <div className={ classes.loadingIconContainer }>
                 <CircularProgress />
@@ -183,7 +186,12 @@ class WelcomePage extends React.Component<Props, State> {
             <Button className={ classes.postColumnButton }>katso kaikki</Button>
           </div>
           <div className= { classes.postsColumn }>
-            <h1>{ <AnnouncementsIcon/> } Kuulutukset</h1>
+            <div className={ classes.postsHeading }>
+              <SvgIcon color="primary" fontSize="large">
+                { announcementIconSvgPath }
+              </SvgIcon>
+              <Typography variant="h1">Kuulutukset</Typography>
+            </div>
             { this.state.loading &&
               <div className={ classes.loadingIconContainer }>
                 <CircularProgress />
@@ -196,8 +204,13 @@ class WelcomePage extends React.Component<Props, State> {
             }
             <Button className={ classes.postColumnButton }>katso kaikki</Button>
           </div>
-          <div className= { classes.postsColumn }>
-            <h1>{ <JobsIcon/> } Työpaikat</h1>
+          <div className={ classes.postsColumn }>
+            <div className={ classes.postsHeading }>
+              <SvgIcon color="primary" fontSize="large">
+                { jobsIconSvgPath }
+              </SvgIcon>
+              <Typography variant="h1">Työpaikat</Typography>
+            </div>
             { this.state.loading &&
               <div className={ classes.loadingIconContainer }>
                 <CircularProgress />
@@ -213,7 +226,7 @@ class WelcomePage extends React.Component<Props, State> {
         </div>
 
         <div className = { classes.linkedEventsContainer }>
-          <h1>Tapahtumat</h1>
+          <Typography variant="h1">Tapahtumat</Typography>
           <div className={ classes.wrapper }>
             { this.renderLinkedEvents(this.state.linkedEventsCategoryId) }
           </div>
@@ -304,7 +317,7 @@ class WelcomePage extends React.Component<Props, State> {
                     <hr />
                   </div>
                 </div>
-              )
+              );
             } else {
               return null;
             }
@@ -328,7 +341,7 @@ class WelcomePage extends React.Component<Props, State> {
       return (
         parsedContent.splice(0, this.state.linkedEventsLimitingNumber).map(contentItem => {
           return (
-            <figure className={classes.events_item_universal}>
+            <figure className={ classes.events_item_universal }>
               { contentItem }
             </figure>
           );

@@ -1,6 +1,8 @@
 import { createStyles } from "@material-ui/core";
 import theme from "./theme";
-import hero from "../resources/img/mantyharju-images/mantyharju-images/hero-front-1600x1080.jpg";
+
+const sidePaddingLg = "0 8rem";
+const maxPageWidthXl = 2000;
 
 export default createStyles({
   /**
@@ -29,10 +31,8 @@ export default createStyles({
     backgroundPosition: "center center",
     backgroundSize: "cover",
     color: "#fff",
-    height:"40vh",
-    maxHeight:500,
-    paddingLeft: "8rem",
-    paddingRight: "8rem",
+    height:"50vh",
+    padding: sidePaddingLg,
     paddingTop: "8rem",
     width:"100%",
     position: "relative",
@@ -52,12 +52,18 @@ export default createStyles({
       backgroundColor: "rgba(0,0,0,0.2)"
     }
   },
+  heroLogo: {
+    position: "relative",
+    zIndex: 2,
+    [theme.breakpoints.up("lg")]: {
+      width: 500
+    },
+  },
   heroText: {
     position: "relative",
     zIndex: 2,
     fontSize: "3.5em",
-    marginTop: "2vw",
-    marginBottom: "2vw",
+    margin: "2rem 0",
     fontWeight: "bold",
     [theme.breakpoints.down("md")]: {
       fontSize: "2.5em"
@@ -98,13 +104,17 @@ export default createStyles({
    * Add events -div
    */
   addEventDiv: {
+    display: "grid",
+    alignSelf: "center",
     color: "#fff",
     width: "100%",
     padding: "2rem 8rem",
-    display: "grid",
     minHeight: 300,
     flexDirection: "row",
     gridTemplateColumns: "50% 50%",
+    [theme.breakpoints.up("xl")]: {
+      maxWidth: maxPageWidthXl
+    },
     [theme.breakpoints.down("sm")]: {
       width: "100%",
       gridTemplateRows: "50% 50%",
@@ -173,10 +183,16 @@ export default createStyles({
    * Posts section styles
    */
   postsContainer: {
-    width: "100%",
+    marginTop: "4rem",
+    padding: sidePaddingLg,
+    alignSelf: "center",
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-evenly",
+    justifyContent: "space-between",
+    width: "100%",
+    [theme.breakpoints.up("xl")]: {
+      maxWidth: maxPageWidthXl,
+    },
     [theme.breakpoints.down("sm")]: {
       display: "grid",
       flexDirection:"column",
@@ -186,6 +202,8 @@ export default createStyles({
   },
   postsColumn: {
     display: "flex",
+    flex: 1,
+    maxWidth: "25%",
     flexDirection: "column",
     [theme.breakpoints.down("sm")]: {
       width: "100%",
@@ -193,6 +211,16 @@ export default createStyles({
     "& linkedevents-event": {
       backgroundColor: "black",
     },
+  },
+  postsHeading: {
+    display: "flex",
+    alignItems: "center",
+    marginBottom: "2rem",
+    "& h1": {
+      marginLeft: "1rem",
+      fontSize: 35,
+      fontWeight: 600
+    }
   },
   allPosts: {
   },
@@ -260,6 +288,7 @@ export default createStyles({
 
   linkedEventsContainer: {
     display: "flex",
+    alignSelf: "center",
     flexDirection: "column",
     marginTop: "5rem",
     padding: "3rem 10rem 3rem 10rem",
@@ -268,13 +297,20 @@ export default createStyles({
     justifyContent: "center",
     backgroundColor: "#EBEBEB",
     [theme.breakpoints.up("xl")]: {
-      width: "70%"
+      maxWidth: maxPageWidthXl
+    },
+    "& h1": {
+      fontSize: 50,
+      fontWeight: 600,
+      alignSelf: "center",
+      marginBottom: "4rem"
     }
   },
   eventsButtonRow: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    margin: "2rem 0"
   },
   eventsTopRow: {
     display: "flex",
@@ -293,7 +329,7 @@ export default createStyles({
     objectFit: "cover",
   },
   allEventsButton: {
-    backgroundColor:"#00AAAD",
+    backgroundColor: "#00AAAD",
     textTransform: "uppercase",
     marginTop: "2rem",
     marginRight: "1rem",
@@ -316,25 +352,26 @@ export default createStyles({
   events_item_universal: {
     backgroundColor: "#FFFFFF",
     padding: "2rem",
-    "& p":{
+    margin: 0,
+    textAlign: "center",
+    "& p": {
       fontWeight: "bold",
       fontSize: "1.2rem",
-      marginTop: "2rem"
     },
-    "& hr":{
+    "& hr": {
       display: "none"
     },
-    "& a":{
+    "& a": {
       margin: 0,
       padding:0,
       color: "black",
       textDecoration: "blink",
     },
-    "& img":{
-      width: "6vw",
+    "& img": {
+      width: "50%",
       height: "5px",
-      marginTop: "0.5vw",
-      marginBottom: "2vw"
+      marginTop: "2rem",
+      marginBottom: "2rem"
     },
   },
   bottom_section: {
@@ -387,8 +424,7 @@ export default createStyles({
       }
     }
   },
-  
-  
+
   // Mantyharju-theme ends, rest of the code can be deleted before production
 
 /*
