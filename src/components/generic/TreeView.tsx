@@ -75,7 +75,7 @@ class TreeView extends React.Component<Props, State> {
   private loadTree = async () => {
     const { slug } = this.props;
     const api = ApiUtils.getApi();
-    const [treeMenu] = await Promise.all([
+    const [ treeMenu ] = await Promise.all([
       api.getTreeMenu({ slug: slug })
     ]);
     this.setState({
