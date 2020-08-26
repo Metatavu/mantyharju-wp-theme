@@ -51,7 +51,6 @@ class TreeView extends React.Component<Props, State> {
   public render() {
     const { classes } = this.props;
     const { treeData, initialOpenNodes } = this.state;
-    console.log(initialOpenNodes)
     return (
       <div className={ classes.treeWrapper }>
         { initialOpenNodes !== undefined &&
