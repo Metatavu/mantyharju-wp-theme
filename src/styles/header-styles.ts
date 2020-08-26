@@ -10,12 +10,20 @@ export default createStyles({
     display: "flex",
     flexDirection: "column",
     width: "100%",
-    padding: "1rem 2rem 0",
+    padding: "1rem",
     [theme.breakpoints.up("sm")]: {
+      height: 50
+    },
+    [theme.breakpoints.up("md")]: {
+      height: "initial",
       padding: "2rem 8rem 0",
     },
   },
   logoBar: {
+    width: 120,
+    [theme.breakpoints.up("lg")]: {
+      width: "initial"
+    }
   },
   nav: {
     display: "flex",
@@ -34,19 +42,16 @@ export default createStyles({
     paddingBottom: "1rem",
     borderBottom: "4px solid rgba(0,0,0,0)",
     transition: "border-bottom-color 0.2s ease-out",
-    [theme.breakpoints.down("sm")]: {
-      fontSize: "0.75rem",
-    },
-    [theme.breakpoints.down("md")]: {
-      fontSize: "0.75rem",
-      marginLeft: 10,
+    [theme.breakpoints.up("md")]: {
+      marginLeft: 20,
+      fontSize: "12px"
     },
     [theme.breakpoints.up("lg")]: {
-      fontSize: "1rem",
-      marginLeft: 35,
+      marginLeft: 25
     },
     [theme.breakpoints.up("xl")]: {
-      marginLeft: 45,
+      marginLeft: 40,
+      fontSize: 16,
     },
     "&.highlight": {
       borderBottomColor: theme.palette.primary.main

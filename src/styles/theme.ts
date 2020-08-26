@@ -3,6 +3,8 @@ import { createMuiTheme, responsiveFontSizes } from "@material-ui/core";
 let theme = createMuiTheme();
 theme = responsiveFontSizes(theme);
 
+const { breakpoints } = theme;
+
 export default createMuiTheme({
   palette: {
     primary: {
@@ -58,7 +60,10 @@ export default createMuiTheme({
       fontFamily: "Open Sans, sans-serif",
       fontWeight: "normal",
       textTransform: "uppercase",
-      fontSize: "16px"
+      fontSize: "14px",
+      [breakpoints.up("sm")]: {
+        fontSize: "16px",
+      },
     },
     subtitle2: {
       fontFamily: "Rubik, sans-serif",
@@ -91,9 +96,15 @@ export default createMuiTheme({
         }
       },
       label: {
-        fontSize: 20,
         fontFamily: "Open Sans, sans-serif",
-        fontWeight: 600
+        fontWeight: 600,
+        fontSize: 14,
+        [breakpoints.up("sm")]: {
+          fontSize: 16,
+        },
+        [breakpoints.up("md")]: {
+          fontSize: 20,
+        }
       },
       text: {
       },

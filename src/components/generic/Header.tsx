@@ -2,7 +2,7 @@ import * as React from "react";
 import bar from "../../resources/img/mantyharju-logo-svg.svg";
 import styles from "../../styles/header-styles";
 import { MenuLocationData, MenuItemData, Page, SearchResult, GetWpV2SearchTypeEnum } from "../../generated/client/src";
-import { withStyles, WithStyles, Link, Typography, SvgIcon } from "@material-ui/core";
+import { withStyles, WithStyles, Link, Typography, SvgIcon, Hidden } from "@material-ui/core";
 import ReactHtmlParser from "react-html-parser";
 import ApiUtils from "../../utils/ApiUtils";
 import * as Autocomplete from "react-autocomplete";
@@ -79,37 +79,42 @@ class Header extends React.Component<Props, State> {
           <a href="/?lang=fi">
             <img className={ classes.logoBar } src={ bar } />
           </a>
-          <div className={ classes.headerRight }>
-            <div className={ classes.localeMenu }>
-              { this.renderLocale() }
-            </div>
-            { this.renderTopMenu() }
-            <div className={ classes.searchBar }>
-              <Autocomplete
-                getItemValue={ this.getItemValue }
-                items={ results }
-                renderItem={ this.renderItem }
-                value={ searchString }
-                onChange={ this.setSearchString }
-                onSelect={ this.selectItem }
-                menuStyle={ menuStyle }
-              />
-              <div className={ classes.searchIconWrapper }>
-                <SvgIcon color="secondary" >
-                  { searchIconVectorPath }
-                </SvgIcon>
+          {/* Hide this part of the header when on small screens */}
+          <Hidden smDown implementation="css">
+            <div className={ classes.headerRight }>
+              <div className={ classes.localeMenu }>
+                { this.renderLocale() }
               </div>
+                { this.renderTopMenu() }
+                <div className={ classes.searchBar }>
+                  <Autocomplete
+                    getItemValue={ this.getItemValue }
+                    items={ results }
+                    renderItem={ this.renderItem }
+                    value={ searchString }
+                    onChange={ this.setSearchString }
+                    onSelect={ this.selectItem }
+                    menuStyle={ menuStyle }
+                    />
+                  <div className={ classes.searchIconWrapper }>
+                    <SvgIcon color="secondary" >
+                      { searchIconVectorPath }
+                    </SvgIcon>
+                  </div>
+                </div>
+            </div>
+          </Hidden>
+        </div>
+        <Hidden smDown implementation="css">
+          <div className={ classes.menuWrapper } onMouseLeave={() => { this.onMouseLeave(); }}>
+            <div className={ classes.mainMenu }>
+              { this.renderMenu() }
+            </div>
+            <div className={ classNames(classes.subMenu, menuVisibility ? "visible" : "" ) }>
+              { this.renderSubmenu() }
             </div>
           </div>
-        </div>
-        <div className={ classes.menuWrapper } onMouseLeave={() => { this.onMouseLeave(); }}>
-          <div className={ classes.mainMenu }>
-            { this.renderMenu() }
-          </div>
-          <div className={ classNames(classes.subMenu, menuVisibility ? "visible" : "" ) }>
-            { this.renderSubmenu() }
-          </div>
-        </div>
+        </Hidden>
       </div>
     );
   }

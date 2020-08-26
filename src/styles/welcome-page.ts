@@ -1,7 +1,10 @@
 import { createStyles } from "@material-ui/core";
 import theme from "./theme";
 
-const sidePaddingLg = "0 8rem";
+const sidePaddingSm = "0 2rem";
+const sidePaddingMd = "0 4rem";
+const sidePaddingLg = "0 6rem";
+const sidePaddingXl = "0 8rem";
 const maxPageWidthXl = 2000;
 
 export default createStyles({
@@ -13,8 +16,6 @@ export default createStyles({
    * TODO:
    * - Improve responsive design for buttons (small screens)
    * - Post columns styling
-   * - LinkedEvents grid styling
-   * - Fonts
    */
 
   loadingIconContainer: {
@@ -31,15 +32,28 @@ export default createStyles({
     backgroundPosition: "center center",
     backgroundSize: "cover",
     color: "#fff",
-    height:"50vh",
-    padding: sidePaddingLg,
-    paddingTop: "8rem",
+    height:" 40vh",
+    padding: sidePaddingSm,
+    paddingTop: "2rem",
     width:"100%",
     position: "relative",
     overflow: "hidden",
-    [theme.breakpoints.down("sm")]: {
-      height: "40vh",
+    [theme.breakpoints.up("sm")]: {
+      padding: sidePaddingMd,
+      paddingTop: "4rem",
+      height: "50vh",
       fontSize: "1.25em",
+    },
+    [theme.breakpoints.up("md")]: {
+      padding: sidePaddingLg,
+      paddingTop: "6rem",
+    },
+    [theme.breakpoints.up("lg")]: {
+      padding: sidePaddingXl,
+      paddingTop: "8rem",
+    },
+    [theme.breakpoints.up("xl")]: {
+
     },
     "&:after": {
       zIndex: 1,
@@ -62,17 +76,11 @@ export default createStyles({
   heroText: {
     position: "relative",
     zIndex: 2,
-    fontSize: "3.5em",
+    fontSize: 20,
     margin: "2rem 0",
     fontWeight: "bold",
-    [theme.breakpoints.down("md")]: {
-      fontSize: "2.5em"
-    },
-    [theme.breakpoints.down("sm")]: {
-      fontSize: "1.25em",
-    },
-    [theme.breakpoints.down("xs")]: {
-      fontSize: "1em",
+    [theme.breakpoints.up("sm")]: {
+      fontSize: 30,
     }
   },
   heroButton: {
@@ -81,88 +89,83 @@ export default createStyles({
     fontSize: "1em",
     backgroundColor: "#FFFFFF",
     textTransform: "uppercase",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.up("sm")]: {
     }
   },
   heroButtonPopularPages: {
     zIndex: 2,
     color: "#fff",
-    backgroundColor:"#00AAAD",
-    fontSize: "4em",
-    paddingTop: "0.2em",
-    paddingBottom: "0.2em",
-    paddingLeft: "1em",
-    paddingRight: "1em",
+    backgroundColor: "#00AAAD",
     cursor: "pointer",
     textTransform: "uppercase",
+    fontSize: "4rem",
     position: "absolute",
-    bottom: "0",
-    right: "8rem",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    width: "100%",
+    justifyContent: "space-between",
+    "& .MuiButton-label": {
+      fontSize: 16
+    },
+      [theme.breakpoints.up("lg")]: {
+        right: "8rem",
+        width: "initial",
+        left: "initial",
+        "& .MuiButton-label": {
+          fontSize: 20
+        }
+      }
     },
 
   /**
    * Add events -div
    */
   addEventDiv: {
-    display: "grid",
+    display: "flex",
+    flexDirection: "column-reverse",
     alignSelf: "center",
     color: "#fff",
     width: "100%",
-    padding: "2rem 8rem",
     minHeight: 300,
-    flexDirection: "row",
-    gridTemplateColumns: "50% 50%",
-    [theme.breakpoints.up("xl")]: {
+    marginTop: "2rem",
+    [theme.breakpoints.up("md")]: {
+      marginTop: 0,
+      padding: "2rem 8rem",
+      display: "grid",
+      flexDirection: "row",
+      gridTemplateColumns: "50% 50%",
       maxWidth: maxPageWidthXl
-    },
-    [theme.breakpoints.down("sm")]: {
-      width: "100%",
-      gridTemplateRows: "50% 50%",
-      margin: "20px 0px 0px 0px"
     }
   },
   addEventImageDiv: {
     gridColumnStart: "1",
-    gridColumnEnd: "1", 
+    gridColumnEnd: "1",
     width: "100%",
-    float: "left",
+    minHeight: 200,
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center center",
-    backgroundSize: "cover",
-    [theme.breakpoints.down("sm")]:{
-      paddingRight: "0.1vw",
-      minHeight: "200px",
-      width: "100%",
-      gridColumnStart: "1",
-      gridColumnEnd: "3", 
-    }
+    backgroundSize: "cover"
   },
   addEventTextDiv: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    padding: "1rem",
     gridColumnStart: "2",
-    gridColumnEnd: "2", 
+    gridColumnEnd: "2",
     width: "100%",
-    float: "left",
-    backgroundColor:"#00AAAD",
-    paddingLeft: "5vw",
-    paddingRight: "10vw",
-    paddingTop: "2vw",
-    [theme.breakpoints.down("sm")]:{
-      paddingRight: "0.1vw",
-      minHeight: "200px",
-      width: "100%",
-      gridColumnStart: "1",
-      gridColumnEnd: "3", 
-    },
+    backgroundColor: "#00AAAD",
+    [theme.breakpoints.up("sm")]: {
+      padding: "2rem",
+    }
   },
   addEventTextDivParagraph: {
-    lineHeight: "1.5em",
-    [theme.breakpoints.down("xs")]:{
-      lineHeight: "0.5rem",
-      fontSize: "0.5rem"
-    },
+    fontSize: "1rem"
   },
   addEventTextDivHeading: {
-    marginBottom: "0",
+    fontSize: "36px",
+    margin: "0",
     textDecoration: "none"
   },
   addEventImage: {
@@ -170,13 +173,11 @@ export default createStyles({
     height: "auto"
   },
   addEventButton: {
-    color: "black",
+    display: "flex",
+    alignSelf: "flex-start",
+    color: "#000",
     backgroundColor: "#FFFFFF",
-    textTransform: "uppercase",
-    marginTop: "1em",
-    [theme.breakpoints.down("sm")]:{
-      fontSize: "0.5em",
-    }
+    textTransform: "uppercase"
   },
 
   /**
@@ -184,31 +185,45 @@ export default createStyles({
    */
   postsContainer: {
     marginTop: "4rem",
-    padding: sidePaddingLg,
+    padding: sidePaddingSm,
     alignSelf: "center",
     display: "flex",
-    flexDirection: "row",
+    flexDirection: "column",
     justifyContent: "space-between",
     width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      flexDirection: "row",
+      padding: sidePaddingSm,
+    },
+    [theme.breakpoints.up("md")]: {
+      padding: sidePaddingLg,
+    },
+    [theme.breakpoints.up("lg")]: {
+      padding: sidePaddingXl,
+    },
     [theme.breakpoints.up("xl")]: {
       maxWidth: maxPageWidthXl,
-    },
-    [theme.breakpoints.down("sm")]: {
-      display: "grid",
-      flexDirection:"column",
-      textAlign: "center",
-      justifyContent: "center",
     },
   },
   postsColumn: {
     display: "flex",
     flex: 1,
-    maxWidth: "25%",
+    maxWidth: "100%",
     flexDirection: "column",
-    [theme.breakpoints.down("sm")]: {
-      width: "100%",
+    marginBottom: "2rem",
+    [theme.breakpoints.up("sm")]: {
+      width: "25%",
+      margin: "0 1rem"
     },
-    "& linkedevents-event": {
+    [theme.breakpoints.up("md")]: {
+      width: "25%",
+      margin: "0 2rem"
+    },
+    [theme.breakpoints.up("lg")]: {
+      marginBottom: 0,
+      margin: "0 4rem"
+    },
+    "& .linkedevents-event": {
       backgroundColor: "black",
     },
   },
@@ -218,8 +233,14 @@ export default createStyles({
     marginBottom: "2rem",
     "& h1": {
       marginLeft: "1rem",
-      fontSize: 35,
-      fontWeight: 600
+      fontSize: 26,
+      fontWeight: 600,
+      [theme.breakpoints.up("sm")]: {
+        fontSize: 26,
+      },
+      [theme.breakpoints.up("lg")]: {
+        fontSize: 36,
+      }
     }
   },
   allPosts: {
@@ -234,11 +255,11 @@ export default createStyles({
     "& a":{
       margin: 0,
       padding:0,
-      color: "black",
+      color: "#000",
       textDecoration: "blink",
     },
     "& hr":{
-      color: "black",
+      color: "#000",
       opacity: "20%",
       margin: 2,
       marginTop: "1rem",
@@ -276,11 +297,12 @@ export default createStyles({
   postColumnButton: {
     color: "#fff",
     backgroundColor: "#00AAAD",
-    marginTop: "2rem",
+    marginTop: "1rem",
     textTransform: "uppercase",
-    paddingLeft: "2rem",
-    paddingRight: "2rem",
-    maxWidth: 270
+    maxWidth: 270,
+    [theme.breakpoints.up("sm")]: {
+      marginTop: "2rem",
+    }
   },
 
   /**
@@ -291,20 +313,39 @@ export default createStyles({
     display: "flex",
     alignSelf: "center",
     flexDirection: "column",
-    marginTop: "5rem",
-    padding: "3rem 10rem 3rem 10rem",
+    marginTop: "2rem",
+    padding: "2rem",
     width: "100%",
     alignContent: "center",
     justifyContent: "center",
     backgroundColor: "#EBEBEB",
+    [theme.breakpoints.up("sm")]: {
+      marginTop: "3rem",
+      padding: sidePaddingMd,
+      paddingTop: "2rem"
+    },
+    [theme.breakpoints.up("md")]: {
+      marginTop: "5rem",
+      padding: sidePaddingLg,
+      paddingTop: "2rem"
+    },
+    [theme.breakpoints.up("lg")]: {
+      padding: sidePaddingXl,
+      paddingTop: "3rem"
+    },
     [theme.breakpoints.up("xl")]: {
+      padding: "3rem 10rem 3rem 10rem",
       maxWidth: maxPageWidthXl
     },
     "& h1": {
-      fontSize: 50,
+      fontSize: 32,
       fontWeight: 600,
       alignSelf: "center",
-      marginBottom: "4rem"
+      marginBottom: "2rem",
+      [theme.breakpoints.up("xl")]: {
+        fontSize: 50,
+        marginBottom: "4rem"
+      }
     }
   },
   legendWrapper: {
@@ -312,7 +353,10 @@ export default createStyles({
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: "4rem"
+    marginBottom: "2rem",
+    [theme.breakpoints.up("xl")]: {
+      marginBottom: "4rem"
+    }
   },
   legend: {
     display: "flex",
@@ -364,17 +408,34 @@ export default createStyles({
     width: 270
   },
   wrapper: {
-    display: "grid",
-    gridTemplateColumns: "repeat(4, 1fr)",
-    gridRowGap: "2rem",
-    gridColumnGap: "1.5rem",
+    display: "flex",
+    flexDirection: "column",
     width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      display: "grid",
+      gridTemplateColumns: "repeat(2, 1fr)",
+      gridRowGap: "2rem",
+      gridColumnGap: "1.5rem",
+    },
+    [theme.breakpoints.up("md")]: {
+      gridTemplateColumns: "repeat(3, 1fr)",
+    },
+    [theme.breakpoints.up("lg")]: {
+      gridTemplateColumns: "repeat(4, 1fr)",
+    }
   },
   events_item_universal: {
     backgroundColor: "#FFFFFF",
-    padding: "2rem 2rem 4rem 2rem",
-    margin: 0,
+    padding: "1rem 1rem 2rem 1rem",
     textAlign: "center",
+    margin: 0,
+    cursor: "pointer",
+    marginBottom: "1rem",
+    transition: "box-shadow 0.2s ease-out",
+    [theme.breakpoints.up("sm")]: {
+      marginBottom: 0,
+      padding: "2rem 2rem 4rem 2rem",
+    },
     "& p": {
       fontWeight: "bold",
       fontSize: "1.2rem",
@@ -391,57 +452,68 @@ export default createStyles({
     "& img": {
       width: "33.33%",
       height: "6px",
-      marginBottom: "2rem"
+      marginBottom: "2rem",
+      transition: "width 0.2s ease-out"
+    },
+    "&:hover": {
+      boxShadow: "0 0 20px rgba(0,0,0,0.2)"
+    },
+    "&:hover img": {
+      width: "50%"
     },
   },
   bottom_section: {
-    display: "grid",
-    gridTemplateColumns: "repeat(3, 1fr)",
-    gridTemplateRows: "repeat(2, 2vw)",
-    gridRowGap: "18rem",
-    gridColumnGap: "0rem",
-    paddingLeft: "15rem",
-    paddingRight: "12rem",
-    height: "100%",
-    [theme.breakpoints.down("md")]:{
-        paddingLeft: "9rem",
-        paddingRight: "5rem"
+    display: "flex",
+    flexDirection: "column",
+    gridGap: "2rem",
+    padding: sidePaddingSm,
+    margin: "2rem 0",
+    [theme.breakpoints.up("sm")]: {
+      display: "grid",
+      padding: sidePaddingMd,
+      gridTemplateColumns: "repeat(2, 1fr)",
+      gridTemplateRows: "repeat(3, 1fr)",
     },
-    [theme.breakpoints.down("sm")]:{
-        paddingLeft: "6rem",
-        paddingRight: "3rem"
+    [theme.breakpoints.up("md")]: {
+      padding: sidePaddingLg,
+      margin: "4rem 0",
+      gridTemplateColumns: "repeat(3, 1fr)",
+      gridTemplateRows: "repeat(2, 1fr)",
+    },
+    [theme.breakpoints.up("lg")]: {
+      padding: sidePaddingXl,
     },
   },
   bottom_section_item: {
-    width: "90%",
-    height: "15vw",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    height: 250,
     cursor: "pointer",
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
+    backgroundBlendMode: "soft-light",
     backgroundSize: "cover",
-    [theme.breakpoints.up("xl")]: {
-        width: "90%"
-    },
-    [theme.breakpoints.down("md")]: {
-        width: "90%"
-    },
-    [theme.breakpoints.down("sm")]:{
-        width: "90%",
-    },
-    [theme.breakpoints.down("xs")]:{
-        fontSize: "130%",
+    [theme.breakpoints.up("md")]: {
+      transition: "background-color 0.2s ease-out, box-shadow 0.2s ease-out",
+      "&:hover": {
+        backgroundColor: "#267b7d",
+        boxShadow: "0px 0px 30px rgba(0,0,0,0.2)",
+      },
     },
     "& p":{
-      fontSize: "2em",
-      marginTop: "6.5vw",
-      textAlign: "center",
-      marginBottom: "2vw",
+      fontSize: 24,
       fontWeight: "bold",
       color: "#FFFFFF",
-      [theme.breakpoints.down("md")]: {
-        fontSize: "1.5em"
+      textAlign: "center",
+      margin: "2rem",
+      textShadow: "0 0 20px rgba(0,0,0,0.5)",
+      [theme.breakpoints.up("lg")]: {
+        fontSize: 28,
       },
-      [theme.breakpoints.down("sm")]: {
-        fontSize: "1em",
-      }
+      [theme.breakpoints.up("xl")]: {
+        fontSize: 34,
+      },
     }
   },
 
