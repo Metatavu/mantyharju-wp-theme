@@ -10,8 +10,10 @@ export default createStyles({
     position: "relative",
     display: "flex",
     flexDirection: "column",
+    justifyContent: "center",
+    padding: "0 1rem",
     width: "100%",
-    padding: "1rem",
+    height: 50,
     [breakpoints.up("sm")]: {
       height: 50
     },
@@ -20,8 +22,16 @@ export default createStyles({
       padding: "2rem 8rem 0",
     },
   },
+  menuButton: {
+    [breakpoints.up("md")]: {
+      display: "none",
+    }
+  },
   logoBar: {
     width: 120,
+    [breakpoints.up("md")]: {
+      width: 230
+    },
     [breakpoints.up("lg")]: {
       width: "initial"
     }

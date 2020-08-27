@@ -94,6 +94,7 @@ class BasicLayout extends React.Component<Props, State> {
     return (
       <div className={ classes.root }>
         <Header
+          lang={ this.props.lang }
           topMenu={ this.state.topMenu }
           localeMenu={ this.state.localeMenu }
           pages={ this.state.pages }

@@ -2,12 +2,14 @@ import * as React from "react";
 import bar from "../../resources/img/mantyharju-logo-svg.svg";
 import styles from "../../styles/header-styles";
 import { MenuLocationData, MenuItemData, Page, SearchResult, GetWpV2SearchTypeEnum } from "../../generated/client/src";
-import { withStyles, WithStyles, Link, Typography, SvgIcon, Hidden } from "@material-ui/core";
+import { withStyles, WithStyles, Link, Typography, SvgIcon, Hidden, IconButton } from "@material-ui/core";
 import ReactHtmlParser from "react-html-parser";
 import ApiUtils from "../../utils/ApiUtils";
 import * as Autocomplete from "react-autocomplete";
 import * as classNames from "classnames";
 import { searchIconVectorPath } from "../../resources/icons/svgIcons";
+import HamburgerIcon from "@material-ui/icons/MenuSharp";
+import MobileMenu from "./MobileMenu";
 
 /**
  * Facebook-logo license: https://commons.wikimedia.org/wiki/File:Facebook_William_Aditya_Sarana.png
@@ -17,6 +19,7 @@ import { searchIconVectorPath } from "../../resources/icons/svgIcons";
  * Component props
  */
 interface Props extends WithStyles<typeof styles> {
+  lang: string,
   localeMenu?: MenuLocationData
   topMenu?: MenuLocationData
   parentPage?: number
@@ -30,7 +33,8 @@ interface State {
   menuVisibility: boolean,
   menuItemCurrent?: Page,
   searchString: string,
-  results: SearchResult[]
+  results: SearchResult[],
+  mobileMenuVisible: boolean
 }
 
 /**
@@ -47,7 +51,8 @@ class Header extends React.Component<Props, State> {
     this.state = {
       menuVisibility: false,
       searchString: "",
-      results: []
+      results: [],
+      mobileMenuVisible: false
     };
   }
 
@@ -74,48 +79,62 @@ class Header extends React.Component<Props, State> {
     };
 
     return (
-      <div className={ classes.header }>
-        <div className={ classes.topSection }>
-          <a href="/?lang=fi">
-            <img className={ classes.logoBar } src={ bar } />
-          </a>
-          {/* Hide this part of the header when on small screens */}
-          <Hidden smDown implementation="css">
-            <div className={ classes.headerRight }>
-              <div className={ classes.localeMenu }>
-                { this.renderLocale() }
-              </div>
-                { this.renderTopMenu() }
-                <div className={ classes.searchBar }>
-                  <Autocomplete
-                    getItemValue={ this.getItemValue }
-                    items={ results }
-                    renderItem={ this.renderItem }
-                    value={ searchString }
-                    onChange={ this.setSearchString }
-                    onSelect={ this.selectItem }
-                    menuStyle={ menuStyle }
-                    />
-                  <div className={ classes.searchIconWrapper }>
-                    <SvgIcon color="secondary" >
-                      { searchIconVectorPath }
-                    </SvgIcon>
-                  </div>
+      <>
+        <div className={ classes.header }>
+          <div className={ classes.topSection }>
+            <a href="/?lang=fi">
+              <img className={ classes.logoBar } src={ bar } />
+            </a>
+            {/* Hide this part of the header when on small screens */}
+            <Hidden smDown implementation="css">
+              <div className={ classes.headerRight }>
+                <div className={ classes.localeMenu }>
+                  { this.renderLocale() }
                 </div>
+                  { this.renderTopMenu() }
+                  <div className={ classes.searchBar }>
+                    <Autocomplete
+                      getItemValue={ this.getItemValue }
+                      items={ results }
+                      renderItem={ this.renderItem }
+                      value={ searchString }
+                      onChange={ this.setSearchString }
+                      onSelect={ this.selectItem }
+                      menuStyle={ menuStyle }
+                      />
+                    <div className={ classes.searchIconWrapper }>
+                      <SvgIcon color="secondary" >
+                        { searchIconVectorPath }
+                      </SvgIcon>
+                    </div>
+                  </div>
+              </div>
+            </Hidden>
+            <IconButton
+              className={ classes.menuButton }
+              color="primary"
+              onClick={ this.showMobileMenu }
+            >
+              <HamburgerIcon fontSize="default" />
+            </IconButton>
+          </div>
+          <Hidden smDown implementation="css">
+            <div className={ classes.menuWrapper } onMouseLeave={() => { this.onMouseLeave(); }}>
+              <div className={ classes.mainMenu }>
+                { this.renderMenu() }
+              </div>
+              <div className={ classNames(classes.subMenu, menuVisibility ? "visible" : "" ) }>
+                { this.renderSubmenu() }
+              </div>
             </div>
           </Hidden>
         </div>
-        <Hidden smDown implementation="css">
-          <div className={ classes.menuWrapper } onMouseLeave={() => { this.onMouseLeave(); }}>
-            <div className={ classes.mainMenu }>
-              { this.renderMenu() }
-            </div>
-            <div className={ classNames(classes.subMenu, menuVisibility ? "visible" : "" ) }>
-              { this.renderSubmenu() }
-            </div>
-          </div>
-        </Hidden>
-      </div>
+        <MobileMenu
+          lang={ this.props.lang }
+          onClose={ () => this.setState({ mobileMenuVisible: false }) }
+          visible={ this.state.mobileMenuVisible }
+        />
+      </>
     );
   }
 
@@ -331,7 +350,7 @@ class Header extends React.Component<Props, State> {
 
   /**
    * Method for setting search string
-   * 
+   *
    * @param event event object
    */
   private setSearchString = async (event: any) => {
@@ -408,6 +427,17 @@ class Header extends React.Component<Props, State> {
       });
       return menuPagesArray;
     }
+  }
+
+  /**
+   * Mobile menu visibility method
+   */
+  private showMobileMenu = () => {
+    return (
+      this.setState({
+        mobileMenuVisible: true
+      })
+    );
   }
 }
 

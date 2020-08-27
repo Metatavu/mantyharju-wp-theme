@@ -27,6 +27,8 @@ export default createMuiTheme({
     }
   },
   typography: {
+    // Tell Material-UI what's the font-size on the html element.
+    htmlFontSize: 16,
     fontFamily: "Open Sans, sans-serif",
     h1: {
       fontFamily: "Open Sans, sans-serif",
