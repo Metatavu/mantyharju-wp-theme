@@ -4580,6 +4580,30 @@ paths:
               schema:
                 $ref: "#/components/schemas/error"
       operationId: GetWpV2CustomTaxonomy
+  /wp/v2/treeMenu?slug={slug}:
+    get:
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - cookieAuth: []
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/treeMenu"
+        default:
+          description: error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error"
+      operationId: GetTreeMenu
   /wp/v2/customize:
     get:
       responses:
@@ -4608,6 +4632,30 @@ components:
       in: header
       description: Please see http://v2.wp-api.org/guide/authentication/
   schemas:
+    treeMenu:
+      type: object
+      properties:
+        treeData:
+          $ref: "#/components/schemas/treeData"
+        initialOpenNodes:
+          type: array
+          items:
+            type: string
+    treeData:
+      type: array
+      items:
+        type: object
+        properties:
+          key:
+            type: string
+          label:
+            type: string
+          link:
+            type: string
+          current:
+            type: boolean
+          nodes:
+            $ref: "#/components/schemas/treeData"
     customizeField:
       type: object
       properties:
