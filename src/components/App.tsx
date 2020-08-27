@@ -50,6 +50,7 @@ class App extends React.Component<Props, State> {
               render={ (props) => (
                 <WelcomePage
                   lang={language}
+                  slug={ this.pathToSlug(props.location.pathname) }
                 />
               )}
             />

@@ -1,7 +1,7 @@
 import * as React from "react";
-import { Link, WithStyles, withStyles, Fade, IconButton } from "@material-ui/core";
-import { MenuLocationData, MenuItemData } from "../../generated/client/src";
+import { Link, WithStyles, withStyles, Fade, IconButton, Accordion, AccordionSummary, AccordionDetails } from "@material-ui/core";
 import ApiUtils from "../../utils/ApiUtils";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import CloseIcon from "@material-ui/icons/CloseSharp";
 import styles from "../../styles/mobile-menu";
 
@@ -9,17 +9,26 @@ import styles from "../../styles/mobile-menu";
  * Interface representing component properties
  */
 interface Props extends WithStyles<typeof styles> {
-  visible: boolean
-  lang: string
-  onClose(): void
+  visible: boolean;
+  slug: string;
+  onClose(): void;
 }
 
 /**
  * Interface representing component state
  */
 interface State {
-  menu?: MenuLocationData
-  loading: boolean
+  menu?: Menu[];
+  loading: boolean;
+}
+
+interface Menu {
+  key: string;
+  menu_order: number;
+  label: string;
+  link: string;
+  current: boolean;
+  nodes: Menu[];
 }
 
 /**
@@ -43,16 +52,18 @@ class MobileMenu extends React.Component<Props, State> {
    * Component did mount life-cycle handler
    */
   public componentDidMount = async () => {
+    const { slug } = this.props;
+
     this.setState({
       loading: true
     });
 
     const api = ApiUtils.getApi();
 
-    const menu = await api.getMenusV1LocationsById({ lang: this.props.lang, id: "topmenu" });
+    const menu = await api.getTreeMenu({ slug: slug });
 
     this.setState({
-      menu: menu,
+      menu: menu.tree_data as Menu[],
       loading: false
     });
   }
@@ -62,7 +73,8 @@ class MobileMenu extends React.Component<Props, State> {
    */
   public render() {
     const { classes } = this.props;
-    if (!this.state.menu || !this.state.menu.items) {
+    const { menu } = this.state;
+    if (!menu) {
       return null;
     }
 
@@ -71,11 +83,11 @@ class MobileMenu extends React.Component<Props, State> {
      *
      * menu items with and without children
      */
-    const itemsWithChildren: MenuItemData[] = [];
-    const itemsWithoutChildren: MenuItemData[] = [];
+    const itemsWithChildren: Menu[] = [];
+    const itemsWithoutChildren: Menu[] = [];
 
-    this.state.menu.items.forEach((item) => {
-      if (item.child_items && item.child_items.length > 0) {
+    menu.forEach((item) => {
+      if (item.nodes && item.nodes.length > 0) {
         itemsWithChildren.push(item);
       } else {
         itemsWithoutChildren.push(item);
@@ -111,8 +123,10 @@ class MobileMenu extends React.Component<Props, State> {
 
   /**
    * Menu group without submenu items render method
+   *
+   * @param items menu array
    */
-  private renderMenuItemsGroupWithoutChildren = (items: MenuItemData[]) => {
+  private renderMenuItemsGroupWithoutChildren = (items: Menu[]) => {
     const { classes } = this.props;
     return (
       <div className={ classes.menuGroup }>
@@ -120,11 +134,11 @@ class MobileMenu extends React.Component<Props, State> {
           <Link
             className={ classes.link }
             variant="h5"
-            key={item.db_id}
-            href={ item.url }
+            key={ item.key }
+            href={ item.link }
           >
             {
-              item.title
+              item.label
             }
           </Link>)}
       </div>
@@ -133,53 +147,96 @@ class MobileMenu extends React.Component<Props, State> {
 
   /**
    * Menu item render method
+   * 
+   * @param item menu
    */
-  private renderMenuItem = (item: MenuItemData) => {
+  private renderMenuItem = (item: Menu) => {
     const { classes } = this.props;
     if (!item) {
       return null;
     }
 
     return (
-      <div className={ classes.menuGroup } key={ item.db_id }>
-        <Link
-          className={ classes.link }
-          href={ item.url }
-          variant="h5"
-        >
-          {
-            item.title
-          }
-        </Link>
-        {
-          (item.child_items || [] ).map((childItems) => {
-            return this.renderMenuSubItem(childItems);
-          })
-        }
+      <div className={ classes.menuGroup } key={ item.key }>
+        <Accordion>
+          <AccordionSummary
+            expandIcon={ <ExpandMoreIcon /> }
+          >
+            <Link
+              className={ classes.link }
+              href={ item.link }
+              variant="h5"
+            >
+              {
+                item.label
+              }
+            </Link>
+          </AccordionSummary>
+          <AccordionDetails>
+            {
+              (item.nodes || [] ).map((node: Menu) => {
+                return this.renderMenuSubItem(node);
+              })
+            }
+          </AccordionDetails>
+        </Accordion>
       </div>
     );
   }
 
   /**
    * Menu sub item render method
+   *
+   * @param item menu
    */
-  private renderMenuSubItem = (item?: MenuItemData) => {
+  private renderMenuSubItem = (item?: Menu) => {
     if (!item) {
       return null;
     }
     const { classes } = this.props;
     return (
-      <Link
-        className={ classes.subLink }
-        key={ item.db_id }
-        href={ item.url }
-        variant="subtitle2"
-      >
-        {
-          item.title
-        }
-      </Link>
+      <>
+        <Link
+          className={ classes.subLink }
+          key={ item.key }
+          href={ item.link }
+          variant="subtitle2"
+        >
+          {
+            item.label
+          }
+        </Link>
+        { this.renderMenuSubItemSubItems(item.nodes) }
+      </>
     );
+  }
+
+  /**
+   * Menu sub item sub items render method
+   *
+   * @param items menu array
+   */
+  private renderMenuSubItemSubItems = (items?: Menu[]) => {
+    const { classes } = this.props;
+
+    if (!items || (items && items.length === 0)) {
+      return;
+    }
+
+    return items.map((item: Menu) => {
+      return (
+        <Link
+          className={ classes.subLinkOfSubLink }
+          key={ item.key }
+          href={ item.link }
+          variant="subtitle2"
+        >
+          {
+            item.label
+          }
+        </Link>
+      );
+    });
   }
 }
 

@@ -19,22 +19,23 @@ import MobileMenu from "./MobileMenu";
  * Component props
  */
 interface Props extends WithStyles<typeof styles> {
-  lang: string,
-  localeMenu?: MenuLocationData
-  topMenu?: MenuLocationData
-  parentPage?: number
-  pages: Page[]
+  slug: string;
+  lang: string;
+  localeMenu?: MenuLocationData;
+  topMenu?: MenuLocationData;
+  parentPage?: number;
+  pages: Page[];
 }
 
 /**
  * Component state
  */
 interface State {
-  menuVisibility: boolean,
-  menuItemCurrent?: Page,
-  searchString: string,
-  results: SearchResult[],
-  mobileMenuVisible: boolean
+  menuVisibility: boolean;
+  menuItemCurrent?: Page;
+  searchString: string;
+  results: SearchResult[];
+  mobileMenuVisible: boolean;
 }
 
 /**
@@ -130,7 +131,7 @@ class Header extends React.Component<Props, State> {
           </Hidden>
         </div>
         <MobileMenu
-          lang={ this.props.lang }
+          slug={ this.props.slug }
           onClose={ () => this.setState({ mobileMenuVisible: false }) }
           visible={ this.state.mobileMenuVisible }
         />

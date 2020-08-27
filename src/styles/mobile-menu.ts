@@ -35,6 +35,12 @@ export default createStyles({
     lineHeight: 1.2,
     marginLeft: "0.8rem"
   },
+  subLinkOfSubLink: {
+    marginBottom: "1rem",
+    fontFamily: theme.typography.body2.fontFamily,
+    lineHeight: 1.2,
+    marginLeft: "0.8rem"
+  },
   controlContainer: {
     display: "flex",
     flexDirection: "row-reverse",

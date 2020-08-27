@@ -100,7 +100,7 @@ class PostPage extends React.Component<Props, State> {
     const loactionPathnameArrayRaw = (locationPath ? locationPath.replace(/\//g, " ") || "" : "").split(" ");
     const loacationPathnameArray = loactionPathnameArrayRaw.splice(1, (loactionPathnameArrayRaw.length -1 ) - 1);
     return (
-      <BasicLayout lang={ lang } title={ this.setTitleSource() }>
+      <BasicLayout lang={ lang } slug={ slug } title={ this.setTitleSource() }>
         <div className={ classes.heroImageDiv }>
           <h1 className={ classes.heroText }>{ currentPage ? ReactHtmlParser(currentPage.title ? currentPage.title.rendered || "" : "") : null }</h1>
         </div>

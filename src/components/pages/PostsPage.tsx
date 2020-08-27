@@ -96,10 +96,10 @@ class PostsPage extends React.Component<Props, State> {
    * Component render
    */
   public render() {
-    const { lang, classes } = this.props;
+    const { lang, slug, classes } = this.props;
 
     return (
-      <BasicLayout lang={ lang }>
+      <BasicLayout lang={ lang } slug={ slug }>
         <div className={ classes.heroImageDiv }>
           <p className={ classes.heroText }>Asiointi ja päätöksenteko</p>
         </div>
