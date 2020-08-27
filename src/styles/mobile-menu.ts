@@ -6,12 +6,13 @@ export default createStyles({
     flexDirection: "column",
     position: "fixed",
     overflow: "auto",
-    top: 50,
+    top: 0,
+    bottom: 0,
     width: "100vw",
     padding: "0 20px",
-    height: "calc(100% - 50px)",
+    height: "100vh",
     zIndex: 1000,
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    backgroundColor: "#fff",
     [theme.breakpoints.up("md")]: {
       display: "none"
     }
@@ -19,45 +20,42 @@ export default createStyles({
   menuContent: {
     display: "flex",
     flexDirection: "column",
-    marginTop: 100
+    marginTop: 80
   },
   menuGroup: {
     display: "flex",
     flexDirection: "column",
-    marginBottom: theme.spacing(4)
+    minHeight: 50,
+    justifyContent: "center",
+    "& > a": {
+      marginLeft: 16
+    }
   },
   link: {
-    marginBottom: "2rem"
   },
   subLink: {
     marginBottom: "1rem",
     fontFamily: theme.typography.body1.fontFamily,
     lineHeight: 1.2,
-    marginLeft: "0.8rem"
+    marginLeft: "1rem"
   },
   subLinkOfSubLink: {
     marginBottom: "1rem",
-    fontFamily: theme.typography.body2.fontFamily,
+    fontFamily: theme.typography.body1.fontFamily,
+    fontWeight: 300,
     lineHeight: 1.2,
-    marginLeft: "0.8rem"
+    marginLeft: "2rem"
   },
   controlContainer: {
     display: "flex",
     flexDirection: "row-reverse",
     marginTop: theme.spacing(2),
     position: "fixed",
-    right: 18
+    right: theme.spacing(1),
   },
   searchContainer: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center"
   },
-  close: {
-    fontSize: 12,
-    textTransform: "initial"
-  },
-  closeIcon: {
-    fontSize: 40
-  }
 });

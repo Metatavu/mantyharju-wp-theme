@@ -11,10 +11,15 @@ export default createStyles({
     }
   },
   listRoot: {
-    width: "70%",
+    width: "100%",
+    padding: "0 1rem",
+    [breakpoints.up("md")]: {
+      width: "70%",
+      padding: 0
+    }
   },
   parentListItem: {
-    display: "flex",
+    display: "none",
     justifyContent: "space-between",
     margin: 0,
     borderBottom: "1px solid rgba(0,0,0,0.2)",
@@ -25,8 +30,17 @@ export default createStyles({
     "&:hover a": {
       textDecoration: "underline"
     },
+    "&.open": {
+      display: "flex",
+      "& > div": {
+        display: "none"
+      }
+    },
     "&.open a": {
       fontWeight: "bold"
+    },
+    [breakpoints.up("md")]: {
+      display: "flex"
     }
   },
   listItem: {

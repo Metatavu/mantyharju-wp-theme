@@ -127,6 +127,11 @@ export default createMuiTheme({
         }
       }
     },
+    MuiPaper: {
+      root: {
+        backgroundColor: "#fff"
+      }
+    },
     MuiInputBase: {
     },
     MuiInputLabel: {
@@ -134,12 +139,33 @@ export default createMuiTheme({
     MuiFormLabel: {
     },
     MuiInput: {
+    },
+    MuiAccordion: {
+      rounded: {
+        borderRadius: 0,
+        "&:last-child": {
+          borderBottomLeftRadius: 0,
+          borderBottomRightRadius: 0
+        },
+        "&:first-child": {
+          borderTopLeftRadius: 0,
+          borderTopRightRadius: 0
+        }
+      }
+    },
+    MuiAccordionDetails: {
+      root: {
+        flexDirection: "column"
+      }
     }
   },
   props: {
     MuiButton: {
       variant: "contained",
       color: "primary",
+    },
+    MuiAccordion: {
+      elevation: 0
     }
   }
 });

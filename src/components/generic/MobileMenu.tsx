@@ -99,11 +99,10 @@ class MobileMenu extends React.Component<Props, State> {
         <div className={ classes.root }>
           <div className={ classes.controlContainer }>
             <IconButton
-              className={ classes.close }
               color="primary"
               onClick={ () => this.props.onClose() }
             >
-              <CloseIcon className={ classes.closeIcon } fontSize="large" />
+              <CloseIcon fontSize="default" />
             </IconButton>
           </div>
           <div className={ classes.menuContent }>
@@ -147,7 +146,7 @@ class MobileMenu extends React.Component<Props, State> {
 
   /**
    * Menu item render method
-   * 
+   *
    * @param item menu
    */
   private renderMenuItem = (item: Menu) => {
@@ -158,7 +157,7 @@ class MobileMenu extends React.Component<Props, State> {
 
     return (
       <div className={ classes.menuGroup } key={ item.key }>
-        <Accordion>
+        <Accordion elevation={ 0 }>
           <AccordionSummary
             expandIcon={ <ExpandMoreIcon /> }
           >

@@ -72,11 +72,13 @@ export default createStyles({
     },
     social: {
         marginTop: "2rem",
+        marginRight: "1rem",
         width: 30,
         height: 30,
         [breakpoints.up("md")]: {
             marginTop: 0,
-            marginLeft: "2rem"
+            marginLeft: "2rem",
+            marginRight: 0,
         }
     },
 });
