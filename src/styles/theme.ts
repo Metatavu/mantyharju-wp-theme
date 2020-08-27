@@ -113,6 +113,20 @@ export default createMuiTheme({
       outlinedPrimary: {
       }
     },
+    MuiListItem: {
+      root: {
+        "&.Mui-selected": {
+          backgroundColor: "transparent",
+          textDecoration: "underline",
+          fontWeight: "bold"
+        },
+        "&.Mui-selected:hover": {
+          backgroundColor: "transparent",
+          textDecoration: "underline",
+          fontWeight: "bold"
+        }
+      }
+    },
     MuiInputBase: {
     },
     MuiInputLabel: {
