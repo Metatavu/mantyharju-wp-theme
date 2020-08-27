@@ -167,9 +167,7 @@ class MobileMenu extends React.Component<Props, State> {
               href={ item.link }
               variant="h5"
             >
-              {
-                item.label
-              }
+              { item.label }
             </Link>
           </AccordionSummary>
           <AccordionDetails>
