@@ -107,9 +107,7 @@ class MobileMenu extends React.Component<Props, State> {
           </div>
           <div className={ classes.menuContent }>
             {
-              itemsWithChildren.map((item) => {
-                return this.renderMenuItem(item);
-              })
+              itemsWithChildren.map(item => this.renderMenuItem(item))
             }
             {
               this.renderMenuItemsGroupWithoutChildren(itemsWithoutChildren)
