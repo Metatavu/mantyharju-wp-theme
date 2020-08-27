@@ -173,9 +173,7 @@ class MobileMenu extends React.Component<Props, State> {
           </AccordionSummary>
           <AccordionDetails>
             {
-              (item.nodes || [] ).map((node: Menu) => {
-                return this.renderMenuSubItem(node);
-              })
+              (item.nodes || []).map((node: Menu) => this.renderMenuSubItem(node))
             }
           </AccordionDetails>
         </Accordion>
