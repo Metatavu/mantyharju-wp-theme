@@ -101,7 +101,12 @@ class TreeView extends React.Component<Props, State> {
       <ListItem
         disableGutters={ true }
         selected={ current }
-        className={ classNames(level === 0 ? classes.parentListItem : classes.listItem, isOpen ? "open" : "") }
+        className={
+          classNames(
+            level === 0 ? classes.parentListItem : classes.listItem,
+            isOpen ? "open" : ""
+          )
+        }
         style={{ paddingLeft: level * 10 }}
         { ...item }
       >
