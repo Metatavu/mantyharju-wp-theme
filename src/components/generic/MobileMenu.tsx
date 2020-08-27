@@ -129,17 +129,18 @@ class MobileMenu extends React.Component<Props, State> {
     const { classes } = this.props;
     return (
       <div className={ classes.menuGroup }>
-        {items.map((item) =>
-          <Link
-            className={ classes.link }
-            variant="h5"
-            key={ item.key }
-            href={ item.link }
-          >
-            {
-              item.label
-            }
-          </Link>)}
+        {
+          items.map(item =>
+            <Link
+              className={ classes.link }
+              variant="h5"
+              key={ item.key }
+              href={ item.link }
+            >
+              { item.label }
+            </Link>
+          )
+        }
       </div>
     );
   }
