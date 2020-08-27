@@ -10,8 +10,9 @@ import Footer from "./generic/Footer";
  * Interface representing component properties
  */
 interface Props extends WithStyles<typeof styles> {
-  lang: string,
-  title?: string
+  slug: string;
+  lang: string;
+  title?: string;
 }
 
 /**
@@ -94,6 +95,8 @@ class BasicLayout extends React.Component<Props, State> {
     return (
       <div className={ classes.root }>
         <Header
+          slug={ this.props.slug }
+          lang={ this.props.lang }
           topMenu={ this.state.topMenu }
           localeMenu={ this.state.localeMenu }
           pages={ this.state.pages }

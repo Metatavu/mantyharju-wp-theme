@@ -1,7 +1,12 @@
 import { createStyles } from "@material-ui/core";
 import theme from "./theme";
 
-const sidePaddingLg = "0 8rem";
+const { breakpoints } = theme;
+
+const sidePaddingSm = "0 2rem";
+const sidePaddingMd = "0 4rem";
+const sidePaddingLg = "0 6rem";
+const sidePaddingXl = "0 8rem";
 const maxPageWidthXl = "100%";
 
 export default createStyles({
@@ -10,34 +15,54 @@ export default createStyles({
         display: "flex",
         flexDirection: "row",
         justifyContent: "center",
-        padding: sidePaddingLg
+        padding: sidePaddingSm,
+        [breakpoints.up("sm")]: {
+            padding: sidePaddingMd
+        },
+        [breakpoints.up("md")]: {
+            padding: sidePaddingLg
+        },
+        [breakpoints.up("lg")]: {
+            padding: sidePaddingXl
+        },
     },
     footerContent: {
         display: "flex",
-        flexDirection: "row",
-        justifyContent: "center",
-        color: "#fff",
-        height: 300,
+        flexDirection: "column",
+        minHeight: 300,
         paddingTop: "2rem",
         width: "100%",
-        [theme.breakpoints.up("xl")]: {
+        paddingBottom: "8rem",
+        [breakpoints.up("md")]: {
+            display: "grid",
+            gridAutoFlow: "column",
+            gridGap: "4rem"
+        },
+        [breakpoints.up("xl")]: {
             maxWidth: maxPageWidthXl
         },
     },
     footerLogo: {
-        width: "30%"
+        width: "100%",
+        marginBottom: "2rem",
+        [breakpoints.up("md")]: {
+            marginBottom: 0,
+        }
     },
     footerAdressInfo: {
-        width: "20%"
+        color: "#fff",
+        width: "100%",
     },
     footerContactInfo: {
-        width: "20%"
+        color: "#fff",
+        width: "100%",
     },
     footerSocialInfo: {
-        width: "30%"
+        width: "100%",
     },
     footerContentItem: {
         "& p": {
+            color: "#fff",
             fontFamily: theme.typography.body1.fontFamily,
             textDecoration: "none",
             margin: 0
@@ -46,8 +71,14 @@ export default createStyles({
     logo: {
     },
     social: {
-        marginLeft: 5,
-        minWidth: "5%",
-        width: "5%"
+        marginTop: "2rem",
+        marginRight: "1rem",
+        width: 30,
+        height: 30,
+        [breakpoints.up("md")]: {
+            marginTop: 0,
+            marginLeft: "2rem",
+            marginRight: 0,
+        }
     },
 });

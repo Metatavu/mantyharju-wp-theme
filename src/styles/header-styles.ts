@@ -1,6 +1,7 @@
 import { createStyles } from "@material-ui/core";
 import theme from "./theme";
-// import headerImage from "../resources/img/headerImage.png";
+
+const { breakpoints } = theme;
 
 const hoverHighlight = "rgba(0,0,0,0.1)";
 
@@ -9,13 +10,31 @@ export default createStyles({
     position: "relative",
     display: "flex",
     flexDirection: "column",
+    justifyContent: "center",
+    padding: "0 1rem",
     width: "100%",
-    padding: "1rem 2rem 0",
-    [theme.breakpoints.up("sm")]: {
+    height: 50,
+    [breakpoints.up("sm")]: {
+      height: 50
+    },
+    [breakpoints.up("md")]: {
+      height: "initial",
       padding: "2rem 8rem 0",
     },
   },
+  menuButton: {
+    [breakpoints.up("md")]: {
+      display: "none",
+    }
+  },
   logoBar: {
+    width: 120,
+    [breakpoints.up("md")]: {
+      width: 230
+    },
+    [breakpoints.up("lg")]: {
+      width: "initial"
+    }
   },
   nav: {
     display: "flex",
@@ -34,19 +53,16 @@ export default createStyles({
     paddingBottom: "1rem",
     borderBottom: "4px solid rgba(0,0,0,0)",
     transition: "border-bottom-color 0.2s ease-out",
-    [theme.breakpoints.down("sm")]: {
-      fontSize: "0.75rem",
+    [breakpoints.up("md")]: {
+      marginLeft: 20,
+      fontSize: "12px"
     },
-    [theme.breakpoints.down("md")]: {
-      fontSize: "0.75rem",
-      marginLeft: 10,
+    [breakpoints.up("lg")]: {
+      marginLeft: 25
     },
-    [theme.breakpoints.up("lg")]: {
-      fontSize: "1rem",
-      marginLeft: 35,
-    },
-    [theme.breakpoints.up("xl")]: {
-      marginLeft: 45,
+    [breakpoints.up("xl")]: {
+      marginLeft: 40,
+      fontSize: 16,
     },
     "&.highlight": {
       borderBottomColor: theme.palette.primary.main
@@ -60,18 +76,18 @@ export default createStyles({
     fontFamily: theme.typography.body1.fontFamily,
     color: theme.palette.primary.dark,
     fontWeight: theme.typography.body1.fontWeight,
-    [theme.breakpoints.down("sm")]: {
+    [breakpoints.down("sm")]: {
       fontSize: "0.75rem",
     },
-    [theme.breakpoints.down("md")]: {
+    [breakpoints.down("md")]: {
       fontSize: "0.75rem",
       marginLeft: 10,
     },
-    [theme.breakpoints.up("lg")]: {
+    [breakpoints.up("lg")]: {
       fontSize: "1rem",
       marginLeft: 35,
     },
-    [theme.breakpoints.up("xl")]: {
+    [breakpoints.up("xl")]: {
       marginLeft: 45,
     }
   },

@@ -5,6 +5,8 @@ import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import TreeMenu, {  TreeMenuItem } from "react-simple-tree-menu";
 import { withStyles, WithStyles, ListItem, List, CircularProgress } from "@material-ui/core";
+import theme from "../../styles/theme";
+import * as classNames from "classnames";
 
 /**
  * Component props
@@ -56,7 +58,7 @@ class TreeView extends React.Component<Props, State> {
         { initialOpenNodes !== undefined &&
           <TreeMenu data={ treeData } initialOpenNodes={ initialOpenNodes } hasSearch={ false }>
             {({ search, items }) => (
-              <List>
+              <List disablePadding={ true } className={ classes.listRoot } >
                 { items.map((item: any) => this.renderTreeMenuItem(item)) }
               </List>
             )}
@@ -92,14 +94,20 @@ class TreeView extends React.Component<Props, State> {
   private renderTreeMenuItem = (item: TreeMenuItem) => {
     const { classes } = this.props;
     const toggleIcon = (on: boolean) => on ?
-      <ExpandLessIcon htmlColor={ focused ? "#000" : "#888" } /> :
-      <ExpandMoreIcon htmlColor={ focused ? "#000" : "#888" }  />;
+      <ExpandLessIcon htmlColor={ focused ? "#000" : theme.palette.primary.main } /> :
+      <ExpandMoreIcon htmlColor={ focused ? "#000" : theme.palette.primary.main }  />;
     const { level, focused, hasNodes, toggleNode, isOpen, label, link, key, current } = item;
     return (
       <ListItem
+        disableGutters={ true }
         selected={ current }
-        className={ classes.listItem }
-        style={{ paddingLeft: level * 20 }}
+        className={
+          classNames(
+            level === 0 ? classes.parentListItem : classes.listItem,
+            isOpen ? "open" : ""
+          )
+        }
+        style={{ paddingLeft: level * 10 }}
         { ...item }
       >
         <a href={ link }>{ label }</a>

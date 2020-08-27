@@ -3,6 +3,8 @@ import { createMuiTheme, responsiveFontSizes } from "@material-ui/core";
 let theme = createMuiTheme();
 theme = responsiveFontSizes(theme);
 
+const { breakpoints } = theme;
+
 export default createMuiTheme({
   palette: {
     primary: {
@@ -25,6 +27,8 @@ export default createMuiTheme({
     }
   },
   typography: {
+    // Tells Material UI the font-size on the html element.
+    htmlFontSize: 16,
     fontFamily: "Open Sans, sans-serif",
     h1: {
       fontFamily: "Open Sans, sans-serif",
@@ -58,7 +62,10 @@ export default createMuiTheme({
       fontFamily: "Open Sans, sans-serif",
       fontWeight: "normal",
       textTransform: "uppercase",
-      fontSize: "16px"
+      fontSize: "14px",
+      [breakpoints.up("sm")]: {
+        fontSize: "16px",
+      },
     },
     subtitle2: {
       fontFamily: "Rubik, sans-serif",
@@ -91,13 +98,38 @@ export default createMuiTheme({
         }
       },
       label: {
-        fontSize: 20,
         fontFamily: "Open Sans, sans-serif",
-        fontWeight: 600
+        fontWeight: 600,
+        fontSize: 14,
+        [breakpoints.up("sm")]: {
+          fontSize: 16,
+        },
+        [breakpoints.up("md")]: {
+          fontSize: 20,
+        }
       },
       text: {
       },
       outlinedPrimary: {
+      }
+    },
+    MuiListItem: {
+      root: {
+        "&.Mui-selected": {
+          backgroundColor: "transparent",
+          textDecoration: "underline",
+          fontWeight: "bold"
+        },
+        "&.Mui-selected:hover": {
+          backgroundColor: "transparent",
+          textDecoration: "underline",
+          fontWeight: "bold"
+        }
+      }
+    },
+    MuiPaper: {
+      root: {
+        backgroundColor: "#fff"
       }
     },
     MuiInputBase: {
@@ -107,12 +139,33 @@ export default createMuiTheme({
     MuiFormLabel: {
     },
     MuiInput: {
+    },
+    MuiAccordion: {
+      rounded: {
+        borderRadius: 0,
+        "&:last-child": {
+          borderBottomLeftRadius: 0,
+          borderBottomRightRadius: 0
+        },
+        "&:first-child": {
+          borderTopLeftRadius: 0,
+          borderTopRightRadius: 0
+        }
+      }
+    },
+    MuiAccordionDetails: {
+      root: {
+        flexDirection: "column"
+      }
     }
   },
   props: {
     MuiButton: {
       variant: "contained",
       color: "primary",
+    },
+    MuiAccordion: {
+      elevation: 0
     }
   }
 });

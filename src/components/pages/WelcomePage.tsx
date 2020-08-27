@@ -13,7 +13,8 @@ import { jobsIconSvgPath, announcementIconSvgPath, currentNewsIconSvgPath } from
  * Interface representing component properties
  */
 interface Props extends WithStyles<typeof styles> {
-  lang: string
+  lang: string;
+  slug: string;
 }
 
 /**
@@ -122,7 +123,7 @@ class WelcomePage extends React.Component<Props, State> {
    * Component render method
    */
   public render() {
-    const { lang, classes } = this.props;
+    const { lang, slug, classes } = this.props;
     const showcase_image = this.getCustomizerValue("showcase_image");
     const showcase_title = this.getCustomizerValue("showcase_title");
     const showcase_text = this.getCustomizerValue("showcase_text");
@@ -138,7 +139,7 @@ class WelcomePage extends React.Component<Props, State> {
     let addEventImageStyle = {backgroundImage: `url(${ showcase_image })`};
 
     return (
-      <BasicLayout lang={ lang }>
+      <BasicLayout lang={ lang } slug={ slug }>
         <div className={ classes.heroImageDiv } style={ heroBackgroundImage }>
           <img className={ classes.heroLogo } src={ hero_logo_image } />
           <h2 className={ classes.heroText }>{ hero_title }</h2>
