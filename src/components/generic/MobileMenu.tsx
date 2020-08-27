@@ -230,9 +230,7 @@ class MobileMenu extends React.Component<Props, State> {
           href={ item.link }
           variant="subtitle2"
         >
-          {
-            item.label
-          }
+          { item.label }
         </Link>
       );
     });
