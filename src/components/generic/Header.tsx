@@ -336,7 +336,7 @@ class Header extends React.Component<Props, State> {
       searchString: value
     });
     if (value) {
-      const results = await api.getWpV2Search({ search: value, type: GetWpV2SearchTypeEnum.Post, subtype: "post" });
+      const results = await api.getWpV2Search({ search: value, type: GetWpV2SearchTypeEnum.Post, subtype: "page" });
       this.setState({
         results: results
       });
