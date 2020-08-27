@@ -75,7 +75,7 @@ class TreeView extends React.Component<Props, State> {
   private loadTree = async () => {
     const { slug } = this.props;
     const api = ApiUtils.getApi();
-    const [treeMenu] = await Promise.all([
+    const [ treeMenu ] = await Promise.all([
       api.getTreeMenu({ slug: slug })
     ]);
     this.setState({
@@ -96,7 +96,12 @@ class TreeView extends React.Component<Props, State> {
       <ExpandMoreIcon htmlColor={ focused ? "#000" : "#888" }  />;
     const { level, focused, hasNodes, toggleNode, isOpen, label, link, key, current } = item;
     return (
-      <ListItem selected={ current } { ...item } className={ classes.listItem } style={{ paddingLeft: level * 20 }}>
+      <ListItem
+        selected={ current }
+        className={ classes.listItem }
+        style={{ paddingLeft: level * 20 }}
+        { ...item }
+      >
         <a href={ link }>{ label }</a>
         <div className={ classes.iconWrapper } onClick={ this.onNodeClick(key, hasNodes, toggleNode) }>
           { hasNodes && toggleIcon(isOpen) }
