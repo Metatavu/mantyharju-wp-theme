@@ -11,12 +11,14 @@ import CurrenEventsIcon from '@material-ui/icons/QuestionAnswerOutlined';
 import AnnouncementsIcon from '@material-ui/icons/VolumeUp';
 import JobsIcon from '@material-ui/icons/ThumbsUpDown';
 import { Post, MenuLocationData, Attachment, GetWpV2PostsOrderbyEnum, GetWpV2PostsOrderEnum, CustomizeField } from "../../generated/client/src";
-import { Metaform, MetaformField } from "../../metaform/models/api";
-import { MetaformComponent, IconName, FieldValue } from "../../metaform";
-import LinkedeventsClient from "linkedevents-client";
+import { MetaformComponent, IconName, FieldValue, Metaform, MetaformField } from "metaform-react";
 import DatePicker, { registerLocale } from "react-datepicker";
+import ImagePicker from 'react-image-picker'
+import 'react-image-picker/dist/index.css'
 import "react-datepicker/dist/react-datepicker.css";
 import fi from "date-fns/esm/locale/fi";
+import ImageUpload from "./image-upload";
+import theme from "../../styles/image-upload";
 
 /**
  * Interface representing component properties
@@ -31,7 +33,9 @@ interface Props extends WithStyles<typeof styles> {
 interface State {
   posts: Post[],
   form: Metaform,
+  placeForm: Metaform,
   formValues: Dictionary<string | number | null>
+  placeFormValues: Dictionary<string | number | null>
   media: Attachment[],
   linkedEventsPost?: Post,
   loading: boolean,
@@ -45,12 +49,25 @@ interface State {
   newsCategoryId: number,
   linkedEventsLimitingNumber: number,
   customizeFields: CustomizeField[],
-  modalOpen: boolean
+  modalOpen: boolean,
+  defaultImageUrl: string,
+  showDefaultImages: boolean,
+  addPlaceVisibility: boolean,
+  imageUrl: string
 }
 
 interface Dictionary<T> {
   [Key: string]: T;
 }
+
+const imageList= [
+  "https://static.metatavu.io/mantyharju/linkedevents/images/defaultimage1.jpg",
+  "https://static.metatavu.io/mantyharju/linkedevents/images/defaultimage2.jpg",
+  "https://static.metatavu.io/mantyharju/linkedevents/images/defaultimage3.jpg",
+  "https://static.metatavu.io/mantyharju/linkedevents/images/defaultimage4.jpg",
+  "https://static.metatavu.io/mantyharju/linkedevents/images/defaultimage5.jpg",
+  "https://static.metatavu.io/mantyharju/linkedevents/images/defaultimage6.jpg"
+]
 
 /**
  * WelcomePage component
@@ -71,21 +88,33 @@ class WelcomePage extends React.Component<Props, State> {
       posts: [],
       media: [],
       form: {},
+      placeForm: {},
       formValues: {},
+      placeFormValues: {},
       loading: false,
       popularPosts: [],
       scrollPosition: 0,
       siteMenuVisible: false,
       siteSearchVisible: false,
-      announcementsCategoryId: 9,
-      newsCategoryId: 14,
+      announcementsCategoryId: 5,
+      newsCategoryId: 15,
       linkedEventsLimitingNumber: 8,
       customizeFields: [],
-      modalOpen: false
-    };
+      modalOpen: false,
+      defaultImageUrl: "",
+      showDefaultImages: false,
+      addPlaceVisibility: false,
+      imageUrl: ""
+    }
+
+    this.onPick = this.onPick.bind(this)
 
     this.popularPagesSection = React.createRef();
     registerLocale('fi', fi);
+  }
+
+  onPick(image: any) {
+    this.setState({defaultImageUrl: image.src})
   }
 
   /**
@@ -100,7 +129,7 @@ class WelcomePage extends React.Component<Props, State> {
     const api = ApiUtils.getApi();
     const [posts, mainMenu, localeMenu, popularCategory, eventsPost, media, customizeFields] = await Promise.all(
       [
-        api.getWpV2Posts({per_page: 30}),
+        api.getWpV2Posts({per_page: 100}),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }),
         api.getWpV2Categories({ slug: ["popular"] }),
@@ -113,12 +142,30 @@ class WelcomePage extends React.Component<Props, State> {
     const categoryIdArray = [(popularCategory.length > 0 ? popularCategory[0].id || -1 : -1).toString()];
 
     const popularPosts = await api.getWpV2Posts({ categories: categoryIdArray, per_page: 6, orderby: GetWpV2PostsOrderbyEnum.Date, order: GetWpV2PostsOrderEnum.Desc });
+    const placeForm: Metaform = require("../../metaform-json/create-place.json");
+    const form: Metaform = require("../../metaform-json/create-event.json");
+    const keywordRes = await fetch("https://mantyharju-test.linkedevents.fi/v1/keyword/?page_size=1000&data_source=mantyharju");
+    const data = await keywordRes.json();
 
-    const form = require("../../metaform-json/index.json");
+    const sections = (form.sections || []).map(section => {
+      if (section.title == "Tapahtumaluokat") {
+        section.fields = data.data.map((keyword: any) => {
+          return {
+            "name": `keyword__${keyword.id}`,
+            "type": "boolean",
+            "title": keyword.name && keyword.name.fi ? keyword.name.fi : keyword.id
+          };
+        });
+      }
+      return section;
+    });
+
+    form.sections = sections;
 
     this.setState({
       posts: posts,
       form: form,
+      placeForm: placeForm,
       loading: false,
       mainMenu: mainMenu,
       localeMenu: localeMenu,
@@ -198,7 +245,7 @@ class WelcomePage extends React.Component<Props, State> {
         <div className = { classes.linkedEventsContainer }>
           <h1>Tapahtumat</h1>
           <div className={ classes.wrapper }>
-            { this.renderLinkedEvents(57) }
+            { this.renderLinkedEvents(27) }
           </div>
           <Button title= "Kaikki tapahtumat" onClick={this.expandLinkedEvents} className={ `${classes.generalButtonStyle} ${classes.allEventsButton}` }>Kaikki tapahtumat</Button>
           <Button title= "Lisää tapahtuma" onClick={ this.openModal } className={ `${classes.generalButtonStyle} ${classes.addLinkedEventButton}` }>Lisää tapahtuma</Button>
@@ -215,7 +262,7 @@ class WelcomePage extends React.Component<Props, State> {
           scroll={ 'paper' }
         >
           {
-            this.renderForm()
+            this.renderForm(this.state.form)
           }
         </Dialog>
       </BasicLayout>
@@ -236,8 +283,7 @@ class WelcomePage extends React.Component<Props, State> {
    */
   private closeModal = () => {
     this.setState({
-      modalOpen: false,
-      formValues: {}
+      modalOpen: false
     });
   }
 
@@ -258,13 +304,13 @@ class WelcomePage extends React.Component<Props, State> {
   /**
    * Render single form
    */
-  private renderForm = () => {
-    const { form } = this.state;
+  private renderForm = (form: Metaform) => {
     const { classes } = this.props;
     return (
       <div className={ classes.paper }>
         <MetaformComponent
           form={ form }
+          renderBeforeField={ this.renderBeforeField }
           formReadOnly={ false }
           getFieldValue={ this.getFieldValue }
           setFieldValue={ this.setFieldValue }
@@ -279,6 +325,75 @@ class WelcomePage extends React.Component<Props, State> {
     );
   }
 
+  private renderBeforeField = (fieldName?: string) => {
+    const { classes } = this.props;
+    const imageTextLabel = "Lisää kuva raahamalla tai klikkaamalla aluetta";
+    if (fieldName == "default-image-url") {
+      return (
+        <div>
+          <input type="checkbox" onChange={this.showDefaultImages}/>
+          <div style={this.state.showDefaultImages && !this.state.imageUrl ? {display:"block"} : {display:"none"}}>
+            <ImagePicker 
+              images={imageList.map((image, i) => ({src: image, value: i}))}
+              onPick={this.onPick}
+            />
+          </div>
+          <div style={this.state.showDefaultImages && this.state.imageUrl ? {display:"block"} : {display:"none"}}>
+            Olet tuonut oman kuvan, mikäli haluat käyttää oletuskuvia, poista ensin lisätty kuva.
+          </div>
+          <div style={{ marginBottom: theme.spacing(3)}}>
+            <ImageUpload userId="staging" onSave={ (url) => {this.setState({imageUrl: url})} } label={ imageTextLabel }  />
+          </div>
+        </div>
+      )
+    }
+    if (fieldName == "add-location") {
+      return (
+        <div>
+          <input type="button" value={this.state.addPlaceVisibility ? "Sulje paikan lisääminen" : "Lisää paikka"} onClick={this.addPlaceVisibility}/>
+
+          <div style={this.state.addPlaceVisibility ? {display:"block"} : {display:"none"}}>
+            <div className={ classes.paper }>
+              <MetaformComponent
+                form={ this.state.placeForm }
+                formReadOnly={ false }
+                getFieldValue={ this.getPlaceFieldValue }
+                setFieldValue={ this.setPlaceFieldValue }
+                datePicker={ this.datePicker }
+                datetimePicker={ this.datetimePicker }
+                uploadFile={ this.uploadFile }
+                setAutocompleteOptions={ this.setAutocompleteOptions }
+                renderIcon={ this.renderIcon }
+                onSubmit={ this.onSubmit }
+              />
+            </div>
+          </div>
+        </div>
+      )
+    }
+    return;
+  }
+
+  /**
+   * Setting showDefaultImages to true or false
+   *
+   * @param null
+   */
+  private addPlaceVisibility = () => {
+    this.setState({addPlaceVisibility: this.state.addPlaceVisibility ? false : true});
+  }
+
+
+  /**
+   * Setting showDefaultImages to true or false
+   *
+   * @param null
+   */
+  private showDefaultImages = () => {
+    this.setState({showDefaultImages: this.state.showDefaultImages ? false : true});
+  }
+
+
   /**
    * Method for getting field value
    *
@@ -286,6 +401,15 @@ class WelcomePage extends React.Component<Props, State> {
    */
   private getFieldValue = (fieldName: string): FieldValue => {
     return this.state.formValues[fieldName];
+  }
+
+    /**
+   * Method for getting field value
+   *
+   * @param fieldName field name
+   */
+  private getPlaceFieldValue = (fieldName: string): FieldValue => {
+    return this.state.placeFormValues[fieldName];
   }
 
   /**
@@ -300,6 +424,18 @@ class WelcomePage extends React.Component<Props, State> {
     this.setState({
       formValues: formValues
     });
+  }
+
+    /**
+   * Method for setting field value
+   *
+   * @param fieldName field name
+   * @param fieldValue field value
+   */
+  private setPlaceFieldValue = (fieldName: string, fieldValue: FieldValue) => {
+    const { placeFormValues } = this.state;
+    placeFormValues[fieldName] = fieldValue;
+    this.setState({ placeFormValues });
   }
 
   /**
@@ -354,7 +490,22 @@ class WelcomePage extends React.Component<Props, State> {
    *
    * @param path path
    */
-  private setAutocompleteOptions = (path: string) => {
+  private setAutocompleteOptions = async (path: string, input: string) => {
+
+    //Handle place autocomplete
+    if (path == "/linkedevents/places/search") {
+      if (input.length < 3) {
+        return [];
+      }
+      const res = await fetch(`https://mantyharju-test.linkedevents.fi/v1/search/?type=place&input=${input}`);
+      const data = await res.json();
+      return data.data.map((place: any) => {
+        return {
+          name: place.name && place.name.fi ? place.name.fi : place.id,
+          value: place.id
+        }
+      });
+    }
     return new Promise<string[]>((resolve, reject) => {
       resolve([ "moi", "hei" ]);
     });
@@ -375,105 +526,63 @@ class WelcomePage extends React.Component<Props, State> {
    *
    * @param source submit input info
    */
-  private onSubmit = async (source: MetaformField) =>  {
-    const { formValues } = this.state;
-    console.log("ValidateForm: ", this.validateForm());
-    console.log("FormValues: ", Object.keys(formValues));
-    try {
-      const linkedEventsUrl = "";
-      const locationId = "";
-      const keywordIds: string[] = [];
-      const keywords = keywordIds.map(keywordId => {
-        return { "@id": `${linkedEventsUrl}/keyword/${keywordId}/` };
-      });
+  private onSubmit = async (source: Metaform) =>  {
+    const submitButtonName = source["name"];
 
-      const imageUrls: string[] = [];
-      const images = await Promise.all(imageUrls.map(url => this.createEventImage(url)));
-      const is_free = formValues["has-price"] == "checked" ? true : false;
-      const eventData = {
-        publication_status: "draft",
-        name: {
-          fi: formValues["name-fi"],
-          sv: formValues["name-sv"],
-          en: formValues["name-en"]
-        },
-        description: {
-          fi: formValues["description-fi"],
-          sv: formValues["description-sv"],
-          en: formValues["description-en"]
-        },
-        short_description: {
-          fi: this.truncateDescription(formValues["description-fi"]),
-          sv: this.truncateDescription(formValues["description-sv"]),
-          en: this.truncateDescription(formValues["description-en"])
-        },
-        custom_data: {
-          "provider-fi": formValues["provider"],
-          "provider-phone": formValues["provider-phone-number"],
-          "provider-email": formValues["provider-email-address"],
-          "responsible-fi": formValues["responsible"],
-          "responsible-phone": formValues["responsible-phone-number"],
-          "responsible-email": formValues["responsible-email-address"],
-          "isRegistration": formValues["is-registration"] || "",
-          "registration-fi": formValues["no-registration-fi"],
-          "registration-sv": formValues["no-registration-sv"],
-          "registration-en": formValues["no-registration-en"],
-          "registration_url": formValues["registration-url"]
-        },
-        images: images,
-        keywords: keywords,
-        location: { "@id": `${linkedEventsUrl}/place/${locationId}/` },
-        offers: [
-          {
-            is_free: is_free,
-            price: {
-              fi: is_free ? formValues["price-fi"] : formValues["free-price-fi"],
-              sv: is_free ? formValues["price-sv"] : formValues["free-price-sv"],
-              en: is_free ? formValues["price-en"] : formValues["free-price-en"]
-            },
-            info_url: formValues["price-url"],
-            description: null
-          } 
-        ]
-      };
+    if(submitButtonName === "submit-event") {
+      const { formValues } = this.state;
+      const start = moment(formValues["start-date-time"] as number);
+      const end = moment(formValues["end-date-time"] as number);
 
-      const api = ApiUtils.getApi();
+      formValues["image-url"] = this.state.imageUrl ? this.state.imageUrl : this.state.defaultImageUrl;
 
-      api.postWpV2Event({ event: formValues });
+      const hasStartTime = !(start.hour() == 0 && start.minute() == 0);
+      const hasEndTime = !(end.hour() == 0 && end.minute() == 0);
 
-      console.log("Eventdata: ",eventData);
+      formValues["has-start-time"] = hasStartTime ? "true" : "false";
+      formValues["has-end-time"] = hasEndTime ? "true" : "false";
 
-    } catch (error) {
-        console.log("Error: ",error);
-    }
-  }
+      formValues["start-time-string"] = start.format();
+      formValues["end-time-string"] = end.format();
+      
+      formValues["submit"] = "event";
 
-  /**
-   * Creates an event image from URL
-   * 
-   * @param url url
-   * @returns promise for created image
-   */
-  private createEventImage = (url: string) => {
-    console.log("CreateEventImage pyörähti")
-    const imageApi = new LinkedeventsClient.ImageApi();
-    return imageApi.imageCreate({
-      imageObject: {
-        url: url
+      const keywords: string[] = [];
+      const formKeys = Object.keys(formValues);
+      formKeys.forEach((formKey) => {
+        if (formKey.startsWith("keyword__") && formValues[formKey] == "checked") {
+          keywords.push(formKey.replace("keyword__", ""));
+        }
+      })
+
+      formValues["keywords"] = keywords.join(",");
+
+      try {
+        const api = ApiUtils.getApi();
+        await api.postWpV2Event({ event: formValues });
+        this.setState({formValues: {}});
+
+      } catch (error) {
+          console.log("Error: ",error);
+
       }
-    });
-  }
-
-  /**
-   * Truncates description to 150 characters
-   *
-   * @param description description
-   */
-  private truncateDescription = (description: string | number | null) => {
-    if (!(typeof description === "string")) {
-      return description;
     }
-    return description.substring(0, 149);
+    if(submitButtonName === "submit-place") {
+
+      const { placeFormValues } = this.state;
+
+      try {
+        const api = ApiUtils.getApi();
+
+        placeFormValues["submit"] = "place";
+
+        api.postWpV2Event({ event: placeFormValues });
+        this.setState({placeFormValues: {}})
+      } catch (error) {
+          alert("Virhe tapahtuman lisäämisessä, tarkista pakolliset kentät ja yritä uudelleen")
+          console.log("Error: ",error);
+      }
+    }
   }
 
   /**

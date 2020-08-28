@@ -5,7 +5,7 @@ const dotenv = require('dotenv').config({
 });
 
 module.exports = {
-  mode: "production",
+  mode: "development",
   entry: './src/index.tsx',
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx']

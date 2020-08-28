@@ -116,10 +116,6 @@ export default createStyles({
     display:"flex",
     flexDirection:"row",
     width: "90%",
-    marginTop: "1vw",
-    marginLeft:"5%",
-    marginBottom: "5%",
-    marginRight:"5%",
     minHeight:"30vw",
     color: "fff"
   },
@@ -407,21 +403,12 @@ export default createStyles({
       }
     }
   },
-  
-  
-  // Mantyharju-theme ends, rest of the code can be deleted before production
+  /**
+   * 
+   * Metaform styling
+   */
 
-/*
-  root: {
-    height: "100vh"
-  },
-  content: {
-    display: "flex",
-    flexDirection: "column"
-  },
-  buttonSection: {
-    textAlign: "center",
-    opacity: 0.8
+  metaform: {
+    textAlign: "left",
   }
-  */
 });
