@@ -21,7 +21,7 @@
       $result .= sprintf('<div><img style="background-color: #e43e3e;"></img></div>');
     }
     $result .= sprintf('<hr></hr>', $eventLink, $eventName);
-    $result .= sprintf('<div><a href="%s/event/%s">%s</a></div>', $siteUrlBase, $eventId, $eventId);
+    $result .= sprintf('<div><a href="%s/event/%s">%s</a></div>', $siteUrlBase, $eventId, $eventName);
     $result .= '</div>';
     $result .= '</article>';
     echo $result;
