@@ -3,6 +3,7 @@ import { BrowserRouter, Route } from "react-router-dom";
 import WelcomePage from "./pages/WelcomePage";
 import PostPage from "./pages/PostPage";
 import PostsPage from "./pages/PostsPage";
+import SingleEventPage from "./pages/SingleEventPage";
 import { CssBaseline, responsiveFontSizes } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
 import mantyharjuTheme from "../styles/theme";
@@ -51,6 +52,19 @@ class App extends React.Component<Props, State> {
                 <WelcomePage
                   lang={language}
                   slug={ this.pathToSlug(props.location.pathname) }
+                />
+              )}
+            />
+            <Route
+              path="/event/:page"
+              exact={ true }
+              render={ (props) => (
+                <SingleEventPage
+                  lang={ language }
+                  slug={ this.pathToSlug(props.location.pathname) }
+                  mainPageSlug={ this.pathToTitle(props.location.pathname) }
+                  locationKey={ props.location.key }
+                  eventId={ this.pathToSlug(props.location.pathname) }
                 />
               )}
             />
