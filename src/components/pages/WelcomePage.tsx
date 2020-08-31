@@ -62,7 +62,7 @@ class WelcomePage extends React.Component<Props, State> {
       siteSearchVisible: false,
       announcementsCategoryId: 4,
       newsCategoryId: 5,
-      linkedEventsCategoryId: 14,
+      linkedEventsCategoryId: 3,
       linkedEventsLimitingNumber: 8,
       customizeFields: []
     };
@@ -355,10 +355,13 @@ class WelcomePage extends React.Component<Props, State> {
       const parsedContent = ReactHtmlParser(linkedEventsPost.content ? linkedEventsPost.content.rendered || "" : "");
       return (
         parsedContent.splice(0, this.state.linkedEventsLimitingNumber).map(contentItem => {
+          const link = this.getEventLink(contentItem);
           return (
-            <figure className={ classes.events_item_universal }>
-              { contentItem }
-            </figure>
+            <a className={ classes.event_link } href={ link ? link : "#" }>
+              <figure className={ classes.events_item_universal }>
+                { contentItem }
+              </figure>
+            </a>
           );
         })
       );
@@ -398,6 +401,29 @@ class WelcomePage extends React.Component<Props, State> {
     }
 
     return attachmentUrl;
+  }
+
+  /**
+   * Recursive search for event link
+   *
+   * @param element react element
+   * @returns link of the event or undefined
+   */
+  private getEventLink = (element: React.ReactElement): string | void => {
+    const { props } = element;
+    if (props) {
+      const { href } = props;
+      if (href) {
+        return href;
+      }
+      const { children } = props;
+      if (children) {
+        const match = children.find((child: React.ReactElement) => typeof this.getEventLink(child) === "string");
+        if (match) {
+          return this.getEventLink(match);
+        }
+      }
+    }
   }
 
   /**
