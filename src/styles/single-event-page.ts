@@ -1,26 +1,32 @@
 import { createStyles } from "@material-ui/core";
 import theme from "./theme";
 import hero from "../resources/img/mantyharju-images/mantyharju-images/hero-image-mantyharju.jpg";
-import { AvRepeat } from "material-ui/svg-icons";
+
+const { breakpoints } = theme;
+
+const sidePaddingSm = "0 2rem";
+const sidePaddingMd = "0 4rem";
+const sidePaddingLg = "0 6rem";
+const sidePaddingXl = "0 8rem";
 
 export default createStyles({
   /**
    * Mantyharju-theme single event page styles
    */
 
-   /**
-    * TODO: 
-    * - Improve responsive design for buttons (small screens)
-    * - Post columns styling
-    * - Fonts
-    * 
-    * NOTE: Try using rem instead of em..
-    */
+  /**
+  * TODO: 
+  * - Improve responsive design for buttons (small screens)
+  * - Post columns styling
+  * - Fonts
+  * 
+  * NOTE: Try using rem instead of em..
+  */
 
-   /**
-    * General front page styles
-    */
-   generalButtonStyle: {
+  /**
+  * General front page styles
+  */
+  generalButtonStyle: {
     paddingTop: "0.4em",
     paddingBottom: "0.4em",
     paddingLeft: "1em",
@@ -28,92 +34,141 @@ export default createStyles({
     pointerEvents: "auto",
   },
 
-   /**
-    * Hero-image as background 
-    */
+  /**
+  * Hero-image as background
+  */
   heroImageDiv: {
+    display: "flex",
+    alignItems: "center",
     backgroundImage: `url(${hero})`,
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center center",
     backgroundSize: "cover",
     color: "#fff",
-    height:"32vh",
-    maxHeight:"30vw",
-    paddingLeft: "8vw",
-    paddingRight: "8vw",
-    paddingTop: "5vw",
-    width:"100%",
+    height: "40vh",
+    padding: sidePaddingSm,
+    width: "100%",
     position: "relative",
-    [theme.breakpoints.down("sm")]:{
-      height: "40vw",
+    overflow: "hidden",
+    [breakpoints.up("sm")]: {
+      padding: sidePaddingMd,
+      height: "40vh",
       fontSize: "1.25em",
+    },
+    [breakpoints.up("md")]: {
+      padding: sidePaddingLg,
+      paddingTop: "6rem",
+    },
+    [breakpoints.up("lg")]: {
+      padding: sidePaddingXl,
+      height: "40vh",
+    },
+    [breakpoints.up("xl")]: {
+      height: "40vh",
+    },
+    "&:after": {
+      zIndex: 1,
+      content: "''",
+      position: "absolute",
+      left: 0,
+      top: 0,
+      width: "100%",
+      height: "100%",
+      backgroundColor: "rgba(0,0,0,0.2)"
+    }
+  },
+  heroContent: {
+    position: "relative",
+    zIndex: 2,
+    textShadow: "0 0 25px rgba(0,0,0,0.2)",
+    "& h2": {
+      fontSize: 20,
+      [breakpoints.up("sm")]: {
+        fontSize: 30,
+      },
+      [breakpoints.up("md")]: {
+        fontSize: 35,
+      },
+      [breakpoints.up("lg")]: {
+        fontSize: 40,
+      }
     }
   },
   heroText: {
-    fontSize: "3.5em",
-    alignContent: "center center",
-    alignItems: "center",
-    marginTop: "2vw",
-    marginBottom: "2vw",
-    fontWeight: "bold",
-    [theme.breakpoints.down("md")]: {
-      fontSize: "2.5em"
+    fontSize: 30,
+    marginBottom: "2rem",
+    fontWeight: 800,
+    [breakpoints.up("sm")]: {
+      fontSize: 40,
     },
-    [theme.breakpoints.down("sm")]:{
-      fontSize: "1.25em",
+    [breakpoints.up("md")]: {
+      fontSize: 45,
     },
-    [theme.breakpoints.down("xs")]:{
-      fontSize: "1em",
+    [breakpoints.up("lg")]: {
+      fontSize: 45,
     }
   },
-  breadcrumb: {
-    width: "83%",
-    marginLeft: "8%",
-    marginBottom: "3rem",
-    color: "#00AAAD"
-  },
   currentPageLink: {
-      color: "#00AAAD",
+    color: "#00AAAD",
   },
   dividerLine: {
     color: "black",
     opacity: "60%"
   },
-  gallery: {
-    display: "grid",
-    gridTemplateColumns: "repeat(2, 1fr)",
-    gridTemplateRows: "repeat(2, 10vw)",
-    gridRowGap: "18rem",
-    gridColumnGap: "0rem",
-    paddingLeft: "12rem",
-    paddingRight: "8rem",
+  event: {
+    display: "flex",
+    flexDirection: "column",
     height: "100%",
-    [theme.breakpoints.down("md")]:{
-        paddingLeft: "9rem",
-        paddingRight: "5rem"
+    padding: sidePaddingSm,
+    marginTop: "2rem",
+    marginBottom: "2rem",
+    "& h2": {
+      marginBottom: "1rem",
+      [breakpoints.up("sm")]: {
+        marginBottom: "2rem",
+      },
     },
-    [theme.breakpoints.down("sm")]:{
-        paddingLeft: "6rem",
-        paddingRight: "3rem"
+    [breakpoints.up("sm")]: {
+      padding: sidePaddingMd
+    },
+    [breakpoints.up("md")]: {
+      flexDirection: "row",
+      padding: sidePaddingLg
+    },
+    [breakpoints.up("lg")]: {
+      padding: sidePaddingXl
+    },
+    [breakpoints.up("xl")]: {
+
     },
   },
-  gallery_header: {
-    gridColumnStart: 1,
-    gridColumnEnd: 2,
+  eventLeftColumn: {
+    flex: 1,
+    "& h6": {
+      marginBottom: "1rem",
+      [breakpoints.up("sm")]: {
+        marginBottom: "2rem"
+      }
+    }
   },
-  gallery_image: {
-    gridColumnStart: 2,
-    gridColumnEnd: 3,
+  eventRightColumn: {
+    flex: 1
   },
-  gallery_description: {
-    gridColumnStart: 1,
-    gridColumnEnd: 3,
-    gridRowStart: 2,
-    gridRowEnd: 3
+  eventImageWrapper: {
+
+  },
+  eventDescription: {
+    marginTop: "1rem",
+    [breakpoints.up("sm")]: {
+      marginTop: "2rem"
+    },
+    [breakpoints.up("md")]: {
+      marginLeft: "2rem",
+      marginTop: 0
+    }
   },
   image_styles: {
     width: "100%",
-    minWidth: "420px",
   },
   topPageContent: {
     display: "grid",

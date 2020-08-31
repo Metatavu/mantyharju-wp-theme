@@ -356,7 +356,10 @@ class WelcomePage extends React.Component<Props, State> {
       return (
         parsedContent.splice(0, this.state.linkedEventsLimitingNumber).map(contentItem => {
           return (
-            <figure className={ classes.events_item_universal }>
+            <figure
+              // FIXME: linkedevents link should be here on the wrapping element
+              onClick={ this.navigateTo( linkedEventsPost.link ? linkedEventsPost.link : "" ) }
+              className={ classes.events_item_universal }>
               { contentItem }
             </figure>
           );
@@ -376,7 +379,7 @@ class WelcomePage extends React.Component<Props, State> {
         <div
           onClick={ this.navigateTo(page.link || window.location.href) }
           style={{ backgroundImage: `url(${ this.getAttachmentForPage(page) })` }}
-          className={classes.bottom_section_item}
+          className={ classes.bottom_section_item }
         >
           <p>{ page.title ? page.title.rendered || "" : "" }</p>
         </div>

@@ -1,9 +1,10 @@
-import * as React from 'react';
+import * as React from "react";
 import { convertNodeToElement } from "react-html-parser";
-import { withStyles, WithStyles } from '@material-ui/core';
-import styles from '../../styles/single-event-page';
-import BasicLayout from '../BasicLayout';
+import { withStyles, WithStyles, Typography } from "@material-ui/core";
+import styles from "../../styles/single-event-page";
+import BasicLayout from "../BasicLayout";
 import { DomElement } from "domhandler";
+import * as moment from "moment";
 
 /**
  * Component props
@@ -56,15 +57,16 @@ class SingleEventPage extends React.Component<Props, State> {
     return (
       <BasicLayout lang={ lang } slug={ slug }>
         <div className={ classes.heroImageDiv }>
-          <p className={ classes.heroText }>{ fetchedContent ? fetchedContent.name.fi || "Event" : "Event" }</p>
+          <div className={ classes.heroContent }>
+            <Typography variant="h1" className={ classes.heroText }>{ fetchedContent ? fetchedContent.name.fi || "Event" : "Event" }</Typography>
+            <Typography variant="h2">
+              { fetchedContent ? moment(fetchedContent.start_time).format("DD.MM.YYYY HH:mm") : "" } - { fetchedContent ? moment(fetchedContent.end_time).format("DD.MM.YYYY HH:mm") : "" }
+            </Typography>
+          </div>
         </div>
-        <p className={ classes.dividerLine }>
-          <hr>
-          </hr>
-        </p>
         { this.renderEventContent() }
       </BasicLayout>
-    )
+    );
   }
 
   /**
@@ -77,18 +79,19 @@ class SingleEventPage extends React.Component<Props, State> {
       return null;
     } else {
       return (
-        <div className={classes.gallery}>
-          <div className={classes.gallery_header}>
-            <h2>{fetchedContent.name.fi}</h2>
-            <div><a>{fetchedContent.start_time}</a></div>
-            <div><a>{fetchedContent.end_time}</a></div>
-            <div><a>{fetchedContent.offers[0].price.fi}</a></div>
+        <div className={ classes.event }>
+          <div className={ classes.eventLeftColumn }>
+            { fetchedContent.offers[0].price.fi &&
+              <Typography variant="h6"> { fetchedContent.offers[0].price.fi }</Typography>
+            }
+            <div className={ classes.eventImageWrapper }>
+              {this.renderEventPicture()}
+            </div>
           </div>
-          <div className={classes.gallery_image}>
-            {this.renderEventPicture()}
-          </div>
-          <div className={classes.gallery_description}>
-            <div><a>{fetchedContent.description.fi}</a></div>
+          <div className={ classes.eventRightColumn }>
+            <div className={ classes.eventDescription }>
+              <Typography variant="body2">{ fetchedContent.description.fi }</Typography>
+            </div>
           </div>
         </div>
       )
@@ -105,9 +108,7 @@ class SingleEventPage extends React.Component<Props, State> {
       return null;
     } else {
       return (
-        <div>
-          <img className={classes.image_styles} src={fetchedContent.images[0].url} alt=""></img>
-        </div>
+        <img className={classes.image_styles} src={fetchedContent.images[0].url} alt=""></img>
       )
     }
   }
@@ -122,12 +123,12 @@ class SingleEventPage extends React.Component<Props, State> {
       null;
     } else {
       console.log("Event id is: ", eventId);
-      const response = await fetch('https://mantyharju.linkedevents.fi/v1/event/' + eventId, {
+      const response = await fetch("https://mantyharju.linkedevents.fi/v1/event/" + eventId, {
         headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
+          "Accept": "application/json",
+          "Content-Type": "application/json",
         },
-        method: 'GET',
+        method: "GET",
       });
       if (response.status !== 400) {
         const content = await response.json();

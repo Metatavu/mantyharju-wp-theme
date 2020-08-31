@@ -55,14 +55,12 @@ export default createStyles({
     transition: "border-bottom-color 0.2s ease-out",
     [breakpoints.up("md")]: {
       marginLeft: 20,
-      fontSize: "12px"
     },
     [breakpoints.up("lg")]: {
       marginLeft: 25
     },
     [breakpoints.up("xl")]: {
       marginLeft: 40,
-      fontSize: 16,
     },
     "&.highlight": {
       borderBottomColor: theme.palette.primary.main
