@@ -518,6 +518,18 @@ export default createStyles({
       },
     }
   },
+  
+  dialog: {
+    display: 'flex',
+    padding: theme.spacing(1),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  paper: {
+    backgroundColor: "#fff",
+    padding: theme.spacing(2, 4, 3),
+  },
 
   // Mantyharju-theme ends, rest of the code can be deleted before production
 
