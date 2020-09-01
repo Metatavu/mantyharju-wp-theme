@@ -13,6 +13,7 @@ import * as moment from "moment";
 import "../../../node_modules/react-simple-tree-menu/dist/main.css";
 import TreeView from "../generic/TreeView";
 import RightSideBar from "../generic/RightSideBar";
+import hero from "../../resources/img/postHeader.png";
 
 /**
  * Interface representing component properties
@@ -42,6 +43,7 @@ interface State {
   pages: Page[];
   sideMenuParentPage?: Page;
   leftMenuCurrentTopPage?: Page;
+  postThumbnail: string;
 }
 
 /**
@@ -72,6 +74,7 @@ class PostPage extends React.Component<Props, State> {
       breadcrumb: [],
       title: "",
       pages: [],
+      postThumbnail: ""
     };
   }
 
@@ -96,12 +99,12 @@ class PostPage extends React.Component<Props, State> {
    */
   public render() {
     const { classes, lang, slug, locationPath } = this.props;
-    const { sideContent, currentPage, parentPage, pages, leftMenuCurrentTopPage } = this.state;
+    const { sideContent, currentPage, postThumbnail } = this.state;
     const loactionPathnameArrayRaw = (locationPath ? locationPath.replace(/\//g, " ") || "" : "").split(" ");
     const loacationPathnameArray = loactionPathnameArrayRaw.splice(1, (loactionPathnameArrayRaw.length -1 ) - 1);
     return (
       <BasicLayout lang={ lang } slug={ slug } title={ this.setTitleSource() }>
-        <div className={ classes.heroImageDiv }>
+        <div className={ classes.heroImageDiv } style={{ backgroundImage: `url(${postThumbnail ? postThumbnail : hero})` }}>
           <h1 className={ classes.heroText }>{ currentPage ? ReactHtmlParser(currentPage.title ? currentPage.title.rendered || "" : "") : null }</h1>
         </div>
         <div className={ classes.wrapper }>
@@ -189,6 +192,7 @@ class PostPage extends React.Component<Props, State> {
       api.getWpV2Pages({ per_page: 100 }),
       api.getWpV2Pages({ slug: [ "sivut" ] }),
       api.getWpV2Pages({ slug: [ loacationPathnameArray[1] ] }),
+      api.getPostThumbnail({ slug: slug })
     ]);
 
     const currentPage = apiCalls[0][0];
@@ -198,6 +202,7 @@ class PostPage extends React.Component<Props, State> {
     const pages = apiCalls[5];
     const parentPage = apiCalls[6][0];
     const leftMenuCurrentTopPage = apiCalls[7][0];
+    const postThumbnail = apiCalls[8];
 
     this.setState({
       currentPage: currentPage,
@@ -208,7 +213,8 @@ class PostPage extends React.Component<Props, State> {
       pageTitle: pageTitle,
       pages: pages,
       parentPage: parentPage,
-      leftMenuCurrentTopPage: leftMenuCurrentTopPage
+      leftMenuCurrentTopPage: leftMenuCurrentTopPage,
+      postThumbnail: postThumbnail
     });
 
     this.breadcrumbPath(pages);
