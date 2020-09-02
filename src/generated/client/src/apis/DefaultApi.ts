@@ -29,6 +29,9 @@ import {
     CustomizeField,
     CustomizeFieldFromJSON,
     CustomizeFieldToJSON,
+    Event,
+    EventFromJSON,
+    EventToJSON,
     Menu,
     MenuFromJSON,
     MenuToJSON,
@@ -600,6 +603,10 @@ export interface PostWpV2CommentsByIdRequest {
     post?: number;
     status?: string;
     meta?: string;
+}
+
+export interface PostWpV2EventRequest {
+    event?: Event;
 }
 
 export interface PostWpV2MediaRequest {
@@ -4069,6 +4076,34 @@ export class DefaultApi extends runtime.BaseAPI {
     async postWpV2CommentsById(requestParameters: PostWpV2CommentsByIdRequest): Promise<Comment> {
         const response = await this.postWpV2CommentsByIdRaw(requestParameters);
         return await response.value();
+    }
+
+    /**
+     * Add a new event
+     */
+    async postWpV2EventRaw(requestParameters: PostWpV2EventRequest): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/wp/v2/linkedeventsEndPoint`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EventToJSON(requestParameters.event),
+        });
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Add a new event
+     */
+    async postWpV2Event(requestParameters: PostWpV2EventRequest): Promise<void> {
+        await this.postWpV2EventRaw(requestParameters);
     }
 
     /**
