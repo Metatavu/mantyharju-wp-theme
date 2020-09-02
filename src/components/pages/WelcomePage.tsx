@@ -659,53 +659,6 @@ class WelcomePage extends React.Component<Props, State> {
   }
 
   /**
-   * Returns boolean depending on wether form is valid or not
-   */
-  private validateForm = () => {
-    const { formValues } = this.state;
-    if (
-      (
-        (
-          formValues["language-fi"] &&
-          (formValues["name-fi"] && ((formValues["has-price"] && formValues["price-fi"]) || !formValues["has-price"]) && formValues["description-fi"]) &&
-          ((formValues["is-registration"] && formValues["no-registration-fi"]) || !formValues["is-registration"]) ||
-          (!formValues["language-fi"] && (formValues["language-sv"] || formValues["language-en"]))
-        ) &&
-        (
-          formValues["language-sv"] &&
-          (formValues["name-sv"] && ((formValues["has-price"] && formValues["price-sv"]) || !formValues["has-price"]) && formValues["description-sv"]) &&
-          ((formValues["is-registration"] && formValues["no-registration-sv"]) || !formValues["is-registration"]) ||
-          (!formValues["language-sv"] && (formValues["language-fi"] || formValues["language-en"]))
-        ) &&
-        (
-          formValues["language-en"] &&
-          (formValues["name-en"] && ((formValues["has-price"] && formValues["price-en"]) || !formValues["has-price"]) && formValues["description-en"]) &&
-          ((formValues["is-registration"] && formValues["no-registration-en"]) || !formValues["is-registration"]) ||
-          (!formValues["language-en"] && (formValues["language-sv"] || formValues["language-fi"]))
-        )
-      ) &&
-      (
-        (formValues["start-date-time"] && formValues["end-date-time"]) ||
-        (formValues["start-date"] && formValues["end-date"])
-      ) &&
-      (
-        (formValues["show-default-images"] && formValues["default-image-url"]) ||
-        (formValues["image"] || formValues["image-url"])
-      ) &&
-      (
-        formValues["location"] &&
-        formValues["provider"] &&
-        formValues["responsible"] &&
-        formValues["responsible-phone-number"] &&
-        formValues["responsible-email-address"]
-      )
-    ) {
-      return true;
-    }
-    return false;
-  }
-
-  /**
    * Render News posts
    * 
    * TODO: Get linkedEventsPost not by the hardcoded post ID
