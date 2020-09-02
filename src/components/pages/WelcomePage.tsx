@@ -584,9 +584,6 @@ class WelcomePage extends React.Component<Props, State> {
         }
       });
     }
-    return new Promise<string[]>((resolve, reject) => {
-      resolve([ "moi", "hei" ]);
-    });
   }
 
   /**
