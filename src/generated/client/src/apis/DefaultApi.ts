@@ -23,6 +23,9 @@ import {
     Comment,
     CommentFromJSON,
     CommentToJSON,
+    CustomPage,
+    CustomPageFromJSON,
+    CustomPageToJSON,
     CustomTaxonomy,
     CustomTaxonomyFromJSON,
     CustomTaxonomyToJSON,
@@ -150,6 +153,10 @@ export interface DeleteWpV2UsersByIdRequest {
 export interface DeleteWpV2UsersMeRequest {
     reassign: number;
     force?: boolean;
+}
+
+export interface GetCustomPagesRequest {
+    parent_slug?: string;
 }
 
 export interface GetMenusV1LocationsByIdRequest {
@@ -1279,6 +1286,38 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async deleteWpV2UsersMe(requestParameters: DeleteWpV2UsersMeRequest): Promise<User> {
         const response = await this.deleteWpV2UsersMeRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async getCustomPagesRaw(requestParameters: GetCustomPagesRequest): Promise<runtime.ApiResponse<Array<CustomPage>>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.parent_slug !== undefined) {
+            queryParameters['parent_slug'] = requestParameters.parent_slug;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-WP-Nonce"] = this.configuration.apiKey("X-WP-Nonce"); // cookieAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/wp/v2/customPages`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(CustomPageFromJSON));
+    }
+
+    /**
+     */
+    async getCustomPages(requestParameters: GetCustomPagesRequest): Promise<Array<CustomPage>> {
+        const response = await this.getCustomPagesRaw(requestParameters);
         return await response.value();
     }
 

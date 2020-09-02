@@ -5,7 +5,7 @@ import { withStyles, WithStyles, Breadcrumbs, Link } from '@material-ui/core';
 import styles from '../../styles/posts-page';
 import BasicLayout from '../BasicLayout';
 import { DomElement } from "domhandler";
-import { Page, Post, MenuLocationData, PostTitle, Attachment } from 'src/generated/client/src';
+import { Page, Post, MenuLocationData, PostTitle, Attachment, CustomPage } from 'src/generated/client/src';
 import strings from "../../localization/strings";
 import * as moment from "moment";
 import hero from "../../resources/img/postHeader.png";
@@ -38,7 +38,7 @@ interface State {
   secondPageCategoryId: number;
   media: Attachment[];
   limitedPosts: Post[];
-  pages: Page[];
+  pages: CustomPage[];
   parentPage?: Page;
   mainContent?: React.ReactElement;
   sideContent?: React.ReactElement;
@@ -68,7 +68,7 @@ class PostsPage extends React.Component<Props, State> {
     super(props);
     this.state = {
       posts: [],
-      media:[],
+      media: [],
       loading: false,
       breadcrumb: [],
       title: "",
@@ -138,8 +138,8 @@ class PostsPage extends React.Component<Props, State> {
         displayPages.map(page => {
           return (
             <div>
-              <div style={{ backgroundImage: `url(${this.getAttachmentForPost(page)})` }} onClick={() => { this.onPostClick(page) }} className={classes.gallery_img} />
-              <h2>{ReactHtmlParser(page.title ? page.title.rendered || "" : "")}</h2>
+              <div style={{ backgroundImage: `url(${ page.featured_image_url || hero })` }} onClick={() => { this.onPostClick(page) }} className={ classes.gallery_img } />
+              <h2>{ ReactHtmlParser(page.post_title ? page.post_title || "" : "") }</h2>
             </div>
           )
         })
@@ -168,22 +168,6 @@ class PostsPage extends React.Component<Props, State> {
   }
 
   /**
-   * Returns post featured image URL
-   */
-  private getAttachmentForPost = (page: Page) => {
-    var attachmentUrl = "";
-    if (this.state.media) {
-      this.state.media.map(attachment => {
-        if (attachment.id == page.featured_media) {
-          attachmentUrl = attachment.source_url || "";
-        }
-      })
-    }
-    
-    return attachmentUrl;
-  }
-
-  /**
    * Loads page or post content
    */
   private loadContent = async () => {
@@ -206,7 +190,7 @@ class PostsPage extends React.Component<Props, State> {
       api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
       api.getWpV2Pages({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
       api.getWpV2Posts({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
-      api.getWpV2Pages({ per_page: 100 }),
+      api.getCustomPages({ parent_slug: "posts" }),
       api.getWpV2Media({ per_page: 100 }),
       api.getWpV2Pages({ slug: [ "sivut" ] }),
       api.getPostThumbnail({ slug: slug })
@@ -242,8 +226,8 @@ class PostsPage extends React.Component<Props, State> {
    *
    * @param pages page array
    */
-  private breadcrumbPath = (pages: Page[]) => {
-    const mainPages = pages.filter(item => item.parent === 0);
+  private breadcrumbPath = (pages: CustomPage[]) => {
+    const mainPages = pages.filter(item => item.post_parent === 0);
     this.buildPath(mainPages, pages);
   }
 
@@ -254,22 +238,22 @@ class PostsPage extends React.Component<Props, State> {
    * @param pages all pages array
    * @param path collected breadcumbs
    */
-  private buildPath = (children: Page[], pages: Page[], path?: Breadcrumb[]) => {
+  private buildPath = (children: CustomPage[], pages: CustomPage[], path?: Breadcrumb[]) => {
     const { page } = this.state;
     children.forEach(childPage => {
-      const childPages = pages.filter(item => item.parent === childPage.id);     
-      if (page && (page.id === childPage.id) && childPage.title) {
+      const childPages = pages.filter(item => item.post_parent === childPage.ID);
+      if (page && (page.id === childPage.ID) && childPage.post_title) {
         this.setState({
-          title: childPage.title.rendered || "",
-          breadcrumb: path ? [...path, { label: childPage.title.rendered || "", link: childPage.link || "" }] : [{ label: childPage.title.rendered || "", link: childPage.link || "" }]
+          title: childPage.post_title || "",
+          breadcrumb: path ? [...path, { label: childPage.post_title || "", link: childPage.link || "" }] : [{ label: childPage.post_title || "", link: childPage.link || "" }]
         });
-      } else if (childPages && childPage.title) {
-        this.buildPath(childPages, pages, path ? [...path, { label: childPage.title.rendered || "", link: childPage.link || "" }] : [{ label: childPage.title.rendered || "", link: childPage.link || "" }]);
+      } else if (childPages && childPage.post_title) {
+        this.buildPath(childPages, pages, path ? [...path, { label: childPage.post_title || "", link: childPage.link || "" }] : [{ label: childPage.post_title || "", link: childPage.link || "" }]);
       }
     });
   }
 
-   /**
+  /**
    * Renders breadcrumb
    */
   private renderBreadcrumb = () => {
@@ -315,7 +299,7 @@ class PostsPage extends React.Component<Props, State> {
    * Redirects to post URL
    * @param post Post
    */
-  private onPostClick(page: Page) {
+  private onPostClick(page: CustomPage) {
     window.location.href = page.link || "";
   }
 
@@ -325,12 +309,12 @@ class PostsPage extends React.Component<Props, State> {
    */
   private getChildMenuPages = (parentPageId: number) => {
     const { pages, page } = this.state;
-    let menuPagesArray: Page[] = new Array();
+    let menuPagesArray: CustomPage[] = new Array();
     if (!pages || !parentPageId) {
       return null;
     } else {
       pages.map(page => {
-        if (page.parent == parentPageId) {
+        if (page.post_parent == parentPageId) {
           menuPagesArray.push(page);
         }
       })
