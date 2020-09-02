@@ -1,6 +1,5 @@
 import { createStyles } from "@material-ui/core";
 import theme from "./theme";
-import hero from "../resources/img/postHeader.png";
 
 const { breakpoints } = theme;
 
@@ -226,7 +225,6 @@ export default createStyles({
   heroImageDiv: {
     display: "flex",
     alignItems: "center",
-    backgroundImage: `url(${hero})`,
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center center",
     backgroundSize: "cover",
