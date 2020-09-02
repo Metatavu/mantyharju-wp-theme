@@ -104,7 +104,7 @@ class PostsPage extends React.Component<Props, State> {
 
     return (
       <BasicLayout lang={ lang } slug={ slug }>
-        <div className={ classes.heroImageDiv } style={{ backgroundImage: `url(${postThumbnail ? postThumbnail : hero})`, }}>
+        <div className={ classes.heroImageDiv } style={{ backgroundImage: `url(${ postThumbnail ? postThumbnail : hero })`, }}>
           <p className={ classes.heroText }>Asiointi ja päätöksenteko</p>
         </div>
         <div className={ classes.breadcrumb }>
