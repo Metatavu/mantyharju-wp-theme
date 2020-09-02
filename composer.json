@@ -1,0 +1,11 @@
+{
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/metatavu/linkedevents-client-php.git"
+    }
+  ],
+  "require": {
+    "metatavu/linkedevents-php-client": "*@dev"
+  }
+}

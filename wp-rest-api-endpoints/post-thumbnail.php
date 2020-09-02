@@ -8,6 +8,9 @@ function register_post_thumbnail_endpoint() {
       $slug = $request->get_param('slug');
       $post = get_wp_post($id, $slug)[0];
       $postThumbnail = get_the_post_thumbnail_url($post);
+      if (!$postThumbnail) {
+          return;
+      }
       return $postThumbnail;
     }
   ));

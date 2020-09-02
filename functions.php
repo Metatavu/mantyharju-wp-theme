@@ -12,4 +12,6 @@
   require_once(__DIR__ . "/wp-rest-api-endpoints/customizer.php");
   require_once(__DIR__ . "/wp-rest-api-endpoints/tree-menu.php");
   require_once(__DIR__ . "/wp-rest-api-endpoints/post-thumbnail.php");
+  require_once(__DIR__ . "/vendor/autoload.php");
+  require_once(__DIR__ . "/linkedevents/event-rest-handler.php");
 ?>
