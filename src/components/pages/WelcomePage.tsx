@@ -561,7 +561,6 @@ class WelcomePage extends React.Component<Props, State> {
    * @param path path
    */
   private uploadFile = (fieldName: string, files: FileList | File, path: string) => {
-    console.log("uploadFile: ", fieldName, files, path);
   }
 
   /**
