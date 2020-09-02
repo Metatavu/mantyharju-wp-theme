@@ -604,7 +604,7 @@ class WelcomePage extends React.Component<Props, State> {
   private onSubmit = async (source: Metaform) =>  {
     const submitButtonName = source["name"];
 
-    if(submitButtonName === "submit-event") {
+    if (submitButtonName === "submit-event") {
       const { formValues } = this.state;
       const start = moment(formValues["start-date-time"] as number);
       const end = moment(formValues["end-date-time"] as number);
