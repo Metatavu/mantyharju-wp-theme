@@ -5,6 +5,7 @@ export * from './Category';
 export * from './Comment';
 export * from './CommentAuthorAvatarUrls';
 export * from './CommentContent';
+export * from './CustomPage';
 export * from './CustomTaxonomy';
 export * from './CustomizeField';
 export * from './Error';
