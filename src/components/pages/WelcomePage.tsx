@@ -327,7 +327,7 @@ class WelcomePage extends React.Component<Props, State> {
               title= "Lisää tapahtuma" 
               >
               Lisää tapahtuma
-              </Button>
+            </Button>
           </div>
         </div>
         <div ref={ this.popularPagesSection } className={ classes.bottom_section }>
