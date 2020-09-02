@@ -8,6 +8,7 @@ import { DomElement } from "domhandler";
 import { Page, Post, MenuLocationData, PostTitle, Attachment } from 'src/generated/client/src';
 import strings from "../../localization/strings";
 import * as moment from "moment";
+import hero from "../../resources/img/postHeader.png";
 
 /**
  * Facebook-logo license: https://commons.wikimedia.org/wiki/File:Facebook_William_Aditya_Sarana.png
@@ -41,6 +42,7 @@ interface State {
   parentPage?: Page;
   mainContent?: React.ReactElement;
   sideContent?: React.ReactElement;
+  postThumbnail: string;
 }
 
 /**
@@ -73,6 +75,7 @@ class PostsPage extends React.Component<Props, State> {
       secondPageCategoryId: 6,
       limitedPosts: [],
       pages: [],
+      postThumbnail: ""
     };
   }
 
@@ -97,10 +100,11 @@ class PostsPage extends React.Component<Props, State> {
    */
   public render() {
     const { lang, slug, classes } = this.props;
+    const { postThumbnail } = this.state;
 
     return (
       <BasicLayout lang={ lang } slug={ slug }>
-        <div className={ classes.heroImageDiv }>
+        <div className={ classes.heroImageDiv } style={{ backgroundImage: `url(${ postThumbnail ? postThumbnail : hero })`, }}>
           <p className={ classes.heroText }>Asiointi ja päätöksenteko</p>
         </div>
         <div className={ classes.breadcrumb }>
@@ -205,6 +209,7 @@ class PostsPage extends React.Component<Props, State> {
       api.getWpV2Pages({ per_page: 100 }),
       api.getWpV2Media({ per_page: 100 }),
       api.getWpV2Pages({ slug: [ "sivut" ] }),
+      api.getPostThumbnail({ slug: slug })
     ]);
 
     const page = apiCalls[0][0];
@@ -214,6 +219,7 @@ class PostsPage extends React.Component<Props, State> {
     const pages = apiCalls[5];
     const media = apiCalls[6];
     const parentPage = apiCalls[7][0];
+    const postThumbnail = apiCalls[8];
 
     this.setState({
       page: page,
@@ -224,6 +230,7 @@ class PostsPage extends React.Component<Props, State> {
       media: media,
       pages: pages,
       parentPage: parentPage,
+      postThumbnail: postThumbnail
     });
 
     this.breadcrumbPath(pages);
