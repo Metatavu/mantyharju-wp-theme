@@ -1,7 +1,4 @@
 <?php
-  require_once "customizer.php";
-  require_once "linkedevents.php";
-  require_once "tree-menu.php";
   add_action('after_setup_theme', function() { 
     add_theme_support('post-thumbnails');
     register_nav_menus([
@@ -10,4 +7,9 @@
       'locale' => __('Localization menu', "mantyharju")
     ]);
   });
+
+  require_once(__DIR__ . "/wp-rest-api-endpoints/customizer.php");
+  require_once(__DIR__ . "/wp-rest-api-endpoints/tree-menu.php");
+  require_once(__DIR__ . "/wp-rest-api-endpoints/post-thumbnail.php");
+  require_once(__DIR__ . "/wp-rest-api-endpoints/linkedevents.php");
 ?>
