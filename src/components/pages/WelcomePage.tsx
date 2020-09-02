@@ -641,7 +641,7 @@ class WelcomePage extends React.Component<Props, State> {
           alert("Virhe tapahtuman lisäämisessä, tarkista pakolliset kentät ja yritä uudelleen")
       }
     }
-    if(submitButtonName === "submit-place") {
+    if (submitButtonName === "submit-place") {
 
       const { placeFormValues } = this.state;
 
