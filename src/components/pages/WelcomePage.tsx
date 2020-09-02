@@ -155,7 +155,7 @@ class WelcomePage extends React.Component<Props, State> {
       if (section.title == "Tapahtumaluokat") {
         section.fields = data.data.map((keyword: any) => {
           return {
-            "name": `keyword__${keyword.id}`,
+            "name": `keyword__${ keyword.id }`,
             "type": "boolean",
             "title": keyword.name && keyword.name.fi ? keyword.name.fi : keyword.id
           };
