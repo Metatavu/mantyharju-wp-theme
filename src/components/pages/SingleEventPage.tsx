@@ -73,28 +73,24 @@ class SingleEventPage extends React.Component<Props, State> {
    * Renders single LinkedEvent content content
    */
   private renderEventContent() {
-    const { classes, locationKey } = this.props;
+    const { classes } = this.props;
     const { fetchedContent } = this.state;
     if (!fetchedContent) {
       return null;
     } else {
       return (
         <div className={ classes.event }>
-          <div className={ classes.eventLeftColumn }>
-            { fetchedContent.offers[0].price.fi &&
-              <Typography variant="h6"> { fetchedContent.offers[0].price.fi }</Typography>
-            }
-            <div className={ classes.eventImageWrapper }>
-              {this.renderEventPicture()}
-            </div>
-          </div>
-          <div className={ classes.eventRightColumn }>
+          { this.renderEventPicture() }
+          <div className={ `${ classes.eventColumn } ${ classes.eventRightColumn }` }>
             <div className={ classes.eventDescription }>
+              { fetchedContent.offers[0].price.fi &&
+                <Typography variant="h6" style={{ marginBottom: "1rem" }}> { fetchedContent.offers[0].price.fi }</Typography>
+              }
               <Typography variant="body2">{ fetchedContent.description.fi }</Typography>
             </div>
           </div>
         </div>
-      )
+      );
     }
   }
 
@@ -102,14 +98,18 @@ class SingleEventPage extends React.Component<Props, State> {
    * Renders single LinkedEvent content content
    */
   private renderEventPicture() {
-    const { classes, locationKey } = this.props;
+    const { classes } = this.props;
     const { fetchedContent } = this.state;
     if (!fetchedContent.images[0]) {
       return null;
     } else {
       return (
-        <img className={classes.image_styles} src={fetchedContent.images[0].url} alt=""></img>
-      )
+        <div className={ `${ classes.eventColumn } ${classes.eventLeftColumn}` }>
+          <div className={ classes.eventImageWrapper }>
+            <img className={ classes.image_styles } src={ fetchedContent.images[0].url } alt=""></img>
+          </div>
+        </div>
+      );
     }
   }
 

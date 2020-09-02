@@ -142,8 +142,23 @@ export default createStyles({
 
     },
   },
-  eventLeftColumn: {
+  eventColumn: {
     flex: 1,
+    [breakpoints.up("md")]: {
+      marginLeft: "2rem",
+      "&:first-child": {
+        marginLeft: 0
+      }
+    }
+  },
+  eventLeftColumn: {
+    marginBottom: "1rem",
+    [breakpoints.up("sm")]: {
+      marginBottom: "2rem"
+    },
+    [breakpoints.up("md")]: {
+      marginBottom: 0
+    },
     "& h6": {
       marginBottom: "1rem",
       [breakpoints.up("sm")]: {
@@ -152,20 +167,13 @@ export default createStyles({
     }
   },
   eventRightColumn: {
-    flex: 1
+
   },
   eventImageWrapper: {
 
   },
   eventDescription: {
-    marginTop: "1rem",
-    [breakpoints.up("sm")]: {
-      marginTop: "2rem"
-    },
-    [breakpoints.up("md")]: {
-      marginLeft: "2rem",
-      marginTop: 0
-    }
+
   },
   image_styles: {
     width: "100%",

@@ -229,6 +229,22 @@ export default createStyles({
       backgroundColor: "black",
     },
   },
+  event_link: {
+    display: "grid",
+    textDecoration: "none",
+    "&:link": {
+      color: "#000"
+    },
+    "&:visited": {
+      color: "#000"
+    },
+    "&:hover": {
+      color: "#000"
+    },
+    "&:active": {
+      color: "#000"
+    }
+  },
   postsHeading: {
     display: "flex",
     alignItems: "center",
