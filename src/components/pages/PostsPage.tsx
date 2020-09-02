@@ -203,7 +203,7 @@ class PostsPage extends React.Component<Props, State> {
       api.getWpV2Pages({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
       api.getWpV2Posts({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
       api.getWpV2Pages({ per_page: 100 }),
-      api.getWpV2Media({}),
+      api.getWpV2Media({ per_page: 100 }),
       api.getWpV2Pages({ slug: [ "sivut" ] }),
     ]);
 
