@@ -106,7 +106,7 @@ class PostPage extends React.Component<Props, State> {
     const isContent = (checkContent ? (checkContent[0] === 0 ? false : true) : false);
     return (
       <BasicLayout lang={ lang } slug={ slug } title={ this.setTitleSource() }>
-        <div className={ classes.heroImageDiv } style={{ backgroundImage: `url(${ postThumbnail ? postThumbnail : hero })` }}>
+        <div className={ classes.heroImageDiv } style={{ backgroundImage: `url(${ postThumbnail !== "false" ? postThumbnail : hero })` }}>
           <h1 className={ classes.heroText }>{ currentPage ? ReactHtmlParser(currentPage.title ? currentPage.title.rendered || "" : "") : null }</h1>
         </div>
         <div className={ classes.wrapper }>
