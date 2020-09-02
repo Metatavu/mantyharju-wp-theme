@@ -99,7 +99,7 @@ class PostPage extends React.Component<Props, State> {
     const { sideContent, currentPage, parentPage, pages, leftMenuCurrentTopPage } = this.state;
     const loactionPathnameArrayRaw = (locationPath ? locationPath.replace(/\//g, " ") || "" : "").split(" ");
     const loacationPathnameArray = loactionPathnameArrayRaw.splice(1, (loactionPathnameArrayRaw.length -1 ) - 1);
-    const checkContent = React.Children.map(sideContent, child => child ? child.props.children.length:0);
+    const checkContent = React.Children.map(sideContent, child => child ? child.props.children.length : 0);
     const isContent = (checkContent ? (checkContent[0] === 0 ? false : true) : false);
     return (
       <BasicLayout lang={ lang } slug={ slug } title={ this.setTitleSource() }>
