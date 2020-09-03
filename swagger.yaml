@@ -4622,6 +4622,18 @@ paths:
               schema:
                 $ref: "#/components/schemas/error"
       operationId: GetWpV2Customize
+  /wp/v2/linkedeventsEndPoint:
+    post:
+      summary: Add a new event
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/event"
+      responses:
+        "200":
+          description: Created
+      operationId: PostWpV2Event
   /wp/v2/postThumbnail:
     get:
       parameters:
@@ -4649,6 +4661,31 @@ paths:
               schema:
                 $ref: "#/components/schemas/error"
       operationId: GetPostThumbnail
+  /wp/v2/customPages:
+    get:
+      parameters:
+        - name: parent_slug
+          in: query
+          schema:
+            type: string
+      security:
+        - cookieAuth: []
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/custom_page"
+        default:
+          description: error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error"
+      operationId: GetCustomPages
 servers:
   - url: http://localhost/index.php/wp-json
 components:
@@ -4659,6 +4696,9 @@ components:
       in: header
       description: Please see http://v2.wp-api.org/guide/authentication/
   schemas:
+    event:
+      anyOf:
+        - type: object
     treeMenu:
       type: object
       properties:
@@ -6140,3 +6180,58 @@ components:
               type: boolean
           items:
             type: string
+    custom_page:
+      type: object
+      properties:
+        ID:
+          type: integer
+        post_author:
+          type: string
+        post_date:
+          type: string
+        post_date_gmt:
+          type: string
+        post_content:
+          type: string
+        post_title:
+          type: string
+        post_excerpt:
+          type: string
+        post_status:
+          type: string
+        comment_status:
+          type: string
+        ping_status:
+          type: string
+        post_password:
+          type: string
+        post_name:
+          type: string
+        to_ping:
+          type: string
+        pinged:
+          type: string
+        post_modified:
+          type: string
+        post_modified_gmt:
+          type: string
+        post_content_filtered:
+          type: string
+        post_parent:
+          type: integer
+        guid:
+          type: string
+        menu_order:
+          type: integer
+        post_type:
+          type: string
+        post_mime_type:
+          type: string
+        comment_count:
+          type: integer
+        filter:
+          type: string
+        featured_image_url:
+          type: string
+        link:
+          type: string

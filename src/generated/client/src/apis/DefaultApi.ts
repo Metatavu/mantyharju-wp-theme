@@ -23,12 +23,18 @@ import {
     Comment,
     CommentFromJSON,
     CommentToJSON,
+    CustomPage,
+    CustomPageFromJSON,
+    CustomPageToJSON,
     CustomTaxonomy,
     CustomTaxonomyFromJSON,
     CustomTaxonomyToJSON,
     CustomizeField,
     CustomizeFieldFromJSON,
     CustomizeFieldToJSON,
+    Event,
+    EventFromJSON,
+    EventToJSON,
     Menu,
     MenuFromJSON,
     MenuToJSON,
@@ -150,6 +156,10 @@ export interface DeleteWpV2UsersByIdRequest {
 export interface DeleteWpV2UsersMeRequest {
     reassign: number;
     force?: boolean;
+}
+
+export interface GetCustomPagesRequest {
+    parent_slug?: string;
 }
 
 export interface GetMenusV1LocationsByIdRequest {
@@ -600,6 +610,10 @@ export interface PostWpV2CommentsByIdRequest {
     post?: number;
     status?: string;
     meta?: string;
+}
+
+export interface PostWpV2EventRequest {
+    event?: Event;
 }
 
 export interface PostWpV2MediaRequest {
@@ -1279,6 +1293,38 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async deleteWpV2UsersMe(requestParameters: DeleteWpV2UsersMeRequest): Promise<User> {
         const response = await this.deleteWpV2UsersMeRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async getCustomPagesRaw(requestParameters: GetCustomPagesRequest): Promise<runtime.ApiResponse<Array<CustomPage>>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.parent_slug !== undefined) {
+            queryParameters['parent_slug'] = requestParameters.parent_slug;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-WP-Nonce"] = this.configuration.apiKey("X-WP-Nonce"); // cookieAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/wp/v2/customPages`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(CustomPageFromJSON));
+    }
+
+    /**
+     */
+    async getCustomPages(requestParameters: GetCustomPagesRequest): Promise<Array<CustomPage>> {
+        const response = await this.getCustomPagesRaw(requestParameters);
         return await response.value();
     }
 
@@ -4069,6 +4115,34 @@ export class DefaultApi extends runtime.BaseAPI {
     async postWpV2CommentsById(requestParameters: PostWpV2CommentsByIdRequest): Promise<Comment> {
         const response = await this.postWpV2CommentsByIdRaw(requestParameters);
         return await response.value();
+    }
+
+    /**
+     * Add a new event
+     */
+    async postWpV2EventRaw(requestParameters: PostWpV2EventRequest): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/wp/v2/linkedeventsEndPoint`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EventToJSON(requestParameters.event),
+        });
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Add a new event
+     */
+    async postWpV2Event(requestParameters: PostWpV2EventRequest): Promise<void> {
+        await this.postWpV2EventRaw(requestParameters);
     }
 
     /**
