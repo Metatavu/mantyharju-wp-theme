@@ -445,7 +445,7 @@ class WelcomePage extends React.Component<Props, State> {
     }
     if (fieldName == "add-location") {
       return (
-        <div className={classes.reactAddLocationWrapper}>
+        <div className={ classes.reactAddLocationWrapper }>
           <input type="button" value={this.state.addPlaceVisibility ? "Sulje paikan lisääminen" : "Lisää paikka"} onClick={this.addPlaceVisibility}/>
           <div style={this.state.addPlaceVisibility ? {display:"block"} : {display:"none"}}>
             <div className={ classes.metaformWrapper }>
