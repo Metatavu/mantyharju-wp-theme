@@ -348,7 +348,7 @@ class WelcomePage extends React.Component<Props, State> {
           <DialogTitle>
             <Grid container alignItems="flex-start" justify="space-between" direction="row">
               <Typography variant="h1" className={ classes.heroText } style={{ margin: 0 }}>Uusi tapahtuma</Typography>
-              <Button onClick={this.closeModal} style={{ color: "#fff", alignItems: "right" }}>Sulje</Button>
+              <Button onClick={ this.closeModal } style={{ color: "#fff", alignItems: "right" }}>Sulje</Button>
             </Grid>
           </DialogTitle>
           <DialogContent>
