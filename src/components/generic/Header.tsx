@@ -136,7 +136,7 @@ class Header extends React.Component<Props, State> {
             </IconButton>
           </div>
           <Hidden smDown implementation="css">
-            <div className={ menuWrapperStyles} onMouseLeave={() => { this.onMouseLeave(); }}>
+            <div className={ menuWrapperStyles } onMouseLeave={() => { this.onMouseLeave(); }}>
               <div className={ classes.mainMenu }>
                 { this.renderMenu() }
               </div>
