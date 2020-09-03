@@ -230,6 +230,7 @@ export default createStyles({
     },
   },
   event_link: {
+    display: "grid",
     textDecoration: "none",
     "&:link": {
       color: "#000"
