@@ -19,10 +19,8 @@ interface Props extends WithStyles<typeof styles> {
  * Interface representing component state
  */
 interface State {
-  loading: boolean,
   topMenu?: MenuLocationData,
   localeMenu?: MenuLocationData,
-  scrollPosition: number,
   pages: Page[],
   parentPage?: number
 }
@@ -39,8 +37,6 @@ class BasicLayout extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      loading: false,
-      scrollPosition: 0,
       pages: [],
     };
   }
@@ -49,13 +45,8 @@ class BasicLayout extends React.Component<Props, State> {
    * Component did mount life-cycle handler
    */
   public componentDidMount = async () => {
-    window.addEventListener("scroll", this.handleScroll);
-    this.setState({
-      loading: true,
-    });
 
     const api = ApiUtils.getApi();
-
     const [localeMenu, topMenu, pages, secondPages, thirdPages, parentPage] = await Promise.all(
       [
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }),
@@ -71,19 +62,11 @@ class BasicLayout extends React.Component<Props, State> {
     const allPages = pages.concat(secondPages).concat(thirdPages);
 
     this.setState({
-      loading: false,
       topMenu: topMenu,
       localeMenu: localeMenu,
       pages: allPages,
       parentPage: parentPageId
     });
-  }
-
-  /**
-   * Component will unmount life-cycle handler
-   */
-  public componentWillUnmount() {
-    window.removeEventListener("scroll", this.handleScroll);
   }
 
   /**
@@ -107,16 +90,6 @@ class BasicLayout extends React.Component<Props, State> {
         <Footer />
       </div>
     );
-  }
-
-  /**
-   * Update scrolling position method
-   */
-  private handleScroll = () => {
-    const currentScrollPos = window.pageYOffset;
-    this.setState({
-      scrollPosition: currentScrollPos
-    });
   }
 }
 

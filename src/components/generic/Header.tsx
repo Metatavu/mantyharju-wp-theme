@@ -36,6 +36,7 @@ interface State {
   searchString: string;
   results: SearchResult[];
   mobileMenuVisible: boolean;
+  scrollPosition: number,
 }
 
 /**
@@ -50,6 +51,7 @@ class Header extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
+      scrollPosition: 0,
       menuVisibility: false,
       searchString: "",
       results: [],
@@ -60,14 +62,23 @@ class Header extends React.Component<Props, State> {
   /**
    * Component did mount life-cycle handler
    */
-  public componentDidMount() {}
+  public componentDidMount() {
+    window.addEventListener("scroll", this.handleScroll);
+  }
+
+  /**
+   * Component will unmount life-cycle handler
+   */
+  public componentWillUnmount() {
+    window.removeEventListener("scroll", this.handleScroll);
+  }
 
   /**
    * Component render
    */
   public render() {
     const { classes } = this.props;
-    const { searchString, results, menuVisibility } = this.state;
+    const { searchString, results, menuVisibility, scrollPosition } = this.state;
 
     const menuStyle: React.CSSProperties = {
       borderRadius: "0",
@@ -78,6 +89,11 @@ class Header extends React.Component<Props, State> {
       maxHeight: 320,
       zIndex: 1000,
     };
+
+    let menuWrapperStyles = classNames( classes.menuWrapper );
+    if ( scrollPosition > 88 ) {
+      menuWrapperStyles = classNames( classes.menuWrapper, "fixed" );
+    }
 
     return (
       <>
@@ -120,7 +136,7 @@ class Header extends React.Component<Props, State> {
             </IconButton>
           </div>
           <Hidden smDown implementation="css">
-            <div className={ classes.menuWrapper } onMouseLeave={() => { this.onMouseLeave(); }}>
+            <div className={ menuWrapperStyles} onMouseLeave={() => { this.onMouseLeave(); }}>
               <div className={ classes.mainMenu }>
                 { this.renderMenu() }
               </div>
@@ -220,7 +236,7 @@ class Header extends React.Component<Props, State> {
    */
   private renderMenu = () => {
     const { classes } = this.props;
-    let menuHeaderItems = this.getChildMenuPages(this.props.parentPage || -1);
+    const menuHeaderItems = this.getChildMenuPages(this.props.parentPage || -1);
     if (!menuHeaderItems) {
       return null;
     } else {
@@ -293,12 +309,12 @@ class Header extends React.Component<Props, State> {
    */
   private renderLowLevelMenuPages = (parentPage: Page) => {
     const { classes } = this.props;
-    let childPages = this.getChildMenuPages(parentPage.id ? parentPage.id : -1);
+    const childPages = this.getChildMenuPages(parentPage.id ? parentPage.id : -1);
     if (childPages == null) {
       return null;
     } else {
       return (
-        childPages.map(childPage => {
+        childPages.map((childPage) => {
           return (
             <Typography
               variant="body1"
@@ -385,7 +401,7 @@ class Header extends React.Component<Props, State> {
    * @param page Page
    */
   private onMouseEnter = (page: Page) => {
-    let currentPage = this.state.menuItemCurrent;
+    const currentPage = this.state.menuItemCurrent;
 
     this.setState({
       menuVisibility: true,
@@ -417,11 +433,11 @@ class Header extends React.Component<Props, State> {
    */
   private getChildMenuPages = (parentPageId: number) => {
     const { pages } = this.props;
-    let menuPagesArray: Page[] = new Array();
+    const menuPagesArray: Page[] = new Array();
     if (!pages) {
       return null;
     } else {
-      pages.map(page => {
+      pages.map((page) => {
         if (page.parent === parentPageId) {
           menuPagesArray.push(page);
         }
@@ -439,6 +455,16 @@ class Header extends React.Component<Props, State> {
         mobileMenuVisible: true
       })
     );
+  }
+
+  /**
+   * Update scrolling position method
+   */
+  private handleScroll = () => {
+    const currentScrollPos = window.pageYOffset;
+    this.setState({
+      scrollPosition: currentScrollPos
+    });
   }
 }
 

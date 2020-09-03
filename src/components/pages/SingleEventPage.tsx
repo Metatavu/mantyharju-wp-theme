@@ -81,13 +81,11 @@ class SingleEventPage extends React.Component<Props, State> {
       return (
         <div className={ classes.event }>
           { this.renderEventPicture() }
-          <div className={ `${ classes.eventColumn } ${ classes.eventRightColumn }` }>
-            <div className={ classes.eventDescription }>
-              { fetchedContent.offers[0].price.fi &&
-                <Typography variant="h6" style={{ marginBottom: "1rem" }}> { fetchedContent.offers[0].price.fi }</Typography>
-              }
-              <Typography variant="body2">{ fetchedContent.description.fi }</Typography>
-            </div>
+          <div className={ classes.eventColumn }>
+            { fetchedContent.offers[0].price.fi &&
+              <Typography variant="h6" style={{ marginBottom: "1rem" }}> { fetchedContent.offers[0].price.fi }</Typography>
+            }
+            <Typography variant="body2">{ fetchedContent.description.fi }</Typography>
           </div>
         </div>
       );
@@ -105,9 +103,7 @@ class SingleEventPage extends React.Component<Props, State> {
     } else {
       return (
         <div className={ `${ classes.eventColumn } ${classes.eventLeftColumn}` }>
-          <div className={ classes.eventImageWrapper }>
-            <img className={ classes.image_styles } src={ fetchedContent.images[0].url } alt=""></img>
-          </div>
+          <img className={ classes.image_styles } src={ fetchedContent.images[0].url } alt=""></img>
         </div>
       );
     }

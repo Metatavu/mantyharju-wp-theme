@@ -127,12 +127,13 @@ class WelcomePage extends React.Component<Props, State> {
     this.setState({
       loading: true
     });
-    const api = ApiUtils.getApi();
 
+    const api = ApiUtils.getApi();
     const customizeFields = await api.getWpV2Customize();
 
     this.setState({
-      customizeFields: customizeFields
+      customizeFields: customizeFields,
+      loading: false
     });
 
     const [posts, mainMenu, localeMenu, popularCategory, media] = await Promise.all(
@@ -173,7 +174,6 @@ class WelcomePage extends React.Component<Props, State> {
       posts: posts,
       form: form,
       placeForm: placeForm,
-      loading: false,
       mainMenu: mainMenu,
       localeMenu: localeMenu,
       popularPages: popularPages,

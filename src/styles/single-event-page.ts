@@ -15,17 +15,8 @@ export default createStyles({
    */
 
   /**
-  * TODO: 
-  * - Improve responsive design for buttons (small screens)
-  * - Post columns styling
-  * - Fonts
-  * 
-  * NOTE: Try using rem instead of em..
-  */
-
-  /**
-  * General front page styles
-  */
+   * General front page styles
+   */
   generalButtonStyle: {
     paddingTop: "0.4em",
     paddingBottom: "0.4em",
@@ -35,8 +26,8 @@ export default createStyles({
   },
 
   /**
-  * Hero-image as background
-  */
+   * Hero-image as background
+   */
   heroImageDiv: {
     display: "flex",
     alignItems: "center",
@@ -165,15 +156,6 @@ export default createStyles({
         marginBottom: "2rem"
       }
     }
-  },
-  eventRightColumn: {
-
-  },
-  eventImageWrapper: {
-
-  },
-  eventDescription: {
-
   },
   image_styles: {
     width: "100%",
