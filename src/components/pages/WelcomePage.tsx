@@ -2,7 +2,7 @@ import * as React from "react";
 import BasicLayout from "../BasicLayout";
 import ReactHtmlParser from "react-html-parser";
 import ApiUtils from "../../utils/ApiUtils";
-import { WithStyles, withStyles, Button, CircularProgress, Typography, SvgIcon, Icon, Dialog } from "@material-ui/core";
+import { WithStyles, withStyles, Button, CircularProgress, Typography, SvgIcon, Icon, Dialog, DialogTitle, DialogContent, DialogActions, Grid } from "@material-ui/core";
 import styles from "../../styles/welcome-page";
 import * as moment from "moment";
 import AddIcon from "@material-ui/icons/Add";
@@ -113,7 +113,7 @@ class WelcomePage extends React.Component<Props, State> {
     registerLocale('fi', fi);
   }
 
-  onPick(image: any) {
+  private onPick(image: any) {
     this.setState({defaultImageUrl: image.src})
   }
 
@@ -336,14 +336,28 @@ class WelcomePage extends React.Component<Props, State> {
           }
         </div>
         <Dialog
+          fullScreen
           className={ classes.dialog }
           onClose={ this.closeModal }
           open={ this.state.modalOpen }
           scroll={ 'paper' }
         >
-          {
-            this.renderForm(this.state.form)
-          }
+          <DialogTitle>
+            <Grid container alignItems="flex-start" justify="space-between" direction="row">
+              <Typography variant="h1" className={ classes.heroText } style={{ margin: 0 }}>Uusi tapahtuma</Typography>
+              <Button onClick={this.closeModal} style={{ color: "#fff", alignItems: "right" }}>Sulje</Button>
+            </Grid>
+          </DialogTitle>
+          <DialogContent>
+            {
+              this.renderForm(this.state.form)
+            }
+          </DialogContent>
+          <DialogActions>
+            <Button autoFocus onClick={this.closeModal} variant="text" color="primary">
+              Peruuta
+            </Button>
+          </DialogActions>
         </Dialog>
       </BasicLayout>
     );
@@ -386,7 +400,7 @@ class WelcomePage extends React.Component<Props, State> {
   private renderForm = (form: Metaform) => {
     const { classes } = this.props;
     return (
-      <div className={ classes.paper }>
+      <div className={ classes.metaformWrapper }>
         <MetaformComponent
           form={ form }
           renderBeforeField={ this.renderBeforeField }
@@ -411,7 +425,7 @@ class WelcomePage extends React.Component<Props, State> {
       return (
         <div>
           <input type="checkbox" onChange={this.showDefaultImages}/>
-          <div style={this.state.showDefaultImages && !this.state.imageUrl ? {display:"block"} : {display:"none"}}>
+          <div  className={classes.reactAddLocationWrapper} style={this.state.showDefaultImages && !this.state.imageUrl ? {display:"block"} : {display:"none"}}>
             <ImagePicker 
               images={imageList.map((image, i) => ({src: image, value: i}))}
               onPick={this.onPick}
@@ -420,7 +434,7 @@ class WelcomePage extends React.Component<Props, State> {
           <div style={this.state.showDefaultImages && this.state.imageUrl ? {display:"block"} : {display:"none"}}>
             Olet tuonut oman kuvan, mikäli haluat käyttää oletuskuvia, poista ensin lisätty kuva.
           </div>
-          <div style={{ marginBottom: theme.spacing(3)}}>
+          <div className={classes.imageUploadWrapper}>
             <ImageUpload userId="staging" onSave={ (url) => {this.setState({imageUrl: url})} } label={ imageTextLabel }  />
           </div>
         </div>
@@ -428,11 +442,11 @@ class WelcomePage extends React.Component<Props, State> {
     }
     if (fieldName == "add-location") {
       return (
-        <div>
+        <div className={classes.reactAddLocationWrapper}>
           <input type="button" value={this.state.addPlaceVisibility ? "Sulje paikan lisääminen" : "Lisää paikka"} onClick={this.addPlaceVisibility}/>
 
           <div style={this.state.addPlaceVisibility ? {display:"block"} : {display:"none"}}>
-            <div className={ classes.paper }>
+            <div className={ classes.metaformWrapper }>
               <MetaformComponent
                 form={ this.state.placeForm }
                 formReadOnly={ false }

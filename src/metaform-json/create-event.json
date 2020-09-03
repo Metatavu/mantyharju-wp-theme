@@ -1,5 +1,4 @@
 {
-  "title": "Uusi tapahtuma",
   "sections": [
     {
       "title": "Kieli",
@@ -519,7 +518,7 @@
         {
           "name": "submit-event",
           "type": "submit",
-          "text": "Luo"
+          "text": "Luo tapahtuma"
         },
         {
           "name": "submit-help",

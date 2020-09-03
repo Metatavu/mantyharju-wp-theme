@@ -536,15 +536,91 @@ export default createStyles({
   
   dialog: {
     display: 'flex',
-    padding: theme.spacing(1),
+    padding: 0,
     alignItems: 'center',
     justifyContent: 'center',
   },
 
-  paper: {
+  metaformWrapper: {
+    width: "100%",
+    [breakpoints.down("sm")]: {
+      padding: 0,
+    },
+    [breakpoints.up("sm")]: {
+      padding: 0,
+    },
+    [breakpoints.up("md")]: {
+      maxWidth: 1500,
+    },
     backgroundColor: "#fff",
     padding: theme.spacing(2, 4, 3),
+    "& .metaform": {
+      "& input[type='text']": {
+        width: "100%",
+        height: 40,
+      },
+      "& input[type='url']": {
+        width: "100%",
+        height: 40,
+      },
+      "& input[type='email']": {
+        width: "100%",
+        height: 40,
+      },
+      "& .react-datepicker-wrapper": {
+        width: "100%",
+      },
+      "& input[type='checkbox']": {
+        width: 40,
+        height: 40,
+      },
+      "& input[type='submit']": {
+        margin: 10,
+        midWidth: 100,
+        width: "100%",
+        height: 40,
+      },
+      "&  input[type='button']": {
+        width: 100,
+        height: 40,
+      },
+      "& .metaform-section": {
+        "& fieldset": {
+          border: 0,
+        },
+        "& .metaform-field": {
+          //display: "flex",
+        },
+        "& .help-container": {
+          marginTop: 10,
+          marginBottom: 10,
+          marginLeft: theme.spacing(0),
+          marginRight: theme.spacing(0),
+          backgroundColor: "#00AAAD",
+          color: "#FFF",
+          padding: 20,
+          "& p": {
+            fontSize: 18,
+            marginTop: 3,
+            marginBottom: 3,
+          }
+        }
+      }
+    }
   },
+
+  reactAddLocationWrapper: {
+    width: "100%",
+  },
+
+  imageUploadWrapper: {
+    marginTop: 10,
+    marginBottom: 10,
+    "& .MuiButton-outlinedSecondary": {
+    color: "#00AAAD",
+    border: "1px solid #000",
+    }
+  }
 
   // Mantyharju-theme ends, rest of the code can be deleted before production
 
