@@ -673,7 +673,7 @@ class WelcomePage extends React.Component<Props, State> {
       return (
         parsedContent.splice(0, 4).map((contentItem) => {
           return (
-            <div className={ classes.allPosts}>
+            <div className={ classes.allPosts }>
               <div className={ classes.singleNewsPost }>
                 { contentItem }
               </div>
