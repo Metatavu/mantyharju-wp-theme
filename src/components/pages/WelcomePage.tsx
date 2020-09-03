@@ -10,8 +10,8 @@ import { Post, MenuLocationData, CustomizeField, Attachment, Page } from "../../
 import { MetaformComponent, IconName, FieldValue, Metaform } from "metaform-react";
 import { jobsIconSvgPath, announcementIconSvgPath, currentNewsIconSvgPath } from "../../resources/icons/svgIcons";
 import DatePicker, { registerLocale } from "react-datepicker";
-import ImagePicker from 'react-image-picker';
-import 'react-image-picker/dist/index.css';
+import ImagePicker from "react-image-picker";
+import "react-image-picker/dist/index.css";
 import "react-datepicker/dist/react-datepicker.css";
 import fi from "date-fns/esm/locale/fi";
 import ImageUpload from "./image-upload";
@@ -59,21 +59,21 @@ interface Dictionary<T> {
   [Key: string]: T;
 }
 
-const imageList= [
+const imageList = [
   "https://static.metatavu.io/mantyharju/linkedevents/images/defaultimage1.jpg",
   "https://static.metatavu.io/mantyharju/linkedevents/images/defaultimage2.jpg",
   "https://static.metatavu.io/mantyharju/linkedevents/images/defaultimage3.jpg",
   "https://static.metatavu.io/mantyharju/linkedevents/images/defaultimage4.jpg",
   "https://static.metatavu.io/mantyharju/linkedevents/images/defaultimage5.jpg",
   "https://static.metatavu.io/mantyharju/linkedevents/images/defaultimage6.jpg"
-]
+];
 
 /**
  * WelcomePage component
  */
 class WelcomePage extends React.Component<Props, State> {
 
-  popularPagesSection: React.RefObject<HTMLDivElement>;
+  public popularPagesSection: React.RefObject<HTMLDivElement>;
 
   /**
    * Constructor
@@ -98,23 +98,26 @@ class WelcomePage extends React.Component<Props, State> {
       announcementsCategoryId: 4,
       newsCategoryId: 5,
       linkedEventsCategoryId: 8,
-      linkedEventsLimitingNumber: 8,
+      linkedEventsLimitingNumber: 4,
       customizeFields: [],
       modalOpen: false,
       defaultImageUrl: "",
       showDefaultImages: false,
       addPlaceVisibility: false,
       imageUrl: ""
-    }
+    };
 
     this.onPick = this.onPick.bind(this);
 
     this.popularPagesSection = React.createRef();
-    registerLocale('fi', fi);
+    registerLocale("fi", fi);
   }
 
-  private onPick(image: any) {
-    this.setState({defaultImageUrl: image.src})
+  /**
+   * Image picking method
+   */
+  public onPick(image: any) {
+    this.setState({defaultImageUrl: image.src});
   }
 
   /**
@@ -124,12 +127,13 @@ class WelcomePage extends React.Component<Props, State> {
     this.setState({
       loading: true
     });
-    const api = ApiUtils.getApi();
 
+    const api = ApiUtils.getApi();
     const customizeFields = await api.getWpV2Customize();
 
     this.setState({
-      customizeFields: customizeFields
+      customizeFields: customizeFields,
+      loading: false
     });
 
     const [posts, mainMenu, localeMenu, popularCategory, media] = await Promise.all(
@@ -151,13 +155,13 @@ class WelcomePage extends React.Component<Props, State> {
     const keywordRes = await fetch("https://mantyharju-test.linkedevents.fi/v1/keyword/?page_size=1000&data_source=mantyharju");
     const data = await keywordRes.json();
 
-    const sections = (form.sections || []).map(section => {
-      if (section.title == "Tapahtumaluokat") {
+    const sections = (form.sections || []).map((section) => {
+      if (section.title === "Tapahtumaluokat") {
         section.fields = data.data.map((keyword: any) => {
           return {
-            "name": `keyword__${ keyword.id }`,
-            "type": "boolean",
-            "title": keyword.name && keyword.name.fi ? keyword.name.fi : keyword.id
+            name: `keyword__${ keyword.id }`,
+            type: "boolean",
+            title: keyword.name && keyword.name.fi ? keyword.name.fi : keyword.id
           };
         });
       }
@@ -170,7 +174,6 @@ class WelcomePage extends React.Component<Props, State> {
       posts: posts,
       form: form,
       placeForm: placeForm,
-      loading: false,
       mainMenu: mainMenu,
       localeMenu: localeMenu,
       popularPages: popularPages,
@@ -192,26 +195,26 @@ class WelcomePage extends React.Component<Props, State> {
    */
   public render() {
     const { lang, slug, classes } = this.props;
-    const showcase_image = this.getCustomizerValue("showcase_image");
-    const showcase_title = this.getCustomizerValue("showcase_title");
-    const showcase_text = this.getCustomizerValue("showcase_text");
-    const showcase_button_link = this.getCustomizerValue("showcase_button_link");
-    const showcase_button_text = this.getCustomizerValue("showcase_button_text");
-    const hero_image = this.getCustomizerValue("hero_image");
-    const hero_logo_image = this.getCustomizerValue("hero_logo_image");
-    const hero_title = this.getCustomizerValue("hero_title");
-    const hero_button_link = this.getCustomizerValue("hero_button_link");
-    const hero_button_text = this.getCustomizerValue("hero_button_text");
+    const showcaseImage = this.getCustomizerValue("showcase_image");
+    const showcaseTitle = this.getCustomizerValue("showcase_title");
+    const showcaseText = this.getCustomizerValue("showcase_text");
+    const showcaseButtonLink = this.getCustomizerValue("showcase_button_link");
+    const showcaseButtonText = this.getCustomizerValue("showcase_button_text");
+    const heroImage = this.getCustomizerValue("hero_image");
+    const heroLogoImage = this.getCustomizerValue("hero_logo_image");
+    const heroTitle = this.getCustomizerValue("hero_title");
+    const heroButtonLink = this.getCustomizerValue("hero_button_link");
+    const heroButtonText = this.getCustomizerValue("hero_button_text");
 
-    let heroBackgroundImage = {backgroundImage: `url(${ hero_image })`};
-    let addEventImageStyle = {backgroundImage: `url(${ showcase_image })`};    
-    
+    const heroBackgroundImage = {backgroundImage: `url(${ heroImage })`};
+    const addEventImageStyle = {backgroundImage: `url(${ showcaseImage })`};
+
     return (
       <BasicLayout lang={ lang } slug={ slug }>
         <div className={ classes.heroImageDiv } style={ heroBackgroundImage }>
-          <img className={ classes.heroLogo } src={ hero_logo_image } />
-          <h2 className={ classes.heroText }>{ hero_title }</h2>
-          <Button color="secondary" className= { classes.heroButton } href={ hero_button_link }>{ hero_button_text }</Button>
+          <img className={ classes.heroLogo } src={ heroLogoImage } />
+          <h2 className={ classes.heroText }>{ heroTitle }</h2>
+          <Button color="secondary" className= { classes.heroButton } href={ heroButtonLink }>{ heroButtonText }</Button>
           <Button
             className={ `${ classes.heroButtonPopularPages }`}
             onClick={ this.scrollDownToPopularPages }
@@ -225,12 +228,12 @@ class WelcomePage extends React.Component<Props, State> {
             <div className= { classes.addEventImageDiv } style={addEventImageStyle}>
             </div>
             <div className= { classes.addEventTextDiv }>
-              <h3 className= { classes.addEventTextDivHeading }>{ showcase_title }</h3>
+              <h3 className= { classes.addEventTextDivHeading }>{ showcaseTitle }</h3>
               <p className= { classes.addEventTextDivParagraph }>
-                { showcase_text }
+                { showcaseText }
               </p>
-              <Button onClick={ this.navigateTo(showcase_button_link || window.location.href) } className={ classes.addEventButton }>
-                { showcase_button_text }
+              <Button onClick={ this.navigateTo(showcaseButtonLink || window.location.href) } className={ classes.addEventButton }>
+                { showcaseButtonText }
               </Button>
             </div>
           </div>
@@ -316,17 +319,17 @@ class WelcomePage extends React.Component<Props, State> {
           <div className={ classes.eventsButtonRow }>
             <Button
               className={ classes.allEventsButton }
-              title= "Kaikki tapahtumat" 
+              title= "Näytä lisää tapahtumia"
               onClick={this.expandLinkedEvents}
               >
-                Kaikki tapahtumat
+                Näytä lisää
             </Button>
             <Button
               onClick={ this.openModal }
               className={ classes.addLinkedEventButton }
-              title= "Lisää tapahtuma" 
+              title= "Lisää tapahtuma"
               >
-              Lisää tapahtuma
+                Lisää tapahtuma
             </Button>
           </div>
         </div>
@@ -340,7 +343,7 @@ class WelcomePage extends React.Component<Props, State> {
           className={ classes.dialog }
           onClose={ this.closeModal }
           open={ this.state.modalOpen }
-          scroll={ 'paper' }
+          scroll={ "paper" }
         >
           <DialogTitle>
             <Grid container alignItems="flex-start" justify="space-between" direction="row">
@@ -389,7 +392,7 @@ class WelcomePage extends React.Component<Props, State> {
    */
   private getCustomizerValue = (key: string) => {
     const { customizeFields } = this.state;
-    const field = customizeFields.find(field => field.key === key);
+    const field = customizeFields.find((field) => field.key === key);
     const value = field ? field.value : "";
     return value;
   }
@@ -421,7 +424,7 @@ class WelcomePage extends React.Component<Props, State> {
   private renderBeforeField = (fieldName?: string) => {
     const { classes } = this.props;
     const imageTextLabel = "Lisää kuva raahamalla tai klikkaamalla aluetta";
-    if (fieldName == "default-image-url") {
+    if (fieldName === "default-image-url") {
       return (
         <div>
           <input type="checkbox" onChange={this.showDefaultImages}/>
@@ -431,8 +434,8 @@ class WelcomePage extends React.Component<Props, State> {
               onPick={this.onPick}
             />
           </div>
-          <div style={this.state.showDefaultImages && this.state.imageUrl ? {display:"block"} : {display:"none"}}>
-            Olet tuonut oman kuvan, mikäli haluat käyttää oletuskuvia, poista ensin lisätty kuva.
+          <div style={this.state.showDefaultImages && this.state.imageUrl ? {display: "block"} : {display: "none"}}>
+            <Typography variant="body2">Olet tuonut oman kuvan, mikäli haluat käyttää oletuskuvia, poista ensin lisätty kuva.</Typography>
           </div>
           <div className={classes.imageUploadWrapper}>
             <ImageUpload userId="staging" onSave={ (url) => {this.setState({imageUrl: url})} } label={ imageTextLabel }  />
@@ -444,7 +447,6 @@ class WelcomePage extends React.Component<Props, State> {
       return (
         <div className={classes.reactAddLocationWrapper}>
           <input type="button" value={this.state.addPlaceVisibility ? "Sulje paikan lisääminen" : "Lisää paikka"} onClick={this.addPlaceVisibility}/>
-
           <div style={this.state.addPlaceVisibility ? {display:"block"} : {display:"none"}}>
             <div className={ classes.metaformWrapper }>
               <MetaformComponent
@@ -462,7 +464,7 @@ class WelcomePage extends React.Component<Props, State> {
             </div>
           </div>
         </div>
-      )
+      );
     }
     return;
   }
@@ -476,7 +478,6 @@ class WelcomePage extends React.Component<Props, State> {
     this.setState({addPlaceVisibility: this.state.addPlaceVisibility ? false : true});
   }
 
-
   /**
    * Setting showDefaultImages to true or false
    *
@@ -485,7 +486,6 @@ class WelcomePage extends React.Component<Props, State> {
   private showDefaultImages = () => {
     this.setState({showDefaultImages: this.state.showDefaultImages ? false : true});
   }
-
 
   /**
    * Method for getting field value
@@ -496,7 +496,7 @@ class WelcomePage extends React.Component<Props, State> {
     return this.state.formValues[fieldName];
   }
 
-    /**
+  /**
    * Method for getting field value
    *
    * @param fieldName field name
@@ -519,7 +519,7 @@ class WelcomePage extends React.Component<Props, State> {
     });
   }
 
-    /**
+  /**
    * Method for setting field value
    *
    * @param fieldName field name
@@ -574,8 +574,7 @@ class WelcomePage extends React.Component<Props, State> {
    * @param file file
    * @param path path
    */
-  private uploadFile = (fieldName: string, files: FileList | File, path: string) => {
-  }
+  private uploadFile = (fieldName: string, files: FileList | File, path: string) => {};
 
   /**
    * Method for setting autocomplete options
@@ -584,18 +583,18 @@ class WelcomePage extends React.Component<Props, State> {
    */
   private setAutocompleteOptions = async (path: string, input: string) => {
 
-    //Handle place autocomplete
-    if (path == "/linkedevents/places/search") {
+    // Handle place autocomplete
+    if (path === "/linkedevents/places/search") {
       if (input.length < 3) {
         return [];
       }
-      const res = await fetch(`https://mantyharju-test.linkedevents.fi/v1/search/?type=place&input=${input}`);
+      const res = await fetch(`https://mantyharju-test.linkedevents.fi/v1/search/?type=place&input=${ input }`);
       const data = await res.json();
       return data.data.map((place: any) => {
         return {
           name: place.name && place.name.fi ? place.name.fi : place.id,
           value: place.id
-        }
+        };
       });
     }
   }
@@ -633,7 +632,7 @@ class WelcomePage extends React.Component<Props, State> {
 
       formValues["start-time-string"] = start.format();
       formValues["end-time-string"] = end.format();
-      
+
       formValues["submit"] = "event";
 
       const keywords: string[] = [];
@@ -642,7 +641,7 @@ class WelcomePage extends React.Component<Props, State> {
         if (formKey.startsWith("keyword__") && formValues[formKey] == "checked") {
           keywords.push(formKey.replace("keyword__", ""));
         }
-      })
+      });
 
       formValues["keywords"] = keywords.join(",");
 
@@ -674,7 +673,7 @@ class WelcomePage extends React.Component<Props, State> {
 
   /**
    * Render News posts
-   * 
+   *
    * TODO: Get linkedEventsPost not by the hardcoded post ID
    */
   private renderNews = (categoryId: number) => {
@@ -685,9 +684,9 @@ class WelcomePage extends React.Component<Props, State> {
     } else {
       const parsedContent = ReactHtmlParser(newsPost.content ? newsPost.content.rendered || "" : "");
       return (
-        parsedContent.splice(0, 4).map(contentItem => {
+        parsedContent.splice(0, 4).map((contentItem) => {
           return (
-            <div className={ classes.allPosts}>
+            <div className={ classes.allPosts }>
               <div className={ classes.singleNewsPost }>
                 { contentItem }
               </div>
@@ -743,14 +742,18 @@ class WelcomePage extends React.Component<Props, State> {
     } else {
       const parsedContent = ReactHtmlParser(linkedEventsPost.content ? linkedEventsPost.content.rendered || "" : "");
       return (
-        parsedContent.splice(0, this.state.linkedEventsLimitingNumber).map(contentItem => {
+        parsedContent.splice(0, this.state.linkedEventsLimitingNumber).map((contentItem) => {
           const link = this.getEventLink(contentItem);
           return (
-            <a className={ classes.event_link } href={ link ? link : "#" }>
-              <figure className={ classes.events_item_universal }>
-                { contentItem }
-              </figure>
-            </a>
+            <>
+              { link &&
+                <a className={ classes.event_link } href={ link ? link : "#" }>
+                  <figure className={ classes.events_item_universal }>
+                    { contentItem }
+                  </figure>
+                </a>
+              }
+            </>
           );
         })
       );
@@ -763,12 +766,12 @@ class WelcomePage extends React.Component<Props, State> {
   private renderBottomSectionPosts = () => {
     const { classes } = this.props;
     const { popularPages } = this.state;
-    return popularPages.map(page => {
+    return popularPages.map((page) => {
       return (
         <div
           onClick={ this.navigateTo(page.link || window.location.href) }
           style={{ backgroundImage: `url(${ this.getAttachmentForPage(page) })` }}
-          className={classes.bottom_section_item}
+          className={ classes.bottom_section_item }
         >
           <p>{ page.title ? page.title.rendered || "" : "" }</p>
         </div>
@@ -782,7 +785,7 @@ class WelcomePage extends React.Component<Props, State> {
   private getAttachmentForPage = (page: Page) => {
     let attachmentUrl = "";
     if (this.state.media) {
-      this.state.media.map(attachment => {
+      this.state.media.map((attachment) => {
         if (attachment.id === page.featured_media) {
           attachmentUrl = attachment.source_url || "";
         }

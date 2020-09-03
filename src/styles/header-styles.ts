@@ -20,6 +20,7 @@ export default createStyles({
     [breakpoints.up("md")]: {
       height: "initial",
       padding: "2rem 8rem 0",
+      minHeight: 153
     },
   },
   menuButton: {
@@ -55,14 +56,12 @@ export default createStyles({
     transition: "border-bottom-color 0.2s ease-out",
     [breakpoints.up("md")]: {
       marginLeft: 20,
-      fontSize: "12px"
     },
     [breakpoints.up("lg")]: {
       marginLeft: 25
     },
     [breakpoints.up("xl")]: {
       marginLeft: 40,
-      fontSize: 16,
     },
     "&.highlight": {
       borderBottomColor: theme.palette.primary.main
@@ -97,7 +96,17 @@ export default createStyles({
     flexDirection: "column",
     zIndex: 100,
     borderTop: "1px solid #ddd",
-    marginTop: "1rem"
+    marginTop: "1rem",
+    "&.fixed": {
+      padding: "0 8rem",
+      marginTop: 0,
+      position: "fixed",
+      top: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: "#fff",
+      boxShadow: "0 0 20px rgba(0,0,0,0.2)"
+    }
   },
   mainMenu: {
     display: "flex",

@@ -32,23 +32,27 @@ export default createMuiTheme({
     fontFamily: "Open Sans, sans-serif",
     h1: {
       fontFamily: "Open Sans, sans-serif",
-      fontWeight: "normal"
+      fontWeight: 900
     },
     h2: {
       fontFamily: "Open Sans, sans-serif",
-      fontWeight: "normal"
+      fontWeight: 600
     },
     h3: {
       fontFamily: "Open Sans, sans-serif",
-      fontWeight: "normal"
+      fontWeight: 600
     },
     h4: {
       fontFamily: "Open Sans, sans-serif",
-      fontWeight: "normal"
+      fontWeight: 600
     },
     h5: {
       fontFamily: "Open Sans, sans-serif",
-      fontWeight: "normal"
+      fontWeight: 600
+    },
+    h6: {
+      fontFamily: "Open Sans, sans-serif",
+      fontWeight: 600
     },
     body1: {
       fontFamily: "Rubik, sans-serif",
@@ -56,7 +60,9 @@ export default createMuiTheme({
     },
     body2: {
       fontFamily: "Open Sans, sans-serif",
-      fontWeight: "normal"
+      fontWeight: "normal",
+      fontSize: 16,
+      lineHeight: "1.8rem"
     },
     subtitle1: {
       fontFamily: "Open Sans, sans-serif",
