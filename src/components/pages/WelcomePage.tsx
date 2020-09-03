@@ -357,7 +357,7 @@ class WelcomePage extends React.Component<Props, State> {
             }
           </DialogContent>
           <DialogActions>
-            <Button autoFocus onClick={this.closeModal} variant="text" color="primary">
+            <Button autoFocus onClick={ this.closeModal } variant="text" color="primary">
               Peruuta
             </Button>
           </DialogActions>
