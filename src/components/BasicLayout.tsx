@@ -1,6 +1,6 @@
 import * as React from "react";
 import { WithStyles, withStyles } from "@material-ui/core";
-import { MenuLocationData, Page } from "../generated/client/src";
+import { MenuLocationData, Page, CustomPage } from "../generated/client/src";
 import ApiUtils from "../utils/ApiUtils";
 import styles from "../styles/basic-layout";
 import Header from "./generic/Header";
@@ -21,7 +21,7 @@ interface Props extends WithStyles<typeof styles> {
 interface State {
   topMenu?: MenuLocationData,
   localeMenu?: MenuLocationData,
-  pages: Page[],
+  pages: CustomPage[],
   parentPage?: number
 }
 
@@ -47,19 +47,16 @@ class BasicLayout extends React.Component<Props, State> {
   public componentDidMount = async () => {
 
     const api = ApiUtils.getApi();
-    const [localeMenu, topMenu, pages, secondPages, thirdPages, parentPage] = await Promise.all(
+    const [localeMenu, topMenu, allPages, parentPage] = await Promise.all(
       [
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "topmenu" }),
-        api.getWpV2Pages({ per_page: 100 }),
-        api.getWpV2Pages({ per_page: 100, offset: 100 }),
-        api.getWpV2Pages({ per_page: 100, offset: 200 }),
-        api.getWpV2Pages({ slug: [ "sivut" ] }),
+        api.getCustomPages({ parent_slug: "sivut" }),
+        api.getWpV2Pages({ slug: [ "sivut" ] })
       ]
     );
 
     const parentPageId = (parentPage.length > 0 ? parentPage[0].id || -1 : -1);
-    const allPages = pages.concat(secondPages).concat(thirdPages);
 
     this.setState({
       topMenu: topMenu,

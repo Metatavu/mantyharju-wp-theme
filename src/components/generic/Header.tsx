@@ -1,9 +1,8 @@
 import * as React from "react";
 import bar from "../../resources/img/mantyharju-logo-svg.svg";
 import styles from "../../styles/header-styles";
-import { MenuLocationData, MenuItemData, Page, SearchResult, GetWpV2SearchTypeEnum } from "../../generated/client/src";
+import { MenuLocationData, MenuItemData, SearchResult, GetWpV2SearchTypeEnum, CustomPage } from "../../generated/client/src";
 import { withStyles, WithStyles, Link, Typography, SvgIcon, Hidden, IconButton } from "@material-ui/core";
-import ReactHtmlParser from "react-html-parser";
 import ApiUtils from "../../utils/ApiUtils";
 import * as Autocomplete from "react-autocomplete";
 import * as classNames from "classnames";
@@ -24,7 +23,7 @@ interface Props extends WithStyles<typeof styles> {
   localeMenu?: MenuLocationData;
   topMenu?: MenuLocationData;
   parentPage?: number;
-  pages: Page[];
+  pages: CustomPage[];
 }
 
 /**
@@ -32,7 +31,7 @@ interface Props extends WithStyles<typeof styles> {
  */
 interface State {
   menuVisibility: boolean;
-  menuItemCurrent?: Page;
+  menuItemCurrent?: CustomPage;
   searchString: string;
   results: SearchResult[];
   mobileMenuVisible: boolean;
@@ -254,7 +253,7 @@ class Header extends React.Component<Props, State> {
    * Render submenu headers
    * @param page Page
    */
-  private renderMenuItems = (page: Page) => {
+  private renderMenuItems = (page: CustomPage) => {
     const { classes } = this.props;
     const { menuItemCurrent } = this.state;
     const highlightThisMenuItem = menuItemCurrent === page;
@@ -267,7 +266,7 @@ class Header extends React.Component<Props, State> {
         className={ classNames( classes.navLink, highlightThisMenuItem ? "highlight" : "" )}
       >
         {
-          ReactHtmlParser(page.title ? page.title.rendered || "" : "")
+          page.post_title || ""
         }
       </Typography>
     );
@@ -280,9 +279,9 @@ class Header extends React.Component<Props, State> {
     const { classes } = this.props;
     const { menuVisibility, menuItemCurrent } = this.state;
     if (menuItemCurrent && menuVisibility) {
-      const childMenuPages = this.getChildMenuPages(menuItemCurrent.id ? menuItemCurrent.id : -1);
+      const childMenuPages = this.getChildMenuPages(menuItemCurrent.ID ? menuItemCurrent.ID : -1);
       return (
-        (childMenuPages ? childMenuPages : new Array()).map((childPage: Page) => {
+        (childMenuPages ? childMenuPages : new Array()).map((childPage: CustomPage) => {
           return (
             <div className={ classes.menuItems }>
               <Typography
@@ -291,7 +290,7 @@ class Header extends React.Component<Props, State> {
                 className={ classes.subMenuLink }
                 onClick={() => { this.onPageClick(childPage); }}
               >
-                { ReactHtmlParser(childPage.title ? childPage.title.rendered || "" : "") }
+                { childPage.post_title || "" }
               </Typography>
               { this.renderLowLevelMenuPages(childPage) }
             </div>
@@ -307,9 +306,9 @@ class Header extends React.Component<Props, State> {
    * Render topmenu post links
    * @param page Page
    */
-  private renderLowLevelMenuPages = (parentPage: Page) => {
+  private renderLowLevelMenuPages = (parentPage: CustomPage) => {
     const { classes } = this.props;
-    const childPages = this.getChildMenuPages(parentPage.id ? parentPage.id : -1);
+    const childPages = this.getChildMenuPages(parentPage.ID ? parentPage.ID : -1);
     if (childPages == null) {
       return null;
     } else {
@@ -322,7 +321,7 @@ class Header extends React.Component<Props, State> {
               className={ classes.lowLevelLink }
               onClick={() => { this.onPageClick(childPage); }}
             >
-              { ReactHtmlParser(childPage.title ? childPage.title.rendered || "" : "") }
+              { childPage.post_title }
             </Typography>
           );
         })
@@ -392,7 +391,7 @@ class Header extends React.Component<Props, State> {
    * Redirects to page URL
    * @param page Page
    */
-  private onPageClick = (page: Page) => {
+  private onPageClick = (page: CustomPage) => {
     window.location.href = page.link || "";
   }
 
@@ -400,7 +399,7 @@ class Header extends React.Component<Props, State> {
    * Mouse enter event handler
    * @param page Page
    */
-  private onMouseEnter = (page: Page) => {
+  private onMouseEnter = (page: CustomPage) => {
     const currentPage = this.state.menuItemCurrent;
 
     this.setState({
@@ -431,14 +430,14 @@ class Header extends React.Component<Props, State> {
    * @param parentPageId number
    * @returns Page[]
    */
-  private getChildMenuPages = (parentPageId: number) => {
+  private getChildMenuPages = (parentPageId: number): CustomPage[] | null => {
     const { pages } = this.props;
-    const menuPagesArray: Page[] = new Array();
+    const menuPagesArray: CustomPage[] = new Array();
     if (!pages) {
       return null;
     } else {
       pages.map((page) => {
-        if (page.parent === parentPageId) {
+        if (page.post_parent === parentPageId) {
           menuPagesArray.push(page);
         }
       });

@@ -36,7 +36,6 @@ interface State {
   pageTitle?: PostTitle;
   title: string;
   secondPageCategoryId: number;
-  media: Attachment[];
   limitedPosts: Post[];
   pages: CustomPage[];
   parentPage?: Page;
@@ -68,7 +67,6 @@ class PostsPage extends React.Component<Props, State> {
     super(props);
     this.state = {
       posts: [],
-      media: [],
       loading: false,
       breadcrumb: [],
       title: "",
@@ -153,7 +151,7 @@ class PostsPage extends React.Component<Props, State> {
   private renderPostContent = () => {
     const { classes, lang } = this.props;
     const { mainContent, sideContent } = this.state;
-    const content = this.getPageOrPostContent();
+    this.getPageOrPostContent();
     moment.locale(lang);
     return (
       <div className={classes.topPageContent}>
@@ -191,7 +189,6 @@ class PostsPage extends React.Component<Props, State> {
       api.getWpV2Pages({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
       api.getWpV2Posts({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
       api.getCustomPages({ parent_slug: "posts" }),
-      api.getWpV2Media({ per_page: 100 }),
       api.getWpV2Pages({ slug: [ "sivut" ] }),
       api.getPostThumbnail({ slug: slug })
     ]);
@@ -201,9 +198,8 @@ class PostsPage extends React.Component<Props, State> {
     const nav = apiCalls[2];
     const pageTitle = apiCalls[3][0].title || apiCalls[4][0].title;
     const pages = apiCalls[5];
-    const media = apiCalls[6];
-    const parentPage = apiCalls[7][0];
-    const postThumbnail = apiCalls[8];
+    const parentPage = apiCalls[6][0];
+    const postThumbnail = apiCalls[7];
 
     this.setState({
       page: page,
@@ -211,7 +207,6 @@ class PostsPage extends React.Component<Props, State> {
       loading: false,
       nav: nav,
       pageTitle: pageTitle,
-      media: media,
       pages: pages,
       parentPage: parentPage,
       postThumbnail: postThumbnail

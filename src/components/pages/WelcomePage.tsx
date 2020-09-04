@@ -6,7 +6,7 @@ import { WithStyles, withStyles, Button, CircularProgress, Typography, SvgIcon, 
 import styles from "../../styles/welcome-page";
 import * as moment from "moment";
 import AddIcon from "@material-ui/icons/Add";
-import { Post, MenuLocationData, CustomizeField, Attachment, Page } from "../../generated/client/src";
+import { Post, MenuLocationData, CustomizeField, Attachment, Page, CustomPost } from "../../generated/client/src";
 import { MetaformComponent, IconName, FieldValue, Metaform } from "metaform-react";
 import { jobsIconSvgPath, announcementIconSvgPath, currentNewsIconSvgPath } from "../../resources/icons/svgIcons";
 import DatePicker, { registerLocale } from "react-datepicker";
@@ -29,7 +29,7 @@ interface Props extends WithStyles<typeof styles> {
  * Interface representing component state
  */
 interface State {
-  posts: Post[],
+  posts: CustomPost[],
   form: Metaform,
   placeForm: Metaform,
   formValues: Dictionary<string | number | null>
@@ -138,7 +138,7 @@ class WelcomePage extends React.Component<Props, State> {
 
     const [posts, mainMenu, localeMenu, popularCategory, media] = await Promise.all(
       [
-        api.getWpV2Posts({per_page: 90}),
+        api.getCustomPosts(),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }),
         api.getWpV2Categories({ slug: ["suosittu"] }),
@@ -682,7 +682,7 @@ class WelcomePage extends React.Component<Props, State> {
     if (!newsPost) {
       return null;
     } else {
-      const parsedContent = ReactHtmlParser(newsPost.content ? newsPost.content.rendered || "" : "");
+      const parsedContent = ReactHtmlParser(newsPost.post_content || "");
       return (
         parsedContent.splice(0, 4).map((contentItem) => {
           return (
@@ -713,9 +713,9 @@ class WelcomePage extends React.Component<Props, State> {
             return(
               <div className={ classes.allPosts}>
                 <div className={ classes.singlePost }>
-                  <p className={ classes.postDate }>{ ReactHtmlParser(!post.date ? "" : moment(post.date).format("DD.MM.YYYY")) }</p>
+                  <p className={ classes.postDate }>{ ReactHtmlParser(!post.post_date ? "" : moment(post.post_date).format("DD.MM.YYYY")) }</p>
                   <div className={ classes.postContent }>
-                    { ReactHtmlParser(post.content ? post.content.rendered || "" : "") }
+                    { ReactHtmlParser(post.post_content || "") }
                   </div>
                   <hr />
                 </div>
@@ -740,7 +740,7 @@ class WelcomePage extends React.Component<Props, State> {
     if (!linkedEventsPost) {
       return null;
     } else {
-      const parsedContent = ReactHtmlParser(linkedEventsPost.content ? linkedEventsPost.content.rendered || "" : "");
+      const parsedContent = ReactHtmlParser(linkedEventsPost.post_content || "");
       return (
         parsedContent.splice(0, this.state.linkedEventsLimitingNumber).map((contentItem) => {
           const link = this.getEventLink(contentItem);
@@ -880,7 +880,7 @@ class WelcomePage extends React.Component<Props, State> {
    * Gets limited posts array
    */
   private getLimitedPosts = (categoryId: number, delimiter: number) => {
-    const postsArray: Post[] = new Array();
+    const postsArray: CustomPost[] = new Array();
     this.state.posts.map((post) => {
       if ((post.categories ? post.categories : new Array()).includes(categoryId)) {
         postsArray.push(post);

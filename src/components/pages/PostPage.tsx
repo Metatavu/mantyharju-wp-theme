@@ -3,7 +3,7 @@ import BasicLayout from "../BasicLayout";
 import { Container, WithStyles, withStyles, Button, Breadcrumbs, Link, Typography } from "@material-ui/core";
 import styles from "../../styles/page-content";
 import ApiUtils from "../../../src/utils/ApiUtils";
-import { Page, Post, MenuLocationData, PostTitle } from "../../../src/generated/client/src";
+import { Page, Post, MenuLocationData, PostTitle, CustomPage } from "../../../src/generated/client/src";
 import ReactHtmlParser, { convertNodeToElement } from "react-html-parser";
 import { DomElement } from "domhandler";
 import strings from "../../localization/strings";
@@ -40,7 +40,7 @@ interface State {
   breadcrumb: Breadcrumb[];
   mainContent?: React.ReactElement;
   sideContent?: React.ReactElement;
-  pages: Page[];
+  pages: CustomPage[];
   sideMenuParentPage?: Page;
   leftMenuCurrentTopPage?: Page;
   postThumbnail: string;
@@ -191,7 +191,7 @@ class PostPage extends React.Component<Props, State> {
       api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
       api.getWpV2Pages({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
       api.getWpV2Posts({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
-      api.getWpV2Pages({ per_page: 100 }),
+      api.getCustomPages({ parent_slug: "sivut" }),
       api.getWpV2Pages({ slug: [ "sivut" ] }),
       api.getWpV2Pages({ slug: [ loacationPathnameArray[1] ] }),
       api.getPostThumbnail({ slug: slug })
@@ -228,8 +228,8 @@ class PostPage extends React.Component<Props, State> {
    *
    * @param pages page array
    */
-  private breadcrumbPath = (pages: Page[]) => {
-    const mainPages = pages.filter(item => item.parent === 0);
+  private breadcrumbPath = (pages: CustomPage[]) => {
+    const mainPages = pages.filter(item => item.post_parent === 0);
     this.buildPath(mainPages, pages);
   }
 
@@ -240,17 +240,17 @@ class PostPage extends React.Component<Props, State> {
    * @param pages all pages array
    * @param path collected breadcumbs
    */
-  private buildPath = (children: Page[], pages: Page[], path?: Breadcrumb[]) => {
+  private buildPath = (children: CustomPage[], pages: CustomPage[], path?: Breadcrumb[]) => {
     const { currentPage } = this.state;
     children.forEach(childPage => {
-      const childPages = pages.filter(item => item.parent === childPage.id);     
-      if (currentPage && (currentPage.id === childPage.id) && childPage.title) {
+      const childPages = pages.filter(item => item.post_parent === childPage.ID);
+      if (currentPage && (currentPage.id === childPage.ID) && childPage.post_title) {
         this.setState({
-          title: childPage.title.rendered || "",
-          breadcrumb: path ? [...path, { label: childPage.title.rendered || "", link: childPage.link || "" }] : [{ label: childPage.title.rendered || "", link: childPage.link || "" }]
+          title: childPage.post_title || "",
+          breadcrumb: path ? [...path, { label: childPage.post_title || "", link: childPage.link || "" }] : [{ label: childPage.post_title || "", link: childPage.link || "" }]
         });
-      } else if (childPages && childPage.title) {
-        this.buildPath(childPages, pages, path ? [...path, { label: childPage.title.rendered || "", link: childPage.link || "" }] : [{ label: childPage.title.rendered || "", link: childPage.link || "" }]);
+      } else if (childPages && childPage.post_title) {
+        this.buildPath(childPages, pages, path ? [...path, { label: childPage.post_title || "", link: childPage.link || "" }] : [{ label: childPage.post_title || "", link: childPage.link || "" }]);
       }
     });
   }
