@@ -6,6 +6,7 @@ export * from './Comment';
 export * from './CommentAuthorAvatarUrls';
 export * from './CommentContent';
 export * from './CustomPage';
+export * from './CustomPost';
 export * from './CustomTaxonomy';
 export * from './CustomizeField';
 export * from './Error';

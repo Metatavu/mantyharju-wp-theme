@@ -26,6 +26,9 @@ import {
     CustomPage,
     CustomPageFromJSON,
     CustomPageToJSON,
+    CustomPost,
+    CustomPostFromJSON,
+    CustomPostToJSON,
     CustomTaxonomy,
     CustomTaxonomyFromJSON,
     CustomTaxonomyToJSON,
@@ -1325,6 +1328,34 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async getCustomPages(requestParameters: GetCustomPagesRequest): Promise<Array<CustomPage>> {
         const response = await this.getCustomPagesRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async getCustomPostsRaw(): Promise<runtime.ApiResponse<Array<CustomPost>>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-WP-Nonce"] = this.configuration.apiKey("X-WP-Nonce"); // cookieAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/wp/v2/customPosts`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(CustomPostFromJSON));
+    }
+
+    /**
+     */
+    async getCustomPosts(): Promise<Array<CustomPost>> {
+        const response = await this.getCustomPostsRaw();
         return await response.value();
     }
 
