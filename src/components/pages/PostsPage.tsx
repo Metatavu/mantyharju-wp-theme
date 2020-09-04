@@ -29,7 +29,6 @@ interface Props extends WithStyles<typeof styles> {
  */
 interface State {
   page?: Page;
-  posts: Post[];
   loading: boolean;
   nav?: MenuLocationData;
   breadcrumb: Breadcrumb[];
@@ -66,7 +65,6 @@ class PostsPage extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      posts: [],
       loading: false,
       breadcrumb: [],
       title: "",
@@ -184,7 +182,6 @@ class PostsPage extends React.Component<Props, State> {
 
     const apiCalls = await Promise.all([
       api.getWpV2Pages({ lang: [ lang ], slug: [ slug ] }),
-      api.getWpV2Posts({ lang: [ lang ] }),
       api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
       api.getWpV2Pages({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
       api.getWpV2Posts({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
@@ -194,16 +191,14 @@ class PostsPage extends React.Component<Props, State> {
     ]);
 
     const page = apiCalls[0][0];
-    const posts = apiCalls[1];
-    const nav = apiCalls[2];
-    const pageTitle = apiCalls[3][0].title || apiCalls[4][0].title;
-    const pages = apiCalls[5];
-    const parentPage = apiCalls[6][0];
-    const postThumbnail = apiCalls[7];
+    const nav = apiCalls[1];
+    const pageTitle = apiCalls[2][0].title || apiCalls[3][0].title;
+    const pages = apiCalls[4];
+    const parentPage = apiCalls[5][0];
+    const postThumbnail = apiCalls[6];
 
     this.setState({
       page: page,
-      posts: posts,
       loading: false,
       nav: nav,
       pageTitle: pageTitle,
