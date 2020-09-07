@@ -15,7 +15,8 @@ add_action('rest_api_init', 'register_posts_endpoint');
 function get_wp_posts() {
   return get_posts(
     array(
-      'post_type' => 'post'
+      'post_type' => 'post',
+      'numberposts' => -1
     )
   );
 }
