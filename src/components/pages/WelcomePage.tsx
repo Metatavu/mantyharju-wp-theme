@@ -15,7 +15,6 @@ import "react-image-picker/dist/index.css";
 import "react-datepicker/dist/react-datepicker.css";
 import fi from "date-fns/esm/locale/fi";
 import ImageUpload from "./image-upload";
-import theme from "../../styles/image-upload";
 
 /**
  * Interface representing component properties
@@ -124,6 +123,8 @@ class WelcomePage extends React.Component<Props, State> {
    * Component did mount life-cycle handler
    */
   public componentDidMount = async () => {
+    const { linkedEventsCategoryId } = this.state;
+
     this.setState({
       loading: true
     });
@@ -142,8 +143,7 @@ class WelcomePage extends React.Component<Props, State> {
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }),
         api.getWpV2Categories({ slug: ["suosittu"] }),
-        api.getWpV2Media({}),
-        api.getWpV2Customize()
+        api.getWpV2Media({})
       ]
     );
 
@@ -177,10 +177,17 @@ class WelcomePage extends React.Component<Props, State> {
       mainMenu: mainMenu,
       localeMenu: localeMenu,
       popularPages: popularPages,
-      media: media
+      media: media,
     });
 
     this.hidePageLoader();
+
+    api.getWpV2Posts({ categories: [ `${linkedEventsCategoryId}` ], per_page: 1 }).then((linkedEventsPostArray) => {
+      const linkedEventsPost = linkedEventsPostArray.length ? linkedEventsPostArray[0] : undefined;
+      this.setState({
+        linkedEventsPost: linkedEventsPost
+      });
+    });
   }
 
   /**
@@ -195,6 +202,7 @@ class WelcomePage extends React.Component<Props, State> {
    */
   public render() {
     const { lang, slug, classes } = this.props;
+    const { linkedEventsPost } = this.state;
     const showcaseImage = this.getCustomizerValue("showcase_image");
     const showcaseTitle = this.getCustomizerValue("showcase_title");
     const showcaseText = this.getCustomizerValue("showcase_text");
@@ -313,9 +321,16 @@ class WelcomePage extends React.Component<Props, State> {
               <Typography variant="subtitle1">Tulossa</Typography>
             </div>
           </div>
-          <div className={ classes.wrapper }>
-            { this.renderLinkedEvents(this.state.linkedEventsCategoryId) }
-          </div>
+          { linkedEventsPost &&
+            <div className={ classes.wrapper }>
+              { this.renderLinkedEvents() }
+            </div>
+          }
+          { !linkedEventsPost &&
+            <div style={{ display: "flex" }}>
+                <CircularProgress style={{ margin: "auto" }} />
+            </div>
+          }
           <div className={ classes.eventsButtonRow }>
             <Button
               className={ classes.allEventsButton }
@@ -443,7 +458,7 @@ class WelcomePage extends React.Component<Props, State> {
         </div>
       )
     }
-    if (fieldName == "add-location") {
+    if (fieldName === "add-location") {
       return (
         <div className={ classes.reactAddLocationWrapper }>
           <input type="button" value={this.state.addPlaceVisibility ? "Sulje paikan lisääminen" : "Lisää paikka"} onClick={this.addPlaceVisibility}/>
@@ -731,16 +746,14 @@ class WelcomePage extends React.Component<Props, State> {
 
   /**
    * Render LinkedEvents posts
-   *
-   * TODO: Get linkedEventsPost not by the hardcoded post ID
    */
-  private renderLinkedEvents = (categoryId: number) => {
+  private renderLinkedEvents = () => {
     const { classes } = this.props;
-    const linkedEventsPost = this.getLimitedPosts(categoryId, 1)[0];
+    const { linkedEventsPost } = this.state;
     if (!linkedEventsPost) {
       return null;
     } else {
-      const parsedContent = ReactHtmlParser(linkedEventsPost.post_content || "");
+      const parsedContent = ReactHtmlParser(linkedEventsPost.content ? linkedEventsPost.content.rendered || "" : "");
       return (
         parsedContent.splice(0, this.state.linkedEventsLimitingNumber).map((contentItem) => {
           const link = this.getEventLink(contentItem);
