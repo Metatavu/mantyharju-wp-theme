@@ -15,13 +15,14 @@ add_action('rest_api_init', 'register_posts_endpoint');
 function get_wp_posts() {
   return get_posts(
     array(
-      'post_type' => 'post'
+      'post_type' => 'post',
+      'numberposts' => -1
     )
   );
 }
 
 function map_additional_post_properties($post) {
-  $post->link = "" . get_permalink($post);
+  $post->link = get_permalink($post) ? get_permalink($post) : "";
   $post->categories = wp_get_post_categories($post->ID);
   return $post;
 }

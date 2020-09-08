@@ -44,7 +44,6 @@ interface State {
   siteSearchVisible: boolean,
   announcementsCategoryId: number,
   newsCategoryId: number,
-  linkedEventsCategoryId: number,
   linkedEventsLimitingNumber: number,
   customizeFields: CustomizeField[],
   modalOpen: boolean,
@@ -96,7 +95,6 @@ class WelcomePage extends React.Component<Props, State> {
       siteSearchVisible: false,
       announcementsCategoryId: 4,
       newsCategoryId: 5,
-      linkedEventsCategoryId: 8,
       linkedEventsLimitingNumber: 4,
       customizeFields: [],
       modalOpen: false,
@@ -123,7 +121,6 @@ class WelcomePage extends React.Component<Props, State> {
    * Component did mount life-cycle handler
    */
   public componentDidMount = async () => {
-    const { linkedEventsCategoryId } = this.state;
 
     this.setState({
       loading: true
@@ -182,7 +179,7 @@ class WelcomePage extends React.Component<Props, State> {
 
     this.hidePageLoader();
 
-    api.getWpV2Posts({ categories: [ `${linkedEventsCategoryId}` ], per_page: 1 }).then((linkedEventsPostArray) => {
+    api.getWpV2Posts({ slug: [ "linked-events" ], per_page: 1 }).then((linkedEventsPostArray) => {
       const linkedEventsPost = linkedEventsPostArray.length ? linkedEventsPostArray[0] : undefined;
       this.setState({
         linkedEventsPost: linkedEventsPost
