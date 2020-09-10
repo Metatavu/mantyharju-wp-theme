@@ -44,7 +44,6 @@ interface State {
   siteSearchVisible: boolean,
   announcementsCategoryId: number,
   newsCategoryId: number,
-  linkedEventsCategoryId: number,
   linkedEventsLimitingNumber: number,
   customizeFields: CustomizeField[],
   modalOpen: boolean,
@@ -107,7 +106,6 @@ class WelcomePage extends React.Component<Props, State> {
       siteSearchVisible: false,
       announcementsCategoryId: 4,
       newsCategoryId: 5,
-      linkedEventsCategoryId: 8,
       linkedEventsLimitingNumber: 4,
       customizeFields: [],
       modalOpen: false,
@@ -134,6 +132,7 @@ class WelcomePage extends React.Component<Props, State> {
    * Component did mount life-cycle handler
    */
   public componentDidMount = async () => {
+
     this.setState({
       loading: true
     });
@@ -152,8 +151,7 @@ class WelcomePage extends React.Component<Props, State> {
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }),
         api.getWpV2Categories({ slug: ["suosittu"] }),
-        api.getWpV2Media({}),
-        api.getWpV2Customize()
+        api.getWpV2Media({})
       ]
     );
 
@@ -187,13 +185,14 @@ class WelcomePage extends React.Component<Props, State> {
       mainMenu: mainMenu,
       localeMenu: localeMenu,
       popularPages: popularPages,
-      media: media
+      media: media,
     });
 
     this.hidePageLoader();
 
     this.getNews();
     this.getAnnouncements();
+    this.getLinkedEvents();
   }
 
   /**
@@ -208,7 +207,7 @@ class WelcomePage extends React.Component<Props, State> {
    */
   public render() {
     const { lang, slug, classes } = this.props;
-    const { announcementsPageLink, newsPageLink } = this.state;
+    const { announcementsPageLink, newsPageLink,linkedEventsPost } = this.state;
     const showcaseImage = this.getCustomizerValue("showcase_image");
     const showcaseTitle = this.getCustomizerValue("showcase_title");
     const showcaseText = this.getCustomizerValue("showcase_text");
@@ -327,9 +326,16 @@ class WelcomePage extends React.Component<Props, State> {
               <Typography variant="subtitle1">Tulossa</Typography>
             </div>
           </div>
-          <div className={ classes.wrapper }>
-            { this.renderLinkedEvents(this.state.linkedEventsCategoryId) }
-          </div>
+          { linkedEventsPost &&
+            <div className={ classes.wrapper }>
+              { this.renderLinkedEvents() }
+            </div>
+          }
+          { !linkedEventsPost &&
+            <div style={{ display: "flex" }}>
+                <CircularProgress style={{ margin: "auto" }} />
+            </div>
+          }
           <div className={ classes.eventsButtonRow }>
             <Button
               className={ classes.allEventsButton }
@@ -417,6 +423,19 @@ class WelcomePage extends React.Component<Props, State> {
           });
         }
       }
+    });
+  }
+
+  /**
+   * Method for getting linked events
+   */
+  private getLinkedEvents = () => {
+    const api = ApiUtils.getApi();
+    api.getWpV2Posts({ slug: [ "linked-events" ], per_page: 1 }).then((linkedEventsPostArray) => {
+      const linkedEventsPost = linkedEventsPostArray.length ? linkedEventsPostArray[0] : undefined;
+      this.setState({
+        linkedEventsPost: linkedEventsPost
+      });
     });
   }
 
@@ -812,16 +831,14 @@ class WelcomePage extends React.Component<Props, State> {
 
   /**
    * Render LinkedEvents posts
-   *
-   * TODO: Get linkedEventsPost not by the hardcoded post ID
    */
-  private renderLinkedEvents = (categoryId: number) => {
+  private renderLinkedEvents = () => {
     const { classes } = this.props;
-    const linkedEventsPost = this.getLimitedPosts(categoryId, 1)[0];
+    const { linkedEventsPost } = this.state;
     if (!linkedEventsPost) {
       return null;
     } else {
-      const parsedContent = ReactHtmlParser(linkedEventsPost.post_content || "");
+      const parsedContent = ReactHtmlParser(linkedEventsPost.content ? linkedEventsPost.content.rendered || "" : "");
       return (
         parsedContent.splice(0, this.state.linkedEventsLimitingNumber).map((contentItem) => {
           const link = this.getEventLink(contentItem);

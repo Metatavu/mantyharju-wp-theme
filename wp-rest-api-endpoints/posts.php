@@ -19,9 +19,9 @@ function register_posts_endpoint() {
 add_action('rest_api_init', 'register_posts_endpoint');
 
 function map_additional_post_properties($post) {
-  $post->link = get_permalink($post);
-  $post->categories = wp_get_post_categories($post);
+  $post->categories = wp_get_post_categories($post->ID);
   $post->featured_image_url = get_the_post_thumbnail_url($post);
+  $post->link = get_permalink($post) ? get_permalink($post) : "";
   return $post;
 }
 

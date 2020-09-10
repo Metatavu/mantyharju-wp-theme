@@ -7,20 +7,24 @@ const hoverHighlight = "rgba(0,0,0,0.1)";
 
 export default createStyles({
   header: {
-    position: "relative",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     padding: "0 1rem",
     width: "100%",
     height: 50,
+    backgroundColor: "#fff",
+    zIndex: 10,
+    position: "fixed",
+    top: 0,
     [breakpoints.up("sm")]: {
-      height: 50
+      height: 50,
     },
     [breakpoints.up("md")]: {
       height: "initial",
       padding: "2rem 8rem 0",
-      minHeight: 153
+      minHeight: 153,
+      position: "relative",
     },
   },
   menuButton: {
