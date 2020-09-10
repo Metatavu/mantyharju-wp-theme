@@ -4,6 +4,9 @@ import WelcomePage from "./pages/WelcomePage";
 import PostPage from "./pages/PostPage";
 import PostsPage from "./pages/PostsPage";
 import SingleEventPage from "./pages/SingleEventPage";
+import Announcements from "./pages/announcements";
+import News from "./pages/news";
+import Jobs from "./pages/jobs";
 import { CssBaseline, responsiveFontSizes } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
 import mantyharjuTheme from "../styles/theme";
@@ -65,6 +68,36 @@ class App extends React.Component<Props, State> {
                   mainPageSlug={ this.pathToTitle(props.location.pathname) }
                   locationKey={ props.location.key }
                   eventId={ this.pathToSlug(props.location.pathname) }
+                />
+              )}
+            />
+            <Route
+              path="/announcements/"
+              exact={ true }
+              render={ (props) => (
+                <Announcements
+                  lang={ language }
+                  slug={ this.pathToSlug(props.location.pathname) }
+                />
+              )}
+            />
+            <Route
+              path="/news/"
+              exact={ true }
+              render={ (props) => (
+                <News
+                  lang={ language }
+                  slug={ this.pathToSlug(props.location.pathname) }
+                />
+              )}
+            />
+            <Route
+              path="/jobs/"
+              exact={ true }
+              render={ (props) => (
+                <Jobs
+                  lang={ language }
+                  slug={ this.pathToSlug(props.location.pathname) }
                 />
               )}
             />

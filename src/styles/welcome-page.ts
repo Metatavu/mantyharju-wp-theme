@@ -262,28 +262,9 @@ export default createStyles({
     }
   },
   allPosts: {
-  },
-  singleNewsPost: {
-    "& p":{
-      margin: 4,
-      padding:0,
-      color: "#15B1B3",
-      fontSize: "0.8rem",
-    },
-    "& a":{
-      margin: 0,
-      padding:0,
-      color: "#000",
-      textDecoration: "blink",
-    },
-    "& hr":{
-      color: "#000",
-      opacity: "20%",
-      margin: 2,
-      marginTop: "1rem",
-    },
-    marginBottom: "2rem",
-    maxHeight: "2.3rem",
+    textOverflow: "ellipsis",
+    overflow: "hidden",
+    whiteSpace: "nowrap"
   },
 
   /**
@@ -301,7 +282,7 @@ export default createStyles({
       marginTop: "1rem",
     },
     marginBottom: "2rem",
-    maxHeight: "2.3rem",
+    maxHeight: "3rem",
   },
   postDate: {
     color: "#15B1B3",
@@ -309,7 +290,11 @@ export default createStyles({
     margin: "0"
   },
   postContent: {
-    margin: 0,
+    width: 0,
+    marginTop: 0,
+    marginLeft: 0,
+    marginRight: 0,
+    marginBottom: "1rem",
     padding: 0
   },
   postColumnButton: {
