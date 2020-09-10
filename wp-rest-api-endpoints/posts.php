@@ -22,8 +22,8 @@ function get_wp_posts() {
 }
 
 function map_additional_post_properties($post) {
-  $post->link = "" . get_permalink($post);
-  $post->categories = wp_get_post_categories($post);
+  $post->link = get_permalink($post) ? get_permalink($post) : "";
+  $post->categories = wp_get_post_categories($post->ID);
   return $post;
 }
 
