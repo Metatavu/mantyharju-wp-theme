@@ -88,7 +88,6 @@ export default createStyles({
   cards: {
     display: "grid",
     gridTemplateColumns: "repeat(3, 1fr)",
-    margin: "0vw 8vw 4vw 12vw",
     height: "fit-content",
     [breakpoints.down("md")]: {
       gridTemplateColumns: "repeat(2, 1fr)",
@@ -102,5 +101,9 @@ export default createStyles({
     margin: "2rem",
     padding: "2rem"
   },
+
+  button: {
+    color: "#fff"
+  }
 
 });

@@ -58,8 +58,6 @@ class Jobs extends React.Component<Props, State> {
             <Typography variant="h1" className={ classes.heroText }>
               Työpaikat
             </Typography>
-            <Typography variant="h2">
-            </Typography>
           </div>
         </div>
         <div className={ classes.cards }>
@@ -106,8 +104,13 @@ class Jobs extends React.Component<Props, State> {
           </Typography>
         </CardContent>
         <CardActions>
-          <Button size="small" color="primary" onClick={ () => { window.location.href = job.link || window.location.href } }>
-            <Typography color="secondary">Lue lisää</Typography>
+          <Button
+            size="small"
+            color="primary"
+            className={ classes.button }
+            onClick={ () => { window.location.href = job.link || window.location.href } }
+          >
+            Lue lisää
           </Button>
         </CardActions>
       </Card>
