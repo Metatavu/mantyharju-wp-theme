@@ -33,7 +33,6 @@ interface State {
   placeForm: Metaform,
   formValues: Dictionary<string | number | null>
   placeFormValues: Dictionary<string | number | null>
-  media: Attachment[],
   linkedEventsPost?: Post,
   loading: boolean,
   popularPages: Page[],
@@ -50,7 +49,8 @@ interface State {
   defaultImageUrl: string,
   showDefaultImages: boolean,
   addPlaceVisibility: boolean,
-  imageUrl: string
+  imageUrl: string,
+  featureImageUrl: string[]
 }
 
 interface Dictionary<T> {
@@ -83,7 +83,6 @@ class WelcomePage extends React.Component<Props, State> {
     super(props);
     this.state = {
       posts: [],
-      media: [],
       form: {},
       placeForm: {},
       formValues: {},
@@ -101,7 +100,8 @@ class WelcomePage extends React.Component<Props, State> {
       defaultImageUrl: "",
       showDefaultImages: false,
       addPlaceVisibility: false,
-      imageUrl: ""
+      imageUrl: "",
+      featureImageUrl: []
     };
 
     this.onPick = this.onPick.bind(this);
@@ -134,13 +134,12 @@ class WelcomePage extends React.Component<Props, State> {
       loading: false
     });
 
-    const [posts, mainMenu, localeMenu, popularCategory, media] = await Promise.all(
+    const [posts, mainMenu, localeMenu, popularCategory] = await Promise.all(
       [
         api.getCustomPosts(),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }),
-        api.getWpV2Categories({ slug: ["suosittu"] }),
-        api.getWpV2Media({})
+        api.getWpV2Categories({ slug: ["suosittu"] })
       ]
     );
 
@@ -174,7 +173,6 @@ class WelcomePage extends React.Component<Props, State> {
       mainMenu: mainMenu,
       localeMenu: localeMenu,
       popularPages: popularPages,
-      media: media,
     });
 
     this.hidePageLoader();
@@ -184,6 +182,22 @@ class WelcomePage extends React.Component<Props, State> {
       this.setState({
         linkedEventsPost: linkedEventsPost
       });
+    });
+  
+    await this.getPopularPagesImageUrl();
+  }
+
+  /**
+   * Fetch PopularPages featured image URL 
+   */
+  private getPopularPagesImageUrl = () => {
+    const { popularPages } = this.state;
+    return popularPages.map(async(page) => {
+      const pageId = page.id ? page.id.toString() : "";
+      const popularImageUrl = await ApiUtils.getApi().getPostThumbnail({ id: pageId });
+      this.setState({
+        featureImageUrl: [...this.state.featureImageUrl, popularImageUrl]
+      })
     });
   }
 
@@ -776,33 +790,17 @@ class WelcomePage extends React.Component<Props, State> {
   private renderBottomSectionPosts = () => {
     const { classes } = this.props;
     const { popularPages } = this.state;
-    return popularPages.map((page) => {
+    return popularPages.map((page, index) => {
       return (
         <div
           onClick={ this.navigateTo(page.link || window.location.href) }
-          style={{ backgroundImage: `url(${ this.getAttachmentForPage(page) })` }}
+          style={{ backgroundImage: `url(${ this.state.featureImageUrl[index] ? this.state.featureImageUrl[index] : "" })` }}
           className={ classes.bottom_section_item }
         >
-          <p>{ page.title ? page.title.rendered || "" : "" }</p>
+          <p>{ ReactHtmlParser(page.title ? page.title.rendered || "" : "")}</p>
         </div>
       );
     });
-  }
-
-  /**
-   * Returns page featured image URL
-   */
-  private getAttachmentForPage = (page: Page) => {
-    let attachmentUrl = "";
-    if (this.state.media) {
-      this.state.media.map((attachment) => {
-        if (attachment.id === page.featured_media) {
-          attachmentUrl = attachment.source_url || "";
-        }
-      });
-    }
-
-    return attachmentUrl;
   }
 
   /**
