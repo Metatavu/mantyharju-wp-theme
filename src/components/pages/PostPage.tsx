@@ -113,9 +113,6 @@ class PostPage extends React.Component<Props, State> {
           <div className={ classes.pageContent }>
             <div className={ classes.breadcrumb }>
               <Breadcrumbs separator=">">
-                <Link color="inherit" href="/" onClick={() => {}}>
-                  Etusivu
-                </Link>
                 { this.state.breadcrumb && this.renderBreadcrumb() }
               </Breadcrumbs>
             </div>

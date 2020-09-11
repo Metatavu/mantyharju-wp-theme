@@ -33,7 +33,6 @@ interface State {
   placeForm: Metaform,
   formValues: Dictionary<string | number | null>
   placeFormValues: Dictionary<string | number | null>
-  media: Attachment[],
   linkedEventsPost?: Post,
   loading: boolean,
   popularPages: Page[],
@@ -83,7 +82,6 @@ class WelcomePage extends React.Component<Props, State> {
     super(props);
     this.state = {
       posts: [],
-      media: [],
       form: {},
       placeForm: {},
       formValues: {},
@@ -134,13 +132,12 @@ class WelcomePage extends React.Component<Props, State> {
       loading: false
     });
 
-    const [posts, mainMenu, localeMenu, popularCategory, media] = await Promise.all(
+    const [posts, mainMenu, localeMenu, popularCategory] = await Promise.all(
       [
         api.getCustomPosts(),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }),
-        api.getWpV2Categories({ slug: ["suosittu"] }),
-        api.getWpV2Media({})
+        api.getWpV2Categories({ slug: ["suosittu"] })
       ]
     );
 
@@ -174,7 +171,6 @@ class WelcomePage extends React.Component<Props, State> {
       mainMenu: mainMenu,
       localeMenu: localeMenu,
       popularPages: popularPages,
-      media: media,
     });
 
     this.hidePageLoader();
@@ -780,29 +776,13 @@ class WelcomePage extends React.Component<Props, State> {
       return (
         <div
           onClick={ this.navigateTo(page.link || window.location.href) }
-          style={{ backgroundImage: `url(${ this.getAttachmentForPage(page) })` }}
+          style={{ backgroundImage: `url(${ page.featured_media })` }}
           className={ classes.bottom_section_item }
         >
-          <p>{ page.title ? page.title.rendered || "" : "" }</p>
+          <p>{ ReactHtmlParser(page.title ? page.title.rendered || "" : "")}</p>
         </div>
       );
     });
-  }
-
-  /**
-   * Returns page featured image URL
-   */
-  private getAttachmentForPage = (page: Page) => {
-    let attachmentUrl = "";
-    if (this.state.media) {
-      this.state.media.map((attachment) => {
-        if (attachment.id === page.featured_media) {
-          attachmentUrl = attachment.source_url || "";
-        }
-      });
-    }
-
-    return attachmentUrl;
   }
 
   /**
