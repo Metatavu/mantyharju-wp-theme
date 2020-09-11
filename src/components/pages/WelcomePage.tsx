@@ -49,7 +49,8 @@ interface State {
   defaultImageUrl: string,
   showDefaultImages: boolean,
   addPlaceVisibility: boolean,
-  imageUrl: string
+  imageUrl: string,
+  featureImageUrl: string[]
 }
 
 interface Dictionary<T> {
@@ -99,7 +100,8 @@ class WelcomePage extends React.Component<Props, State> {
       defaultImageUrl: "",
       showDefaultImages: false,
       addPlaceVisibility: false,
-      imageUrl: ""
+      imageUrl: "",
+      featureImageUrl: []
     };
 
     this.onPick = this.onPick.bind(this);
@@ -180,6 +182,22 @@ class WelcomePage extends React.Component<Props, State> {
       this.setState({
         linkedEventsPost: linkedEventsPost
       });
+    });
+  
+    await this.getPopularPagesImageUrl();
+  }
+
+  /**
+   * Fetch PopularPages featured image URL 
+   */
+  private getPopularPagesImageUrl = () => {
+    const { popularPages } = this.state;
+    return popularPages.map(async(page) => {
+      const pageId = page.id ? page.id.toString() : "";
+      const popularImageUrl = await ApiUtils.getApi().getPostThumbnail({ id: pageId });
+      this.setState({
+        featureImageUrl: [...this.state.featureImageUrl, popularImageUrl]
+      })
     });
   }
 
@@ -772,11 +790,11 @@ class WelcomePage extends React.Component<Props, State> {
   private renderBottomSectionPosts = () => {
     const { classes } = this.props;
     const { popularPages } = this.state;
-    return popularPages.map((page) => {
+    return popularPages.map((page, index) => {
       return (
         <div
           onClick={ this.navigateTo(page.link || window.location.href) }
-          style={{ backgroundImage: `url(${ page.featured_media })` }}
+          style={{ backgroundImage: `url(${ this.state.featureImageUrl[index] ? this.state.featureImageUrl[index] : "" })` }}
           className={ classes.bottom_section_item }
         >
           <p>{ ReactHtmlParser(page.title ? page.title.rendered || "" : "")}</p>
