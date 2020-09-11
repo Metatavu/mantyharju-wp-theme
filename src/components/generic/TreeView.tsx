@@ -20,6 +20,7 @@ interface Props extends WithStyles<typeof styles> {
  */
 interface State {
   treeData: any[];
+  mobileParentOpen: boolean;
   initialOpenNodes?: string[];
 }
 
@@ -36,7 +37,8 @@ class TreeView extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      treeData: []
+      treeData: [],
+      mobileParentOpen: false
     };
   }
 
@@ -52,14 +54,31 @@ class TreeView extends React.Component<Props, State> {
    */
   public render() {
     const { classes } = this.props;
-    const { treeData, initialOpenNodes } = this.state;
+    const { treeData, initialOpenNodes, mobileParentOpen } = this.state;
+    const onMobile: boolean = window.matchMedia("(max-width: 960px)").matches;
+    const toggleIcon = (on: boolean) => on ?
+      <ExpandLessIcon htmlColor={ theme.palette.primary.main } /> :
+      <ExpandMoreIcon htmlColor={ theme.palette.primary.main } />;
     return (
       <div className={ classes.treeWrapper }>
         { initialOpenNodes !== undefined &&
           <TreeMenu data={ treeData } initialOpenNodes={ initialOpenNodes } hasSearch={ false }>
             {({ search, items }) => (
               <List disablePadding={ true } className={ classes.listRoot } >
-                { items.map((item: any) => this.renderTreeMenuItem(item)) }
+                { onMobile &&
+                  <ListItem
+                    disableGutters={ true }
+                    className={ classes.parentListItem }
+                  >
+                    Valikko
+                    <div className={ classes.iconWrapper } onClick={ this.openMobileParent }>
+                      { toggleIcon(mobileParentOpen) }
+                    </div>
+                  </ListItem>
+                }
+                { (!onMobile || mobileParentOpen) &&
+                  items.map((item: any) => this.renderTreeMenuItem(item))
+                }
               </List>
             )}
           </TreeMenu>
@@ -95,7 +114,7 @@ class TreeView extends React.Component<Props, State> {
     const { classes } = this.props;
     const toggleIcon = (on: boolean) => on ?
       <ExpandLessIcon htmlColor={ focused ? "#000" : theme.palette.primary.main } /> :
-      <ExpandMoreIcon htmlColor={ focused ? "#000" : theme.palette.primary.main }  />;
+      <ExpandMoreIcon htmlColor={ focused ? "#000" : theme.palette.primary.main } />;
     const { level, focused, hasNodes, toggleNode, isOpen, label, link, key, current } = item;
     return (
       <ListItem
@@ -128,6 +147,14 @@ class TreeView extends React.Component<Props, State> {
       toggleNode();
     }
     event.stopPropagation();
+  }
+
+  /**
+   * Method for setting mobile parent open
+   */
+  private openMobileParent = () => {
+    const { mobileParentOpen } = this.state;
+    this.setState({ mobileParentOpen: !mobileParentOpen });
   }
 }
 

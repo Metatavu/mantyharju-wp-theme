@@ -60,7 +60,7 @@ class MobileMenu extends React.Component<Props, State> {
 
     const api = ApiUtils.getApi();
 
-    const menu = await api.getTreeMenu({ slug });
+    const menu = await api.getTreeMenu({ slug: "sivut" });
 
     this.setState({
       menu: menu.tree_data as Menu[],
