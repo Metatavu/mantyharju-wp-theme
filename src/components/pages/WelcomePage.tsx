@@ -197,7 +197,7 @@ class WelcomePage extends React.Component<Props, State> {
     const api = ApiUtils.getApi();
     const result : PageWithImgUrl[] = [];
 
-    popularPages.map(async (page) => {
+    popularPages.forEach(async (page) => {
       const pageId = page.id ? page.id.toString() : "";
       const popularImageUrl = await api.getPostThumbnail({ id: pageId });
       const pageAndUrl = { ...page, featureImageUrl: popularImageUrl ? popularImageUrl : "" };
@@ -776,7 +776,7 @@ class WelcomePage extends React.Component<Props, State> {
       const parsedContent = ReactHtmlParser(linkedEventsPost.content ? linkedEventsPost.content.rendered || "" : "");
       return (
         parsedContent.splice(0, this.state.linkedEventsLimitingNumber).map((contentItem) => {
-          const link = this.getEventLink(contentItem);
+          const link = "" //this.getEventLink(contentItem);
           return (
             <>
               { link &&
