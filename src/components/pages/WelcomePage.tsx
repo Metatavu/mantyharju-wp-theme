@@ -776,7 +776,7 @@ class WelcomePage extends React.Component<Props, State> {
       const parsedContent = ReactHtmlParser(linkedEventsPost.content ? linkedEventsPost.content.rendered || "" : "");
       return (
         parsedContent.splice(0, this.state.linkedEventsLimitingNumber).map((contentItem) => {
-          const link = "" //this.getEventLink(contentItem);
+          const link = this.getEventLink(contentItem);
           return (
             <>
               { link &&
