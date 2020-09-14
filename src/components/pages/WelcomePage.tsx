@@ -35,7 +35,7 @@ interface State {
   placeFormValues: Dictionary<string | number | null>
   linkedEventsPost?: Post,
   loading: boolean,
-  popularPages: Page[],
+  popularPages: PageWithImgUrl[],
   mainMenu?: MenuLocationData,
   localeMenu?: MenuLocationData,
   scrollPosition: number,
@@ -49,12 +49,15 @@ interface State {
   defaultImageUrl: string,
   showDefaultImages: boolean,
   addPlaceVisibility: boolean,
-  imageUrl: string,
-  featureImageUrl: string[]
+  imageUrl: string
 }
 
 interface Dictionary<T> {
   [Key: string]: T;
+}
+
+interface PageWithImgUrl extends Page {
+  featureImageUrl?: string
 }
 
 const imageList = [
@@ -100,8 +103,7 @@ class WelcomePage extends React.Component<Props, State> {
       defaultImageUrl: "",
       showDefaultImages: false,
       addPlaceVisibility: false,
-      imageUrl: "",
-      featureImageUrl: []
+      imageUrl: ""
     };
 
     this.onPick = this.onPick.bind(this);
@@ -148,7 +150,7 @@ class WelcomePage extends React.Component<Props, State> {
     const popularPages = await api.getWpV2Pages({ categories: categoryIdArray, per_page: 6});
     const placeForm: Metaform = require("../../metaform-json/create-place.json");
     const form: Metaform = require("../../metaform-json/create-event.json");
-    const keywordRes = await fetch("https://mantyharju-test.linkedevents.fi/v1/keyword/?page_size=1000&data_source=mantyharju");
+    const keywordRes = await fetch("https://mantyharju.linkedevents.fi/v1/keyword/?page_size=1000&data_source=mantyharju");
     const data = await keywordRes.json();
 
     const sections = (form.sections || []).map((section) => {
@@ -172,7 +174,7 @@ class WelcomePage extends React.Component<Props, State> {
       placeForm: placeForm,
       mainMenu: mainMenu,
       localeMenu: localeMenu,
-      popularPages: popularPages,
+      popularPages: popularPages
     });
 
     this.hidePageLoader();
@@ -183,8 +185,8 @@ class WelcomePage extends React.Component<Props, State> {
         linkedEventsPost: linkedEventsPost
       });
     });
-  
-    await this.getPopularPagesImageUrl();
+
+    this.getPopularPagesImageUrl();
   }
 
   /**
@@ -192,12 +194,19 @@ class WelcomePage extends React.Component<Props, State> {
    */
   private getPopularPagesImageUrl = () => {
     const { popularPages } = this.state;
-    return popularPages.map(async(page) => {
+    const api = ApiUtils.getApi();
+    const result : PageWithImgUrl[] = [];
+
+    popularPages.map(async (page) => {
       const pageId = page.id ? page.id.toString() : "";
-      const popularImageUrl = await ApiUtils.getApi().getPostThumbnail({ id: pageId });
-      this.setState({
-        featureImageUrl: [...this.state.featureImageUrl, popularImageUrl]
-      })
+      const popularImageUrl = await api.getPostThumbnail({ id: pageId });
+      const pageAndUrl = { ...page, featureImageUrl: popularImageUrl ? popularImageUrl : "" };
+
+      return result.push(pageAndUrl);
+    });
+
+    this.setState({
+      popularPages: result
     });
   }
 
@@ -794,8 +803,9 @@ class WelcomePage extends React.Component<Props, State> {
       return (
         <div
           onClick={ this.navigateTo(page.link || window.location.href) }
-          style={{ backgroundImage: `url(${ this.state.featureImageUrl[index] ? this.state.featureImageUrl[index] : "" })` }}
+          style={{ backgroundImage: `url(${ page.featureImageUrl ? page.featureImageUrl : "" })` }}
           className={ classes.bottom_section_item }
+          key={ index }
         >
           <p>{ ReactHtmlParser(page.title ? page.title.rendered || "" : "")}</p>
         </div>
