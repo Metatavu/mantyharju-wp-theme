@@ -4,6 +4,7 @@ import WelcomePage from "./pages/WelcomePage";
 import PostPage from "./pages/PostPage";
 import PostsPage from "./pages/PostsPage";
 import SingleEventPage from "./pages/SingleEventPage";
+import ArticlePage from "./pages/article-page";
 import Announcements from "./pages/announcements";
 import News from "./pages/news";
 import Jobs from "./pages/jobs";
@@ -102,17 +103,6 @@ class App extends React.Component<Props, State> {
               )}
             />
             <Route
-              path="/:pages/:page/:pages"
-              render={ (props) => (
-                <PostPage
-                  lang={ language }
-                  slug={ this.pathToSlug(props.location.pathname) }
-                  mainPageSlug={ this.pathToTitle(props.location.pathname) }
-                  locationPath={ props.location.pathname }
-                />
-              )}
-            />
-            <Route
               path="/sivut/:page"
               exact={ true }
               render={ (props) => (
@@ -124,6 +114,45 @@ class App extends React.Component<Props, State> {
                 />
               )}
             />
+            <Route
+              path="/sivut/:page/:page"
+              exact={ true }
+              render={ (props) => (
+                <PostsPage
+                  lang={ language }
+                  slug={ this.pathToSlug(props.location.pathname) }
+                  mainPageSlug={ this.pathToTitle(props.location.pathname) }
+                  locationKey={ props.location.key }
+                />
+              )}
+            />
+            <Route
+              path="/sivut/:page/:page/:page"
+              render={ (props) => (
+                <PostPage
+                  lang={ language }
+                  slug={ this.pathToSlug(props.location.pathname) }
+                  mainPageSlug={ this.pathToTitle(props.location.pathname) }
+                  locationPath={ props.location.pathname }
+                />
+              )}
+            />
+            <Route
+              path="/:page"
+              render={ (props) => {
+                // Check for special pages
+                if (/^\/event\/|\/announcements\/$|^\/news\/$|^\/jobs\/$|^\/sivut\//.test(props.location.pathname)) {
+                  return null;
+                }
+
+                return (
+                  <ArticlePage
+                    lang={ language }
+                    slug={ this.pathToSlug(props.location.pathname) }
+                  />
+                )
+              }}
+            />
           </div>
         </BrowserRouter>
       </ThemeProvider>
@@ -132,7 +161,7 @@ class App extends React.Component<Props, State> {
 
   /**
    * Takes in a path and returns the last location
-   * 
+   *
    * @param path path as string
    */
   private pathToSlug = (path?: string) => {
