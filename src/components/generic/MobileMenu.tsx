@@ -11,6 +11,7 @@ import styles from "../../styles/mobile-menu";
 interface Props extends WithStyles<typeof styles> {
   visible: boolean;
   slug: string;
+  searchBar: JSX.Element;
   onClose(): void;
 }
 
@@ -72,7 +73,7 @@ class MobileMenu extends React.Component<Props, State> {
    * Component render method
    */
   public render() {
-    const { classes } = this.props;
+    const { classes, searchBar } = this.props;
     const { menu } = this.state;
     if (!menu) {
       return null;
@@ -104,6 +105,9 @@ class MobileMenu extends React.Component<Props, State> {
             >
               <CloseIcon fontSize="default" />
             </IconButton>
+          </div>
+          <div className={ classes.searchBar }>
+            { searchBar }
           </div>
           <div className={ classes.menuContent }>
             {

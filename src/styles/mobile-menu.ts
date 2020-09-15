@@ -17,10 +17,20 @@ export default createStyles({
       display: "none"
     }
   },
+  searchBar: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    height: "40px",
+    marginTop: 80,
+    "& input": {
+      height: "100%"
+    }
+  },
   menuContent: {
     display: "flex",
     flexDirection: "column",
-    marginTop: 80
+    marginTop: 15
   },
   menuGroup: {
     display: "flex",
