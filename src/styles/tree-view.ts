@@ -19,7 +19,6 @@ export default createStyles({
     }
   },
   parentListItem: {
-    display: "none",
     justifyContent: "space-between",
     margin: 0,
     borderBottom: "1px solid rgba(0,0,0,0.2)",

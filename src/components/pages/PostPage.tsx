@@ -125,7 +125,7 @@ class PostPage extends React.Component<Props, State> {
                 { this.renderContent() }
               </div>
                 { sideContent &&
-                <div className={ classes.sidebar } style={ isContent ? { display: "block" }: { display: "none" } } >
+                <div className={ classes.sidebar } style={ isContent ? { display: "block" } : { display: "none" } }>
                   <RightSideBar content={ sideContent } />
                 </div>
                 }

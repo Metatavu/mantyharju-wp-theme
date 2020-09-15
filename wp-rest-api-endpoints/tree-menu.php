@@ -1,11 +1,12 @@
 <?php
+
 function register_tree_menu_endpoint() {
     register_rest_route( 'wp/v2', '/treeMenu', array(
       'methods' => 'GET',
       'callback' => function (WP_REST_Request $request) {
         $slug = $request->get_param('slug');
         $page = page_by_slug($slug);
-        $mainPage = get_main_page();
+        $mainPage = get_main_page($page);
         $initial_open_nodes = get_initial_open_nodes($page);
         $treeData = build_tree($mainPage, $page);
         return array(
@@ -30,8 +31,16 @@ function register_tree_menu_endpoint() {
     return $pages[0];
   }
 
-  function get_main_page() {
-    return page_by_slug("sivut");
+  function get_main_page($page) {
+    $ancestors = get_post_ancestors($page);
+    $length = count($ancestors);
+    if ($length === 2) {
+      return $page;
+    }
+    if ($length > 2) {
+      return get_post($ancestors[count($ancestors) - 3]);
+    }
+    return page_by_slug("sivut"); 
   }
 
   function get_initial_open_nodes($page) {
@@ -78,4 +87,5 @@ function register_tree_menu_endpoint() {
     });
     return $tree_nodes;
   }
+
 ?>
