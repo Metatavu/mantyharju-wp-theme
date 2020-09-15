@@ -165,6 +165,10 @@ export interface GetCustomPagesRequest {
     parent_slug?: string;
 }
 
+export interface GetCustomPostsRequest {
+    category?: string;
+}
+
 export interface GetMenusV1LocationsByIdRequest {
     id: string;
     lang?: string;
@@ -1333,8 +1337,12 @@ export class DefaultApi extends runtime.BaseAPI {
 
     /**
      */
-    async getCustomPostsRaw(): Promise<runtime.ApiResponse<Array<CustomPost>>> {
+    async getCustomPostsRaw(requestParameters: GetCustomPostsRequest): Promise<runtime.ApiResponse<Array<CustomPost>>> {
         const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.category !== undefined) {
+            queryParameters['category'] = requestParameters.category;
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -1354,8 +1362,8 @@ export class DefaultApi extends runtime.BaseAPI {
 
     /**
      */
-    async getCustomPosts(): Promise<Array<CustomPost>> {
-        const response = await this.getCustomPostsRaw();
+    async getCustomPosts(requestParameters: GetCustomPostsRequest): Promise<Array<CustomPost>> {
+        const response = await this.getCustomPostsRaw(requestParameters);
         return await response.value();
     }
 

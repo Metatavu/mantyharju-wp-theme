@@ -174,6 +174,12 @@ export interface CustomPost {
      * @memberof CustomPost
      */
     categories?: Array<number>;
+    /**
+     * 
+     * @type {string}
+     * @memberof CustomPost
+     */
+    featured_image_url?: string;
 }
 
 export function CustomPostFromJSON(json: any): CustomPost {
@@ -212,6 +218,7 @@ export function CustomPostFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         'filter': !exists(json, 'filter') ? undefined : json['filter'],
         'link': !exists(json, 'link') ? undefined : json['link'],
         'categories': !exists(json, 'categories') ? undefined : json['categories'],
+        'featured_image_url': !exists(json, 'featured_image_url') ? undefined : json['featured_image_url'],
     };
 }
 
@@ -250,6 +257,7 @@ export function CustomPostToJSON(value?: CustomPost | null): any {
         'filter': value.filter,
         'link': value.link,
         'categories': value.categories,
+        'featured_image_url': value.featured_image_url,
     };
 }
 

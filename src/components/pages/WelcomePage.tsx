@@ -49,15 +49,26 @@ interface State {
   defaultImageUrl: string,
   showDefaultImages: boolean,
   addPlaceVisibility: boolean,
-  imageUrl: string
+  imageUrl: string,
+  newsPageLink?: string,
+  news?: PostItem[],
+  announcementsPageLink?: string,
+  announcements?: PostItem[]
 }
 
 interface Dictionary<T> {
   [Key: string]: T;
 }
 
+interface PostItem {
+  title: string;
+  link: string;
+  content?: any;
+  date?: moment.Moment;
+
 interface PageWithImgUrl extends Page {
   featureImageUrl?: string
+
 }
 
 const imageList = [
@@ -138,7 +149,7 @@ class WelcomePage extends React.Component<Props, State> {
 
     const [posts, mainMenu, localeMenu, popularCategory] = await Promise.all(
       [
-        api.getCustomPosts(),
+        api.getCustomPosts({}),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }),
         api.getWpV2Categories({ slug: ["suosittu"] })
@@ -178,14 +189,10 @@ class WelcomePage extends React.Component<Props, State> {
     });
 
     this.hidePageLoader();
-
-    api.getWpV2Posts({ slug: [ "linked-events" ], per_page: 1 }).then((linkedEventsPostArray) => {
-      const linkedEventsPost = linkedEventsPostArray.length ? linkedEventsPostArray[0] : undefined;
-      this.setState({
-        linkedEventsPost: linkedEventsPost
-      });
-    });
-
+    
+    this.getNews();
+    this.getAnnouncements();
+    this.getLinkedEvents();
     this.getPopularPagesImageUrl();
   }
 
@@ -208,6 +215,7 @@ class WelcomePage extends React.Component<Props, State> {
     this.setState({
       popularPages: result
     });
+
   }
 
   /**
@@ -222,7 +230,7 @@ class WelcomePage extends React.Component<Props, State> {
    */
   public render() {
     const { lang, slug, classes } = this.props;
-    const { linkedEventsPost } = this.state;
+    const { announcementsPageLink, newsPageLink,linkedEventsPost } = this.state;
     const showcaseImage = this.getCustomizerValue("showcase_image");
     const showcaseTitle = this.getCustomizerValue("showcase_title");
     const showcaseText = this.getCustomizerValue("showcase_text");
@@ -273,17 +281,17 @@ class WelcomePage extends React.Component<Props, State> {
               </SvgIcon>
               <Typography variant="h1">Ajankohtaista</Typography>
             </div>
-        { this.state.loading &&
-          <div className={ classes.loadingIconContainer }>
-            <CircularProgress />
-          </div>
-        }
-            {!this.state.loading &&
-              <div>
-                { this.renderNews(this.state.newsCategoryId) }
+            { !this.state.news &&
+              <div className={ classes.loadingIconContainer }>
+                <CircularProgress />
               </div>
             }
-            <Button className={ classes.postColumnButton }>katso kaikki</Button>
+            { this.state.news &&
+              <div>
+                { this.renderNews() }
+              </div>
+            }
+            <Button className={ classes.postColumnButton } onClick={ this.navigateTo(newsPageLink || window.location.href) }>katso kaikki</Button>
           </div>
           <div className= { classes.postsColumn }>
             <div className={ classes.postsHeading }>
@@ -292,17 +300,17 @@ class WelcomePage extends React.Component<Props, State> {
               </SvgIcon>
               <Typography variant="h1">Kuulutukset</Typography>
             </div>
-            { this.state.loading &&
+            { !this.state.announcements &&
               <div className={ classes.loadingIconContainer }>
                 <CircularProgress />
               </div>
             }
-            {!this.state.loading &&
-              <div>
-                { this.renderAnnouncements(this.state.announcementsCategoryId) }
+            { this.state.announcements &&
+              <div className={ classes.allPosts }>
+                { this.renderAnnouncements() }
               </div>
             }
-            <Button className={ classes.postColumnButton }>katso kaikki</Button>
+            <Button className={ classes.postColumnButton } onClick={ this.navigateTo(announcementsPageLink || window.location.href) }>katso kaikki</Button>
           </div>
           <div className={ classes.postsColumn }>
             <div className={ classes.postsHeading }>
@@ -311,17 +319,17 @@ class WelcomePage extends React.Component<Props, State> {
               </SvgIcon>
               <Typography variant="h1">Työpaikat</Typography>
             </div>
-            { this.state.loading &&
+            { !this.state.announcements &&
               <div className={ classes.loadingIconContainer }>
                 <CircularProgress />
               </div>
             }
-            { !this.state.loading &&
-              <div>
-                { this.renderAnnouncements(this.state.announcementsCategoryId) }
+            { this.state.announcements &&
+              <div className={ classes.allPosts }>
+                { this.renderAnnouncements() }
               </div>
             }
-            <Button className={ classes.postColumnButton }>katso kaikki</Button>
+            <Button className={ classes.postColumnButton } onClick={ this.navigateTo(`${ window.location.origin }/jobs/"` || window.location.href) }>katso kaikki</Button>
           </div>
         </div>
 
@@ -402,6 +410,92 @@ class WelcomePage extends React.Component<Props, State> {
   }
 
   /**
+   * Method for getting news
+   */
+  private getNews = () => {
+    const api = ApiUtils.getApi();
+    api.getWpV2Posts({ slug: [ "news" ], per_page: 1 }).then((postArray) => {
+      const post = postArray.length ? postArray[0] : undefined;
+      if (post) {
+        const postContent = post.content ? post.content.rendered : undefined;
+        if (postContent) {
+          const news = this.parsePostItems(postContent);
+          this.setState({
+            newsPageLink: post.link,
+            news: news
+          });
+        }
+      }
+    });
+  }
+
+  /**
+   * Method for getting announcements
+   */
+  private getAnnouncements = () => {
+    const api = ApiUtils.getApi();
+    api.getWpV2Posts({ slug: [ "announcements" ], per_page: 1 }).then((postArray) => {
+      const post = postArray.length ? postArray[0] : undefined;
+      if (post) {
+        const postContent = post.content ? post.content.rendered : undefined;
+        if (postContent) {
+          const announcements = this.parsePostItems(postContent);
+          this.setState({
+            announcementsPageLink: post.link,
+            announcements: announcements
+          });
+        }
+      }
+    });
+  }
+
+  /**
+   * Method for getting linked events
+   */
+  private getLinkedEvents = () => {
+    const api = ApiUtils.getApi();
+    api.getWpV2Posts({ slug: [ "linked-events" ], per_page: 1 }).then((linkedEventsPostArray) => {
+      const linkedEventsPost = linkedEventsPostArray.length ? linkedEventsPostArray[0] : undefined;
+      this.setState({
+        linkedEventsPost: linkedEventsPost
+      });
+    });
+  }
+
+  /**
+   * Method for parsing post items
+   *
+   * @param postContent post content
+   */
+  private parsePostItems = (postContent: string): PostItem[] => {
+    const listTags = postContent.match(/<li.*?>.*?<\/li>/g); // Matches all <li> tags and their children
+    if (listTags) {
+      const listChildren = listTags.map(tag => {
+        const match = tag.match(/<a.*?>.*?<\/a>(<time.*?>.*?<\/time>)?(<div.*?>.*?<\/div>)?/g); // Matches all <a>, <time> and <div> tags along with their children
+        if (match) {
+          return match[0];
+        }
+        return "";
+      });
+      const postItems = listChildren.map((child) => {
+        const title = child.replace(/^.*?<a.*?>|<\/a>.*$/g, ""); // Filters everything but <a> tag text
+        const link = child.replace(/^.*?<a.*?href="|".*?>.*$/g, ""); // Filters everything but <a> tag href text
+        const content = child.replace(/^.*?<div.*?>|<\/div.*$|<a.*?<\/a>|<time.*?>.*?<\/time>/g, ""); // Filters everything but <div> tag children
+        const dateString = child.replace(/^.*?<time.*?datetime="|<a.*?<\/a>|<div.*?>.*?<\/div>|".*$/g, ""); // Filters everything but <time> tag datetime attribute value
+        const postItem: PostItem = {
+          title: title,
+          link: link,
+          content: content ? ReactHtmlParser(content) : undefined,
+          date: dateString ? moment(dateString) : undefined
+        };
+        return postItem;
+      });
+      return postItems;
+    }
+    return [];
+  }
+
+  /**
    * Sets modal state to open
    */
   private openModal = () => {
@@ -464,7 +558,7 @@ class WelcomePage extends React.Component<Props, State> {
         <div>
           <input type="checkbox" onChange={this.showDefaultImages}/>
           <div  className={classes.reactAddLocationWrapper} style={this.state.showDefaultImages && !this.state.imageUrl ? {display:"block"} : {display:"none"}}>
-            <ImagePicker 
+            <ImagePicker
               images={imageList.map((image, i) => ({src: image, value: i}))}
               onPick={this.onPick}
             />
@@ -699,69 +793,63 @@ class WelcomePage extends React.Component<Props, State> {
         placeFormValues["submit"] = "place";
 
         api.postWpV2Event({ event: placeFormValues });
-        this.setState({placeFormValues: {}})
+        this.setState({placeFormValues: {}});
       } catch (error) {
-          alert("Virhe paikan lisäämisessä, tarkista pakolliset kentät ja yritä uudelleen")
+          alert("Virhe paikan lisäämisessä, tarkista pakolliset kentät ja yritä uudelleen");
       }
     }
   }
 
   /**
    * Render News posts
-   *
-   * TODO: Get linkedEventsPost not by the hardcoded post ID
    */
-  private renderNews = (categoryId: number) => {
+  private renderNews = () => {
     const { classes } = this.props;
-    const newsPost = this.getLimitedPosts(categoryId, 1)[0];
-    if (!newsPost) {
-      return null;
-    } else {
-      const parsedContent = ReactHtmlParser(newsPost.post_content || "");
-      return (
-        parsedContent.splice(0, 4).map((contentItem) => {
-          return (
-            <div className={ classes.allPosts }>
-              <div className={ classes.singleNewsPost }>
-                { contentItem }
-              </div>
-            </div>
-          );
-        })
-      );
+    const { news } = this.state;
+
+    if (!news) {
+      return;
     }
+
+    return news.map((newsItem: PostItem) => (
+      <div className={ classes.singlePost }>
+        <p className={ classes.postDate }>{ newsItem.date ? newsItem.date.format("DD.MM.YYYY") : "" }</p>
+        <div className={ classes.postContent }>
+          <a href={ newsItem.link }>
+            <p>
+              { newsItem.title }
+            </p>
+          </a>
+        </div>
+        <hr />
+      </div>
+    ));
   }
 
   /**
    * Render Announcements posts
    */
-  private renderAnnouncements = (categoryId: number) => {
+  private renderAnnouncements = () => {
     const { classes } = this.props;
-    if (!this.state.posts.length) {
+    const { announcements } = this.state;
+
+    if (!announcements) {
       return null;
-    } else {
-      return (
-        this.getLimitedPosts(categoryId, 3).map((post) => {
-          if ((post.categories ? post.categories : new Array()).includes(categoryId)) {
-            const postsArray = new Array();
-            postsArray.concat(post);
-            return(
-              <div className={ classes.allPosts}>
-                <div className={ classes.singlePost }>
-                  <p className={ classes.postDate }>{ ReactHtmlParser(!post.post_date ? "" : moment(post.post_date).format("DD.MM.YYYY")) }</p>
-                  <div className={ classes.postContent }>
-                    { ReactHtmlParser(post.post_content || "") }
-                  </div>
-                  <hr />
-                </div>
-              </div>
-            );
-          } else {
-            return null;
-          }
-        })
-      );
     }
+
+    return announcements.map((announcement: PostItem) => (
+      <div className={ classes.singlePost }>
+        <p className={ classes.postDate }>{ announcement.date ? announcement.date.format("DD.MM.YYYY") : "" }</p>
+        <div className={ classes.postContent }>
+          <a href={ announcement.link }>
+            <p>
+              { announcement.title }
+            </p>
+          </a>
+        </div>
+        <hr />
+      </div>
+    ));
   }
 
   /**

@@ -4688,6 +4688,12 @@ paths:
       operationId: GetCustomPages
   /wp/v2/customPosts:
     get:
+      parameters:
+        - name: category
+          in: query
+          description: Category slug
+          schema:
+            type: string
       security:
         - cookieAuth: []
       responses:
@@ -6312,3 +6318,5 @@ components:
           type: array
           items:
             type: integer
+        featured_image_url:
+          type: string
