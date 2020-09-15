@@ -65,6 +65,7 @@ interface PostItem {
   link: string;
   content?: any;
   date?: moment.Moment;
+}
 
 interface PageWithImgUrl extends Page {
   featureImageUrl?: string
