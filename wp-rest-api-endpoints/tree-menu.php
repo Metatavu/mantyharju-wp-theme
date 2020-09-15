@@ -46,7 +46,7 @@ function register_tree_menu_endpoint() {
   function get_initial_open_nodes($page) {
     $initial_open_nodes = array("$page->ID");
     $current = $page;
-    while (wp_get_post_parent_id($current)) {
+    while (wp_get_post_parent_id(wp_get_post_parent_id(wp_get_post_parent_id(wp_get_post_parent_id($current))))) {
       $parentId = wp_get_post_parent_id($current);
       $current = get_post($parentId);
       $id = "$current->ID";
