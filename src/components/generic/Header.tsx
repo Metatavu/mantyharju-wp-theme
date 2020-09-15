@@ -89,6 +89,25 @@ class Header extends React.Component<Props, State> {
       zIndex: 1000,
     };
 
+    const searchBar: JSX.Element = (
+      <React.Fragment>
+        <Autocomplete
+          getItemValue={ this.getItemValue }
+          items={ results }
+          renderItem={ this.renderItem }
+          value={ searchString }
+          onChange={ this.setSearchString }
+          onSelect={ this.selectItem }
+          menuStyle={ menuStyle }
+        />
+        <div className={ classes.searchIconWrapper }>
+          <SvgIcon color="secondary" >
+            { searchIconVectorPath }
+          </SvgIcon>
+        </div>
+      </React.Fragment>
+    );
+
     let menuWrapperStyles = classNames( classes.menuWrapper );
     if ( scrollPosition > 88 ) {
       menuWrapperStyles = classNames( classes.menuWrapper, "fixed" );
@@ -109,20 +128,7 @@ class Header extends React.Component<Props, State> {
                 </div>
                   { this.renderTopMenu() }
                   <div className={ classes.searchBar }>
-                    <Autocomplete
-                      getItemValue={ this.getItemValue }
-                      items={ results }
-                      renderItem={ this.renderItem }
-                      value={ searchString }
-                      onChange={ this.setSearchString }
-                      onSelect={ this.selectItem }
-                      menuStyle={ menuStyle }
-                      />
-                    <div className={ classes.searchIconWrapper }>
-                      <SvgIcon color="secondary" >
-                        { searchIconVectorPath }
-                      </SvgIcon>
-                    </div>
+                    { searchBar }
                   </div>
               </div>
             </Hidden>
@@ -149,6 +155,7 @@ class Header extends React.Component<Props, State> {
           slug={ this.props.slug }
           onClose={ () => this.setState({ mobileMenuVisible: false }) }
           visible={ this.state.mobileMenuVisible }
+          searchBar={ searchBar }
         />
       </>
     );
