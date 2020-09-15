@@ -2,9 +2,14 @@ import * as React from "react";
 import { BrowserRouter, Route } from "react-router-dom";
 import WelcomePage from "./pages/WelcomePage";
 import PostPage from "./pages/PostPage";
+import PostsPage from "./pages/PostsPage";
+import SingleEventPage from "./pages/SingleEventPage";
+import Announcements from "./pages/announcements";
+import News from "./pages/news";
+import Jobs from "./pages/jobs";
 import { CssBaseline, responsiveFontSizes } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
-import pedanetTheme from "../styles/theme";
+import mantyharjuTheme from "../styles/theme";
 import * as qs from "query-string";
 import strings from "../localization/strings";
 
@@ -23,7 +28,7 @@ interface State {
 /**
  * Material UI's automated responsive font sizes
  */
-const theme = responsiveFontSizes(pedanetTheme);
+const theme = responsiveFontSizes(mantyharjuTheme);
 
 /**
  * App component
@@ -49,16 +54,73 @@ class App extends React.Component<Props, State> {
               render={ (props) => (
                 <WelcomePage
                   lang={language}
+                  slug={ this.pathToSlug(props.location.pathname) }
                 />
               )}
             />
             <Route
-              path="/:slug"
+              path="/event/:page"
+              exact={ true }
+              render={ (props) => (
+                <SingleEventPage
+                  lang={ language }
+                  slug={ this.pathToSlug(props.location.pathname) }
+                  mainPageSlug={ this.pathToTitle(props.location.pathname) }
+                  locationKey={ props.location.key }
+                  eventId={ this.pathToSlug(props.location.pathname) }
+                />
+              )}
+            />
+            <Route
+              path="/announcements/"
+              exact={ true }
+              render={ (props) => (
+                <Announcements
+                  lang={ language }
+                  slug={ this.pathToSlug(props.location.pathname) }
+                />
+              )}
+            />
+            <Route
+              path="/news/"
+              exact={ true }
+              render={ (props) => (
+                <News
+                  lang={ language }
+                  slug={ this.pathToSlug(props.location.pathname) }
+                />
+              )}
+            />
+            <Route
+              path="/jobs/"
+              exact={ true }
+              render={ (props) => (
+                <Jobs
+                  lang={ language }
+                  slug={ this.pathToSlug(props.location.pathname) }
+                />
+              )}
+            />
+            <Route
+              path="/:pages/:page/:pages"
               render={ (props) => (
                 <PostPage
                   lang={ language }
                   slug={ this.pathToSlug(props.location.pathname) }
                   mainPageSlug={ this.pathToTitle(props.location.pathname) }
+                  locationPath={ props.location.pathname }
+                />
+              )}
+            />
+            <Route
+              path="/sivut/:page"
+              exact={ true }
+              render={ (props) => (
+                <PostsPage
+                  lang={ language }
+                  slug={ this.pathToSlug(props.location.pathname) }
+                  mainPageSlug={ this.pathToTitle(props.location.pathname) }
+                  locationKey={ props.location.key }
                 />
               )}
             />

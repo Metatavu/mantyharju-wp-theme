@@ -3,7 +3,7 @@ import BasicLayout from "../BasicLayout";
 import { Container, WithStyles, withStyles, Button, Breadcrumbs, Link, Typography } from "@material-ui/core";
 import styles from "../../styles/page-content";
 import ApiUtils from "../../../src/utils/ApiUtils";
-import { Page, Post, MenuLocationData, PostTitle } from "../../../src/generated/client/src";
+import { Page, Post, MenuLocationData, PostTitle, CustomPage } from "../../../src/generated/client/src";
 import ReactHtmlParser, { convertNodeToElement } from "react-html-parser";
 import { DomElement } from "domhandler";
 import strings from "../../localization/strings";
@@ -13,6 +13,7 @@ import * as moment from "moment";
 import "../../../node_modules/react-simple-tree-menu/dist/main.css";
 import TreeView from "../generic/TreeView";
 import RightSideBar from "../generic/RightSideBar";
+import hero from "../../resources/img/postHeader.png";
 
 /**
  * Interface representing component properties
@@ -21,22 +22,28 @@ interface Props extends WithStyles<typeof styles> {
   slug: string
   lang: string
   mainPageSlug: string
+  locationPath: string
 }
 
 /**
  * Interface representing component state
  */
 interface State {
-  page?: Page;
+  currentPage?: Page;
+  parentPage?: Page;
   post?: Post;
+  title: string;
   loading: boolean;
   isArticle: boolean;
-  heroBanner?: React.ReactElement;
-  heroContent?: React.ReactElement;
+  pageTitle?: PostTitle;
   nav?: MenuLocationData;
   breadcrumb: Breadcrumb[];
-  pageTitle?: PostTitle;
-  title: string;
+  mainContent?: React.ReactElement;
+  sideContent?: React.ReactElement;
+  pages: CustomPage[];
+  sideMenuParentPage?: Page;
+  leftMenuCurrentTopPage?: Page;
+  postThumbnail: string;
 }
 
 /**
@@ -52,6 +59,8 @@ interface Breadcrumb {
  */
 class PostPage extends React.Component<Props, State> {
 
+  private contentParsed: boolean;
+
   /**
    * Constructor
    *
@@ -63,7 +72,9 @@ class PostPage extends React.Component<Props, State> {
       isArticle: false,
       loading: false,
       breadcrumb: [],
-      title: ""
+      title: "",
+      pages: [],
+      postThumbnail: ""
     };
   }
 
@@ -87,32 +98,34 @@ class PostPage extends React.Component<Props, State> {
    * Component render method
    */
   public render() {
-    const { classes, lang, slug } = this.props;
-    const { title } = this.state;
-
+    const { classes, lang, slug, locationPath } = this.props;
+    const { sideContent, currentPage, postThumbnail } = this.state;
+    const loactionPathnameArrayRaw = (locationPath ? locationPath.replace(/\//g, " ") || "" : "").split(" ");
+    const loacationPathnameArray = loactionPathnameArrayRaw.splice(1, (loactionPathnameArrayRaw.length -1 ) - 1);
+    const checkContent = React.Children.map(sideContent, child => child ? child.props.children.length : 0);
+    const isContent = (checkContent ? (checkContent[0] === 0 ? false : true) : false);
     return (
-      <BasicLayout lang={ lang } title={ this.setTitleSource() }>
+      <BasicLayout lang={ lang } slug={ slug } title={ this.setTitleSource() }>
+        <div className={ classes.heroImageDiv } style={{ backgroundImage: `url(${ postThumbnail ? postThumbnail : hero })` }}>
+          <h1 className={ classes.heroText }>{ currentPage ? ReactHtmlParser(currentPage.title ? currentPage.title.rendered || "" : "") : null }</h1>
+        </div>
         <div className={ classes.wrapper }>
           <div className={ classes.pageContent }>
             <div className={ classes.breadcrumb }>
               <Breadcrumbs separator=">">
-                <Link color="inherit" href="/" onClick={() => {}}>
-                  Etusivu
-                </Link>
                 { this.state.breadcrumb && this.renderBreadcrumb() }
               </Breadcrumbs>
             </div>
             <div className={ classes.columns }>
-              <div className={ classes.sidebar }>
-                <Typography variant="h5">{ title }</Typography>
-                <TreeView lang={ lang } slug={ slug } />
-              </div>
+              <TreeView slug={ slug } />
               <div className={ classes.contentarea }>
                 { this.renderContent() }
               </div>
-              <div className={ classes.sidebar }>
-                <RightSideBar />
-              </div>
+                { sideContent &&
+                <div className={ classes.sidebar } style={ isContent ? { display: "block" } : { display: "none" } }>
+                  <RightSideBar content={ sideContent } />
+                </div>
+                }
             </div>
           </div>
         </div>
@@ -128,7 +141,7 @@ class PostPage extends React.Component<Props, State> {
     return breadcrumb.map((crumb) => {
       return (
         <Link color="inherit" href={ crumb.link } onClick={() => {}}>
-          { crumb.label }
+          { ReactHtmlParser(crumb.label ? crumb.label || "" : "") }
         </Link>
       );
     });
@@ -139,9 +152,10 @@ class PostPage extends React.Component<Props, State> {
    */
   private renderContent = () => {
     const { classes } = this.props;
-
+    const page = this.state.currentPage;
     return (
       <Container className={ classNames( classes.root, this.state.isArticle && "article") }>
+        <h2>{ page ? ReactHtmlParser(page.title ? page.title.rendered || "" : "") : null }</h2>
         { this.renderPostContent() }
       </Container>
     );
@@ -155,6 +169,9 @@ class PostPage extends React.Component<Props, State> {
       loading: true
     });
 
+    const { locationPath } = this.props;
+    const loactionPathnameArrayRaw = (locationPath ? locationPath.replace(/\//g, " ") || "" : "").split(" ");
+    const loacationPathnameArray = loactionPathnameArrayRaw.splice(1, (loactionPathnameArrayRaw.length -1 ) - 1);
     const lang = this.props.lang;
     const slugParts = this.props.slug.split("/");
     const slug = slugParts.pop() || slugParts.pop();
@@ -171,22 +188,32 @@ class PostPage extends React.Component<Props, State> {
       api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
       api.getWpV2Pages({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
       api.getWpV2Posts({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
-      api.getWpV2Pages({ per_page: 100 })
+      api.getCustomPages({ parent_slug: "sivut" }),
+      api.getWpV2Pages({ slug: [ "sivut" ] }),
+      api.getWpV2Pages({ slug: [ loacationPathnameArray[1] ] }),
+      api.getPostThumbnail({ slug: slug })
     ]);
 
-    const page = apiCalls[0][0];
+    const currentPage = apiCalls[0][0];
     const post = apiCalls[1][0];
     const nav = apiCalls[2];
     const pageTitle = apiCalls[3][0].title || apiCalls[4][0].title;
     const pages = apiCalls[5];
+    const parentPage = apiCalls[6][0];
+    const leftMenuCurrentTopPage = apiCalls[7][0];
+    const postThumbnail = apiCalls[8];
 
     this.setState({
-      page: page,
+      currentPage: currentPage,
       post: post,
       isArticle: !!post,
       loading: false,
       nav: nav,
-      pageTitle: pageTitle
+      pageTitle: pageTitle,
+      pages: pages,
+      parentPage: parentPage,
+      leftMenuCurrentTopPage: leftMenuCurrentTopPage,
+      postThumbnail: postThumbnail
     });
 
     this.breadcrumbPath(pages);
@@ -198,8 +225,8 @@ class PostPage extends React.Component<Props, State> {
    *
    * @param pages page array
    */
-  private breadcrumbPath = (pages: Page[]) => {
-    const mainPages = pages.filter(item => item.parent === 0);
+  private breadcrumbPath = (pages: CustomPage[]) => {
+    const mainPages = pages.filter(item => item.post_parent === 0);
     this.buildPath(mainPages, pages);
   }
 
@@ -210,17 +237,17 @@ class PostPage extends React.Component<Props, State> {
    * @param pages all pages array
    * @param path collected breadcumbs
    */
-  private buildPath = (children: Page[], pages: Page[], path?: Breadcrumb[]) => {
-    const { page } = this.state;
+  private buildPath = (children: CustomPage[], pages: CustomPage[], path?: Breadcrumb[]) => {
+    const { currentPage } = this.state;
     children.forEach(childPage => {
-      const childPages = pages.filter(item => item.parent === childPage.id);     
-      if (page && (page.id === childPage.id) && childPage.title) {
+      const childPages = pages.filter(item => item.post_parent === childPage.ID);
+      if (currentPage && (currentPage.id === childPage.ID) && childPage.post_title) {
         this.setState({
-          title: childPage.title.rendered || "",
-          breadcrumb: path ? [...path, { label: childPage.title.rendered || "", link: childPage.link || "" }] : [{ label: childPage.title.rendered || "", link: childPage.link || "" }]
+          title: childPage.post_title || "",
+          breadcrumb: path ? [...path, { label: childPage.post_title || "", link: childPage.link || "" }] : [{ label: childPage.post_title || "", link: childPage.link || "" }]
         });
-      } else if (childPages && childPage.title) {
-        this.buildPath(childPages, pages, path ? [...path, { label: childPage.title.rendered || "", link: childPage.link || "" }] : [{ label: childPage.title.rendered || "", link: childPage.link || "" }]);
+      } else if (childPages && childPage.post_title) {
+        this.buildPath(childPages, pages, path ? [...path, { label: childPage.post_title || "", link: childPage.link || "" }] : [{ label: childPage.post_title || "", link: childPage.link || "" }]);
       }
     });
   }
@@ -230,6 +257,8 @@ class PostPage extends React.Component<Props, State> {
    */
   private renderPostContent = () => {
     const { classes, lang } = this.props;
+    const { mainContent } = this.state;
+    const content = this.getPageOrPostContent();
     moment.locale(lang);
     return (
       <div className={
@@ -237,8 +266,11 @@ class PostPage extends React.Component<Props, State> {
         this.state.isArticle && "article")
         }
       >
+      { !this.state.loading && !mainContent &&
+        content
+      }
       { !this.state.loading &&
-        this.getPageOrPostContent()
+        mainContent
       }
     </div>
     );
@@ -276,21 +308,20 @@ class PostPage extends React.Component<Props, State> {
    * Set html source for page content
    */
   private getPageOrPostContent = () => {
-    const {page, post} = this.state;
+    const {currentPage, post} = this.state;
 
     const noContentError = <h2 className="error-text">{ strings.pageNotFound }</h2>;
     const undefinedContentError = <h2 className="error-text">{ strings.somethingWentWrong }</h2>;
-    if (!page && !post) {
+    if (!currentPage && !post) {
       return noContentError;
     }
 
-    const renderedContent = page && page.content ? page.content.rendered : post && post.content ? post.content.rendered : undefined;
+    const renderedContent = currentPage && currentPage.content ? currentPage.content.rendered : post && post.content ? post.content.rendered : undefined;
     if (!renderedContent) {
       return undefinedContentError;
     }
 
     return ReactHtmlParser(renderedContent, { transform: this.transformContent });
-
   }
 
   /**
@@ -324,6 +355,16 @@ class PostPage extends React.Component<Props, State> {
   }
 
   /**
+   * transform without changes
+   *
+   * @param node DomElement
+   * @param index DomElement index
+   */
+  private transform = (node: DomElement, index: number) => {
+    return convertNodeToElement(node, index, this.transform);
+  }
+
+  /**
    * transform html source content before it is rendered
    *
    * @param node DomElement
@@ -332,6 +373,16 @@ class PostPage extends React.Component<Props, State> {
   private transformContent = (node: DomElement, index: number) => {
     const { classes } = this.props;
     const classNames = this.getElementClasses(node);
+
+    if (classNames.indexOf("wp-block-columns") > -1 && node.children && node.children.length > 3 && !this.contentParsed) {
+      this.contentParsed = true;
+      const mainContent = convertNodeToElement(node.children[1], index, this.transform);
+      const sideContent = convertNodeToElement(node.children[3], index, this.transform);
+      this.setState({
+        mainContent: mainContent,
+        sideContent: sideContent
+      });
+    }
 
     // Find any buttons and replace them with Material UI button
     if (classNames.indexOf("wp-block-button") > -1) {
@@ -350,5 +401,4 @@ class PostPage extends React.Component<Props, State> {
     return convertNodeToElement(node, index, this.transformContent);
   }
 }
-
 export default withStyles(styles)(PostPage);

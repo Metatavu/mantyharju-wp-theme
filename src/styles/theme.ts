@@ -3,13 +3,18 @@ import { createMuiTheme, responsiveFontSizes } from "@material-ui/core";
 let theme = createMuiTheme();
 theme = responsiveFontSizes(theme);
 
+const { breakpoints } = theme;
+
 export default createMuiTheme({
   palette: {
     primary: {
-      main: "#082b45",
-      dark: "#26201E"
+      main: "#00AAAD",
+      dark: "#019698"
     },
-    secondary: { main: "#C24A49" },
+    secondary: { 
+      main: "#fff",
+      dark: "#eee"
+    },
     background: {
       default: "#ffffff",
       paper: "#F5EFEA"
@@ -22,101 +27,151 @@ export default createMuiTheme({
     }
   },
   typography: {
-    fontFamily: "tt_norms_proregular",
+    // Tells Material UI the font-size on the html element.
+    htmlFontSize: 16,
+    fontFamily: "Open Sans, sans-serif",
     h1: {
-      fontFamily: "tt_norms_promedium",
-      fontWeight: "normal"
+      fontFamily: "Open Sans, sans-serif",
+      fontWeight: 900
     },
     h2: {
-      fontFamily: "tt_norms_promedium",
-      fontWeight: "normal"
+      fontFamily: "Open Sans, sans-serif",
+      fontWeight: 600
     },
     h3: {
-      fontFamily: "tt_norms_promedium",
-      fontWeight: "normal"
+      fontFamily: "Open Sans, sans-serif",
+      fontWeight: 600
     },
     h4: {
-      fontFamily: "tt_norms_promedium",
-      fontWeight: "normal"
+      fontFamily: "Open Sans, sans-serif",
+      fontWeight: 600
     },
     h5: {
-      fontFamily: "tt_norms_promedium",
-      fontWeight: "normal"
+      fontFamily: "Open Sans, sans-serif",
+      fontWeight: 600
+    },
+    h6: {
+      fontFamily: "Open Sans, sans-serif",
+      fontWeight: 600
     },
     body1: {
-      fontFamily: "tt_norms_proregular",
+      fontFamily: "Rubik, sans-serif",
       fontWeight: "normal"
     },
     body2: {
-      fontFamily: "tt_norms_proregular",
-      fontWeight: "normal"
+      fontFamily: "Open Sans, sans-serif",
+      fontWeight: "normal",
+      fontSize: 16,
+      lineHeight: "1.8rem"
     },
     subtitle1: {
-      fontFamily: "tt_norms_proregular",
-      fontWeight: "normal"
+      fontFamily: "Open Sans, sans-serif",
+      fontWeight: "normal",
+      textTransform: "uppercase",
+      fontSize: "14px",
+      [breakpoints.up("sm")]: {
+        fontSize: "16px",
+      },
     },
     subtitle2: {
-      fontFamily: "tt_norms_promedium",
-      fontWeight: "normal"
+      fontFamily: "Rubik, sans-serif",
+      fontWeight: 600
     }
   },
   overrides: {
+    MuiBreadcrumbs: {
+      li: {
+        fontFamily: "Open Sans, sans-serif",
+        fontSize: 14,
+        color: "#717171",
+        "&:last-child": {
+          color: "#00AAAD"
+        }
+      },
+      separator: {
+        fontFamily: "Open Sans, sans-serif",
+        fontSize: 14,
+        color: "#717171"
+      }
+    },
     MuiButton: {
+      root: {
+        borderRadius: 0,
+        paddingLeft: "2rem",
+        paddingRight: "2rem",
+        "&:hover": {
+          backgroundColor: "rgba(0, 170, 173, 0.9)"
+        }
+      },
       label: {
-        fontSize: "1rem",
-        whiteSpace: "nowrap",
+        fontFamily: "Open Sans, sans-serif",
+        fontWeight: 600,
+        fontSize: 14,
+        [breakpoints.up("sm")]: {
+          fontSize: 16,
+        },
+        [breakpoints.up("md")]: {
+          fontSize: 20,
+        }
       },
       text: {
-        fontFamily: theme.typography.h1.fontFamily,
-        fontSize: theme.typography.h6.fontSize
       },
       outlinedPrimary: {
-        justifyContent: "space-between",
-        textTransform: "initial",
-        height: 55,
-        borderRadius: 0,
-        padding: "5px 15px",
-        border: "1px solid rgba(245, 239, 234, 0.8)",
-        borderWidth: 3,
-        "&:hover": {
-          borderWidth: 3,
+      }
+    },
+    MuiListItem: {
+      root: {
+        "&.Mui-selected": {
+          backgroundColor: "transparent",
+          textDecoration: "underline",
+          fontWeight: "bold"
         },
-        "&:active": {
-          borderWidth: 3,
+        "&.Mui-selected:hover": {
+          backgroundColor: "transparent",
+          textDecoration: "underline",
+          fontWeight: "bold"
         }
+      }
+    },
+    MuiPaper: {
+      root: {
+        backgroundColor: "#fff"
       }
     },
     MuiInputBase: {
-      input: {
-        fontSize: "2rem"
-      },
     },
     MuiInputLabel: {
-      root: {
-        fontSize: "1.6rem",
-        color: "#F5EFEA"
-      }
     },
     MuiFormLabel: {
-      root: {
-        color: "#F5EFEA",
-        "&$focused": {
-          color: "rgba(245, 239, 234, 0.5)"
+    },
+    MuiInput: {
+    },
+    MuiAccordion: {
+      rounded: {
+        borderRadius: 0,
+        "&:last-child": {
+          borderBottomLeftRadius: 0,
+          borderBottomRightRadius: 0
+        },
+        "&:first-child": {
+          borderTopLeftRadius: 0,
+          borderTopRightRadius: 0
         }
       }
     },
-    MuiInput: {
-      underline: {
-        "&:before": {
-          borderBottom: "3px solid #F5EFEA"
-        },
-        "&:after": {
-          borderBottom: "3px solid rgba(245, 239, 234, 0.8)"
-        },
-        "&:hover:not($disabled):before": {
-          borderBottom: "3px solid rgba(245, 239, 234, 0.2)"
-        },
+    MuiAccordionDetails: {
+      root: {
+        flexDirection: "column"
       }
+    }
+  },
+  props: {
+    MuiButton: {
+      variant: "contained",
+      color: "primary",
+    },
+    MuiAccordion: {
+      elevation: 0
     }
   }
 });

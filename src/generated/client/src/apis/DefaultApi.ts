@@ -23,9 +23,21 @@ import {
     Comment,
     CommentFromJSON,
     CommentToJSON,
+    CustomPage,
+    CustomPageFromJSON,
+    CustomPageToJSON,
+    CustomPost,
+    CustomPostFromJSON,
+    CustomPostToJSON,
     CustomTaxonomy,
     CustomTaxonomyFromJSON,
     CustomTaxonomyToJSON,
+    CustomizeField,
+    CustomizeFieldFromJSON,
+    CustomizeFieldToJSON,
+    Event,
+    EventFromJSON,
+    EventToJSON,
     Menu,
     MenuFromJSON,
     MenuToJSON,
@@ -71,6 +83,9 @@ import {
     Theme,
     ThemeFromJSON,
     ThemeToJSON,
+    TreeMenu,
+    TreeMenuFromJSON,
+    TreeMenuToJSON,
     Type,
     TypeFromJSON,
     TypeToJSON,
@@ -146,6 +161,14 @@ export interface DeleteWpV2UsersMeRequest {
     force?: boolean;
 }
 
+export interface GetCustomPagesRequest {
+    parent_slug?: string;
+}
+
+export interface GetCustomPostsRequest {
+    category?: string;
+}
+
 export interface GetMenusV1LocationsByIdRequest {
     id: string;
     lang?: string;
@@ -153,6 +176,15 @@ export interface GetMenusV1LocationsByIdRequest {
 
 export interface GetMenusV1MenusByIdRequest {
     id: string;
+}
+
+export interface GetPostThumbnailRequest {
+    id?: string;
+    slug?: string;
+}
+
+export interface GetTreeMenuRequest {
+    slug: string;
 }
 
 export interface GetWpV2BlockRendererByNameRequest {
@@ -585,6 +617,10 @@ export interface PostWpV2CommentsByIdRequest {
     post?: number;
     status?: string;
     meta?: string;
+}
+
+export interface PostWpV2EventRequest {
+    event?: Event;
 }
 
 export interface PostWpV2MediaRequest {
@@ -1269,6 +1305,70 @@ export class DefaultApi extends runtime.BaseAPI {
 
     /**
      */
+    async getCustomPagesRaw(requestParameters: GetCustomPagesRequest): Promise<runtime.ApiResponse<Array<CustomPage>>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.parent_slug !== undefined) {
+            queryParameters['parent_slug'] = requestParameters.parent_slug;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-WP-Nonce"] = this.configuration.apiKey("X-WP-Nonce"); // cookieAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/wp/v2/customPages`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(CustomPageFromJSON));
+    }
+
+    /**
+     */
+    async getCustomPages(requestParameters: GetCustomPagesRequest): Promise<Array<CustomPage>> {
+        const response = await this.getCustomPagesRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async getCustomPostsRaw(requestParameters: GetCustomPostsRequest): Promise<runtime.ApiResponse<Array<CustomPost>>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.category !== undefined) {
+            queryParameters['category'] = requestParameters.category;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-WP-Nonce"] = this.configuration.apiKey("X-WP-Nonce"); // cookieAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/wp/v2/customPosts`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(CustomPostFromJSON));
+    }
+
+    /**
+     */
+    async getCustomPosts(requestParameters: GetCustomPostsRequest): Promise<Array<CustomPost>> {
+        const response = await this.getCustomPostsRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
     async getMenusV1LocationsRaw(): Promise<runtime.ApiResponse<Array<MenuLocation>>> {
         const queryParameters: runtime.HTTPQuery = {};
 
@@ -1388,6 +1488,74 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async getMenusV1MenusById(requestParameters: GetMenusV1MenusByIdRequest): Promise<MenuData> {
         const response = await this.getMenusV1MenusByIdRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async getPostThumbnailRaw(requestParameters: GetPostThumbnailRequest): Promise<runtime.ApiResponse<string>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.id !== undefined) {
+            queryParameters['id'] = requestParameters.id;
+        }
+
+        if (requestParameters.slug !== undefined) {
+            queryParameters['slug'] = requestParameters.slug;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-WP-Nonce"] = this.configuration.apiKey("X-WP-Nonce"); // cookieAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/wp/v2/postThumbnail`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.TextApiResponse(response) as any;
+    }
+
+    /**
+     */
+    async getPostThumbnail(requestParameters: GetPostThumbnailRequest): Promise<string> {
+        const response = await this.getPostThumbnailRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async getTreeMenuRaw(requestParameters: GetTreeMenuRequest): Promise<runtime.ApiResponse<TreeMenu>> {
+        if (requestParameters.slug === null || requestParameters.slug === undefined) {
+            throw new runtime.RequiredError('slug','Required parameter requestParameters.slug was null or undefined when calling getTreeMenu.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-WP-Nonce"] = this.configuration.apiKey("X-WP-Nonce"); // cookieAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/wp/v2/treeMenu?slug={slug}`.replace(`{${"slug"}}`, encodeURIComponent(String(requestParameters.slug))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => TreeMenuFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async getTreeMenu(requestParameters: GetTreeMenuRequest): Promise<TreeMenu> {
+        const response = await this.getTreeMenuRaw(requestParameters);
         return await response.value();
     }
 
@@ -1932,6 +2100,30 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async getWpV2CustomTaxonomy(requestParameters: GetWpV2CustomTaxonomyRequest): Promise<Array<CustomTaxonomy>> {
         const response = await this.getWpV2CustomTaxonomyRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async getWpV2CustomizeRaw(): Promise<runtime.ApiResponse<Array<CustomizeField>>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/wp/v2/customize`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(CustomizeFieldFromJSON));
+    }
+
+    /**
+     */
+    async getWpV2Customize(): Promise<Array<CustomizeField>> {
+        const response = await this.getWpV2CustomizeRaw();
         return await response.value();
     }
 
@@ -3962,6 +4154,34 @@ export class DefaultApi extends runtime.BaseAPI {
     async postWpV2CommentsById(requestParameters: PostWpV2CommentsByIdRequest): Promise<Comment> {
         const response = await this.postWpV2CommentsByIdRaw(requestParameters);
         return await response.value();
+    }
+
+    /**
+     * Add a new event
+     */
+    async postWpV2EventRaw(requestParameters: PostWpV2EventRequest): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/wp/v2/linkedeventsEndPoint`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EventToJSON(requestParameters.event),
+        });
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Add a new event
+     */
+    async postWpV2Event(requestParameters: PostWpV2EventRequest): Promise<void> {
+        await this.postWpV2EventRaw(requestParameters);
     }
 
     /**
