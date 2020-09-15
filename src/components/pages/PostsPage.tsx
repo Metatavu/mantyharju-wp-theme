@@ -1,13 +1,14 @@
 import * as React from 'react';
 import ApiUtils from "../../../src/utils/ApiUtils";
 import ReactHtmlParser, { convertNodeToElement } from "react-html-parser";
-import { withStyles, WithStyles, Breadcrumbs, Link } from '@material-ui/core';
+import { Container, withStyles, WithStyles, Breadcrumbs, Link, Grid } from '@material-ui/core';
 import styles from '../../styles/posts-page';
 import BasicLayout from '../BasicLayout';
 import { DomElement } from "domhandler";
 import { Page, Post, MenuLocationData, PostTitle, Attachment, CustomPage } from 'src/generated/client/src';
 import strings from "../../localization/strings";
 import * as moment from "moment";
+import * as classNames from "classnames";
 import hero from "../../resources/img/postHeader.png";
 
 /**
@@ -28,6 +29,7 @@ interface Props extends WithStyles<typeof styles> {
  * Component state
  */
 interface State {
+  currentPage?: Page;
   page?: Page;
   loading: boolean;
   nav?: MenuLocationData;
@@ -96,27 +98,28 @@ class PostsPage extends React.Component<Props, State> {
    */
   public render() {
     const { lang, slug, classes } = this.props;
-    const { postThumbnail } = this.state;
-
+    const { currentPage, postThumbnail } = this.state;
     return (
-      <BasicLayout lang={ lang } slug={ slug }>
-        <div className={ classes.heroImageDiv } style={{ backgroundImage: `url(${ postThumbnail ? postThumbnail : hero })`, }}>
-          <p className={ classes.heroText }>Asiointi ja päätöksenteko</p>
+      <BasicLayout lang={ lang } slug={ slug } title={ this.setTitleSource() }>
+        <div className={ classes.heroImageDiv } style={{ backgroundImage: `url(${ postThumbnail ? postThumbnail : hero })` }}>
+          <h1 className={ classes.heroText }>{ currentPage ? ReactHtmlParser(currentPage.title ? currentPage.title.rendered || "" : "") : null }</h1>
         </div>
-        <div className={ classes.breadcrumb }>
-            <Breadcrumbs separator=">">
-                <Link color="inherit" href="/" onClick={() => {}}>
-                    Etusivu
-                </Link>
-                { this.state.breadcrumb && this.renderBreadcrumb() }
-            </Breadcrumbs>
-            <p className={ classes.dividerLine }><hr></hr></p>
-        </div>
-        <div>
-          { this.renderPostContent() }
-        </div>
-        <div className={classes.gallery}>
-          { this.renderPosts() }
+        <div className={ classes.wrapper }>
+          <div className={ classes.pageContent }>
+            <div className={ classes.breadcrumb }>
+              <Breadcrumbs separator=">">
+                  { this.state.breadcrumb && this.renderBreadcrumb() }
+              </Breadcrumbs>
+            </div>
+            <div>
+              { this.renderPostContent() }
+            </div>    
+            <div style={{flexGrow: 1}}>
+              <Grid container className={ classes.gallery }>
+                { this.renderPosts() }
+              </Grid>
+            </div>
+          </div>
         </div>
       </BasicLayout>
     )
@@ -133,13 +136,44 @@ class PostsPage extends React.Component<Props, State> {
       return (
         displayPages.map(page => {
           return (
-            <div>
-              <div style={{ backgroundImage: `url(${ page.featured_image_url || hero })` }} onClick={() => { this.onPostClick(page) }} className={ classes.gallery_img } />
+            <Grid item xs={12} sm={6} md={4} className={classes.grid_item}>
+              <div style={{ backgroundImage: `url(${ page.featured_image_url || hero })` }} onClick={() => { this.onPostClick(page) }} className={ classes.gallery_section_item  } />
               <h2>{ ReactHtmlParser(page.post_title ? page.post_title || "" : "") }</h2>
-            </div>
+            </Grid>
           )
         })
       )
+    }
+  }
+
+  /**
+   * Render content method
+   */
+  private renderContent = () => {
+    const { classes } = this.props;
+    const page = this.state.currentPage;
+    return (
+      <Container className={ classNames( classes.root ) }>
+        <h2>{ page ? ReactHtmlParser(page.title ? page.title.rendered || "" : "") : null }</h2>
+        { this.renderPostContent() }
+      </Container>
+    );
+  }
+
+  /**
+   * Set html source for page content
+   */
+  private setTitleSource = () => {
+    const { pageTitle, loading } = this.state;
+    const noContentError = `${ strings.whoops }`;
+    const undefinedContentError = `${ strings.error }`;
+
+    if (pageTitle) {
+      return pageTitle.rendered || undefinedContentError;
+    } else if (!loading) {
+      return noContentError;
+    } else {
+      return "";
     }
   }
 
@@ -152,14 +186,14 @@ class PostsPage extends React.Component<Props, State> {
     this.getPageOrPostContent();
     moment.locale(lang);
     return (
-      <div className={classes.topPageContent}>
-        <div>
-          <h2>{mainContent}</h2>
-        </div>
-        <div>
+      <Grid container>
+        <Grid item xs={12} sm={12} md={4} className={classes.grid_item}>
+          {mainContent}
+        </Grid>
+        <Grid item xs={12} sm={12} md={8} className={classes.grid_item}>
           {sideContent}
-        </div>
-      </div>
+        </Grid>
+      </Grid>
     );
   }
 
@@ -190,6 +224,7 @@ class PostsPage extends React.Component<Props, State> {
       api.getPostThumbnail({ slug: slug })
     ]);
 
+    const currentPage = apiCalls[0][0];
     const page = apiCalls[0][0];
     const nav = apiCalls[1];
     const pageTitle = apiCalls[2][0].title || apiCalls[3][0].title;
@@ -198,13 +233,14 @@ class PostsPage extends React.Component<Props, State> {
     const postThumbnail = apiCalls[6];
 
     this.setState({
+      currentPage: currentPage,
       page: page,
       loading: false,
       nav: nav,
       pageTitle: pageTitle,
       pages: pages,
       parentPage: parentPage,
-      postThumbnail: postThumbnail
+      postThumbnail: postThumbnail,
     });
 
     this.breadcrumbPath(pages);
@@ -247,11 +283,10 @@ class PostsPage extends React.Component<Props, State> {
    * Renders breadcrumb
    */
   private renderBreadcrumb = () => {
-    const { classes } = this.props;
     const { breadcrumb } = this.state;
     return breadcrumb.map((crumb) => {
       return (
-        <Link className={ classes.currentPageLink } href={ crumb.link } onClick={() => {}}>
+        <Link color="inherit" href={ crumb.link } onClick={() => {}}>
           { ReactHtmlParser(crumb.label ? crumb.label || "" : "") }
         </Link>
       );

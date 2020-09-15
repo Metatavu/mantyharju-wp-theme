@@ -40,6 +40,7 @@ export default createStyles({
     width:"100%",
     position: "relative",
     overflow: "hidden",
+    marginTop: 57,
     [breakpoints.up("sm")]: {
       padding: sidePaddingMd,
       paddingTop: "4rem",
@@ -49,6 +50,7 @@ export default createStyles({
     [breakpoints.up("md")]: {
       padding: sidePaddingLg,
       paddingTop: "6rem",
+      marginTop: 0,
     },
     [breakpoints.up("lg")]: {
       padding: sidePaddingXl,
