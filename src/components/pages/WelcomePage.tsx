@@ -33,10 +33,9 @@ interface State {
   placeForm: Metaform,
   formValues: Dictionary<string | number | null>
   placeFormValues: Dictionary<string | number | null>
-  media: Attachment[],
   linkedEventsPost?: Post,
   loading: boolean,
-  popularPages: Page[],
+  popularPages: PageWithImgUrl[],
   mainMenu?: MenuLocationData,
   localeMenu?: MenuLocationData,
   scrollPosition: number,
@@ -66,6 +65,10 @@ interface PostItem {
   link: string;
   content?: any;
   date?: moment.Moment;
+
+interface PageWithImgUrl extends Page {
+  featureImageUrl?: string
+
 }
 
 const imageList = [
@@ -94,7 +97,6 @@ class WelcomePage extends React.Component<Props, State> {
     super(props);
     this.state = {
       posts: [],
-      media: [],
       form: {},
       placeForm: {},
       formValues: {},
@@ -145,13 +147,12 @@ class WelcomePage extends React.Component<Props, State> {
       loading: false
     });
 
-    const [posts, mainMenu, localeMenu, popularCategory, media] = await Promise.all(
+    const [posts, mainMenu, localeMenu, popularCategory] = await Promise.all(
       [
         api.getCustomPosts({}),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
         api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }),
-        api.getWpV2Categories({ slug: ["suosittu"] }),
-        api.getWpV2Media({})
+        api.getWpV2Categories({ slug: ["suosittu"] })
       ]
     );
 
@@ -160,7 +161,7 @@ class WelcomePage extends React.Component<Props, State> {
     const popularPages = await api.getWpV2Pages({ categories: categoryIdArray, per_page: 6});
     const placeForm: Metaform = require("../../metaform-json/create-place.json");
     const form: Metaform = require("../../metaform-json/create-event.json");
-    const keywordRes = await fetch("https://mantyharju-test.linkedevents.fi/v1/keyword/?page_size=1000&data_source=mantyharju");
+    const keywordRes = await fetch("https://mantyharju.linkedevents.fi/v1/keyword/?page_size=1000&data_source=mantyharju");
     const data = await keywordRes.json();
 
     const sections = (form.sections || []).map((section) => {
@@ -184,15 +185,37 @@ class WelcomePage extends React.Component<Props, State> {
       placeForm: placeForm,
       mainMenu: mainMenu,
       localeMenu: localeMenu,
-      popularPages: popularPages,
-      media: media,
+      popularPages: popularPages
     });
 
     this.hidePageLoader();
-
+    
     this.getNews();
     this.getAnnouncements();
     this.getLinkedEvents();
+    this.getPopularPagesImageUrl();
+  }
+
+  /**
+   * Fetch PopularPages featured image URL 
+   */
+  private getPopularPagesImageUrl = () => {
+    const { popularPages } = this.state;
+    const api = ApiUtils.getApi();
+    const result : PageWithImgUrl[] = [];
+
+    popularPages.forEach(async (page) => {
+      const pageId = page.id ? page.id.toString() : "";
+      const popularImageUrl = await api.getPostThumbnail({ id: pageId });
+      const pageAndUrl = { ...page, featureImageUrl: popularImageUrl ? popularImageUrl : "" };
+
+      return result.push(pageAndUrl);
+    });
+
+    this.setState({
+      popularPages: result
+    });
+
   }
 
   /**
@@ -864,33 +887,18 @@ class WelcomePage extends React.Component<Props, State> {
   private renderBottomSectionPosts = () => {
     const { classes } = this.props;
     const { popularPages } = this.state;
-    return popularPages.map((page) => {
+    return popularPages.map((page, index) => {
       return (
         <div
           onClick={ this.navigateTo(page.link || window.location.href) }
-          style={{ backgroundImage: `url(${ this.getAttachmentForPage(page) })` }}
+          style={{ backgroundImage: `url(${ page.featureImageUrl ? page.featureImageUrl : "" })` }}
           className={ classes.bottom_section_item }
+          key={ index }
         >
-          <p>{ page.title ? page.title.rendered || "" : "" }</p>
+          <p>{ ReactHtmlParser(page.title ? page.title.rendered || "" : "")}</p>
         </div>
       );
     });
-  }
-
-  /**
-   * Returns page featured image URL
-   */
-  private getAttachmentForPage = (page: Page) => {
-    let attachmentUrl = "";
-    if (this.state.media) {
-      this.state.media.map((attachment) => {
-        if (attachment.id === page.featured_media) {
-          attachmentUrl = attachment.source_url || "";
-        }
-      });
-    }
-
-    return attachmentUrl;
   }
 
   /**

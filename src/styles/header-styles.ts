@@ -12,13 +12,13 @@ export default createStyles({
     justifyContent: "center",
     padding: "0 1rem",
     width: "100%",
-    height: 50,
+    height: 57,
     backgroundColor: "#fff",
     zIndex: 10,
     position: "fixed",
     top: 0,
     [breakpoints.up("sm")]: {
-      height: 50,
+      height: 57,
     },
     [breakpoints.up("md")]: {
       height: "initial",
@@ -33,9 +33,9 @@ export default createStyles({
     }
   },
   logoBar: {
-    width: 120,
-    [breakpoints.up("md")]: {
-      width: 230
+    width: 180,
+    [breakpoints.up("sm")]: {
+      width: 240
     },
     [breakpoints.up("lg")]: {
       width: "initial"
@@ -122,7 +122,7 @@ export default createStyles({
     width: "100%",
     display: "flex",
     visibility: "hidden",
-    marginLeft: "2rem",
+    marginLeft: "1rem",
     paddingBottom: 0,
     paddingTop: "1rem",
     backgroundColor: "#fff",

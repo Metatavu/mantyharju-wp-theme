@@ -233,6 +233,7 @@ export default createStyles({
     width: "100%",
     minHeight: 220,
     position: "relative",
+    marginTop: 57,
     [breakpoints.up("sm")]: {
       padding: sidePaddingMd,
       minHeight: 280,
@@ -240,6 +241,7 @@ export default createStyles({
     [breakpoints.up("md")]: {
       padding: sidePaddingLg,
       minHeight: 300,
+      marginTop: 0,
     },
     [breakpoints.up("lg")]: {
       padding: sidePaddingXl,
