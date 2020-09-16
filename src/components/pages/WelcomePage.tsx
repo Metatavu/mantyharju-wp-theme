@@ -234,7 +234,7 @@ class WelcomePage extends React.Component<Props, State> {
    */
   public render() {
     const { lang, slug, classes } = this.props;
-    const { announcementsPageLink, newsPageLink, jobsLink,linkedEventsPost, news, announcements, jobs } = this.state;
+    const { announcementsPageLink, newsPageLink, jobsLink, linkedEventsPost, news, announcements, jobs } = this.state;
     const showcaseImage = this.getCustomizerValue("showcase_image");
     const showcaseTitle = this.getCustomizerValue("showcase_title");
     const showcaseText = this.getCustomizerValue("showcase_text");
