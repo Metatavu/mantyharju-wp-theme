@@ -53,7 +53,9 @@ interface State {
   newsPageLink?: string,
   news?: PostItem[],
   announcementsPageLink?: string,
-  announcements?: PostItem[]
+  announcements?: PostItem[],
+  jobsLink?: string,
+  jobs?: PostItem[]
 }
 
 interface Dictionary<T> {
@@ -190,8 +192,9 @@ class WelcomePage extends React.Component<Props, State> {
     });
 
     this.hidePageLoader();
-    
+
     this.getNews();
+    this.getJobs();
     this.getAnnouncements();
     this.getLinkedEvents();
     this.getPopularPagesImageUrl();
@@ -231,7 +234,7 @@ class WelcomePage extends React.Component<Props, State> {
    */
   public render() {
     const { lang, slug, classes } = this.props;
-    const { announcementsPageLink, newsPageLink,linkedEventsPost } = this.state;
+    const { announcementsPageLink, newsPageLink, jobsLink, linkedEventsPost, news, announcements, jobs } = this.state;
     const showcaseImage = this.getCustomizerValue("showcase_image");
     const showcaseTitle = this.getCustomizerValue("showcase_title");
     const showcaseText = this.getCustomizerValue("showcase_text");
@@ -282,14 +285,14 @@ class WelcomePage extends React.Component<Props, State> {
               </SvgIcon>
               <Typography variant="h1">Ajankohtaista</Typography>
             </div>
-            { !this.state.news &&
+            { !news &&
               <div className={ classes.loadingIconContainer }>
                 <CircularProgress />
               </div>
             }
-            { this.state.news &&
+            { news &&
               <div>
-                { this.renderNews() }
+                { this.renderPostItems(news) }
               </div>
             }
             <Button className={ classes.postColumnButton } onClick={ this.navigateTo(newsPageLink || window.location.href) }>katso kaikki</Button>
@@ -301,14 +304,14 @@ class WelcomePage extends React.Component<Props, State> {
               </SvgIcon>
               <Typography variant="h1">Kuulutukset</Typography>
             </div>
-            { !this.state.announcements &&
+            { !announcements &&
               <div className={ classes.loadingIconContainer }>
                 <CircularProgress />
               </div>
             }
-            { this.state.announcements &&
+            { announcements &&
               <div className={ classes.allPosts }>
-                { this.renderAnnouncements() }
+                { this.renderPostItems(announcements) }
               </div>
             }
             <Button className={ classes.postColumnButton } onClick={ this.navigateTo(announcementsPageLink || window.location.href) }>katso kaikki</Button>
@@ -320,17 +323,17 @@ class WelcomePage extends React.Component<Props, State> {
               </SvgIcon>
               <Typography variant="h1">Työpaikat</Typography>
             </div>
-            { !this.state.announcements &&
+            { !jobs &&
               <div className={ classes.loadingIconContainer }>
                 <CircularProgress />
               </div>
             }
-            { this.state.announcements &&
+            { jobs &&
               <div className={ classes.allPosts }>
-                { this.renderAnnouncements() }
+                { this.renderPostItems(jobs) }
               </div>
             }
-            <Button className={ classes.postColumnButton } onClick={ this.navigateTo(`${ window.location.origin }/jobs/"` || window.location.href) }>katso kaikki</Button>
+            <Button className={ classes.postColumnButton } onClick={ this.navigateTo(jobsLink || window.location.href) }>katso kaikki</Button>
           </div>
         </div>
 
@@ -451,6 +454,26 @@ class WelcomePage extends React.Component<Props, State> {
   }
 
   /**
+   * Method for getting jobs
+   */
+  private getJobs = () => {
+    const api = ApiUtils.getApi();
+    api.getWpV2Posts({ slug: [ "jobs" ], per_page: 1 }).then((postArray) => {
+      const post = postArray.length ? postArray[0] : undefined;
+      if (post) {
+        const postContent = post.content ? post.content.rendered : undefined;
+        if (postContent) {
+          const jobs = this.parseJobs(postContent);
+          this.setState({
+            jobsLink: post.link,
+            jobs: jobs
+          });
+        }
+      }
+    });
+  }
+
+  /**
    * Method for getting linked events
    */
   private getLinkedEvents = () => {
@@ -489,6 +512,32 @@ class WelcomePage extends React.Component<Props, State> {
           content: content ? ReactHtmlParser(content) : undefined,
           date: dateString ? moment(dateString) : undefined
         };
+        return postItem;
+      });
+      return postItems;
+    }
+    return [];
+  }
+
+  /**
+   * Method for parsing jobs
+   *
+   * @param postContent post content
+   * @returns post item array
+   */
+  parseJobs = (postContent: string): PostItem[] => {
+    const articles = postContent.match(/<article.*?>.*?<\/article>/g); // Match <article> tags and their content
+    if (articles) {
+      const postItems = articles.map(article => {
+        const title = article.replace(/^.*?<strong.*?>|<\/strong>.*$/g, ""); // Replace everything but <strong> tag content
+        const link = article.replace(/^.*?<a.*?href="|".*$/g, ""); // Replace everything but <a> tag link
+        const dateMatch = article.match(/\d?\d\.ḑ?\d\.\d\d\d\d/g); // Matches DD.MM.YYYY formated date
+        const date = dateMatch ? new Date(this.convertToISO(dateMatch[0])) : undefined;
+        const postItem = {
+          title: title,
+          link: link,
+          date: date ? moment(date) : undefined
+        }
         return postItem;
       });
       return postItems;
@@ -804,47 +853,16 @@ class WelcomePage extends React.Component<Props, State> {
   /**
    * Render News posts
    */
-  private renderNews = () => {
+  private renderPostItems = (postItems: PostItem[]) => {
     const { classes } = this.props;
-    const { news } = this.state;
 
-    if (!news) {
-      return;
-    }
-
-    return news.map((newsItem: PostItem) => (
+    return postItems.map((postItem: PostItem) => (
       <div className={ classes.singlePost }>
-        <p className={ classes.postDate }>{ newsItem.date ? newsItem.date.format("DD.MM.YYYY") : "" }</p>
+        <p className={ classes.postDate }>{ postItem.date ? postItem.date.format("DD.MM.YYYY") : "" }</p>
         <div className={ classes.postContent }>
-          <a href={ newsItem.link }>
+          <a href={ postItem.link }>
             <p>
-              { newsItem.title }
-            </p>
-          </a>
-        </div>
-        <hr />
-      </div>
-    ));
-  }
-
-  /**
-   * Render Announcements posts
-   */
-  private renderAnnouncements = () => {
-    const { classes } = this.props;
-    const { announcements } = this.state;
-
-    if (!announcements) {
-      return null;
-    }
-
-    return announcements.map((announcement: PostItem) => (
-      <div className={ classes.singlePost }>
-        <p className={ classes.postDate }>{ announcement.date ? announcement.date.format("DD.MM.YYYY") : "" }</p>
-        <div className={ classes.postContent }>
-          <a href={ announcement.link }>
-            <p>
-              { announcement.title }
+              { postItem.title }
             </p>
           </a>
         </div>
@@ -932,6 +950,16 @@ class WelcomePage extends React.Component<Props, State> {
    */
   private navigateTo = (url: string) => () => {
     window.location.href = url;
+  }
+
+  /**
+   * Method for converting dd.mm.yyyy to yyyy-mm-dd
+   *
+   * @param str string
+   */
+  private convertToISO = (str: string) => {
+    const [day, month, year] = str.split(".");
+    return `${year}-${month.length > 1 ? month : `0${month}`}-${day.length > 1 ? day : `0${day}`}`;
   }
 
   /**
