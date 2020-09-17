@@ -85,4 +85,28 @@ export default createStyles({
     }
   },
 
+  wrapper: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "center"
+  },
+
+  pageContent: {
+    marginTop: "3rem",
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
+    maxWidth: 960,
+    padding: "0 2rem 1rem",
+    [breakpoints.up("md")]: {
+      padding: "0 4rem 2rem"
+    },
+    [breakpoints.up("lg")]: {
+      padding: "0 6rem 2rem"
+    },
+    [breakpoints.up("xl")]: {
+      padding: "0 8rem 2rem"
+    },
+  },
+
 });
