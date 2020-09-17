@@ -31,9 +31,6 @@ export default createStyles({
     },
     "&.open": {
       display: "flex",
-      "& > div": {
-        display: "none"
-      }
     },
     "&.open a": {
       fontWeight: "bold"
