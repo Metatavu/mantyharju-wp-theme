@@ -1,24 +1,23 @@
 import * as React from "react";
-import { withStyles, WithStyles, Typography, Card, CardMedia, CardContent, CardActions, Button } from "@material-ui/core";
+import { withStyles, WithStyles, Typography, Card, CardContent } from "@material-ui/core";
 import styles from "../../styles/jobs";
 import BasicLayout from "../BasicLayout";
 import ApiUtils from "../../utils/ApiUtils";
-import { CustomPost } from "src/generated/client/src";
 import ReactHtmlParser from "react-html-parser";
 
 /**
  * Component props
  */
 interface Props extends WithStyles<typeof styles> {
-    slug: string
-    lang: string
+    slug: string;
+    lang: string;
 }
 
 /**
  * Component state
  */
 interface State {
-  jobs: CustomPost[];
+  jobs: string[];
 }
 
 /**
@@ -28,6 +27,7 @@ class Jobs extends React.Component<Props, State> {
 
   /**
    * Constructor
+   *
    * @param props component properties
    */
   constructor(props: Props) {
@@ -72,10 +72,17 @@ class Jobs extends React.Component<Props, State> {
    */
   private fetchJobs = () => {
     const api = ApiUtils.getApi();
-    api.getCustomPosts({ category: "announcement" }).then((jobs: CustomPost[]) => {
-      this.setState({
-        jobs: jobs
-      });
+    api.getWpV2Posts({ slug: [ "jobs" ], per_page: 1 }).then((postArray) => {
+      const post = postArray.length ? postArray[0] : undefined;
+      if (post) {
+        const postContent = post.content ? post.content.rendered : undefined;
+        if (postContent) {
+          const jobs = this.parseJobs(postContent);
+          this.setState({
+            jobs: jobs
+          });
+        }
+      }
     });
   }
 
@@ -90,48 +97,28 @@ class Jobs extends React.Component<Props, State> {
       return null;
     }
 
-    return jobs.map((job: CustomPost) => (
+    return jobs.map((job: string) => (
       <Card className={ classes.card }>
-        <CardMedia
-          image={ job.featured_image_url }
-        />
         <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
-            { job.post_title }
-          </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
-            { ReactHtmlParser(this.getFirstParagraph(job.post_content)) }
-          </Typography>
+          { ReactHtmlParser(job) }
         </CardContent>
-        <CardActions>
-          <Button
-            size="small"
-            color="primary"
-            className={ classes.button }
-            onClick={ () => { window.location.href = job.link || window.location.href } }
-          >
-            Lue lisää
-          </Button>
-        </CardActions>
       </Card>
     ));
   }
 
   /**
-   * Method for getting first paragraph
+   * Method for parsing jobs
    *
-   * @param content string
-   * @returns string
+   * @param postContent post content
+   * @returns string array
    */
-  private getFirstParagraph = (content?: string): string => {
-    if (content) {
-      const match = content.match(/<p.*?>.*?<\/p>/g);
-      if (match) {
-        const paragraph = match[0];
-        return paragraph;
-      }
+  private parseJobs = (postContent: string): string[] => {
+    const matches = postContent.match(/<article.*?>.*?<\/article>/g); // Mathes <article> tags and their content
+    if (matches) {
+      const jobs = matches.map(match => match);
+      return jobs;
     }
-    return "";
+    return [];
   }
 
   /**

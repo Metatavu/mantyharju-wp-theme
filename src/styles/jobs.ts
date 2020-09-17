@@ -99,7 +99,10 @@ export default createStyles({
 
   card: {
     margin: "2rem",
-    padding: "2rem"
+    padding: "2rem",
+    "& a, a:hover, a:visited, a:focus": {
+      color: theme.palette.primary.dark
+    }
   },
 
   button: {
