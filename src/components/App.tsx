@@ -116,18 +116,6 @@ class App extends React.Component<Props, State> {
             />
             <Route
               path="/sivut/:page/:page"
-              exact={ true }
-              render={ (props) => (
-                <PostsPage
-                  lang={ language }
-                  slug={ this.pathToSlug(props.location.pathname) }
-                  mainPageSlug={ this.pathToTitle(props.location.pathname) }
-                  locationKey={ props.location.key }
-                />
-              )}
-            />
-            <Route
-              path="/sivut/:page/:page/:page"
               render={ (props) => (
                 <PostPage
                   lang={ language }
