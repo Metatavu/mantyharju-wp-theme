@@ -104,7 +104,6 @@ class ArticlePage extends React.Component<Props, State> {
       <React.Fragment>
         <div className={ classes.wrapper }>
           <div className={ classes.pageContent }>
-            <h1>{ postTitle }</h1>
             { postContent }
           </div>
         </div>
