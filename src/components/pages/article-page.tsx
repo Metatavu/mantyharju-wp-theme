@@ -98,7 +98,7 @@ class ArticlePage extends React.Component<Props, State> {
    */
   private renderContent() {
     const { classes } = this.props;
-    const { postTitle, postContent } = this.state;
+    const { postContent } = this.state;
 
     return (
       <React.Fragment>
