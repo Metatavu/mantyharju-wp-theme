@@ -34,11 +34,11 @@ function register_tree_menu_endpoint() {
   function get_main_page($page) {
     $ancestors = get_post_ancestors($page);
     $length = count($ancestors);
-    if ($length === 2) {
+    if ($length === 1) {
       return $page;
     }
-    if ($length > 2) {
-      return get_post($ancestors[count($ancestors) - 3]);
+    if ($length > 1) {
+      return get_post($ancestors[count($ancestors) - 2]);
     }
     return page_by_slug("sivut"); 
   }
@@ -46,7 +46,7 @@ function register_tree_menu_endpoint() {
   function get_initial_open_nodes($page) {
     $initial_open_nodes = array("$page->ID");
     $current = $page;
-    while (wp_get_post_parent_id(wp_get_post_parent_id(wp_get_post_parent_id(wp_get_post_parent_id($current))))) {
+    while (wp_get_post_parent_id(wp_get_post_parent_id(wp_get_post_parent_id($current)))) {
       $parentId = wp_get_post_parent_id($current);
       $current = get_post($parentId);
       $id = "$current->ID";
