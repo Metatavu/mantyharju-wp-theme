@@ -247,10 +247,21 @@ export default createStyles({
       padding: sidePaddingXl,
       minHeight: 335,
     },
+    "&:after": {
+      zIndex: 1,
+      content: "''",
+      position: "absolute",
+      left: 0,
+      top: 0,
+      width: "100%",
+      height: "100%",
+      backgroundColor: "rgba(0,0,0,0.2)"
+    }
   },
   heroText: {
     fontSize: "2rem",
     fontWeight: "bold",
+    zIndex: 2,
     color: "#ffffff",
     [breakpoints.up("sm")]: {
       fontSize: "2rem"
