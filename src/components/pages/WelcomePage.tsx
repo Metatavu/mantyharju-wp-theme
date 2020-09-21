@@ -201,28 +201,6 @@ class WelcomePage extends React.Component<Props, State> {
   }
 
   /**
-   * Fetch PopularPages featured image URL 
-   */
-  private getPopularPagesImageUrl = () => {
-    const { popularPages } = this.state;
-    const api = ApiUtils.getApi();
-    const result : PageWithImgUrl[] = [];
-
-    popularPages.forEach(async (page) => {
-      const pageId = page.id ? page.id.toString() : "";
-      const popularImageUrl = await api.getPostThumbnail({ id: pageId });
-      const pageAndUrl = { ...page, featureImageUrl: popularImageUrl ? popularImageUrl : "" };
-
-      return result.push(pageAndUrl);
-    });
-
-    this.setState({
-      popularPages: result
-    });
-
-  }
-
-  /**
    * Component will unmount life-cycle handler
    */
   public componentWillUnmount() {
@@ -368,15 +346,15 @@ class WelcomePage extends React.Component<Props, State> {
               className={ classes.allEventsButton }
               title= "Näytä lisää tapahtumia"
               onClick={this.expandLinkedEvents}
-              >
-                Näytä lisää
+            >
+              Näytä lisää
             </Button>
             <Button
               onClick={ this.openModal }
               className={ classes.addLinkedEventButton }
               title= "Lisää tapahtuma"
-              >
-                Lisää tapahtuma
+            >
+              Lisää tapahtuma
             </Button>
           </div>
         </div>
@@ -411,6 +389,28 @@ class WelcomePage extends React.Component<Props, State> {
         </Dialog>
       </BasicLayout>
     );
+  }
+
+  /**
+   * Fetch PopularPages featured image URL
+   */
+  private getPopularPagesImageUrl = () => {
+    const { popularPages } = this.state;
+    const api = ApiUtils.getApi();
+    const result : PageWithImgUrl[] = [];
+
+    popularPages.forEach(async (page) => {
+      const pageId = page.id ? page.id.toString() : "";
+      const popularImageUrl = await api.getPostThumbnail({ id: pageId });
+      const pageAndUrl = { ...page, featureImageUrl: popularImageUrl ? popularImageUrl : "" };
+
+      return result.push(pageAndUrl);
+    });
+
+    this.setState({
+      popularPages: result
+    });
+
   }
 
   /**
@@ -852,11 +852,13 @@ class WelcomePage extends React.Component<Props, State> {
 
   /**
    * Render News posts
+   *
+   * @param postItems post items
    */
   private renderPostItems = (postItems: PostItem[]) => {
     const { classes } = this.props;
 
-    return postItems.map((postItem: PostItem) => (
+    return postItems.slice(0, 5).map((postItem: PostItem) => (
       <div className={ classes.singlePost }>
         <p className={ classes.postDate }>{ postItem.date ? postItem.date.format("DD.MM.YYYY") : "" }</p>
         <div className={ classes.postContent }>
