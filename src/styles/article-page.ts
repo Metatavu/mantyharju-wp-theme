@@ -108,5 +108,21 @@ export default createStyles({
       padding: "0 8rem 2rem"
     },
   },
-
+  contentarea: {
+    display: "flex",
+    flexDirection: "column",
+    flex: 3,
+    "& .wp-block-group__inner-container": {
+      marginTop: "1em",
+      marginBottom: "1em",
+      "& h3": {
+        marginBlockStart: 0,
+        marginBlockEnd: 0
+      },
+      "& p": {
+        marginBlockStart: 0,
+        marginBlockEnd: 0
+      },
+    },
+  },
 });

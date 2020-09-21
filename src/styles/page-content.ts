@@ -263,6 +263,7 @@ export default createStyles({
     fontWeight: "bold",
     zIndex: 2,
     color: "#ffffff",
+    textShadow: "0px 0px 4px #000",
     [breakpoints.up("sm")]: {
       fontSize: "2rem"
     },
@@ -328,7 +329,19 @@ export default createStyles({
   contentarea: {
     display: "flex",
     flexDirection: "column",
-    flex: 3
+    flex: 3,
+    "& .wp-block-group__inner-container": {
+      marginTop: "1em",
+      marginBottom: "1em",
+      "& h3": {
+        marginBlockStart: 0,
+        marginBlockEnd: 0
+      },
+      "& p": {
+        marginBlockStart: 0,
+        marginBlockEnd: 0
+      },
+    },
   },
   sidebar: {
     flex: 1,

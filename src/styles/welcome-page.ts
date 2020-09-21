@@ -83,6 +83,7 @@ export default createStyles({
     fontSize: 20,
     margin: "2rem 0",
     fontWeight: "bold",
+    textShadow: "0px 0px 4px #000",
     [breakpoints.up("sm")]: {
       fontSize: 30,
     }
@@ -208,6 +209,9 @@ export default createStyles({
     [breakpoints.up("xl")]: {
       maxWidth: maxPageWidthXl,
     },
+    "& a, a:link, a:visited, a:focus, a:hover, a:active": {
+      color: "#000",
+    }
   },
   postsColumn: {
     display: "flex",
