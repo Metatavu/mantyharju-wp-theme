@@ -83,6 +83,7 @@ export default createStyles({
     fontSize: 20,
     margin: "2rem 0",
     fontWeight: "bold",
+    textShadow: "0px 0px 2px #000",
     [breakpoints.up("sm")]: {
       fontSize: 30,
     }
@@ -99,7 +100,7 @@ export default createStyles({
   heroButtonPopularPages: {
     zIndex: 2,
     color: "#fff",
-    backgroundColor: "#00AAAD",
+    backgroundColor: "#1068B3",
     cursor: "pointer",
     textTransform: "uppercase",
     fontSize: "4rem",
@@ -159,7 +160,7 @@ export default createStyles({
     gridColumnStart: "2",
     gridColumnEnd: "2",
     width: "100%",
-    backgroundColor: "#00AAAD",
+    backgroundColor: "#1068B3",
     [breakpoints.up("sm")]: {
       padding: "2rem",
     }
@@ -208,6 +209,9 @@ export default createStyles({
     [breakpoints.up("xl")]: {
       maxWidth: maxPageWidthXl,
     },
+    "& a, a:link, a:visited, a:focus, a:hover, a:active": {
+      color: "#000",
+    }
   },
   postsColumn: {
     display: "flex",
@@ -287,7 +291,7 @@ export default createStyles({
     maxHeight: "3rem",
   },
   postDate: {
-    color: "#15B1B3",
+    color: "#1068B3",
     fontSize: "0.8rem",
     margin: "0"
   },
@@ -301,7 +305,7 @@ export default createStyles({
   },
   postColumnButton: {
     color: "#fff",
-    backgroundColor: "#00AAAD",
+    backgroundColor: "#1068B3",
     marginTop: "1rem",
     textTransform: "uppercase",
     maxWidth: 270,
@@ -397,7 +401,7 @@ export default createStyles({
     objectFit: "cover",
   },
   allEventsButton: {
-    backgroundColor: "#00AAAD",
+    backgroundColor: "#1068B3",
     textTransform: "uppercase",
     marginTop: "2rem",
     marginRight: "1rem",
@@ -405,7 +409,7 @@ export default createStyles({
     width: 270
   },
   addLinkedEventButton: {
-    backgroundColor: "#00AAAD",
+    backgroundColor: "#1068B3",
     textTransform: "uppercase",
     marginLeft: "1rem",
     color: "#fff",
@@ -584,7 +588,7 @@ export default createStyles({
           marginBottom: 10,
           marginLeft: theme.spacing(0),
           marginRight: theme.spacing(0),
-          backgroundColor: "#00AAAD",
+          backgroundColor: "#1068B3",
           color: "#FFF",
           padding: 20,
           "& p": {
@@ -605,7 +609,7 @@ export default createStyles({
     marginTop: 10,
     marginBottom: 10,
     "& .MuiButton-outlinedSecondary": {
-    color: "#00AAAD",
+    color: "#1068B3",
     border: "1px solid #000",
     }
   }

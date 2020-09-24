@@ -247,11 +247,23 @@ export default createStyles({
       padding: sidePaddingXl,
       minHeight: 335,
     },
+    "&:after": {
+      zIndex: 1,
+      content: "''",
+      position: "absolute",
+      left: 0,
+      top: 0,
+      width: "100%",
+      height: "100%",
+      backgroundColor: "rgba(0,0,0,0.2)"
+    }
   },
   heroText: {
     fontSize: "2rem",
     fontWeight: "bold",
+    zIndex: 2,
     color: "#ffffff",
+    textShadow: "0px 0px 4px #000",
     [breakpoints.up("sm")]: {
       fontSize: "2rem"
     },
@@ -317,7 +329,19 @@ export default createStyles({
   contentarea: {
     display: "flex",
     flexDirection: "column",
-    flex: 3
+    flex: 3,
+    "& .wp-block-group__inner-container": {
+      marginTop: "1em",
+      marginBottom: "1em",
+      "& h3": {
+        marginBlockStart: 0,
+        marginBlockEnd: 0
+      },
+      "& p": {
+        marginBlockStart: 0,
+        marginBlockEnd: 0
+      },
+    },
   },
   sidebar: {
     flex: 1,

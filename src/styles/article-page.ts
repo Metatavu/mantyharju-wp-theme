@@ -85,28 +85,44 @@ export default createStyles({
     }
   },
 
-  cards: {
-    display: "grid",
-    gridTemplateColumns: "repeat(3, 1fr)",
-    height: "fit-content",
-    [breakpoints.down("md")]: {
-      gridTemplateColumns: "repeat(2, 1fr)",
-    },
-    [breakpoints.down("sm")]: {
-      gridTemplateColumns: "repeat(1, 1fr)"
-    },
+  wrapper: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "center"
   },
 
-  card: {
-    margin: "2rem",
-    padding: "2rem",
-    "& a, a:hover, a:visited, a:focus": {
-      color: theme.palette.primary.dark
-    }
+  pageContent: {
+    marginTop: "3rem",
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
+    maxWidth: 960,
+    padding: "0 2rem 1rem",
+    [breakpoints.up("md")]: {
+      padding: "0 4rem 2rem"
+    },
+    [breakpoints.up("lg")]: {
+      padding: "0 6rem 2rem"
+    },
+    [breakpoints.up("xl")]: {
+      padding: "0 8rem 2rem"
+    },
   },
-
-  button: {
-    color: "#fff"
-  }
-
+  contentarea: {
+    display: "flex",
+    flexDirection: "column",
+    flex: 3,
+    "& .wp-block-group__inner-container": {
+      marginTop: "1em",
+      marginBottom: "1em",
+      "& h3": {
+        marginBlockStart: 0,
+        marginBlockEnd: 0
+      },
+      "& p": {
+        marginBlockStart: 0,
+        marginBlockEnd: 0
+      },
+    },
+  },
 });

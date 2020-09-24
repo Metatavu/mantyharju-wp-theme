@@ -10,11 +10,11 @@ import * as moment from "moment";
  * Component props
  */
 interface Props extends WithStyles<typeof styles> {
-    slug: string
-    lang: string
-    mainPageSlug: string
-    locationKey?: string
-    eventId?: string
+    slug: string;
+    lang: string;
+    mainPageSlug: string;
+    locationKey?: string;
+    eventId?: string;
 }
 
 /**

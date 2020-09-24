@@ -102,7 +102,6 @@ export default createStyles({
     borderTop: "1px solid #ddd",
     marginTop: "1rem",
     "&.fixed": {
-      padding: "0 8rem",
       marginTop: 0,
       position: "fixed",
       top: 0,
@@ -113,8 +112,10 @@ export default createStyles({
     }
   },
   mainMenu: {
+    position: "relative",
     display: "flex",
     padding: "1rem 0 0",
+    zIndex: 10,
   },
   subMenu: {
     position: "absolute",
@@ -122,12 +123,12 @@ export default createStyles({
     width: "100%",
     display: "flex",
     visibility: "hidden",
-    marginLeft: "1rem",
     paddingBottom: 0,
     paddingTop: "1rem",
     backgroundColor: "#fff",
     opacity: 0,
     transition: "opacity 0.2s ease-out",
+    boxShadow: "0 6px 10px rgba(0,0,0,0.2)",
     "&.visible": {
       paddingBottom: "1rem",
       opacity: 1,
