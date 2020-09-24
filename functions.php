@@ -15,4 +15,13 @@
   require_once(__DIR__ . "/wp-rest-api-endpoints/posts.php");
   require_once(__DIR__ . "/vendor/autoload.php");
   require_once(__DIR__ . "/linkedevents/event-rest-handler.php");
+
+  add_filter("sptv_service_location_service_channel_components", function ($templates) {
+    $templates[] = [
+      "slug" => "accessibility",
+      "name" => __("Esteettömyystiedot", "sptv")
+    ];
+    
+    return $templates;
+  });
 ?>

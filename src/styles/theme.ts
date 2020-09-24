@@ -8,7 +8,7 @@ const { breakpoints } = theme;
 export default createMuiTheme({
   palette: {
     primary: {
-      main: "#00AAAD",
+      main: "#1068B3",
       dark: "#019698"
     },
     secondary: { 
@@ -85,7 +85,7 @@ export default createMuiTheme({
         fontSize: 14,
         color: "#717171",
         "&:last-child": {
-          color: "#00AAAD"
+          color: "#1068B3"
         }
       },
       separator: {

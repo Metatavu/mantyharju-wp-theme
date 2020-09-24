@@ -230,7 +230,7 @@ class WelcomePage extends React.Component<Props, State> {
     return (
       <BasicLayout lang={ lang } slug={ slug }>
         <div className={ classes.heroImageDiv } style={ heroBackgroundImage }>
-          <img className={ classes.heroLogo } src={ heroLogoImage } />
+          <img className={ classes.heroLogo } src={ heroLogoImage } alt="Mäntyharju" />
           <h2 className={ classes.heroText }>{ heroTitle }</h2>
           <Button color="secondary" className= { classes.heroButton } href={ heroButtonLink }>{ heroButtonText }</Button>
           <Button

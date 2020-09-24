@@ -118,7 +118,7 @@ class Header extends React.Component<Props, State> {
         <div className={ classes.header }>
           <div className={ classes.topSection }>
             <a href="/?lang=fi">
-              <img className={ classes.logoBar } src={ bar } />
+              <img className={ classes.logoBar } src={ bar } alt="Mäntyharju logo" />
             </a>
             {/* Hide this part of the header when on small screens */}
             <Hidden smDown implementation="css">
