@@ -1,6 +1,6 @@
 import * as React from "react";
 import BasicLayout from "../BasicLayout";
-import { Container, WithStyles, withStyles, Button, Breadcrumbs, Link, Typography } from "@material-ui/core";
+import { Container, WithStyles, withStyles, Button, Breadcrumbs, Link, Typography, Grid } from "@material-ui/core";
 import styles from "../../styles/page-content";
 import ApiUtils from "../../../src/utils/ApiUtils";
 import { Page, Post, MenuLocationData, PostTitle, CustomPage } from "../../../src/generated/client/src";
@@ -112,23 +112,27 @@ class PostPage extends React.Component<Props, State> {
         <div className={ classes.wrapper }>
           <div className={ classes.pageContent }>
             <div className={ classes.breadcrumb }>
-              <Breadcrumbs separator=">">
-                { this.state.breadcrumb && this.renderBreadcrumb() }
-              </Breadcrumbs>
-              <div id="readspeaker_button1" className="rs_skip rsbtn rs_preserve">
-                <a rel="nofollow" className="rsbtn_play" accessKey="L" title="Kuuntele ReadSpeaker webReaderilla" href={"//app-eu.readspeaker.com/cgi-bin/rsent?customerid=11747&amp;lang=fi_fi&amp;readclass=readthis&amp;url="+encodeURIComponent(window.location.href)}>
-                    <span className="rsbtn_left rsimg rspart"><span className="rsbtn_text"><span>Kuuntele</span></span></span>
-                    <span className="rsbtn_right rsimg rsplay rspart"></span>
-                </a>
-              </div>
+              <Grid container spacing={0}>
+                <Grid item xs={12} md={8} key={"123"}>
+                  <Breadcrumbs separator=">">
+                    { this.state.breadcrumb && this.renderBreadcrumb() }
+                  </Breadcrumbs>
+                </Grid>
+                <Grid item xs={12} md={4} key={"456"}>
+                  <div id="readspeaker_button1" className="rs_skip rsbtn rs_preserve">
+                    <a rel="nofollow" className="rsbtn_play" accessKey="L" title="Kuuntele ReadSpeaker webReaderilla" href={"//app-eu.readspeaker.com/cgi-bin/rsent?customerid=11747&amp;lang=fi_fi&amp;readid=readthis&amp;url="+encodeURIComponent(window.location.href)}>
+                        <span className="rsbtn_left rsimg rspart"><span className="rsbtn_text"><span>Kuuntele</span></span></span>
+                        <span className="rsbtn_right rsimg rsplay rspart"></span>
+                    </a>
+                  </div>
+                </Grid>
+              </Grid>
             </div>
-            <div className={ classes.columns }>
+            <div id="readthis" className={ classes.columns }>
               <TreeView slug={ slug } />
-            <div className={ classes.contentarea } >
-              <div className="readthis">
-                { this.renderContent() }
+              <div className={ classes.contentarea } >       
+                  { this.renderContent() }
               </div>
-            </div>
               { sideContent &&
               <div className={ classes.sidebar } style={ isContent ? { display: "block" } : { display: "none" } }>
                 <RightSideBar content={ sideContent } />

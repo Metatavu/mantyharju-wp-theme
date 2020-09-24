@@ -1,4 +1,4 @@
-<html>
+<html lang="fi">
   <head>
     <?php require get_template_directory() . '/inc/template-head-generic.php'; ?>
     <script src="//cdn1.readspeaker.com/script/11747/webReader/webReader.js?pids=wr" type="text/javascript"></script>
