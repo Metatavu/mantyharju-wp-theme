@@ -56,15 +56,17 @@ class SingleEventPage extends React.Component<Props, State> {
 
     return (
       <BasicLayout lang={ lang } slug={ slug }>
-        <div className={ classes.heroImageDiv }>
-          <div className={ classes.heroContent }>
-            <Typography variant="h1" className={ classes.heroText }>{ fetchedContent ? fetchedContent.name.fi || "Event" : "Event" }</Typography>
-            <Typography variant="h2">
-              { fetchedContent ? moment(fetchedContent.start_time).format("DD.MM.YYYY HH:mm") : "" } - { fetchedContent ? moment(fetchedContent.end_time).format("DD.MM.YYYY HH:mm") : "" }
-            </Typography>
+        <div id="readthis">
+          <div className={ classes.heroImageDiv }>
+            <div className={ classes.heroContent }>
+              <Typography variant="h1" className={ classes.heroText }>{ fetchedContent ? fetchedContent.name.fi || "Event" : "Event" }</Typography>
+              <Typography variant="h2">
+                { fetchedContent ? moment(fetchedContent.start_time).format("DD.MM.YYYY HH:mm") : "" } - { fetchedContent ? moment(fetchedContent.end_time).format("DD.MM.YYYY HH:mm") : "" }
+              </Typography>
+            </div>
           </div>
+          { this.renderEventContent() }
         </div>
-        { this.renderEventContent() }
       </BasicLayout>
     );
   }
@@ -80,6 +82,12 @@ class SingleEventPage extends React.Component<Props, State> {
     } else {
       return (
         <div className={ classes.event }>
+          <div id="readspeaker_button1" className="rs_skip rsbtn rs_preserve">
+            <a rel="nofollow" className="rsbtn_play" accessKey="L" title="Kuuntele ReadSpeaker webReaderilla" href={"//app-eu.readspeaker.com/cgi-bin/rsent?customerid=11747&amp;lang=fi_fi&amp;readid=readthis&amp;url="+encodeURIComponent(window.location.href)}>
+                <span className="rsbtn_left rsimg rspart"><span className="rsbtn_text"><span>Kuuntele</span></span></span>
+                <span className="rsbtn_right rsimg rsplay rspart"></span>
+            </a>
+          </div>
           { this.renderEventPicture() }
           <div className={ classes.eventColumn }>
             { fetchedContent.offers[0].price.fi &&
