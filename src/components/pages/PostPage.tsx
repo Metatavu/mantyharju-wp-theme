@@ -129,7 +129,9 @@ class PostPage extends React.Component<Props, State> {
               </Grid>
             </div>
             <div id="readthis" className={ classes.columns }>
-              <TreeView slug={ slug } />
+              <div className="rs_skip">
+                <TreeView slug={ slug }/>
+              </div>
               <div className={ classes.contentarea } >       
                   { this.renderContent() }
               </div>
