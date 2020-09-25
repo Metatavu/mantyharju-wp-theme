@@ -1,6 +1,7 @@
 <html lang="fi">
   <head>
     <?php require get_template_directory() . '/inc/template-head-generic.php'; ?>
+    <script type="text/javascript">window.rsConf = {general: {usePost: true}};</script>
     <script src="//cdn1.readspeaker.com/script/11747/webReader/webReader.js?pids=wr" type="text/javascript"></script>
   </head>
   <body>
