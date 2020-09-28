@@ -5,6 +5,7 @@ import styles from "../../styles/single-event-page";
 import BasicLayout from "../BasicLayout";
 import { DomElement } from "domhandler";
 import * as moment from "moment";
+import ReadSpeaker from "../generic/ReadSpeaker";
 
 /**
  * Component props
@@ -82,12 +83,7 @@ class SingleEventPage extends React.Component<Props, State> {
     } else {
       return (
         <div className={ classes.event }>
-          <div id="readspeaker_button1" className="rs_skip rsbtn rs_preserve">
-            <a rel="nofollow" className="rsbtn_play" accessKey="L" title="Kuuntele ReadSpeaker webReaderilla" href={"//app-eu.readspeaker.com/cgi-bin/rsent?customerid=11747&amp;lang=fi_fi&amp;readid=readthis&amp;url="+encodeURIComponent(window.location.href)}>
-                <span className="rsbtn_left rsimg rspart"><span className="rsbtn_text"><span>Kuuntele</span></span></span>
-                <span className="rsbtn_right rsimg rsplay rspart"></span>
-            </a>
-          </div>
+          <ReadSpeaker />
           { this.renderEventPicture() }
           <div className={ classes.eventColumn }>
             { fetchedContent.offers[0].price.fi &&
