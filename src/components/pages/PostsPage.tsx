@@ -10,6 +10,7 @@ import strings from "../../localization/strings";
 import * as moment from "moment";
 import * as classNames from "classnames";
 import hero from "../../resources/img/postHeader.png";
+import ReadSpeaker from '../generic/ReadSpeaker';
 
 /**
  * Facebook-logo license: https://commons.wikimedia.org/wiki/File:Facebook_William_Aditya_Sarana.png
@@ -107,17 +108,26 @@ class PostsPage extends React.Component<Props, State> {
         <div className={ classes.wrapper }>
           <div className={ classes.pageContent }>
             <div className={ classes.breadcrumb }>
-              <Breadcrumbs separator=">">
-                  { this.state.breadcrumb && this.renderBreadcrumb() }
-              </Breadcrumbs>
-            </div>
-            <div>
-              { this.renderPostContent() }
-            </div>    
-            <div style={{flexGrow: 1}}>
-              <Grid container className={ classes.gallery }>
-                { this.renderPosts() }
+            <Grid container spacing={0}>
+                <Grid item xs={12} md={8} key={"123"}>
+                  <Breadcrumbs separator=">">
+                    { this.state.breadcrumb && this.renderBreadcrumb() }
+                  </Breadcrumbs>
+                </Grid>
+                <Grid item xs={12} md={4} key={"456"}>
+                 <ReadSpeaker />
+                </Grid>
               </Grid>
+              <div id ="readthis">
+                <div>
+                  { this.renderPostContent() }
+                </div>
+                <div style={{flexGrow: 1}}>
+                  <Grid container className={ classes.gallery }>
+                    { this.renderPosts() }
+                  </Grid>
+                </div>
+              </div>
             </div>
           </div>
         </div>

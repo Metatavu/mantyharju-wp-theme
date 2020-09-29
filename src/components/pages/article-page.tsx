@@ -6,6 +6,7 @@ import ReactHtmlParser from "react-html-parser";
 import { Post } from "src/generated/client/src";
 import strings from "../../localization/strings";
 import { withStyles, WithStyles, Typography } from "@material-ui/core";
+import ReadSpeaker from "../generic/ReadSpeaker";
 
 /**
  * Component props
@@ -103,8 +104,14 @@ class ArticlePage extends React.Component<Props, State> {
     return (
       <React.Fragment>
         <div className={ classes.wrapper }>
-          <div className={ classes.pageContent }>
+          <div className={ classes.pageContent } id="readthis">
+            <ReadSpeaker />
             { postContent }
+            <div>
+              <Typography variant="button" display="block" gutterBottom>
+                <a href="/">Palaa takaisin etusivulle</a>
+              </Typography>
+            </div>
           </div>
         </div>
       </React.Fragment>

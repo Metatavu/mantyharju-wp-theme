@@ -9,6 +9,8 @@ const sidePaddingMd = "0 4rem";
 const sidePaddingLg = "0 6rem";
 const sidePaddingXl = "0 8rem";
 
+const hoverHighlight = "rgba(0,0,0,0.1)";
+
 export default createStyles({
 
   heroImageDiv: {
@@ -48,7 +50,7 @@ export default createStyles({
       top: 0,
       width: "100%",
       height: "100%",
-      backgroundColor: "rgba(0,0,0,0.2)"
+      backgroundColor: "rgba(0,0,0,0.1)"
     }
   },
 
@@ -125,4 +127,14 @@ export default createStyles({
       },
     },
   },
+  backlink: {
+    padding: "0.5rem 1rem",
+    color: theme.palette.primary.main,
+    fontSize: 14,
+    textTransform: "uppercase",
+    "&:hover": {
+      textDecoration: "none",
+      backgroundColor: hoverHighlight
+    }
+  }
 });
