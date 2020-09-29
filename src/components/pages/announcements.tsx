@@ -5,6 +5,7 @@ import BasicLayout from "../BasicLayout";
 import ApiUtils from "../../utils/ApiUtils";
 import { CustomPost } from "src/generated/client/src";
 import ReactHtmlParser from "react-html-parser";
+import ReadSpeaker from "../generic/ReadSpeaker";
 
 /**
  * Component props
@@ -60,7 +61,8 @@ class Announcements extends React.Component<Props, State> {
             </Typography>
           </div>
         </div>
-        <div className={ classes.cards }>
+        <ReadSpeaker />
+        <div className={ classes.cards } id="readthis">
           { this.renderContent() }
         </div>
       </BasicLayout>

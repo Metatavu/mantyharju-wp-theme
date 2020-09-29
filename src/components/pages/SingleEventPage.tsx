@@ -5,6 +5,7 @@ import styles from "../../styles/single-event-page";
 import BasicLayout from "../BasicLayout";
 import { DomElement } from "domhandler";
 import * as moment from "moment";
+import ReadSpeaker from "../generic/ReadSpeaker";
 
 /**
  * Component props
@@ -56,15 +57,17 @@ class SingleEventPage extends React.Component<Props, State> {
 
     return (
       <BasicLayout lang={ lang } slug={ slug }>
-        <div className={ classes.heroImageDiv }>
-          <div className={ classes.heroContent }>
-            <Typography variant="h1" className={ classes.heroText }>{ fetchedContent ? fetchedContent.name.fi || "Event" : "Event" }</Typography>
-            <Typography variant="h2">
-              { fetchedContent ? moment(fetchedContent.start_time).format("DD.MM.YYYY HH:mm") : "" } - { fetchedContent ? moment(fetchedContent.end_time).format("DD.MM.YYYY HH:mm") : "" }
-            </Typography>
+        <div id="readthis">
+          <div className={ classes.heroImageDiv }>
+            <div className={ classes.heroContent }>
+              <Typography variant="h1" className={ classes.heroText }>{ fetchedContent ? fetchedContent.name.fi || "Event" : "Event" }</Typography>
+              <Typography variant="h2">
+                { fetchedContent ? moment(fetchedContent.start_time).format("DD.MM.YYYY HH:mm") : "" } - { fetchedContent ? moment(fetchedContent.end_time).format("DD.MM.YYYY HH:mm") : "" }
+              </Typography>
+            </div>
           </div>
+          { this.renderEventContent() }
         </div>
-        { this.renderEventContent() }
       </BasicLayout>
     );
   }
@@ -80,6 +83,7 @@ class SingleEventPage extends React.Component<Props, State> {
     } else {
       return (
         <div className={ classes.event }>
+          <ReadSpeaker />
           { this.renderEventPicture() }
           <div className={ classes.eventColumn }>
             { fetchedContent.offers[0].price.fi &&
