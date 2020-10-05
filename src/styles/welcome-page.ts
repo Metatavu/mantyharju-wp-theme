@@ -485,7 +485,8 @@ export default createStyles({
     },
     [breakpoints.up("md")]: {
       padding: sidePaddingLg,
-      margin: "4rem 0",
+      paddingTop: "4rem",
+      paddingBottom: "4rem",
       gridTemplateColumns: "repeat(3, 1fr)",
       gridTemplateRows: "repeat(2, 1fr)",
     },
@@ -506,7 +507,7 @@ export default createStyles({
     [breakpoints.up("md")]: {
       transition: "background-color 0.2s ease-out, box-shadow 0.2s ease-out",
       "&:hover": {
-        backgroundColor: "#267b7d",
+        backgroundColor: "#2a465e",
         boxShadow: "0px 0px 30px rgba(0,0,0,0.2)",
       },
     },
