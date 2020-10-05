@@ -13,7 +13,7 @@ export default createStyles({
     alignItems: "center",
     textDecoration: "none",
     fontFamily: theme.typography.h2.fontFamily,
-    color: "#00AAAD",
+    color: "#1068B3",
     cursor: "pointer",
   },
   menuItems: {

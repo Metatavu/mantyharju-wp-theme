@@ -14,7 +14,7 @@
     $eventEndTime = $event["endTime"]->format("d.m.Y");
     $result .= sprintf('<p>%s</p>', $eventTime);
     if ($event["startTime"]->format("U") > date("U") &&  $event["endTime"]->format("U") > date("U")) {
-      $result .= sprintf('<div><img style="background-color: #00AAAD;"></img></div>');
+      $result .= sprintf('<div><img style="background-color: #1068B3;"></img></div>');
     } elseif ($event["startTime"]->format("U") < date("U") &&  $event["endTime"]->format("U") > date("U")) {
       $result .= sprintf('<div><img style="background-color: #FFCF4E;"></img></div>');
     } else {

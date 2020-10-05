@@ -100,7 +100,7 @@ export default createStyles({
     }
   },
   currentPageLink: {
-    color: "#00AAAD",
+    color: "#1068B3",
   },
   dividerLine: {
     color: "black",

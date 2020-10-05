@@ -250,7 +250,7 @@ class WelcomePage extends React.Component<Props, State> {
               <p className= { classes.addEventTextDivParagraph }>
                 { showcaseText }
               </p>
-              <Button onClick={ this.navigateTo(showcaseButtonLink || window.location.href) } className={ classes.addEventButton }>
+              <Button color="secondary" onClick={ this.navigateTo(showcaseButtonLink || window.location.href) } className={ classes.addEventButton }>
                 { showcaseButtonText }
               </Button>
             </div>
@@ -327,7 +327,7 @@ class WelcomePage extends React.Component<Props, State> {
               <Typography variant="subtitle1">Menossa</Typography>
             </div>
             <div className={ classes.legend }>
-              <div className={ classes.legendColor } style={{ backgroundColor: "#00AAAD" }} />
+              <div className={ classes.legendColor } style={{ backgroundColor: "#1068B3" }} />
               <Typography variant="subtitle1">Tulossa</Typography>
             </div>
           </div>
