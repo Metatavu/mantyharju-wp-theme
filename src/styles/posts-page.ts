@@ -13,6 +13,11 @@ export default createStyles({
    * Page styles
    */
   root: {
+    "& .wp-block-column": {
+      "& p": {
+        marginBlockStart: "0 !important",
+      }
+    }
   },
   logoBar: {
     display: "flex",
@@ -345,7 +350,7 @@ export default createStyles({
   },
   sidebar: {
     flex: 1,
-    backgroundColor: "#E6F1F0",
+    backgroundColor: "#e4e9f7",
     padding: "2rem"
   },
 
@@ -849,12 +854,24 @@ export default createStyles({
   },
   grid_item: {
     padding: 15,
+    "& .wp-block-group__inner-container": {
+      marginTop: "1em",
+      marginBottom: "1em",
+      "& h3": {
+        marginBlockStart: 0,
+        marginBlockEnd: 0
+      },
+      "& p": {
+        marginBlockStart: 0,
+        marginBlockEnd: 0
+      },
+    },
   },
   gallery: {
     "& h2":{
       fontSize: 24,
       fontWeight: "bold",
-      color: "#00AAAD",
+      color: "#1068B3",
       textAlign: "left",
       topMargin: "1rem",
       "&:hover":{
@@ -880,7 +897,7 @@ export default createStyles({
     [breakpoints.up("md")]: {
       transition: "background-color 0.2s ease-out, box-shadow 0.2s ease-out",
       "&:hover": {
-        backgroundColor: "#267b7d",
+        backgroundColor: "#2a465e",
         boxShadow: "0px 0px 30px rgba(0,0,0,0.2)",
       },
     },

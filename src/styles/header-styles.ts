@@ -196,7 +196,7 @@ export default createStyles({
     height: 40,
     marginLeft: "2rem",
     "& input": {
-      backgroundColor: "#E6F1F0",
+      backgroundColor: "#e4e9f7",
       border: 0,
       height: 40,
       width: 250,
