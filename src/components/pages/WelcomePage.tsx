@@ -738,7 +738,7 @@ class WelcomePage extends React.Component<Props, State> {
       <DatePicker
         selected={ value ? new Date(value) : null }
         onChange={ onChange }
-        dateFormat="dd.MM.yyyy"
+        dateFormat="dd.MM.yyyy HH:mm"
         showTimeSelect
         timeFormat="HH:mm"
         timeIntervals={ 15 }
