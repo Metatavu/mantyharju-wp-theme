@@ -912,7 +912,7 @@ class WelcomePage extends React.Component<Props, State> {
       return (
         <div
           onClick={ this.navigateTo(page.link || window.location.href) }
-          style={{ backgroundImage: `url(${ page.featureImageUrl ? page.featureImageUrl : "" })` }}
+          style={{ backgroundImage: `url(${ page.featureImageUrl ? page.featureImageUrl : "" })`, backgroundPosition: "center" }}
           className={ classes.bottom_section_item }
           key={ index }
         >

@@ -147,7 +147,7 @@ class PostsPage extends React.Component<Props, State> {
         displayPages.map(page => {
           return (
             <Grid item xs={12} sm={6} md={4} className={classes.grid_item}>
-              <div style={{ backgroundImage: `url(${ page.featured_image_url || hero })` }} onClick={() => { this.onPostClick(page) }} className={ classes.gallery_section_item  } />
+              <div style={{ backgroundImage: `url(${ page.featured_image_url || hero })`, backgroundPosition: "center" }} onClick={() => { this.onPostClick(page) }} className={ classes.gallery_section_item  } />
               <h2>{ ReactHtmlParser(page.post_title ? page.post_title || "" : "") }</h2>
             </Grid>
           )
