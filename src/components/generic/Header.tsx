@@ -99,6 +99,12 @@ class Header extends React.Component<Props, State> {
           onChange={ this.setSearchString }
           onSelect={ this.selectItem }
           menuStyle={ menuStyle }
+          renderInput={params => (
+            <input
+              {...params}
+              title="Haku"
+            /> 
+          )}
         />
         <div className={ classes.searchIconWrapper }>
           <SvgIcon color="secondary" >

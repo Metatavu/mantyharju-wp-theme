@@ -19,6 +19,9 @@ export default createStyles({
    * - Improve responsive design for buttons (small screens)
    * - Post columns styling
    */
+  "button:focus": {
+    border: "1px solid black"
+  },
 
   loadingIconContainer: {
     display: "flex",
