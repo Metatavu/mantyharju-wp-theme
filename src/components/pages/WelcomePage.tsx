@@ -762,21 +762,22 @@ class WelcomePage extends React.Component<Props, State> {
    *
    * @param path path
    */
-  private setAutocompleteOptions = async (path: string, input: string) => {
+  private setAutocompleteOptions = async (input: string) => {
 
+    const { fetchData } = this.state;
     // Handle place autocomplete
-    if (input.length < 1) {
+    if (!input) {
       return [];
     }
 
-    if (Object.keys(this.state.fetchData).length === 0) {
+    if (Object.keys(fetchData).length === 0) {
       const data = await this.fetchPlaces();
       this.setState({
         fetchData: data
       })
     }
 
-    return await this.state.fetchData.data.map((place: any) => {
+    return await fetchData.data.map((place: any) => {
       return {
         name: place.name && place.name.fi ? place.name.fi : place.id,
         value: place.id
@@ -787,7 +788,6 @@ class WelcomePage extends React.Component<Props, State> {
   /**
    * Fetching data if not having any
    * 
-   * @param icon 
    */
   private fetchPlaces = async () => {
     const res = await fetch(`https://mantyharju.linkedevents.fi/v1/place/?&data_source=mantyharju`);
