@@ -326,7 +326,7 @@ class Header extends React.Component<Props, State> {
       return null;
     } else {
       return (
-        childPages.map((childPage) => {
+        childPages.sort(this.compareMenuOrder).map((childPage) => {
           return (
             <Typography
               variant="body1"
@@ -342,6 +342,30 @@ class Header extends React.Component<Props, State> {
     }
   }
 
+  /**
+   * Method for comparing menuorder numbers from CustomPage.
+   * 
+   * @param a CustomPage object
+   * @param b CustomPage object
+   * 
+   * @returns number
+   */
+
+  private compareMenuOrder = (a: CustomPage, b: CustomPage) => {
+    const pageA = a.menu_order;
+    const pageB = b.menu_order;
+    let comparison = 0;
+
+    if (pageA && pageB) {
+      if (pageA > pageB) {
+        comparison = 1;
+      } else if (pageA < pageB) {
+        comparison = -1;
+      }
+    }
+    return comparison;
+  }
+  
   /**
    * Method for rendering list item
    *
