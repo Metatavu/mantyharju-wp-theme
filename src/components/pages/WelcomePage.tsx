@@ -787,7 +787,6 @@ class WelcomePage extends React.Component<Props, State> {
 
   /**
    * Fetching data if not having any
-   * 
    */
   private fetchPlaces = async () => {
     const res = await fetch(`https://mantyharju.linkedevents.fi/v1/place/?&data_source=mantyharju`);
