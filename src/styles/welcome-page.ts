@@ -585,6 +585,9 @@ export default createStyles({
           border: 0,
         },
         "& .metaform-field": {
+          "& div" : {
+            display: "block !important"
+          }
           //display: "flex",
         },
         "& .help-container": {
