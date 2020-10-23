@@ -337,8 +337,12 @@ class Header extends React.Component<Props, State> {
   }
 
   /**
-   * Method for comparing menuorder from CustomPage. Used to sort pages
+   * Method for comparing menuorder numbers from CustomPage.
    * 
+   * @param CustomPage object
+   * @param CustomPage object
+   * 
+   * @returns number
    */
 
   private compareMenuOrder = (a: CustomPage, b: CustomPage) => {
