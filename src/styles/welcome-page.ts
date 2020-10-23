@@ -584,12 +584,6 @@ export default createStyles({
         "& fieldset": {
           border: 0,
         },
-        "& .metaform-field": {
-          "& div" : {
-            display: "block !important"
-          }
-          //display: "flex",
-        },
         "& .help-container": {
           marginTop: 10,
           marginBottom: 10,
