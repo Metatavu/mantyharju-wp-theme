@@ -339,8 +339,8 @@ class Header extends React.Component<Props, State> {
   /**
    * Method for comparing menuorder numbers from CustomPage.
    * 
-   * @param CustomPage object
-   * @param CustomPage object
+   * @param a CustomPage object
+   * @param b CustomPage object
    * 
    * @returns number
    */
