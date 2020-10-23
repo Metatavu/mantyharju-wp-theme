@@ -7,16 +7,6 @@
       "title": "Nimi (Suomi)",
       "required": true
     }, {
-      "name": "name-sv",
-      "type": "text",
-      "title": "Nimi (Ruotsi)",
-      "required": false
-    }, {
-      "name": "name-en",
-      "type": "text",
-      "title": "Nimi (Englanti)",
-      "required": false
-    }, {
       "name": "submit-place",
       "type": "submit",
       "text": "Luo"
