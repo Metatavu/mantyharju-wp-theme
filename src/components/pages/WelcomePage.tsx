@@ -55,7 +55,8 @@ interface State {
   announcementsPageLink?: string,
   announcements?: PostItem[],
   jobsLink?: string,
-  jobs?: PostItem[]
+  jobs?: PostItem[],
+  fetchData: any
 }
 
 interface Dictionary<T> {
@@ -117,7 +118,8 @@ class WelcomePage extends React.Component<Props, State> {
       defaultImageUrl: "",
       showDefaultImages: false,
       addPlaceVisibility: false,
-      imageUrl: ""
+      imageUrl: "",
+      fetchData: {}
     };
 
     this.onPick = this.onPick.bind(this);
@@ -738,7 +740,7 @@ class WelcomePage extends React.Component<Props, State> {
       <DatePicker
         selected={ value ? new Date(value) : null }
         onChange={ onChange }
-        dateFormat="dd.MM.yyyy"
+        dateFormat="dd.MM.yyyy HH:mm"
         showTimeSelect
         timeFormat="HH:mm"
         timeIntervals={ 15 }
@@ -760,22 +762,35 @@ class WelcomePage extends React.Component<Props, State> {
    *
    * @param path path
    */
-  private setAutocompleteOptions = async (path: string, input: string) => {
+  private setAutocompleteOptions = async (input: string) => {
 
+    const { fetchData } = this.state;
     // Handle place autocomplete
-    if (path === "/linkedevents/places/search") {
-      if (input.length < 3) {
-        return [];
-      }
-      const res = await fetch(`https://mantyharju-test.linkedevents.fi/v1/search/?type=place&input=${ input }`);
-      const data = await res.json();
-      return data.data.map((place: any) => {
-        return {
-          name: place.name && place.name.fi ? place.name.fi : place.id,
-          value: place.id
-        };
-      });
+    if (!input) {
+      return [];
     }
+
+    if (Object.keys(fetchData).length === 0) {
+      const data = await this.fetchPlaces();
+      this.setState({
+        fetchData: data
+      })
+    }
+
+    return await fetchData.data.map((place: any) => {
+      return {
+        name: place.name && place.name.fi ? place.name.fi : place.id,
+        value: place.id
+      };
+    });
+  }
+
+  /**
+   * Fetching data if not having any
+   */
+  private fetchPlaces = async () => {
+    const res = await fetch(`https://mantyharju.linkedevents.fi/v1/place/?&data_source=mantyharju`);
+    return res.json();
   }
 
   /**
@@ -912,7 +927,7 @@ class WelcomePage extends React.Component<Props, State> {
       return (
         <div
           onClick={ this.navigateTo(page.link || window.location.href) }
-          style={{ backgroundImage: `url(${ page.featureImageUrl ? page.featureImageUrl : "" })` }}
+          style={{ backgroundImage: `url(${ page.featureImageUrl ? page.featureImageUrl : "" })`, backgroundPosition: "center" }}
           className={ classes.bottom_section_item }
           key={ index }
         >

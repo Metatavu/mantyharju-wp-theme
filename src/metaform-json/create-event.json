@@ -1,57 +1,12 @@
 {
   "sections": [
     {
-      "title": "Kieli",
-      "fields": [
-        {
-          "name": "language-fi",
-          "type": "boolean",
-          "title": "suomeksi",
-          "required": true
-        },
-        {
-          "name": "language-sv",
-          "type": "boolean",
-          "title": "ruotsiksi"
-        },
-        {
-          "name": "language-en",
-          "type": "boolean",
-          "title": "englanniksi"
-        }
-      ]
-    },
-    {
       "fields": [
         {
           "name": "name-fi",
           "type": "text",
-          "title": "Nimi (Suomi)",
-          "required": true,
-          "visible-if": {
-            "field": "language-fi",
-            "equals": true
-          }
-        },
-        {
-          "name": "name-sv",
-          "type": "text",
-          "title": "Nimi (Ruotsi)",
-          "required": true,
-          "visible-if": {
-            "field": "language-sv",
-            "equals": true
-          }
-        },
-        {
-          "name": "name-en",
-          "type": "text",
-          "title": "Nimi (Englanti)",
-          "required": true,
-          "visible-if": {
-            "field": "language-en",
-            "equals": true
-          }
+          "title": "Tapahtuman nimi",
+          "required": true
         },
         {
           "name": "name-help",
@@ -232,32 +187,8 @@
         {
           "name": "description-fi",
           "type": "memo",
-          "title": "Kuvaus (Suomi)",
-          "required": true,
-          "visible-if": {
-            "field": "language-fi",
-            "equals": true
-          }
-        },
-        {
-          "name": "description-sv",
-          "type": "memo",
-          "title": "Kuvaus (Ruotsi)",
-          "required": true,
-          "visible-if": {
-            "field": "language-sv",
-            "equals": true
-          }
-        },
-        {
-          "name": "description-en",
-          "type": "memo",
-          "title": "Kuvaus (Englanti)",
-          "required": true,
-          "visible-if": {
-            "field": "language-en",
-            "equals": true
-          }
+          "title": "Kuvaus",
+          "required": true
         }
       ]
     },
@@ -272,109 +203,29 @@
         {
           "name": "price-fi",
           "type": "memo",
-          "title": "Hintatietojen kuvaus (Suomi)",
+          "title": "Hintatietojen kuvaus",
           "required": true,
           "placeholder": "Esimerkki: 10 euroa, maksetaan paikanpäälle.",
           "visible-if": {
             "field": "has-price",
-            "equals": true,
-            "and": [
-              {
-                "field": "language-fi",
-                "equals": true
-              }
-            ]
+            "equals": true
           }
         },
         {
           "name": "free-price-fi",
           "type": "memo",
-          "title": "Hintatietojen kuvaus (Suomi)",
+          "title": "Hintatietojen kuvaus",
           "required": false,
           "placeholder": "Esimerkki: 10 euroa, maksetaan paikanpäälle.",
           "visible-if": {
             "field": "has-price",
-            "not-equals": true,
-            "and": [
-              {
-                "field": "language-fi",
-                "equals": true
-              }
-            ]
+            "not-equals": true
           }
         },
         {
           "name": "price-help",
           "type": "html",
           "html": "<div class='help-container'><p>Mikäli tapahtuma on maksullinen, lisää rasti ruutuun ‘Pääsymaksu’ ja lisää lipun hinta tekstimuodossa (esim. 10 euroa/hlö)</p><p>Mikäli käytössä on sähköinen lipunmyynti, voit lisätä linkin sivustolle.</p></div>"
-        },
-        {
-          "name": "price-sv",
-          "type": "memo",
-          "title": "Hintatietojen kuvaus (Ruotsi)",
-          "required": true,
-          "placeholder": "Exempel: 10 EUR",
-          "visible-if": {
-            "field": "has-price",
-            "equals": true,
-            "and": [
-              {
-                "field": "language-sv",
-                "equals": true
-              }
-            ]
-          }
-        },
-        {
-          "name": "price-en",
-          "type": "memo",
-          "title": "Hintatietojen kuvaus (Englanti)",
-          "required": true,
-          "placeholder": "Example: 10 EUR",
-          "visible-if": {
-            "field": "has-price",
-            "equals": true,
-            "and": [
-              {
-                "field": "language-en",
-                "equals": true
-              }
-            ]
-          }
-        },
-        {
-          "name": "free-price-sv",
-          "type": "memo",
-          "title": "Hintatietojen kuvaus (Ruotsi)",
-          "required": false,
-          "placeholder": "Exempel: 10 EUR",
-          "visible-if": {
-            "field": "has-price",
-            "not-equals": true,
-            "and": [
-              {
-                "field": "language-sv",
-                "equals": true
-              }
-            ]
-          }
-        },
-        {
-          "name": "free-price-en",
-          "type": "memo",
-          "title": "Hintatietojen kuvaus (Englanti)",
-          "required": false,
-          "placeholder": "Example: 10 EUR",
-          "visible-if": {
-            "field": "has-price",
-            "not-equals": true,
-            "and": [
-              {
-                "field": "language-en",
-                "equals": true
-              }
-            ]
-          }
         },
         {
           "name": "price-url",
@@ -410,103 +261,27 @@
         {
           "name": "no-registration-fi",
           "type": "memo",
-          "title": "Ilmoittautuminen (Suomi)",
-          "required": true,
+          "title": "Ilmoittautuminen",
+          "required": false,
           "visible-if": {
             "field": "is-registration",
-            "equals": true,
-            "and": [
-              {
-                "field": "language-fi",
-                "equals": true
-              }
-            ]
+            "equals": true
           }
         },
         {
           "name": "registration-fi",
           "type": "memo",
-          "title": "Ilmoittautuminen (Suomi)",
+          "title": "Ilmoittautuminen",
           "required": false,
           "visible-if": {
             "field": "is-registration",
-            "not-equals": true,
-            "and": [
-              {
-                "field": "language-fi",
-                "equals": true
-              }
-            ]
+            "not-equals": true
           }
         },
         {
           "name": "registration-help",
           "type": "html",
           "html": "<div class='help-container'><p>Kerro mahdollisesta ennakkoilmoittautumisesta tai anna lisätietoja esimerkiksi paikkavarauksista.</p><p>Voit lisätä linkin ilmoittautumissivulle.</p></div>"
-        },
-        {
-          "name": "no-registration-sv",
-          "type": "memo",
-          "title": "Ilmoittautuminen (Ruotsi)",
-          "required": true,
-          "visible-if": {
-            "field": "is-registration",
-            "equals": true,
-            "and": [
-              {
-                "field": "language-sv",
-                "equals": true
-              }
-            ]
-          }
-        },
-        {
-          "name": "no-registration-en",
-          "type": "memo",
-          "title": "Ilmoittautuminen (Englanti)",
-          "required": true,
-          "visible-if": {
-            "field": "is-registration",
-            "equals": true,
-            "and": [
-              {
-                "field": "language-en",
-                "equals": true
-              }
-            ]
-          }
-        },
-        {
-          "name": "registration-sv",
-          "type": "memo",
-          "title": "Ilmoittautuminen (Ruotsi)",
-          "required": false,
-          "visible-if": {
-            "field": "is-registration",
-            "not-equals": true,
-            "and": [
-              {
-                "field": "language-sv",
-                "equals": true
-              }
-            ]
-          }
-        },
-        {
-          "name": "registration-en",
-          "type": "memo",
-          "title": "Ilmoittautuminen (Englanti)",
-          "required": false,
-          "visible-if": {
-            "field": "is-registration",
-            "not-equals": true,
-            "and": [
-              {
-                "field": "language-en",
-                "equals": true
-              }
-            ]
-          }
         },
         {
           "name": "registration-url",
