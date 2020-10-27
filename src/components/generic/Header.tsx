@@ -294,7 +294,7 @@ class Header extends React.Component<Props, State> {
     if (menuItemCurrent && menuVisibility) {
       const childMenuPages = this.getChildMenuPages(menuItemCurrent.ID ? menuItemCurrent.ID : -1);
       return (
-        (childMenuPages ? childMenuPages : new Array()).map((childPage: CustomPage) => {
+        (childMenuPages ? childMenuPages.sort(this.compareMenuOrder) : new Array()).map((childPage: CustomPage) => {
           return (
             <div className={ classes.menuItems }>
               <Typography
@@ -356,7 +356,7 @@ class Header extends React.Component<Props, State> {
     const pageB = b.menu_order;
     let comparison = 0;
 
-    if (pageA && pageB) {
+    if (typeof pageA === 'number' && typeof pageB === 'number') {
       if (pageA > pageB) {
         comparison = 1;
       } else if (pageA < pageB) {
