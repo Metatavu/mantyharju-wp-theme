@@ -585,8 +585,9 @@ export default createStyles({
           border: 0,
         },
         "& .metaform-field": { 
-          "& div": {
-            width: "100%"
+          "& textarea": {
+            width: "100%",
+            height: 100
           }
         },
         "& .help-container": {
