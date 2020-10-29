@@ -8,8 +8,6 @@
     return;
   }
 
-  echo "<p>";
   echo getLocalizedValue($emails, $data->language);
-  echo "</p>";
 
 ?>
