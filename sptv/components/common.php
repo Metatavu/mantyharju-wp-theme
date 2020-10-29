@@ -116,15 +116,15 @@
         if ($serviceHour["serviceHourType"] == "DaysOfTheWeek") {
           $additionalInformation = getLocalizedValue($serviceHour["additionalInformation"], $data->language);
           $openingHours = $serviceHour["openingHour"];
-          $result .= "<p>$additionalInformation</p>";
+          $result .= "<ul style=\"list-style-type:none; padding: 0px;\">";
           
-          $result .= "<p>";
+          $result .= "<li><b>$additionalInformation</b></li>";
           if (!$serviceHour["isClosed"] && count($openingHours) == 0) {
             $result .= __("Open 24 hours.", "sptv");
           } else {
             $result .= formatOpeningHours($openingHours);
           }
-          $result .= "</p>";
+          $result .= "</ul>";
 
         }
       }
@@ -145,7 +145,7 @@
     $to = "";
     
     if (isset($openingHour['dayTo'])) {
-      $days .= ' - ' . getLocalizedDayName($openingHour['dayTo']);
+      $days .= ': ' . getLocalizedDayName($openingHour['dayTo']);
     }
     
     if (isset($openingHour['from'])) {
@@ -157,9 +157,9 @@
     }
     
     if (!empty($from) || !empty($to)) {
-      return "${days} ${from} - ${to}";
+      return "<li>${days} ${from} - ${to}</li>";
     } else {
-      return "${days} ${from}";
+      return "<li>${days} ${from}</li>";
     }
   }
 
@@ -170,7 +170,7 @@
    * @return string formatted string
    */
   function formatOpeningHours($openingHours) {
-    return implode(", ", array_map(function ($openingHour) {
+    return implode("", array_map(function ($openingHour) {
       return formatOpeningHour($openingHour);
     }, $openingHours));
   }
