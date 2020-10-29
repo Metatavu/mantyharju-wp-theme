@@ -126,10 +126,33 @@ class App extends React.Component<Props, State> {
               )}
             />
             <Route
+              path="/drafts/:page"
+              exact={ true }
+              render={ (props) => (
+                <PostsPage
+                  lang={ language }
+                  slug={ this.pathToSlug(props.location.pathname) }
+                  mainPageSlug={ this.pathToTitle(props.location.pathname) }
+                  locationKey={ props.location.key }
+                />
+              )}
+            />
+            <Route
+              path="/drafts/:page/:page"
+              render={ (props) => (
+                <PostPage
+                  lang={ language }
+                  slug={ this.pathToSlug(props.location.pathname) }
+                  mainPageSlug={ this.pathToTitle(props.location.pathname) }
+                  locationPath={ props.location.pathname }
+                />
+              )}
+            />
+            <Route
               path="/:page"
               render={ (props) => {
                 // Check for special pages
-                if (/^\/event\/|\/announcements\/$|^\/news\/$|^\/jobs\/$|^\/sivut\//.test(props.location.pathname)) {
+                if (/^\/event\/|\/announcements\/$|^\/news\/$|^\/jobs\/$|^\/drafts\/|^\/sivut\//.test(props.location.pathname)) {
                   return null;
                 }
 
