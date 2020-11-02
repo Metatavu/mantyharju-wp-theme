@@ -598,6 +598,9 @@ export default createStyles({
             marginBottom: 3,
           }
         }
+      },
+      "& .metaform-field-missing-error": {
+        color: "#FF0000"
       }
     }
   },

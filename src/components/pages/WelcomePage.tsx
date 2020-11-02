@@ -6,8 +6,7 @@ import { WithStyles, withStyles, Button, CircularProgress, Typography, SvgIcon, 
 import styles from "../../styles/welcome-page";
 import * as moment from "moment";
 import AddIcon from "@material-ui/icons/Add";
-import { Post, MenuLocationData, CustomizeField, Attachment, Page, CustomPost } from "../../generated/client/src";
-import { MetaformComponent, IconName, FieldValue, Metaform } from "metaform-react";
+import { Post, MenuLocationData, CustomizeField, Page, CustomPost } from "../../generated/client/src";
 import { jobsIconSvgPath, announcementIconSvgPath, currentNewsIconSvgPath } from "../../resources/icons/svgIcons";
 import DatePicker, { registerLocale } from "react-datepicker";
 import ImagePicker from "react-image-picker";
@@ -15,6 +14,8 @@ import "react-image-picker/dist/index.css";
 import "react-datepicker/dist/react-datepicker.css";
 import fi from "date-fns/esm/locale/fi";
 import ImageUpload from "./image-upload";
+import { MetaformComponent, IconName, FieldValue, Metaform } from "metaform-react";
+import strings from "../../localization/strings";
 
 /**
  * Interface representing component properties
@@ -31,6 +32,7 @@ interface State {
   posts: CustomPost[],
   form: Metaform,
   placeForm: Metaform,
+  requiredFieldsMissing: boolean,
   formValues: Dictionary<string | number | null>
   placeFormValues: Dictionary<string | number | null>
   linkedEventsPost?: Post,
@@ -71,8 +73,7 @@ interface PostItem {
 }
 
 interface PageWithImgUrl extends Page {
-  featureImageUrl?: string
-
+  featureImageUrl?: string;
 }
 
 const imageList = [
@@ -110,6 +111,7 @@ class WelcomePage extends React.Component<Props, State> {
       scrollPosition: 0,
       siteMenuVisible: false,
       siteSearchVisible: false,
+      requiredFieldsMissing: false,
       announcementsCategoryId: 4,
       newsCategoryId: 5,
       linkedEventsLimitingNumber: 4,
@@ -583,20 +585,23 @@ class WelcomePage extends React.Component<Props, State> {
    */
   private renderForm = (form: Metaform) => {
     const { classes } = this.props;
+    const { requiredFieldsMissing } = this.state;
     return (
       <div className={ classes.metaformWrapper }>
         <MetaformComponent
           form={ form }
-          renderBeforeField={ this.renderBeforeField }
           formReadOnly={ false }
+          onSubmit={ this.onSubmit }
+          datePicker={ this.datePicker }
+          uploadFile={ this.uploadFile }
+          renderIcon={ this.renderIcon }
           getFieldValue={ this.getFieldValue }
           setFieldValue={ this.setFieldValue }
-          datePicker={ this.datePicker }
           datetimePicker={ this.datetimePicker }
-          uploadFile={ this.uploadFile }
+          renderBeforeField={ this.renderBeforeField }
           setAutocompleteOptions={ this.setAutocompleteOptions }
-          renderIcon={ this.renderIcon }
-          onSubmit={ this.onSubmit }
+          showRequiredFieldsMissingError={ requiredFieldsMissing }
+          requiredFieldsMissingError={ strings.requiredFieldMissing }
         />
       </div>
     );
@@ -809,17 +814,28 @@ class WelcomePage extends React.Component<Props, State> {
    * @param source submit input info
    */
   private onSubmit = async (source: Metaform) =>  {
+
     const submitButtonName = source["name"];
 
     if (submitButtonName === "submit-event") {
       const { formValues } = this.state;
+      if (!this.isFormValid()) {
+        this.setState({
+          requiredFieldsMissing: true
+        });
+        return;
+      } else {
+        this.setState({
+          requiredFieldsMissing: false
+        });
+      }
       const start = moment(formValues["start-date-time"] as number);
       const end = moment(formValues["end-date-time"] as number);
 
       formValues["image-url"] = this.state.imageUrl ? this.state.imageUrl : this.state.defaultImageUrl;
 
-      const hasStartTime = !(start.hour() == 0 && start.minute() == 0);
-      const hasEndTime = !(end.hour() == 0 && end.minute() == 0);
+      const hasStartTime = !(start.hour() === 0 && start.minute() === 0);
+      const hasEndTime = !(end.hour() === 0 && end.minute() === 0);
 
       formValues["has-start-time"] = hasStartTime ? "true" : "false";
       formValues["has-end-time"] = hasEndTime ? "true" : "false";
@@ -843,9 +859,8 @@ class WelcomePage extends React.Component<Props, State> {
         const api = ApiUtils.getApi();
         await api.postWpV2Event({ event: formValues });
         this.setState({formValues: {}});
-
       } catch (error) {
-          alert("Virhe tapahtuman lisäämisessä, tarkista pakolliset kentät ja yritä uudelleen")
+        alert("Virhe tapahtuman lisäämisessä, tarkista pakolliset kentät ja yritä uudelleen");
       }
     }
     if (submitButtonName === "submit-place") {
@@ -863,6 +878,44 @@ class WelcomePage extends React.Component<Props, State> {
           alert("Virhe paikan lisäämisessä, tarkista pakolliset kentät ja yritä uudelleen");
       }
     }
+  }
+
+  /**
+   * Validates form
+   *
+   * @returns boolean
+   */
+  private isFormValid = (): boolean => {
+    const { form, formValues } = this.state;
+
+    if (!form.sections) {
+      return false;
+    }
+
+    let formvalid = true;
+    form.sections.forEach(section => {
+
+      if (!section.fields) {
+        return;
+      }
+
+      section.fields.forEach(field => {
+
+        if (!field.name) {
+          return;
+        }
+
+        if (
+          field.required &&
+          (formValues[field.name] === "" ||
+          formValues[field.name] === null ||
+          formValues[field.name] === undefined)
+        ) {
+          formvalid = false;
+        }
+      });
+    });
+    return formvalid;
   }
 
   /**

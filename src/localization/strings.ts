@@ -11,7 +11,8 @@ export interface IStrings extends LocalizedStringsMethods {
   pageNotFound: string,
   searchSite: string,
   somethingWentWrong: string,
-  whoops: string
+  whoops: string,
+  requiredFieldMissing: string,
 }
 
 const strings: IStrings = new LocalizedStrings({
