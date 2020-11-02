@@ -16,6 +16,7 @@ import fi from "date-fns/esm/locale/fi";
 import ImageUpload from "./image-upload";
 import { MetaformComponent, IconName, FieldValue, Metaform } from "metaform-react";
 import strings from "../../localization/strings";
+import defaultimage from "../../resources/img/postHeader.png";
 
 /**
  * Interface representing component properties
@@ -980,7 +981,7 @@ class WelcomePage extends React.Component<Props, State> {
       return (
         <div
           onClick={ this.navigateTo(page.link || window.location.href) }
-          style={{ backgroundImage: `url(${ page.featureImageUrl ? page.featureImageUrl : "" })`, backgroundPosition: "center" }}
+          style={{ backgroundImage: `url(${ page.featureImageUrl ? page.featureImageUrl : defaultimage })`, backgroundPosition: "center" }}
           className={ classes.bottom_section_item }
           key={ index }
         >
