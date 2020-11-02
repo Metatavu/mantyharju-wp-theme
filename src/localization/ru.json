@@ -8,5 +8,6 @@
   "pageNotFound": "Page not found.",
   "searchSite": "Search from site",
   "somethingWentWrong": "Something went wrong. Contact site administrator.",
-  "whoops": "Whoops!"
+  "whoops": "Whoops!",
+  "requiredFieldMissing": "Pakollinen tieto puuttuu"
 }
