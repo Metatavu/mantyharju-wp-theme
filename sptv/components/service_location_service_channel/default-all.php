@@ -2,26 +2,27 @@
   include "name.php";
   include "description.php";
   
-  echo "<h3>" . __("Visiting information", "sptv") . "</h3>";
-
+  echo "<p>";
+  echo "<b>" . __("Visiting information", "sptv") . "</b><br/>";
   include "addresses.php";
   include "service-hours.php";
+  echo "</p>";
 
-  echo "<h3>" . __("Other contact details", "sptv") . "</h3>";
+  echo "<p>";
+  echo "<b>" . __("Other contact details", "sptv") . "</b><br/>";
 
   if (getLocalizedValue($serviceChannel ["emails"], $data->language)) {
-    echo "<b>" . __("Email", "sptv") . "</b>";
+    echo "<b>" . __("Email", "sptv") . "</b><br/>";
     include "email.php";
   }
 
   include "phone-numbers.php";
 
   if (getLocalizedValue($serviceChannel ["webPages"], $data->language)) {
-    echo "<b>" . __("Website", "sptv") . "</b>";
+    echo "<b>" . __("Website", "sptv") . "</b><br/>";
     include "webpage.php";
+    echo "</p>";
   }
-
-  echo "<h3>" . __("Accessibility information", "sptv") . "</h3>";
 
   include "accessibility.php";
 ?>

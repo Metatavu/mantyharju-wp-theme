@@ -571,7 +571,7 @@ export default createStyles({
         height: 40,
       },
       "& input[type='submit']": {
-        margin: 10,
+        marginTop: 10,
         midWidth: 100,
         width: "100%",
         height: 40,
@@ -583,6 +583,12 @@ export default createStyles({
       "& .metaform-section": {
         "& fieldset": {
           border: 0,
+        },
+        "& .metaform-field": { 
+          "& textarea": {
+            width: "100%",
+            height: 100
+          }
         },
         "& .help-container": {
           marginTop: 10,

@@ -1,22 +1,11 @@
 {
   "sections": [
     {
-      "title": "Kieli",
-      "fields": [
-        {
-          "name": "language-fi",
-          "type": "boolean",
-          "title": "suomeksi",
-          "required": true
-        }
-      ]
-    },
-    {
       "fields": [
         {
           "name": "name-fi",
           "type": "text",
-          "title": "Nimi (Suomi)",
+          "title": "Tapahtuman nimi",
           "required": true
         },
         {
@@ -198,12 +187,8 @@
         {
           "name": "description-fi",
           "type": "memo",
-          "title": "Kuvaus (Suomi)",
-          "required": true,
-          "visible-if": {
-            "field": "language-fi",
-            "equals": true
-          }
+          "title": "Kuvaus",
+          "required": true
         }
       ]
     },
@@ -218,35 +203,23 @@
         {
           "name": "price-fi",
           "type": "memo",
-          "title": "Hintatietojen kuvaus (Suomi)",
+          "title": "Hintatietojen kuvaus",
           "required": true,
           "placeholder": "Esimerkki: 10 euroa, maksetaan paikanpäälle.",
           "visible-if": {
             "field": "has-price",
-            "equals": true,
-            "and": [
-              {
-                "field": "language-fi",
-                "equals": true
-              }
-            ]
+            "equals": true
           }
         },
         {
           "name": "free-price-fi",
           "type": "memo",
-          "title": "Hintatietojen kuvaus (Suomi)",
+          "title": "Hintatietojen kuvaus",
           "required": false,
           "placeholder": "Esimerkki: 10 euroa, maksetaan paikanpäälle.",
           "visible-if": {
             "field": "has-price",
-            "not-equals": true,
-            "and": [
-              {
-                "field": "language-fi",
-                "equals": true
-              }
-            ]
+            "not-equals": true
           }
         },
         {
@@ -288,33 +261,21 @@
         {
           "name": "no-registration-fi",
           "type": "memo",
-          "title": "Ilmoittautuminen (Suomi)",
-          "required": true,
+          "title": "Ilmoittautuminen",
+          "required": false,
           "visible-if": {
             "field": "is-registration",
-            "equals": true,
-            "and": [
-              {
-                "field": "language-fi",
-                "equals": true
-              }
-            ]
+            "equals": true
           }
         },
         {
           "name": "registration-fi",
           "type": "memo",
-          "title": "Ilmoittautuminen (Suomi)",
+          "title": "Ilmoittautuminen",
           "required": false,
           "visible-if": {
             "field": "is-registration",
-            "not-equals": true,
-            "and": [
-              {
-                "field": "language-fi",
-                "equals": true
-              }
-            ]
+            "not-equals": true
           }
         },
         {
