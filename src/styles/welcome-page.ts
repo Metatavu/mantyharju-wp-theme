@@ -590,6 +590,9 @@ export default createStyles({
             height: 100
           }
         },
+        "& .metaform-autocomplete-field": {
+          width: "100%"
+        },
         "& .help-container": {
           marginTop: 10,
           marginBottom: 10,
