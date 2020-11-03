@@ -172,7 +172,7 @@ class WelcomePage extends React.Component<Props, State> {
     const keywordRes = await fetch("https://mantyharju.linkedevents.fi/v1/keyword/?page_size=1000&data_source=mantyharju");
     const data = await keywordRes.json();
 
-    const sections = (form.sections || []).map((section) => {
+    const sections = (form.sections || []).map((section: any) => {
       if (section.title === "Tapahtumaluokat") {
         section.fields = data.data.map((keyword: any) => {
           return {
@@ -894,13 +894,13 @@ class WelcomePage extends React.Component<Props, State> {
     }
 
     let formvalid = true;
-    form.sections.forEach(section => {
+    form.sections.forEach((section: any) => {
 
       if (!section.fields) {
         return;
       }
 
-      section.fields.forEach(field => {
+      section.fields.forEach((field: any) => {
 
         if (!field.name) {
           return;
