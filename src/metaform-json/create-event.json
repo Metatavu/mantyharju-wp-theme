@@ -27,20 +27,20 @@
           "name": "start-date-time",
           "type": "date-time",
           "title": "Alkamispäivämäärä",
-          "required": true,
-          "visible-if": {
+          "required": false,
+          "visibleIf": {
             "field": "all-day",
-            "not-equals": true
+            "notEquals": "checked"
           }
         },
         {
           "name": "start-date",
           "type": "date",
           "title": "Alkamispäivämäärä",
-          "required": true,
-          "visible-if": {
+          "required": false,
+          "visibleIf": {
             "field": "all-day",
-            "equals": true
+            "equals": "checked"
           }
         },
         {
@@ -52,20 +52,20 @@
           "name": "end-date-time",
           "type": "date-time",
           "title": "Loppumispäivämäärä",
-          "required": true,
-          "visible-if": {
+          "required": false,
+          "visibleIf": {
             "field": "all-day",
-            "not-equals": true
+            "notEquals": "checked"
           }
         },
         {
           "name": "end-date",
           "type": "date",
           "title": "Loppumispäivämäärä",
-          "required": true,
-          "visible-if": {
+          "required": false,
+          "visibleIf": {
             "field": "all-day",
-            "equals": true
+            "equals": "checked"
           }
         }
       ]
@@ -108,9 +108,9 @@
           "name": "default-image-html",
           "type": "html",
           "html": "<div class=\"default-images\"></div>",
-          "visible-if": {
+          "visibleIf": {
             "field": "show-default-images",
-            "equals": true
+            "equals": "checked"
           }
         },
         {
@@ -204,11 +204,11 @@
           "name": "price-fi",
           "type": "memo",
           "title": "Hintatietojen kuvaus",
-          "required": true,
+          "required": false,
           "placeholder": "Esimerkki: 10 euroa, maksetaan paikanpäälle.",
-          "visible-if": {
+          "visibleIf": {
             "field": "has-price",
-            "equals": true
+            "equals": "checked"
           }
         },
         {
@@ -217,9 +217,9 @@
           "title": "Hintatietojen kuvaus",
           "required": false,
           "placeholder": "Esimerkki: 10 euroa, maksetaan paikanpäälle.",
-          "visible-if": {
+          "visibleIf": {
             "field": "has-price",
-            "not-equals": true
+            "notEquals": "checked"
           }
         },
         {
@@ -263,9 +263,9 @@
           "type": "memo",
           "title": "Ilmoittautuminen",
           "required": false,
-          "visible-if": {
+          "visibleIf": {
             "field": "is-registration",
-            "equals": true
+            "equals": "checked"
           }
         },
         {
@@ -273,9 +273,9 @@
           "type": "memo",
           "title": "Ilmoittautuminen",
           "required": false,
-          "visible-if": {
+          "visibleIf": {
             "field": "is-registration",
-            "not-equals": true
+            "notEquals": "checked"
           }
         },
         {

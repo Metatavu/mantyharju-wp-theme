@@ -590,6 +590,9 @@ export default createStyles({
             height: 100
           }
         },
+        "& .metaform-autocomplete-field": {
+          width: "100%"
+        },
         "& .help-container": {
           marginTop: 10,
           marginBottom: 10,
@@ -604,6 +607,9 @@ export default createStyles({
             marginBottom: 3,
           }
         }
+      },
+      "& .metaform-field-missing-error": {
+        color: "#FF0000"
       }
     }
   },
