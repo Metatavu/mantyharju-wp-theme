@@ -1,5 +1,5 @@
 import * as React from "react";
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Redirect, Route } from "react-router-dom";
 import WelcomePage from "./pages/WelcomePage";
 import PostPage from "./pages/PostPage";
 import PostsPage from "./pages/PostsPage";
@@ -102,6 +102,12 @@ class App extends React.Component<Props, State> {
                 />
               )}
             />
+            <Route  
+            path="/sivut/"
+            exact={ true }
+            >
+              <Redirect to="/" />
+            </Route>
             <Route
               path="/sivut/:page"
               exact={ true }

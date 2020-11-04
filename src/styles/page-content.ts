@@ -240,15 +240,19 @@ export default createStyles({
     position: "relative",
     marginTop: 57,
     [breakpoints.up("sm")]: {
-      padding: sidePaddingMd,
+      padding: "0 3rem",
       minHeight: 280,
     },
     [breakpoints.up("md")]: {
-      padding: sidePaddingLg,
+      padding: sidePaddingMd,
       minHeight: 300,
       marginTop: 0,
     },
     [breakpoints.up("lg")]: {
+      padding: sidePaddingLg,
+      minHeight: 335,
+    },
+    [breakpoints.up("xl")]: {
       padding: sidePaddingXl,
       minHeight: 335,
     },
@@ -270,12 +274,15 @@ export default createStyles({
     color: "#ffffff",
     textShadow: "0px 0px 4px #000",
     [breakpoints.up("sm")]: {
+      marginLeft: 0,
       fontSize: "2rem"
     },
     [breakpoints.up("md")]: {
+      marginLeft: 15,
       fontSize: "2.5em",
     },
     [breakpoints.up("lg")]: {
+      marginLeft: 0,
       fontSize: "3rem",
     }
   },
@@ -297,11 +304,12 @@ export default createStyles({
     display: "flex",
     flexDirection: "column",
     width: "100%",
+    paddingLeft: 15,
     [breakpoints.up("sm")]: {
       padding: "0 2rem 1rem"
     },
     [breakpoints.up("md")]: {
-      padding: "0 4rem 2rem"
+      padding: "0 5rem 2rem"
     },
     [breakpoints.up("lg")]: {
       padding: "0 6rem 2rem"
