@@ -108,7 +108,7 @@ class PostsPage extends React.Component<Props, State> {
         <div className={ classes.wrapper }>
           <div className={ classes.pageContent }>
             <div className={ classes.breadcrumb }>
-            <Grid container spacing={0}>
+            <Grid className={ classes.breadcrumbar } container spacing={0}>
                 <Grid item xs={12} md={8} key={"123"}>
                   <Breadcrumbs separator=">">
                     { this.state.breadcrumb && this.renderBreadcrumb() }
@@ -294,6 +294,7 @@ class PostsPage extends React.Component<Props, State> {
    */
   private renderBreadcrumb = () => {
     const { breadcrumb } = this.state;
+    console.log(breadcrumb);
     return breadcrumb.map((crumb) => {
       return (
         <Link color="inherit" href={ crumb.link } onClick={() => {}}>

@@ -240,15 +240,19 @@ export default createStyles({
     position: "relative",
     marginTop: 57,
     [breakpoints.up("sm")]: {
-      padding: sidePaddingMd,
+      padding: sidePaddingSm,
       minHeight: 280,
     },
     [breakpoints.up("md")]: {
-      padding: sidePaddingLg,
+      padding: sidePaddingMd,
       minHeight: 300,
       marginTop: 0,
     },
     [breakpoints.up("lg")]: {
+      padding: sidePaddingLg,
+      minHeight: 335,
+    },
+    [breakpoints.up("xl")]: {
       padding: sidePaddingXl,
       minHeight: 335,
     },
@@ -270,12 +274,15 @@ export default createStyles({
     color: "#ffffff",
     textShadow: "0px 0px 4px #000",
     [breakpoints.up("sm")]: {
+      marginLeft: 0,
       fontSize: "2rem"
     },
     [breakpoints.up("md")]: {
+      marginLeft: 15,
       fontSize: "2.5em",
     },
     [breakpoints.up("lg")]: {
+      marginLeft: 15,
       fontSize: "3rem",
     }
   },
@@ -899,7 +906,10 @@ export default createStyles({
       "&:hover": {
         backgroundColor: "#2a465e",
         boxShadow: "0px 0px 30px rgba(0,0,0,0.2)",
-      },
-    },
+      }
+    }
+  },
+  breadcrumbar: {
+    paddingLeft: 15
   }
 });

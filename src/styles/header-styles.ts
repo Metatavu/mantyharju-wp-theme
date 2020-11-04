@@ -22,7 +22,7 @@ export default createStyles({
     },
     [breakpoints.up("md")]: {
       height: "initial",
-      padding: "2rem 8rem 0",
+      padding: "2rem 5rem 0",
       minHeight: 153,
       position: "relative",
     },
@@ -44,6 +44,8 @@ export default createStyles({
   nav: {
     display: "flex",
     flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-between"
   },
   navLink: {
     display: "flex",
@@ -58,15 +60,7 @@ export default createStyles({
     paddingBottom: "1rem",
     borderBottom: "4px solid rgba(0,0,0,0)",
     transition: "border-bottom-color 0.2s ease-out",
-    [breakpoints.up("md")]: {
-      marginLeft: 20,
-    },
-    [breakpoints.up("lg")]: {
-      marginLeft: 25
-    },
-    [breakpoints.up("xl")]: {
-      marginLeft: 40,
-    },
+    margin: "0 5px",
     "&.highlight": {
       borderBottomColor: theme.palette.primary.main
     }
@@ -114,7 +108,7 @@ export default createStyles({
   mainMenu: {
     position: "relative",
     display: "flex",
-    padding: "1rem 0 0",
+    padding: "1rem 30px 0",
     zIndex: 10,
   },
   subMenu: {
