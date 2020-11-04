@@ -294,7 +294,6 @@ class PostsPage extends React.Component<Props, State> {
    */
   private renderBreadcrumb = () => {
     const { breadcrumb } = this.state;
-    console.log(breadcrumb);
     return breadcrumb.map((crumb) => {
       return (
         <Link color="inherit" href={ crumb.link } onClick={() => {}}>
