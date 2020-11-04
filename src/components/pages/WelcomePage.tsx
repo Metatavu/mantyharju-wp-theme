@@ -854,6 +854,10 @@ class WelcomePage extends React.Component<Props, State> {
         }
       });
 
+      if (keywords.length < 1) {
+        keywords.push("mantyharju:afxsgyecju");
+      }
+
       formValues["keywords"] = keywords.join(",");
 
       try {
