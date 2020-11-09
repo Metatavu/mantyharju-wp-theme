@@ -20,11 +20,16 @@ class ComposerStaticInit68338b26674b31c4bd3b803744470c35
         ),
     );
 
+    public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit68338b26674b31c4bd3b803744470c35::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit68338b26674b31c4bd3b803744470c35::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit68338b26674b31c4bd3b803744470c35::$classMap;
 
         }, null, ClassLoader::class);
     }

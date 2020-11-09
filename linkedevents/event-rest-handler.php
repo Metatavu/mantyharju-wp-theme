@@ -4,7 +4,7 @@ namespace Metatavu\LinkedEvents\Rest;
 defined ( 'ABSPATH' ) || die ( 'No script kiddies please!' );
 
 if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
- 
+
   class RestHandler {
   
     function __construct() {}
@@ -20,10 +20,9 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
 
     public function createEventHandler($request) {
 
-     /*
-      *
-      Set all events public by default
-      */
+      /*
+       * Set all events public by default
+       */
       $defaultPublication = "public";
 
       $result = \Metatavu\LinkedEvents\Configuration::getDefaultConfiguration();
