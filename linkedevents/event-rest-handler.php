@@ -93,15 +93,11 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
         'provider-phone',
         'responsible-fi',
         'is_registration',
-        'registration-en',
         'registration-fi',
-        'registration-sv',
         'registration_url',
         'responsible-email',
         'responsible-phone',
         'no-registration-fi',
-        'no-registration-sv',
-        'no-registration-en'
       ];
       $customData = [];
 
@@ -182,15 +178,7 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
      */
     protected function updateEventName($event, $body) {
       $name = $event->getName();
-      if($body->{'language-fi'} == checked) {
-        $name->setFi($body->{'name-fi'});
-      }
-      if($body->{'language-sv'} == checked) {
-        $name->setSv($body->{'name-sv'});
-      }
-      if($body->{'language-en'} == checked) {
-        $name->setEn($body->{'name-en'});
-      }
+      $name->setFi($body->{'name-fi'});
       $event->setName($name);
     }
 
