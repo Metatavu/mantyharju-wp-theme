@@ -482,13 +482,6 @@ export default createStyles({
         fontSize: 18
       },
     },
-    // Strong
-    "& strong": {},
-    // Lists
-    "& ul": {
-      listStyle: "none",
-      padding: 0
-    },
     // Separator
     "& hr": {
       marginTop: theme.spacing(5),
