@@ -2,8 +2,8 @@
     "packages": [
         {
             "name": "metatavu/linkedevents-php-client",
-            "version": "dev-master",
-            "version_normalized": "dev-master",
+            "version": "0.0.16",
+            "version_normalized": "0.0.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/metatavu/linkedevents-client-php.git",

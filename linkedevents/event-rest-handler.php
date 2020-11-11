@@ -50,7 +50,6 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
 
         $api_instance = new \Metatavu\LinkedEvents\Client\EventApi($client);
 
-
         try {
             $eventCreateResult = $api_instance->eventCreate($event);
             echo $eventCreateResult;
