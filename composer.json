@@ -6,6 +6,6 @@
     }
   ],
   "require": {
-    "metatavu/linkedevents-php-client": "*@dev"
+    "metatavu/linkedevents-php-client": "0.0.16"
   }
 }
