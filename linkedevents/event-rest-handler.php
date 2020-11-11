@@ -4,7 +4,7 @@ namespace Metatavu\LinkedEvents\Rest;
 defined ( 'ABSPATH' ) || die ( 'No script kiddies please!' );
 
 if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
- 
+
   class RestHandler {
   
     function __construct() {}
@@ -20,10 +20,9 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
 
     public function createEventHandler($request) {
 
-     /*
-      *
-      Set all events public by default
-      */
+      /*
+       * Set all events public by default
+       */
       $defaultPublication = "public";
 
       $result = \Metatavu\LinkedEvents\Configuration::getDefaultConfiguration();
@@ -50,7 +49,6 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
         $this->updateCustomData($event, $body);
 
         $api_instance = new \Metatavu\LinkedEvents\Client\EventApi($client);
-
 
         try {
             $eventCreateResult = $api_instance->eventCreate($event);
@@ -94,15 +92,11 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
         'provider-phone',
         'responsible-fi',
         'is_registration',
-        'registration-en',
         'registration-fi',
-        'registration-sv',
         'registration_url',
         'responsible-email',
         'responsible-phone',
         'no-registration-fi',
-        'no-registration-sv',
-        'no-registration-en'
       ];
       $customData = [];
 
@@ -183,15 +177,7 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
      */
     protected function updateEventName($event, $body) {
       $name = $event->getName();
-      if($body->{'language-fi'} == checked) {
-        $name->setFi($body->{'name-fi'});
-      }
-      if($body->{'language-sv'} == checked) {
-        $name->setSv($body->{'name-sv'});
-      }
-      if($body->{'language-en'} == checked) {
-        $name->setEn($body->{'name-en'});
-      }
+      $name->setFi($body->{'name-fi'});
       $event->setName($name);
     }
 

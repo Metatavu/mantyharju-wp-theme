@@ -4,11 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "56db32dd0e414277d0203806e3926428",
+    "content-hash": "9461f5487207eaa97082d73e7bc72bcd",
     "packages": [
         {
             "name": "metatavu/linkedevents-php-client",
-            "version": "dev-master",
+            "version": "0.0.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/metatavu/linkedevents-client-php.git",
@@ -59,12 +59,10 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "metatavu/linkedevents-php-client": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.0.0"
 }
