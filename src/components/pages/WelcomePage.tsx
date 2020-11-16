@@ -534,7 +534,6 @@ class WelcomePage extends React.Component<Props, State> {
     const articles = postContent.match(/<article.*?>.*?<\/article>/g); // Match <article> tags and their content
     if (articles) {
       const postItems = articles.map(article => {
-        console.log(article);
         const title = article.replace(/^.*?<strong.*?>|<\/strong>.*$/g, ""); // Replace everything but <strong> tag content
         const link = article.replace(/^.*?<a.*?href="|".*$/g, ""); // Replace everything but <a> tag link
         const dateMatch = article.match(/\d?\d.\d?\d.\d\d\d\d(?!.*\d?\d.\d?\d.\d\d\d\d)/g); // Matches latest DD.MM.YYYY or D.M.YYYY formated date
