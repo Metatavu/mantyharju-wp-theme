@@ -536,7 +536,7 @@ class WelcomePage extends React.Component<Props, State> {
       const postItems = articles.map(article => {
         const title = article.replace(/^.*?<strong.*?>|<\/strong>.*$/g, ""); // Replace everything but <strong> tag content
         const link = article.replace(/^.*?<a.*?href="|".*$/g, ""); // Replace everything but <a> tag link
-        const dateMatch = article.match(/\d?\d\.ḑ?\d\.\d\d\d\d/g); // Matches DD.MM.YYYY formated date
+        const dateMatch = article.match(/\d?\d.\d?\d.\d\d\d\d(?!.*\d?\d.\d?\d.\d\d\d\d)/g); // Matches latest DD.MM.YYYY or D.M.YYYY formated date
         const date = dateMatch ? new Date(this.convertToISO(dateMatch[0])) : undefined;
         const postItem = {
           title: title,
@@ -930,7 +930,6 @@ class WelcomePage extends React.Component<Props, State> {
    */
   private renderPostItems = (postItems: PostItem[]) => {
     const { classes } = this.props;
-
     return postItems.slice(0, 5).map((postItem: PostItem) => (
       <div className={ classes.singlePost }>
         <p className={ classes.postDate }>{ postItem.date ? postItem.date.format("DD.MM.YYYY") : "" }</p>

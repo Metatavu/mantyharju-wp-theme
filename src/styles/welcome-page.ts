@@ -218,7 +218,6 @@ export default createStyles({
   },
   postsColumn: {
     display: "flex",
-    flex: 1,
     maxWidth: "100%",
     flexDirection: "column",
     marginBottom: "2rem",
@@ -258,6 +257,7 @@ export default createStyles({
     display: "flex",
     alignItems: "center",
     marginBottom: "2rem",
+    alignSelf: "center",
     "& h1": {
       marginLeft: "1rem",
       fontSize: 26,
@@ -290,8 +290,7 @@ export default createStyles({
       opacity: "20%",
       marginTop: "1rem",
     },
-    marginBottom: "2rem",
-    maxHeight: "3rem",
+    marginBottom: "2rem"
   },
   postDate: {
     color: "#1068B3",
@@ -299,12 +298,13 @@ export default createStyles({
     margin: "0"
   },
   postContent: {
-    width: 0,
+    width: "100%",
     marginTop: 0,
     marginLeft: 0,
     marginRight: 0,
     marginBottom: "1rem",
-    padding: 0
+    padding: 0,
+    whiteSpace: "break-spaces"
   },
   postColumnButton: {
     color: "#fff",
@@ -312,6 +312,7 @@ export default createStyles({
     marginTop: "1rem",
     textTransform: "uppercase",
     maxWidth: 270,
+    alignSelf: "center",
     [breakpoints.up("sm")]: {
       marginTop: "2rem",
     }
