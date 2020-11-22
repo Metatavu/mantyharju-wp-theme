@@ -116,25 +116,29 @@ class TreeView extends React.Component<Props, State> {
       <ExpandLessIcon htmlColor={ focused ? "#000" : theme.palette.primary.main } /> :
       <ExpandMoreIcon htmlColor={ focused ? "#000" : theme.palette.primary.main } />;
     const { level, focused, hasNodes, toggleNode, isOpen, label, link, key, current } = item;
-    return (
-      <ListItem
-        disableGutters={ true }
-        selected={ current }
-        className={
-          classNames(
-            level === 0 ? classes.parentListItem : classes.listItem,
-            isOpen ? "open" : ""
-          )
-        }
-        style={{ paddingLeft: level * 10 }}
-        { ...item }
-      >
-        <a href={ link }>{ label }</a>
-        <div className={ classes.iconWrapper } onClick={ this.onNodeClick(key, hasNodes, toggleNode) }>
-          { hasNodes && toggleIcon(isOpen) }
-        </div>
-      </ListItem>
-    );
+    if(item.post_status !== "publish") {
+      return null;
+    } else {
+      return (
+        <ListItem
+          disableGutters={ true }
+          selected={ current }
+          className={
+            classNames(
+              level === 0 ? classes.parentListItem : classes.listItem,
+              isOpen ? "open" : ""
+            )
+          }
+          style={{ paddingLeft: level * 10 }}
+          { ...item }
+        >
+          <a href={ link }>{ label }</a>
+          <div className={ classes.iconWrapper } onClick={ this.onNodeClick(key, hasNodes, toggleNode) }>
+            { hasNodes && toggleIcon(isOpen) }
+          </div>
+        </ListItem>
+      );
+    }
   }
 
   /**

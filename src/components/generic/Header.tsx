@@ -474,7 +474,7 @@ class Header extends React.Component<Props, State> {
       return null;
     } else {
       pages.map((page) => {
-        if (page.post_parent === parentPageId) {
+        if (page.post_parent === parentPageId && page.post_status === "publish") {
           menuPagesArray.push(page);
         }
       });

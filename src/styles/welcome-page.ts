@@ -508,6 +508,9 @@ export default createStyles({
     backgroundColor: "rgba(0, 0, 0, 0.3)",
     backgroundBlendMode: "soft-light",
     backgroundSize: "cover",
+    [breakpoints.down("sm")]: {
+      marginBottom: "5px"
+    },
     [breakpoints.up("md")]: {
       transition: "background-color 0.2s ease-out, box-shadow 0.2s ease-out",
       "&:hover": {

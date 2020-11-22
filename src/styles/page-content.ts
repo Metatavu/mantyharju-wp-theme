@@ -17,6 +17,15 @@ export default createStyles({
       "& p": {
         marginBlockStart: "0 !important",
       }
+    },
+    "& .is-style-stripes": {
+      "& table":{
+        "& tbody": {
+          "& tr:nth-child(odd)": {
+            backgroundColor: "#f2f2f2"
+          }
+        }
+      }
     }
   },
   logoBar: {
@@ -336,13 +345,11 @@ export default createStyles({
     }
   },
   navigation: {
-    flex: 1,
     padding: "2rem"
   },
   contentarea: {
     display: "flex",
     flexDirection: "column",
-    flex: 3,
     "& .wp-block-group__inner-container": {
       marginTop: "1em",
       marginBottom: "1em",

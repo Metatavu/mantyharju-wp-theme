@@ -113,7 +113,6 @@ export default createStyles({
   contentarea: {
     display: "flex",
     flexDirection: "column",
-    flex: 3,
     "& .wp-block-group__inner-container": {
       marginTop: "1em",
       marginBottom: "1em",

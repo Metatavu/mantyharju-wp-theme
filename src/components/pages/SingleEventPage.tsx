@@ -82,14 +82,18 @@ class SingleEventPage extends React.Component<Props, State> {
       return null;
     } else {
       return (
-        <div className={ classes.event }>
-          <ReadSpeaker />
-          { this.renderEventPicture() }
-          <div className={ classes.eventColumn } id="readthis">
-            { fetchedContent.offers[0].price.fi &&
-              <Typography variant="h6" style={{ marginBottom: "1rem" }}> { fetchedContent.offers[0].price.fi }</Typography>
-            }
-            <Typography variant="body2">{ fetchedContent.description.fi }</Typography>
+        <div>
+          <div className={ classes.event }>
+            <ReadSpeaker />
+          </div>
+          <div className={ classes.event }>
+            { this.renderEventPicture() }
+            <div className={ classes.eventColumn } id="readthis">
+              { fetchedContent.offers[0].price.fi &&
+                <Typography variant="h6" style={{ marginBottom: "1rem" }}> { fetchedContent.offers[0].price.fi }</Typography>
+              }
+              <Typography variant="body2">{ fetchedContent.description.fi }</Typography>
+            </div>
           </div>
         </div>
       );

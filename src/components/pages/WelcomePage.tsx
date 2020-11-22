@@ -173,7 +173,7 @@ class WelcomePage extends React.Component<Props, State> {
     const data = await keywordRes.json();
 
     const sections = (form.sections || []).map((section: any) => {
-      if (section.title === "Tapahtumaluokat") {
+      if (section.name === "keywords") {
         section.fields = data.data.map((keyword: any) => {
           return {
             name: `keyword__${ keyword.id }`,
@@ -833,7 +833,11 @@ class WelcomePage extends React.Component<Props, State> {
       const start = moment(formValues["start-date-time"] as number);
       const end = moment(formValues["end-date-time"] as number);
 
+      if (this.state.defaultImageUrl || this.state.imageUrl) {
       formValues["image-url"] = this.state.imageUrl ? this.state.imageUrl : this.state.defaultImageUrl;
+      } else {
+        return alert("Lisää tapahtumalle kuva, mikäli sinulla ei ole omaa kuvaa, klikkaa kohtaa \"Näytä oletuskuvat\"");
+      }
 
       const hasStartTime = !(start.hour() === 0 && start.minute() === 0);
       const hasEndTime = !(end.hour() === 0 && end.minute() === 0);
@@ -855,7 +859,7 @@ class WelcomePage extends React.Component<Props, State> {
       });
 
       if (keywords.length < 1) {
-        keywords.push("mantyharju:afxsgyecju");
+        return alert("Lisää tapahtumalle vähintään yksi tapahtumaluokka.");
       }
 
       formValues["keywords"] = keywords.join(",");
@@ -864,6 +868,7 @@ class WelcomePage extends React.Component<Props, State> {
         const api = ApiUtils.getApi();
         await api.postWpV2Event({ event: formValues });
         this.setState({formValues: {}});
+        alert("Tapahtuma lisätty onnistuneesti!");
       } catch (error) {
         alert("Virhe tapahtuman lisäämisessä, tarkista pakolliset kentät ja yritä uudelleen");
       }
