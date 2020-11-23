@@ -145,12 +145,16 @@ class PostsPage extends React.Component<Props, State> {
       displayPages = displayPages.length > 6 ? displayPages.splice(0, 6) : displayPages;
       return (
         displayPages.map(page => {
-          return (
-            <Grid item xs={12} sm={6} md={4} className={classes.grid_item}>
-              <div style={{ backgroundImage: `url(${ page.featured_image_url || hero })`, backgroundPosition: "center" }} onClick={() => { this.onPostClick(page) }} className={ classes.gallery_section_item  } />
-              <h2>{ ReactHtmlParser(page.post_title ? page.post_title || "" : "") }</h2>
-            </Grid>
-          )
+          if (page.post_status === "publish") {
+            return (
+              <Grid item xs={12} sm={6} md={4} className={classes.grid_item}>
+                <div style={{ backgroundImage: `url(${ page.featured_image_url || hero })`, backgroundPosition: "center" }} onClick={() => { this.onPostClick(page) }} className={ classes.gallery_section_item  } />
+                <h2>{ ReactHtmlParser(page.post_title ? page.post_title || "" : "") }</h2>
+              </Grid>
+            );
+          } else {
+            return null;
+          }
         })
       )
     }
