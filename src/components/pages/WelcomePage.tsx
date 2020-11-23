@@ -241,7 +241,7 @@ class WelcomePage extends React.Component<Props, State> {
           <Button
             className={ `${ classes.heroButtonPopularPages }`}
             onClick={ this.scrollDownToPopularPages }
-            title="Suosituimmat sivut"
+            title={strings.popularPages}
             endIcon={ <AddIcon/> }
           >
             Suosituimmat sivut
@@ -266,7 +266,7 @@ class WelcomePage extends React.Component<Props, State> {
               <SvgIcon color="primary" fontSize="large">
                 { currentNewsIconSvgPath }
               </SvgIcon>
-              <Typography variant="h1">Ajankohtaista</Typography>
+              <Typography variant="h1">{strings.currentNews}</Typography>
             </div>
             { !news &&
               <div className={ classes.loadingIconContainer }>
@@ -285,7 +285,7 @@ class WelcomePage extends React.Component<Props, State> {
               <SvgIcon color="primary" fontSize="large">
                 { announcementIconSvgPath }
               </SvgIcon>
-              <Typography variant="h1">Kuulutukset</Typography>
+              <Typography variant="h1">{strings.announcements}</Typography>
             </div>
             { !announcements &&
               <div className={ classes.loadingIconContainer }>
@@ -304,7 +304,7 @@ class WelcomePage extends React.Component<Props, State> {
               <SvgIcon color="primary" fontSize="large">
                 { jobsIconSvgPath }
               </SvgIcon>
-              <Typography variant="h1">Työpaikat</Typography>
+              <Typography variant="h1">{strings.jobs}</Typography>
             </div>
             { !jobs &&
               <div className={ classes.loadingIconContainer }>
@@ -321,19 +321,19 @@ class WelcomePage extends React.Component<Props, State> {
         </div>
 
         <div className = { classes.linkedEventsContainer }>
-          <Typography variant="h1">Tapahtumat</Typography>
+          <Typography variant="h1">{strings.events}</Typography>
           <div className={ classes.legendWrapper }>
             <div className={ classes.legend }>
               <div className={ classes.legendColor } style={{ backgroundColor: "#e43e3e" }} />
-              <Typography variant="subtitle1">Menneet</Typography>
+              <Typography variant="subtitle1">{strings.past}</Typography>
             </div>
             <div className={ classes.legend }>
               <div className={ classes.legendColor } style={{ backgroundColor: "#FFCF4E" }} />
-              <Typography variant="subtitle1">Menossa</Typography>
+              <Typography variant="subtitle1">{strings.ongoing}</Typography>
             </div>
             <div className={ classes.legend }>
               <div className={ classes.legendColor } style={{ backgroundColor: "#1068B3" }} />
-              <Typography variant="subtitle1">Tulossa</Typography>
+              <Typography variant="subtitle1">{strings.coming}</Typography>
             </div>
           </div>
           { linkedEventsPost &&
@@ -349,17 +349,17 @@ class WelcomePage extends React.Component<Props, State> {
           <div className={ classes.eventsButtonRow }>
             <Button
               className={ classes.allEventsButton }
-              title= "Näytä lisää tapahtumia"
+              title= {strings.showMoreEvents}
               onClick={this.expandLinkedEvents}
             >
-              Näytä lisää
+              {strings.showMore}
             </Button>
             <Button
               onClick={ this.openModal }
               className={ classes.addLinkedEventButton }
-              title= "Lisää tapahtuma"
+              title= {strings.addEvent}
             >
-              Lisää tapahtuma
+              {strings.addEvent}
             </Button>
           </div>
         </div>
@@ -377,8 +377,8 @@ class WelcomePage extends React.Component<Props, State> {
         >
           <DialogTitle>
             <Grid container alignItems="flex-start" justify="space-between" direction="row">
-              <Typography variant="h1" className={ classes.heroText } style={{ margin: 0 }}>Uusi tapahtuma</Typography>
-              <Button onClick={ this.closeModal } style={{ color: "#fff", alignItems: "right" }}>Sulje</Button>
+              <Typography variant="h1" className={ classes.heroText } style={{ margin: 0 }}>{strings.newEvent}</Typography>
+              <Button onClick={ this.closeModal } style={{ color: "#fff", alignItems: "right" }}>{strings.close}</Button>
             </Grid>
           </DialogTitle>
           <DialogContent>
@@ -388,7 +388,7 @@ class WelcomePage extends React.Component<Props, State> {
           </DialogContent>
           <DialogActions>
             <Button autoFocus onClick={ this.closeModal } variant="text" color="primary">
-              Peruuta
+              {strings.cancel}
             </Button>
           </DialogActions>
         </Dialog>
@@ -610,7 +610,7 @@ class WelcomePage extends React.Component<Props, State> {
 
   private renderBeforeField = (fieldName?: string) => {
     const { classes } = this.props;
-    const imageTextLabel = "Lisää kuva raahamalla tai klikkaamalla aluetta";
+    const imageTextLabel = strings.eventAdd.addImage;
     if (fieldName === "default-image-url") {
       return (
         <div>
@@ -622,7 +622,7 @@ class WelcomePage extends React.Component<Props, State> {
             />
           </div>
           <div style={this.state.showDefaultImages && this.state.imageUrl ? {display: "block"} : {display: "none"}}>
-            <Typography variant="body2">Olet tuonut oman kuvan, mikäli haluat käyttää oletuskuvia, poista ensin lisätty kuva.</Typography>
+            <Typography variant="body2">{strings.eventAdd.deleteOwnPicture}</Typography>
           </div>
           <div className={classes.imageUploadWrapper}>
             <ImageUpload userId="staging" onSave={ (url) => {this.setState({imageUrl: url})} } label={ imageTextLabel }  />
@@ -633,7 +633,7 @@ class WelcomePage extends React.Component<Props, State> {
     if (fieldName === "add-location") {
       return (
         <div className={ classes.reactAddLocationWrapper }>
-          <input type="button" value={this.state.addPlaceVisibility ? "Sulje paikan lisääminen" : "Lisää paikka"} onClick={this.addPlaceVisibility}/>
+          <input type="button" value={this.state.addPlaceVisibility ? strings.eventAdd.closeAddingPlace : strings.eventAdd.addPlace} onClick={this.addPlaceVisibility}/>
           <div style={this.state.addPlaceVisibility ? { display:"block" } : { display:"none" }}>
             <div className={ classes.metaformWrapper }>
               <MetaformComponent
@@ -836,7 +836,7 @@ class WelcomePage extends React.Component<Props, State> {
       if (this.state.defaultImageUrl || this.state.imageUrl) {
       formValues["image-url"] = this.state.imageUrl ? this.state.imageUrl : this.state.defaultImageUrl;
       } else {
-        return alert("Lisää tapahtumalle kuva, mikäli sinulla ei ole omaa kuvaa, klikkaa kohtaa \"Näytä oletuskuvat\"");
+        return alert(strings.eventAdd.notificationAddImage);
       }
 
       const hasStartTime = !(start.hour() === 0 && start.minute() === 0);
@@ -859,7 +859,7 @@ class WelcomePage extends React.Component<Props, State> {
       });
 
       if (keywords.length < 1) {
-        return alert("Lisää tapahtumalle vähintään yksi tapahtumaluokka.");
+        return alert(strings.eventAdd.notificationAddKeyword);
       }
 
       formValues["keywords"] = keywords.join(",");
@@ -868,9 +868,9 @@ class WelcomePage extends React.Component<Props, State> {
         const api = ApiUtils.getApi();
         await api.postWpV2Event({ event: formValues });
         this.setState({formValues: {}});
-        alert("Tapahtuma lisätty onnistuneesti!");
+        alert(strings.eventAdd.successfullyAdded);
       } catch (error) {
-        alert("Virhe tapahtuman lisäämisessä, tarkista pakolliset kentät ja yritä uudelleen");
+        alert(strings.eventAdd.errorWhenAddingEvent);
       }
     }
     if (submitButtonName === "submit-place") {
@@ -885,7 +885,7 @@ class WelcomePage extends React.Component<Props, State> {
         api.postWpV2Event({ event: placeFormValues });
         this.setState({placeFormValues: {}});
       } catch (error) {
-          alert("Virhe paikan lisäämisessä, tarkista pakolliset kentät ja yritä uudelleen");
+          alert(strings.eventAdd.errorWhenAddingPlace);
       }
     }
   }
