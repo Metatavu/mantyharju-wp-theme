@@ -116,7 +116,7 @@ class TreeView extends React.Component<Props, State> {
       <ExpandLessIcon htmlColor={ focused ? "#000" : theme.palette.primary.main } /> :
       <ExpandMoreIcon htmlColor={ focused ? "#000" : theme.palette.primary.main } />;
     const { level, focused, hasNodes, toggleNode, isOpen, label, link, key, current } = item;
-    if(item.post_status !== "publish") {
+    if (item.post_status !== "publish") {
       return null;
     } else {
       return (
