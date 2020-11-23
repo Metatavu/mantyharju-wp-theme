@@ -109,7 +109,6 @@ export default createStyles({
   event: {
     display: "flex",
     flexDirection: "column",
-    height: "100%",
     padding: sidePaddingSm,
     marginTop: "2rem",
     marginBottom: "2rem",
@@ -134,7 +133,6 @@ export default createStyles({
     },
   },
   eventColumn: {
-    flex: 1,
     [breakpoints.up("md")]: {
       marginLeft: "2rem",
       "&:first-child": {

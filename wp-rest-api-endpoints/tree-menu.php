@@ -74,6 +74,7 @@ function register_tree_menu_endpoint() {
           array(
             'key' => $page->ID,
             'menu_order' => $page->menu_order,
+            'post_status' => get_post_status($page->ID),
             'label' => $page->post_title,
             'link' => get_page_link($page->ID),
             'current' => $page->ID === $currentPageId,

@@ -93,7 +93,7 @@
       ]
     },
     {
-      "title": "Tapahtuman kuva",
+      "title": "Tapahtuman kuva *",
       "fields": [
         {
           "name": "show-default-images",
@@ -237,7 +237,7 @@
       ]
     },
     {
-      "title": "Tapahtumaluokat",
+      "title": "Tapahtumaluokat *",
       "name": "keywords",
       "fields": []
     },

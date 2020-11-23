@@ -29,6 +29,7 @@ interface Menu {
   label: string;
   link: string;
   current: boolean;
+  post_status: string;
   nodes: Menu[];
 }
 
@@ -154,7 +155,7 @@ class MobileMenu extends React.Component<Props, State> {
    */
   private renderMenuItem = (item: Menu) => {
     const { classes } = this.props;
-    if (!item) {
+    if (!item || item.post_status !== "publish") {
       return null;
     }
 
@@ -188,7 +189,7 @@ class MobileMenu extends React.Component<Props, State> {
    * @param item menu
    */
   private renderMenuSubItem = (item?: Menu) => {
-    if (!item) {
+    if (!item || item.post_status !== "publish") {
       return null;
     }
     const { classes } = this.props;
@@ -220,16 +221,20 @@ class MobileMenu extends React.Component<Props, State> {
     }
 
     return items.map((item: Menu) => {
-      return (
-        <Link
-          className={ classes.subLinkOfSubLink }
-          key={ item.key }
-          href={ item.link }
-          variant="subtitle2"
-        >
-          { item.label }
-        </Link>
-      );
+      if (item.post_status === "publish") {
+        return (
+          <Link
+            className={ classes.subLinkOfSubLink }
+            key={ item.key }
+            href={ item.link }
+            variant="subtitle2"
+          >
+            { item.label }
+          </Link>
+        );
+      } else {
+        return null;
+      }
     });
   }
 }
