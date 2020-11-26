@@ -369,6 +369,9 @@ export default createStyles({
     marginBottom: "2rem",
     [breakpoints.up("xl")]: {
       marginBottom: "4rem"
+    },
+    [breakpoints.down("md")]: {
+      display: "block",
     }
   },
   legend: {

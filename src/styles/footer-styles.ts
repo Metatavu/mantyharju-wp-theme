@@ -15,9 +15,9 @@ export default createStyles({
         display: "flex",
         flexDirection: "row",
         justifyContent: "center",
-        padding: sidePaddingSm,
+        padding: 0,
         [breakpoints.up("sm")]: {
-            padding: sidePaddingMd
+            padding: 0
         },
         [breakpoints.up("md")]: {
             padding: sidePaddingLg
@@ -51,14 +51,15 @@ export default createStyles({
     },
     footerAdressInfo: {
         color: "#fff",
-        width: "100%",
+        marginLeft: 5,
     },
     footerContactInfo: {
         color: "#fff",
-        width: "100%",
+        marginLeft: 5,
     },
     footerSocialInfo: {
-        width: "100%",
+        paddingTop: 16,
+        marginLeft: 5,
     },
     footerContentItem: {
         "& p": {

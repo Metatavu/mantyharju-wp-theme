@@ -1,6 +1,6 @@
 import * as React from "react";
 import { convertNodeToElement } from "react-html-parser";
-import { withStyles, WithStyles, Typography } from "@material-ui/core";
+import { withStyles, WithStyles, Typography, Card, CardContent, CardHeader } from "@material-ui/core";
 import styles from "../../styles/single-event-page";
 import BasicLayout from "../BasicLayout";
 import { DomElement } from "domhandler";
@@ -66,7 +66,9 @@ class SingleEventPage extends React.Component<Props, State> {
               </Typography>
             </div>
           </div>
-          { this.renderEventContent() }
+          <div>
+            { this.renderEventContent() }
+          </div>
         </div>
       </BasicLayout>
     );
@@ -89,10 +91,84 @@ class SingleEventPage extends React.Component<Props, State> {
           <div className={ classes.event }>
             { this.renderEventPicture() }
             <div className={ classes.eventColumn } id="readthis">
-              { fetchedContent.offers[0].price.fi &&
-                <Typography variant="h6" style={{ marginBottom: "1rem" }}> { fetchedContent.offers[0].price.fi }</Typography>
-              }
-              <Typography variant="body2">{ fetchedContent.description.fi }</Typography>
+              <Card className={ classes.card }>
+                <CardContent>
+                  <Typography variant="h3" className={ classes.heroText }>
+                    { fetchedContent ? fetchedContent.name.fi || "Event" : "Event" }
+                  </Typography>
+                  <Typography variant="body2">
+                    { fetchedContent.description.fi }
+                  </Typography>
+                  <Typography variant="body2">
+                    { fetchedContent.location.id }
+                  </Typography>
+                </CardContent>
+              </Card>
+              <Card className={ classes.card }>
+                <CardContent>
+                  <Typography variant="h6">
+                    Tapahtuman tiedot
+                  </Typography>
+                  { moment(fetchedContent.start_time).format("DD.MM.YYYY HH:mm") &&
+                    <Typography variant="body2">
+                      Alkaa: { moment(fetchedContent.start_time).format("DD.MM.YYYY HH:mm") }
+                    </Typography>
+                  }
+                  { moment(fetchedContent.end_time).format("DD.MM.YYYY HH:mm") &&
+                    <Typography variant="body2">
+                      Päättyy: { moment(fetchedContent.end_time).format("DD.MM.YYYY HH:mm") }
+                    </Typography>
+                  }
+                  { fetchedContent.custom_data['provider-fi'] &&
+                    <Typography variant="body2">
+                      Järjestäjä: { fetchedContent.custom_data['provider-fi'] }
+                    </Typography>
+                  }
+                  { fetchedContent.custom_data['provider-phone'] &&
+                    <Typography variant="body2">
+                      Puhelinnumero: { fetchedContent.custom_data['provider-phone'] }
+                    </Typography>
+                  }
+                  { fetchedContent.custom_data['provider-email'] &&
+                    <Typography variant="body2">
+                      Email: { fetchedContent.custom_data['provider-email'] }
+                    </Typography>
+                  }
+                  { fetchedContent.offers[0].price.fi &&
+                    <Typography variant="body2" style={{ marginBottom: "1rem" }}>
+                      Hintatiedot: { fetchedContent.offers[0].price.fi }
+                    </Typography> 
+                  }
+                  { fetchedContent.offers[0].description &&
+                    <Typography variant="body2" style={{ marginBottom: "1rem" }}>
+                      Lisätiedot: { fetchedContent.offers[0].description }
+                    </Typography>
+                  }
+                  { fetchedContent.offers[0].info_url &&
+                    <Typography variant="body2" style={{ marginBottom: "1rem" }}>
+                      Linkki: { fetchedContent.offers[0].info_url }
+                    </Typography>
+                  }
+                  { fetchedContent.custom_data['registration-fi'] || fetchedContent.custom_data['registration_url'] &&
+                  <>
+                    <hr />
+                    <Typography variant="h6">
+                      Ilmoittautuminen
+                    </Typography>
+                  </>
+                  }
+                  { fetchedContent.custom_data['registration-fi'] &&
+                  <Typography variant="body2">
+                    { fetchedContent.custom_data['registration-fi'] }
+                  </Typography>
+                  }
+                  { fetchedContent.custom_data['registration_url'] &&
+                  <Typography variant="body2">
+                    { fetchedContent.custom_data['registration_url'] }
+                  </Typography>
+                  }
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
