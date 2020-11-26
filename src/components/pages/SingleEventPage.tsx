@@ -80,6 +80,8 @@ class SingleEventPage extends React.Component<Props, State> {
   private renderEventContent() {
     const { classes } = this.props;
     const { fetchedContent } = this.state;
+    const start_time = fetchedContent ? moment(fetchedContent.start_time).format("DD.MM.YYYY HH:mm") : null;
+    const end_time = fetchedContent ? moment(fetchedContent.end_time).format("DD.MM.YYYY HH:mm"): null;
     if (!fetchedContent) {
       return null;
     } else {
@@ -109,14 +111,14 @@ class SingleEventPage extends React.Component<Props, State> {
                   <Typography variant="h6">
                     Tapahtuman tiedot
                   </Typography>
-                  { moment(fetchedContent.start_time).format("DD.MM.YYYY HH:mm") &&
+                  { start_time &&
                     <Typography variant="body2">
-                      Alkaa: { moment(fetchedContent.start_time).format("DD.MM.YYYY HH:mm") }
+                      Alkaa: { start_time }
                     </Typography>
                   }
-                  { moment(fetchedContent.end_time).format("DD.MM.YYYY HH:mm") &&
+                  { end_time &&
                     <Typography variant="body2">
-                      Päättyy: { moment(fetchedContent.end_time).format("DD.MM.YYYY HH:mm") }
+                      Päättyy: { end_time }
                     </Typography>
                   }
                   { fetchedContent.custom_data['provider-fi'] &&
