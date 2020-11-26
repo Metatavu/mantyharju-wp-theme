@@ -72,7 +72,7 @@ class News extends React.Component<Props, State> {
    */
   private fetchNews = () => {
     const api = ApiUtils.getApi();
-    api.getCustomPosts({ category: "news item" }).then((news: CustomPost[]) => {
+    api.getCustomPosts({ category: "news" }).then((news: CustomPost[]) => {
       this.setState({
         news: news
       });
