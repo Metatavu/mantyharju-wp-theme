@@ -23,7 +23,7 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
       /*
        * Set all events public by default
        */
-      $defaultPublication = "public";
+      $defaultPublication = "draft";
 
       $result = \Metatavu\LinkedEvents\Configuration::getDefaultConfiguration();
       $result->setHost(\Metatavu\LinkedEvents\Wordpress\Settings\Settings::getValue("api-url"));
