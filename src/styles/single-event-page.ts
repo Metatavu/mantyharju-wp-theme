@@ -35,6 +35,7 @@ export default createStyles({
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center center",
     backgroundSize: "cover",
+    marginTop: 57,
     color: "#fff",
     height: "40vh",
     padding: sidePaddingSm,
@@ -49,6 +50,7 @@ export default createStyles({
     [breakpoints.up("md")]: {
       padding: sidePaddingLg,
       paddingTop: "6rem",
+      marginTop: 0,
     },
     [breakpoints.up("lg")]: {
       padding: sidePaddingXl,
@@ -109,7 +111,7 @@ export default createStyles({
   event: {
     display: "flex",
     flexDirection: "column",
-    padding: sidePaddingSm,
+    padding: 0,
     marginTop: "2rem",
     marginBottom: "2rem",
     "& h2": {
@@ -119,7 +121,7 @@ export default createStyles({
       },
     },
     [breakpoints.up("sm")]: {
-      padding: sidePaddingMd
+      padding: 0
     },
     [breakpoints.up("md")]: {
       flexDirection: "row",
@@ -157,11 +159,35 @@ export default createStyles({
   },
   image_styles: {
     width: "100%",
+    minWidth: 300,
+    [breakpoints.up("md")]: {
+      minWidth: 400,
+    },
+    [breakpoints.up("lg")]: {
+      minWidth: 500,
+    }
   },
   topPageContent: {
     display: "grid",
     gridTemplateColumns: "repeat(2, 1fr)",
     margin: "0vw 8vw 4vw 12vw",
     height: "fit-content"
-  }
+  },
+  cards: {
+    display: "grid",
+    gridTemplateColumns: "repeat(3, 1fr)",
+    height: "fit-content",
+    [breakpoints.down("md")]: {
+      gridTemplateColumns: "repeat(2, 1fr)",
+    },
+    [breakpoints.down("sm")]: {
+      gridTemplateColumns: "repeat(1, 1fr)"
+    },
+  },
+  card: {
+    marginBottom: "2rem",
+    "& a, a:hover, a:visited, a:focus": {
+      color: theme.palette.primary.dark
+    }
+  },
 });

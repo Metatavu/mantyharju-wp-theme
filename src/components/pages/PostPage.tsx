@@ -125,17 +125,25 @@ class PostPage extends React.Component<Props, State> {
               </Grid>
             </div>
             <div id="readthis" className={ classes.columns }>
-              <div className="rs_skip">
-                <TreeView slug={ slug }/>
-              </div>
-              <div className={ classes.contentarea } >       
-                  { this.renderContent() }
-              </div>
-              { sideContent &&
-              <div className={ classes.sidebar } style={ isContent ? { display: "block" } : { display: "none" } }>
-                <RightSideBar content={ sideContent } />
-              </div>
-              }
+              <Grid container spacing={0}>
+                <Grid item xs={12} md={3} lg={2} key={"123"}>
+                  <div className="rs_skip">
+                    <TreeView slug={ slug }/>
+                  </div>
+                </Grid>
+                <Grid item xs={12} md={6} lg={7} key={"456"}>
+                  <div className={ classes.contentarea } >       
+                      { this.renderContent() }
+                  </div>
+                </Grid>
+                <Grid item xs={12} md={3} lg={3} key={"789"}>
+                  { sideContent &&
+                  <div className={ classes.sidebar } style={ isContent ? { display: "block" } : { display: "none" } }>
+                    <RightSideBar content={ sideContent } />
+                  </div>
+                  }
+                </Grid>
+              </Grid>
             </div>
           </div>
         </div>
