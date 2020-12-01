@@ -13,7 +13,7 @@
   if ($webPage) {
     $url = $webPage["url"];
     $text = $webPage["value"] ? $webPage["value"] : $url;
-    echo "<a target=\"_blank\" href=\"$url\">$text</a>";
+    echo "<p><a target=\"_blank\" href=\"$url\">$text</a></p>";
   }
 
 ?>

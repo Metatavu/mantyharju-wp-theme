@@ -9,6 +9,7 @@
     return;
   }
   
+  echo "<p>";
   foreach ($phoneNumbers as $phoneNumber) {
     $additionalInformation = $phoneNumber["additionalInformation"];
     $prefixNumber = $phoneNumber["prefixNumber"];
@@ -20,15 +21,14 @@
         $chargeInfo = __("Chargeable", "sptv");
     }
 
-    echo "<p>";
-
     if ($additionalInformation) {
-      echo "<b>$additionalInformation<br/></b>";
+      echo "<b>$additionalInformation</b><br/>";
     }
 
     echo implode(" ", [$prefixNumber, $number, $chargeInfo]);
 
-    echo "</p>";
+    echo "<br/>";
   }
+  echo "</p>";
 
 ?>
