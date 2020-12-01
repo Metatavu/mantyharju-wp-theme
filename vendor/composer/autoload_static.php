@@ -9,12 +9,12 @@ class ComposerStaticInit125d1bedc97c0cb80f52718ed8014890
     public static $prefixLengthsPsr4 = array (
         'M' => 
         array (
-            'Metatavu\\LinkedEvents\\' => 22,
+            'Metatavu\\MantyharjuTheme\\LinkedEvents\\' => 22,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Metatavu\\LinkedEvents\\' => 
+        'Metatavu\\MantyharjuTheme\\LinkedEvents\\' => 
         array (
             0 => __DIR__ . '/..' . '/metatavu/linkedevents-php-client/lib',
         ),

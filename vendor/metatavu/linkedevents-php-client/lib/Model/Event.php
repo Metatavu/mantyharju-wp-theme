@@ -27,7 +27,7 @@
  * Do not edit the class manually.
  */
 
-namespace Metatavu\LinkedEvents\Model;
+namespace Metatavu\MantyharjuTheme\LinkedEvents\Model;
 
 use \ArrayAccess;
 
@@ -56,22 +56,22 @@ class Event implements ArrayAccess
       */
     protected static $swaggerTypes = [
         'id' => 'string',
-        'location' => '\Metatavu\LinkedEvents\Model\Place',
-        'keywords' => '\Metatavu\LinkedEvents\Model\IdRef[]',
-        'inLanguage' => '\Metatavu\LinkedEvents\Model\Language[]',
-        'superEvent' => '\Metatavu\LinkedEvents\Model\IdRef',
+        'location' => '\Metatavu\MantyharjuTheme\LinkedEvents\Model\Place',
+        'keywords' => '\Metatavu\MantyharjuTheme\LinkedEvents\Model\IdRef[]',
+        'inLanguage' => '\Metatavu\MantyharjuTheme\LinkedEvents\Model\Language[]',
+        'superEvent' => '\Metatavu\MantyharjuTheme\LinkedEvents\Model\IdRef',
         'superEventType' => 'string',
         'eventStatus' => 'string',
         'publicationStatus' => 'string',
-        'externalLinks' => '\Metatavu\LinkedEvents\Model\Eventlink[]',
-        'offers' => '\Metatavu\LinkedEvents\Model\Offer[]',
-        'subEvents' => '\Metatavu\LinkedEvents\Model\IdRef[]',
+        'externalLinks' => '\Metatavu\MantyharjuTheme\LinkedEvents\Model\Eventlink[]',
+        'offers' => '\Metatavu\MantyharjuTheme\LinkedEvents\Model\Offer[]',
+        'subEvents' => '\Metatavu\MantyharjuTheme\LinkedEvents\Model\IdRef[]',
         'customData' => 'object',
-        'name' => '\Metatavu\LinkedEvents\Model\EventName',
-        'images' => '\Metatavu\LinkedEvents\Model\Image[]',
+        'name' => '\Metatavu\MantyharjuTheme\LinkedEvents\Model\EventName',
+        'images' => '\Metatavu\MantyharjuTheme\LinkedEvents\Model\Image[]',
         'createdTime' => '\DateTime',
         'lastModifiedTime' => '\DateTime',
-        'infoUrl' => '\Metatavu\LinkedEvents\Model\EventInfoUrl',
+        'infoUrl' => '\Metatavu\MantyharjuTheme\LinkedEvents\Model\EventInfoUrl',
         'description' => 'object',
         'shortDescription' => 'object',
         'context' => 'string',
@@ -83,7 +83,7 @@ class Event implements ArrayAccess
         'endTime' => '\DateTime',
         'hasStartTime' => 'bool',
         'hasEndTime' => 'bool',
-        'audience' => '\Metatavu\LinkedEvents\Model\Keyword[]',
+        'audience' => '\Metatavu\MantyharjuTheme\LinkedEvents\Model\Keyword[]',
         'dataSource' => 'string',
         'createdBy' => 'string',
         'lastModifiedBy' => 'string',
@@ -400,7 +400,7 @@ class Event implements ArrayAccess
 
     /**
      * Gets location
-     * @return \Metatavu\LinkedEvents\Model\Place
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\Place
      */
     public function getLocation()
     {
@@ -409,7 +409,7 @@ class Event implements ArrayAccess
 
     /**
      * Sets location
-     * @param \Metatavu\LinkedEvents\Model\Place $location
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\Place $location
      * @return $this
      */
     public function setLocation($location)
@@ -421,7 +421,7 @@ class Event implements ArrayAccess
 
     /**
      * Gets keywords
-     * @return \Metatavu\LinkedEvents\Model\IdRef[]
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\IdRef[]
      */
     public function getKeywords()
     {
@@ -430,7 +430,7 @@ class Event implements ArrayAccess
 
     /**
      * Sets keywords
-     * @param \Metatavu\LinkedEvents\Model\IdRef[] $keywords array of keyword uri references
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\IdRef[] $keywords array of keyword uri references
      * @return $this
      */
     public function setKeywords($keywords)
@@ -442,7 +442,7 @@ class Event implements ArrayAccess
 
     /**
      * Gets inLanguage
-     * @return \Metatavu\LinkedEvents\Model\Language[]
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\Language[]
      */
     public function getInLanguage()
     {
@@ -451,7 +451,7 @@ class Event implements ArrayAccess
 
     /**
      * Sets inLanguage
-     * @param \Metatavu\LinkedEvents\Model\Language[] $inLanguage the languages spoken or supported at the event
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\Language[] $inLanguage the languages spoken or supported at the event
      * @return $this
      */
     public function setInLanguage($inLanguage)
@@ -463,7 +463,7 @@ class Event implements ArrayAccess
 
     /**
      * Gets superEvent
-     * @return \Metatavu\LinkedEvents\Model\IdRef
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\IdRef
      */
     public function getSuperEvent()
     {
@@ -472,7 +472,7 @@ class Event implements ArrayAccess
 
     /**
      * Sets superEvent
-     * @param \Metatavu\LinkedEvents\Model\IdRef $superEvent references the aggregate event containing this event
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\IdRef $superEvent references the aggregate event containing this event
      * @return $this
      */
     public function setSuperEvent($superEvent)
@@ -547,7 +547,7 @@ class Event implements ArrayAccess
 
     /**
      * Gets externalLinks
-     * @return \Metatavu\LinkedEvents\Model\Eventlink[]
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\Eventlink[]
      */
     public function getExternalLinks()
     {
@@ -556,7 +556,7 @@ class Event implements ArrayAccess
 
     /**
      * Sets externalLinks
-     * @param \Metatavu\LinkedEvents\Model\Eventlink[] $externalLinks See external link definition
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\Eventlink[] $externalLinks See external link definition
      * @return $this
      */
     public function setExternalLinks($externalLinks)
@@ -568,7 +568,7 @@ class Event implements ArrayAccess
 
     /**
      * Gets offers
-     * @return \Metatavu\LinkedEvents\Model\Offer[]
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\Offer[]
      */
     public function getOffers()
     {
@@ -577,7 +577,7 @@ class Event implements ArrayAccess
 
     /**
      * Sets offers
-     * @param \Metatavu\LinkedEvents\Model\Offer[] $offers See offer definition
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\Offer[] $offers See offer definition
      * @return $this
      */
     public function setOffers($offers)
@@ -589,7 +589,7 @@ class Event implements ArrayAccess
 
     /**
      * Gets subEvents
-     * @return \Metatavu\LinkedEvents\Model\IdRef[]
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\IdRef[]
      */
     public function getSubEvents()
     {
@@ -598,7 +598,7 @@ class Event implements ArrayAccess
 
     /**
      * Sets subEvents
-     * @param \Metatavu\LinkedEvents\Model\IdRef[] $subEvents for aggregate events this contains references to all sub events. Usually this means that the sub events are part of series. The field 'super_event_type' tells the type of the aggregate event.
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\IdRef[] $subEvents for aggregate events this contains references to all sub events. Usually this means that the sub events are part of series. The field 'super_event_type' tells the type of the aggregate event.
      * @return $this
      */
     public function setSubEvents($subEvents)
@@ -631,7 +631,7 @@ class Event implements ArrayAccess
 
     /**
      * Gets name
-     * @return \Metatavu\LinkedEvents\Model\EventName
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\EventName
      */
     public function getName()
     {
@@ -640,7 +640,7 @@ class Event implements ArrayAccess
 
     /**
      * Sets name
-     * @param \Metatavu\LinkedEvents\Model\EventName $name
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\EventName $name
      * @return $this
      */
     public function setName($name)
@@ -652,7 +652,7 @@ class Event implements ArrayAccess
 
     /**
      * Gets images
-     * @return \Metatavu\LinkedEvents\Model\Image[]
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\Image[]
      */
     public function getImages()
     {
@@ -661,7 +661,7 @@ class Event implements ArrayAccess
 
     /**
      * Sets images
-     * @param \Metatavu\LinkedEvents\Model\Image[] $images
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\Image[] $images
      * @return $this
      */
     public function setImages($images)
@@ -715,7 +715,7 @@ class Event implements ArrayAccess
 
     /**
      * Gets infoUrl
-     * @return \Metatavu\LinkedEvents\Model\EventInfoUrl
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\EventInfoUrl
      */
     public function getInfoUrl()
     {
@@ -724,7 +724,7 @@ class Event implements ArrayAccess
 
     /**
      * Sets infoUrl
-     * @param \Metatavu\LinkedEvents\Model\EventInfoUrl $infoUrl
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\EventInfoUrl $infoUrl
      * @return $this
      */
     public function setInfoUrl($infoUrl)
@@ -967,7 +967,7 @@ class Event implements ArrayAccess
 
     /**
      * Gets audience
-     * @return \Metatavu\LinkedEvents\Model\Keyword[]
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\Keyword[]
      */
     public function getAudience()
     {
@@ -976,7 +976,7 @@ class Event implements ArrayAccess
 
     /**
      * Sets audience
-     * @param \Metatavu\LinkedEvents\Model\Keyword[] $audience
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\Keyword[] $audience
      * @return $this
      */
     public function setAudience($audience)
@@ -1121,10 +1121,10 @@ class Event implements ArrayAccess
     public function __toString()
     {
         if (defined('JSON_PRETTY_PRINT')) { // use JSON pretty print
-            return json_encode(\Metatavu\LinkedEvents\ObjectSerializer::sanitizeForSerialization($this), JSON_PRETTY_PRINT);
+            return json_encode(\Metatavu\MantyharjuTheme\LinkedEvents\ObjectSerializer::sanitizeForSerialization($this), JSON_PRETTY_PRINT);
         }
 
-        return json_encode(\Metatavu\LinkedEvents\ObjectSerializer::sanitizeForSerialization($this));
+        return json_encode(\Metatavu\MantyharjuTheme\LinkedEvents\ObjectSerializer::sanitizeForSerialization($this));
     }
 }
 

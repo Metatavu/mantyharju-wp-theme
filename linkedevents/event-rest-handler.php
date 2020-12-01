@@ -25,10 +25,10 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
        */
       $defaultPublication = "draft";
 
-      $result = \Metatavu\LinkedEvents\Configuration::getDefaultConfiguration();
+      $result = \Metatavu\MantyharjuTheme\LinkedEvents\Configuration::getDefaultConfiguration();
       $result->setHost(\Metatavu\LinkedEvents\Wordpress\Settings\Settings::getValue("api-url"));
       $result->addDefaultHeader('apikey', \Metatavu\LinkedEvents\Wordpress\Settings\Settings::getValue("api-key"));
-      $client = new \Metatavu\LinkedEvents\ApiClient($result);
+      $client = new \Metatavu\MantyharjuTheme\LinkedEvents\ApiClient($result);
 
       $apiurl = \Metatavu\LinkedEvents\Wordpress\Settings\Settings::getValue("api-url");
       $apikey = \Metatavu\LinkedEvents\Wordpress\Settings\Settings::getValue("api-key");
@@ -48,12 +48,13 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
         $this->updateEventEndTime($event, $body);
         $this->updateCustomData($event, $body);
 
-        $api_instance = new \Metatavu\LinkedEvents\Client\EventApi($client);
+        $api_instance = new \Metatavu\MantyharjuTheme\LinkedEvents\Client\EventApi($client);
 
         try {
             $eventCreateResult = $api_instance->eventCreate($event);
             echo $eventCreateResult;
-        } catch (\Metatavu\LinkedEvents\ApiException $e) {
+        } catch (\Metatavu\MantyharjuTheme\LinkedEvents\ApiException $e) {
+            error_log(print_r($e, true));
             return new \WP_REST_Response("Error creating event", 400);
         }
       }
@@ -67,13 +68,13 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
         $this->updatePlaceName($place, $body);
         $this->updatePlaceAddress($place, $body);
         
-        $api_instance = new \Metatavu\LinkedEvents\Client\FilterApi($client);
+        $api_instance = new \Metatavu\MantyharjuTheme\LinkedEvents\Client\FilterApi($client);
 
         try {
           $placeCreateResult = $api_instance->placeCreate($place);
           echo $placeCreateResult;
         } 
-        catch (\Metatavu\LinkedEvents\ApiException $e) {
+        catch (\Metatavu\MantyharjuTheme\LinkedEvents\ApiException $e) {
           $custom_msg = json_decode($e->get_body()){'responseBody'};
           return new \WP_REST_Response("Error creating place",$custom_msg, 400);
         }
@@ -83,7 +84,7 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
     /**
      * Updates events customdata into model
      * 
-     * @param \Metatavu\LinkedEvents\Model\Event $event $body
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\Event $event $body
      */
     protected function updateCustomData($event, $body) {
       $customDataFields = [
@@ -115,10 +116,10 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
     /**
      * Creates new prefilled event object 
      * 
-     * @return \Metatavu\LinkedEvents\Model\Event created event object
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\Event created event object
      */
     protected function getNewEvent($body) {
-      $event = new \Metatavu\LinkedEvents\Model\Event();
+      $event = new \Metatavu\MantyharjuTheme\LinkedEvents\Model\Event();
       $body = $body;
       $this->ensureEventRequiredFields($event, $body);
       return $event; 
@@ -135,7 +136,7 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
       $name = $event->getName();
       
       if (!isset($name)) {
-        $name = new \Metatavu\LinkedEvents\Model\EventName();
+        $name = new \Metatavu\MantyharjuTheme\LinkedEvents\Model\EventName();
         $event->setName($name);
       }
     }
@@ -173,7 +174,7 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
     /**
      * Updates event name into model
      * 
-     * @param \Metatavu\LinkedEvents\Model\Event $event
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\Event $event
      */
     protected function updateEventName($event, $body) {
       $name = $event->getName();
@@ -184,7 +185,7 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
     /**
      * Updates event description into model
      * 
-     * @param \Metatavu\LinkedEvents\Model\Event $event
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\Event $event
      */
     protected function updateEventDescription($event, $body) { 
       $description = $event->getDescription();     
@@ -196,7 +197,7 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
     /**
      * Updates event short description into model
      * 
-     * @param \Metatavu\LinkedEvents\Model\Event $event
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\Event $event
      */
     protected function updateEventShortDescription($event, $body) {
       $shortDescription = $event->getShortDescription();
@@ -209,14 +210,14 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
     /**
      * Updates event image into model
      * 
-     * @param \Metatavu\LinkedEvents\Model\Event $event
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\Event $event
      */
     protected function updateEventImage($event, $body, $client) {
       $imageUrl = $body->{'image-url'};
       $images = $event->getImages();
       $imageFound = false;
       $imageRefs = [];
-      $api = new \Metatavu\LinkedEvents\Client\ImageApi($client);
+      $api = new \Metatavu\MantyharjuTheme\LinkedEvents\Client\ImageApi($client);
 
       $image = $api->imageCreate(null, [
         url => $imageUrl
@@ -248,7 +249,7 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
      * Returns IdRef array for keyword ids
      * 
      * @param type $keywordIds keyword ids
-     * @return \Metatavu\LinkedEvents\Model\IdRef[] keyword IdRefs
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\IdRef[] keyword IdRefs
      */
     public static function getKeywordRefs($keywordIds) {
       $result = [];
@@ -264,7 +265,7 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
      * Returns reference into the keyword
      * 
      * @param string $keywordId keyword id
-     * @return \Metatavu\LinkedEvents\Model\IdRef reference into the keyword
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\IdRef reference into the keyword
      */
     public static function getKeywordRef($keywordId) {
       return self::getIdRef(self::getApiUrl() . "/keyword/$keywordId/");
@@ -274,7 +275,7 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
      * Returns reference into the location
      * 
      * @param string $locationId location id
-     * @return \Metatavu\LinkedEvents\Model\IdRef reference into the location
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\IdRef reference into the location
      */
     public static function getPlaceRef($locationId) {
       return self::getIdRef(self::getApiUrl() . "/place/$locationId/");
@@ -284,7 +285,7 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
      * Returns reference into the image
      * 
      * @param string $id image id
-     * @return \Metatavu\LinkedEvents\Model\IdRef reference into the image
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\IdRef reference into the image
      */
     public static function getImageRef($id) {
       return self::getIdRef($id);
@@ -294,10 +295,10 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
      * Returns IdRef object for id
      * 
      * @param string $id id
-     * @return \Metatavu\LinkedEvents\Model\IdRef IdRef
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\IdRef IdRef
      */
     public static function getIdRef($id) {
-      $idRef = new \Metatavu\LinkedEvents\Model\IdRef();
+      $idRef = new \Metatavu\MantyharjuTheme\LinkedEvents\Model\IdRef();
       $idRef->setId($id);
       return $idRef;
     }
@@ -314,7 +315,7 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
     /**
      * Updates event start time from http request
      * 
-     * @param \Metatavu\LinkedEvents\Model\Event $event
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\Event $event
      */
     protected function updateEventStartTime($event, $body) {
       $event->setStartTime($body->{'start-time-string'});
@@ -324,7 +325,7 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
     /**
      * Updates event start time from http request
      * 
-     * @param \Metatavu\LinkedEvents\Model\Event $event
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\Event $event
      */
     protected function updateEventEndTime($event, $body) {
       $endTime = $body->{'end-time-string'};
@@ -339,17 +340,17 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
     /**
      * Creates new prefilled place object 
      * 
-     * @return \Metatavu\LinkedEvents\Model\Place created event object
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\Place created event object
      */
     protected function getNewPlace($body) {
-      $place = new \Metatavu\LinkedEvents\Model\Place();
-      $place->setName(new \Metatavu\LinkedEvents\Model\PlaceName());
-      $place->setDescription(new \Metatavu\LinkedEvents\Model\PlaceDescription());
-      $place->setStreetAddress(new \Metatavu\LinkedEvents\Model\PlaceStreetAddress());
-      $place->setAddressLocality(new \Metatavu\LinkedEvents\Model\PlaceAddressLocality());
-      $place->setPosition(new \Metatavu\LinkedEvents\Model\PlacePosition());
-      $place->setTelephone(new \Metatavu\LinkedEvents\Model\PlaceTelephone());
-      $place->setInfoUrl(new \Metatavu\LinkedEvents\Model\PlaceInfoUrl());
+      $place = new \Metatavu\MantyharjuTheme\LinkedEvents\Model\Place();
+      $place->setName(new \Metatavu\MantyharjuTheme\LinkedEvents\Model\PlaceName());
+      $place->setDescription(new \Metatavu\MantyharjuTheme\LinkedEvents\Model\PlaceDescription());
+      $place->setStreetAddress(new \Metatavu\MantyharjuTheme\LinkedEvents\Model\PlaceStreetAddress());
+      $place->setAddressLocality(new \Metatavu\MantyharjuTheme\LinkedEvents\Model\PlaceAddressLocality());
+      $place->setPosition(new \Metatavu\MantyharjuTheme\LinkedEvents\Model\PlacePosition());
+      $place->setTelephone(new \Metatavu\MantyharjuTheme\LinkedEvents\Model\PlaceTelephone());
+      $place->setInfoUrl(new \Metatavu\MantyharjuTheme\LinkedEvents\Model\PlaceInfoUrl());
       $place->setOriginId(uniqid());
       $place->setDeleted(false);
       
@@ -362,7 +363,7 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
     /**
      * Updates place name into model
      * 
-     * @param \Metatavu\LinkedEvents\Model\Place $place
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\Place $place
      */
     protected function updatePlaceName($place, $body) {
       $name = $place->getName();
@@ -375,11 +376,11 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
     /**
      * Updates place description into model
      * 
-     * @param \Metatavu\LinkedEvents\Model\Place $place
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\Place $place
      */
     protected function updatePlaceDescription($place, $body) {
       if (!$place->getDescription()) {
-        $place->setDescription(new \Metatavu\LinkedEvents\Model\PlaceDescription());
+        $place->setDescription(new \Metatavu\MantyharjuTheme\LinkedEvents\Model\PlaceDescription());
       }
       
       $place->getDescription()->setFi($this->getLocalizedRawPostString('description', 'fi'));
@@ -390,7 +391,7 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
     /**
      * Updates place home page into model
      * 
-     * @param \Metatavu\LinkedEvents\Model\Place $place
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\Place $place
      */
     protected function updatePlaceHomePage($place, $body) {
       $place->getInfoUrl()->setFi($this->getLocalizedPostString('homepage', 'fi'));
@@ -401,13 +402,13 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
     /**
      * Updates place address page into model
      * 
-     * @param \Metatavu\LinkedEvents\Model\Place $place
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\Place $place
      */
     protected function updatePlaceAddress($place, $body) {
       $latitude = $body->{'position-latitude'};
       $longitude = $body->{'position-longitude'};
 
-      $place->setPosition(new \Metatavu\LinkedEvents\Model\PlacePosition());
+      $place->setPosition(new \Metatavu\MantyharjuTheme\LinkedEvents\Model\PlacePosition());
       
       if ($latitude && $longitude) {
         $place->getPosition()->setCoordinates([$latitude, $longitude]);
@@ -420,7 +421,7 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
     /**
      * Updates place email into model
      * 
-     * @param \Metatavu\LinkedEvents\Model\Place $place
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\Place $place
      */
     protected function updatePlaceEmail($place, $body) {
       $place->setEmail($this->getPostString('email'));
@@ -429,11 +430,11 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
     /**
      * Updates place telephone into model
      * 
-     * @param \Metatavu\LinkedEvents\Model\Place $place
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\Place $place
      */
     protected function updatePlaceTelephone($place, $body) {
       if (!$place->getTelephone()) {
-        $place->setTelephone(new \Metatavu\LinkedEvents\Model\PlaceTelephone());
+        $place->setTelephone(new \Metatavu\MantyharjuTheme\LinkedEvents\Model\PlaceTelephone());
       }
       
       $place->getTelephone()->setFi($this->getLocalizedPostString('telephone', 'fi'));
@@ -444,7 +445,7 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
     /**
      * Updates place contact type into model
      * 
-     * @param \Metatavu\LinkedEvents\Model\Place $place
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\Place $place
      */
     protected function updatePlaceContactType($place, $body) {
       $place->setContactType($this->getPostString('contact-type'));
