@@ -13,7 +13,7 @@
     $text = $attachment["description"] ? $attachment["description"] : $url;
     echo "<p>";
     echo $description;
-    echo "<a target=\"_blank\" href=\"$url\">$text</a>";
+    echo "<br/><a target=\"_blank\" href=\"$url\">$text</a>";
     echo "</p>";
   }
 ?>

@@ -8,6 +8,7 @@
   if (!$phoneNumbers) {
     return;
   }
+  echo "<p>";
   
   foreach ($phoneNumbers as $phoneNumber) {
     $additionalInformation = $phoneNumber["additionalInformation"];
@@ -20,15 +21,13 @@
         $chargeInfo = __("Chargeable", "sptv");
     }
 
-    echo "<p>";
-
     if ($additionalInformation) {
       echo "<b>$additionalInformation<br/></b>";
     }
 
     echo "$prefixNumber $number $chargeInfo";
 
-    echo "</p>";
   }
 
+  echo "</p>";
 ?>
