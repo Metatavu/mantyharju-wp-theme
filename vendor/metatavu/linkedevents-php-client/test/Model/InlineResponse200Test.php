@@ -27,7 +27,7 @@
  * Please update the test case below to test the model.
  */
 
-namespace Metatavu\LinkedEvents;
+namespace Metatavu\MantyharjuTheme\LinkedEvents;
 
 /**
  * InlineResponse200Test Class Doc Comment

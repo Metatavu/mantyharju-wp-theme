@@ -26,7 +26,7 @@
  * Do not edit the class manually.
  */
 
-namespace Metatavu\LinkedEvents;
+namespace Metatavu\MantyharjuTheme\LinkedEvents;
 
 use \Exception;
 

@@ -27,7 +27,7 @@
  * Do not edit the class manually.
  */
 
-namespace Metatavu\LinkedEvents\Model;
+namespace Metatavu\MantyharjuTheme\LinkedEvents\Model;
 
 use \ArrayAccess;
 
@@ -56,7 +56,7 @@ class KeywordSet implements ArrayAccess
       */
     protected static $swaggerTypes = [
         'id' => 'string',
-        'name' => '\Metatavu\LinkedEvents\Model\KeywordSetName',
+        'name' => '\Metatavu\MantyharjuTheme\LinkedEvents\Model\KeywordSetName',
         'originId' => 'string',
         'createdTime' => '\DateTime',
         'lastModifiedTime' => '\DateTime',
@@ -64,7 +64,7 @@ class KeywordSet implements ArrayAccess
         'lastModifiedBy' => 'string',
         'usage' => 'string',
         'organization' => 'string',
-        'keywords' => '\Metatavu\LinkedEvents\Model\Keyword[]'
+        'keywords' => '\Metatavu\MantyharjuTheme\LinkedEvents\Model\Keyword[]'
     ];
 
     /**
@@ -278,7 +278,7 @@ class KeywordSet implements ArrayAccess
 
     /**
      * Gets name
-     * @return \Metatavu\LinkedEvents\Model\KeywordSetName
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\KeywordSetName
      */
     public function getName()
     {
@@ -287,7 +287,7 @@ class KeywordSet implements ArrayAccess
 
     /**
      * Sets name
-     * @param \Metatavu\LinkedEvents\Model\KeywordSetName $name
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\KeywordSetName $name
      * @return $this
      */
     public function setName($name)
@@ -455,7 +455,7 @@ class KeywordSet implements ArrayAccess
 
     /**
      * Gets keywords
-     * @return \Metatavu\LinkedEvents\Model\Keyword[]
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\Keyword[]
      */
     public function getKeywords()
     {
@@ -464,7 +464,7 @@ class KeywordSet implements ArrayAccess
 
     /**
      * Sets keywords
-     * @param \Metatavu\LinkedEvents\Model\Keyword[] $keywords Keywords that belong to this keyword_set
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\Keyword[] $keywords Keywords that belong to this keyword_set
      * @return $this
      */
     public function setKeywords($keywords)
@@ -525,10 +525,10 @@ class KeywordSet implements ArrayAccess
     public function __toString()
     {
         if (defined('JSON_PRETTY_PRINT')) { // use JSON pretty print
-            return json_encode(\Metatavu\LinkedEvents\ObjectSerializer::sanitizeForSerialization($this), JSON_PRETTY_PRINT);
+            return json_encode(\Metatavu\MantyharjuTheme\LinkedEvents\ObjectSerializer::sanitizeForSerialization($this), JSON_PRETTY_PRINT);
         }
 
-        return json_encode(\Metatavu\LinkedEvents\ObjectSerializer::sanitizeForSerialization($this));
+        return json_encode(\Metatavu\MantyharjuTheme\LinkedEvents\ObjectSerializer::sanitizeForSerialization($this));
     }
 }
 

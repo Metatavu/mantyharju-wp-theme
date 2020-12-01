@@ -27,7 +27,7 @@
  * Do not edit the class manually.
  */
 
-namespace Metatavu\LinkedEvents\Model;
+namespace Metatavu\MantyharjuTheme\LinkedEvents\Model;
 
 use \ArrayAccess;
 
@@ -55,9 +55,9 @@ class Offer implements ArrayAccess
       * @var string[]
       */
     protected static $swaggerTypes = [
-        'price' => '\Metatavu\LinkedEvents\Model\OfferPrice',
-        'infoUrl' => '\Metatavu\LinkedEvents\Model\OfferInfoUrl',
-        'description' => '\Metatavu\LinkedEvents\Model\OfferDescription',
+        'price' => '\Metatavu\MantyharjuTheme\LinkedEvents\Model\OfferPrice',
+        'infoUrl' => '\Metatavu\MantyharjuTheme\LinkedEvents\Model\OfferInfoUrl',
+        'description' => '\Metatavu\MantyharjuTheme\LinkedEvents\Model\OfferDescription',
         'isFree' => 'bool'
     ];
 
@@ -181,7 +181,7 @@ class Offer implements ArrayAccess
 
     /**
      * Gets price
-     * @return \Metatavu\LinkedEvents\Model\OfferPrice
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\OfferPrice
      */
     public function getPrice()
     {
@@ -190,7 +190,7 @@ class Offer implements ArrayAccess
 
     /**
      * Sets price
-     * @param \Metatavu\LinkedEvents\Model\OfferPrice $price
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\OfferPrice $price
      * @return $this
      */
     public function setPrice($price)
@@ -202,7 +202,7 @@ class Offer implements ArrayAccess
 
     /**
      * Gets infoUrl
-     * @return \Metatavu\LinkedEvents\Model\OfferInfoUrl
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\OfferInfoUrl
      */
     public function getInfoUrl()
     {
@@ -211,7 +211,7 @@ class Offer implements ArrayAccess
 
     /**
      * Sets infoUrl
-     * @param \Metatavu\LinkedEvents\Model\OfferInfoUrl $infoUrl
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\OfferInfoUrl $infoUrl
      * @return $this
      */
     public function setInfoUrl($infoUrl)
@@ -223,7 +223,7 @@ class Offer implements ArrayAccess
 
     /**
      * Gets description
-     * @return \Metatavu\LinkedEvents\Model\OfferDescription
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\OfferDescription
      */
     public function getDescription()
     {
@@ -232,7 +232,7 @@ class Offer implements ArrayAccess
 
     /**
      * Sets description
-     * @param \Metatavu\LinkedEvents\Model\OfferDescription $description
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\OfferDescription $description
      * @return $this
      */
     public function setDescription($description)
@@ -314,10 +314,10 @@ class Offer implements ArrayAccess
     public function __toString()
     {
         if (defined('JSON_PRETTY_PRINT')) { // use JSON pretty print
-            return json_encode(\Metatavu\LinkedEvents\ObjectSerializer::sanitizeForSerialization($this), JSON_PRETTY_PRINT);
+            return json_encode(\Metatavu\MantyharjuTheme\LinkedEvents\ObjectSerializer::sanitizeForSerialization($this), JSON_PRETTY_PRINT);
         }
 
-        return json_encode(\Metatavu\LinkedEvents\ObjectSerializer::sanitizeForSerialization($this));
+        return json_encode(\Metatavu\MantyharjuTheme\LinkedEvents\ObjectSerializer::sanitizeForSerialization($this));
     }
 }
 

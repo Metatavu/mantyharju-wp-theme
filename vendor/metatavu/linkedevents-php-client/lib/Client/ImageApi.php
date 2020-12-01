@@ -26,12 +26,12 @@
  * Do not edit the class manually.
  */
 
-namespace Metatavu\LinkedEvents\Client;
+namespace Metatavu\MantyharjuTheme\LinkedEvents\Client;
 
-use \Metatavu\LinkedEvents\ApiClient;
-use \Metatavu\LinkedEvents\ApiException;
-use \Metatavu\LinkedEvents\Configuration;
-use \Metatavu\LinkedEvents\ObjectSerializer;
+use \Metatavu\MantyharjuTheme\LinkedEvents\ApiClient;
+use \Metatavu\MantyharjuTheme\LinkedEvents\ApiException;
+use \Metatavu\MantyharjuTheme\LinkedEvents\Configuration;
+use \Metatavu\MantyharjuTheme\LinkedEvents\ObjectSerializer;
 
 /**
  * ImageApi Class Doc Comment
@@ -46,16 +46,16 @@ class ImageApi
     /**
      * API Client
      *
-     * @var \Metatavu\LinkedEvents\ApiClient instance of the ApiClient
+     * @var \Metatavu\MantyharjuTheme\LinkedEvents\ApiClient instance of the ApiClient
      */
     protected $apiClient;
 
     /**
      * Constructor
      *
-     * @param \Metatavu\LinkedEvents\ApiClient|null $apiClient The api client to use
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\ApiClient|null $apiClient The api client to use
      */
-    public function __construct(\Metatavu\LinkedEvents\ApiClient $apiClient = null)
+    public function __construct(\Metatavu\MantyharjuTheme\LinkedEvents\ApiClient $apiClient = null)
     {
         if ($apiClient === null) {
             $apiClient = new ApiClient();
@@ -67,7 +67,7 @@ class ImageApi
     /**
      * Get API client
      *
-     * @return \Metatavu\LinkedEvents\ApiClient get the API client
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\ApiClient get the API client
      */
     public function getApiClient()
     {
@@ -77,11 +77,11 @@ class ImageApi
     /**
      * Set the API client
      *
-     * @param \Metatavu\LinkedEvents\ApiClient $apiClient set the API client
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\ApiClient $apiClient set the API client
      *
      * @return ImageApi
      */
-    public function setApiClient(\Metatavu\LinkedEvents\ApiClient $apiClient)
+    public function setApiClient(\Metatavu\MantyharjuTheme\LinkedEvents\ApiClient $apiClient)
     {
         $this->apiClient = $apiClient;
         return $this;
@@ -93,9 +93,9 @@ class ImageApi
      * Create a new image
      *
      * @param \SplFileObject $imageFile  (optional)
-     * @param \Metatavu\LinkedEvents\Model\ImageUrl $imageObject  (optional)
-     * @throws \Metatavu\LinkedEvents\ApiException on non-2xx response
-     * @return \Metatavu\LinkedEvents\Model\Image
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\ImageUrl $imageObject  (optional)
+     * @throws \Metatavu\MantyharjuTheme\LinkedEvents\ApiException on non-2xx response
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\Image
      */
     public function imageCreate($imageFile = null, $imageObject = null)
     {
@@ -109,9 +109,9 @@ class ImageApi
      * Create a new image
      *
      * @param \SplFileObject $imageFile  (optional)
-     * @param \Metatavu\LinkedEvents\Model\ImageUrl $imageObject  (optional)
-     * @throws \Metatavu\LinkedEvents\ApiException on non-2xx response
-     * @return array of \Metatavu\LinkedEvents\Model\Image, HTTP status code, HTTP response headers (array of strings)
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\ImageUrl $imageObject  (optional)
+     * @throws \Metatavu\MantyharjuTheme\LinkedEvents\ApiException on non-2xx response
+     * @return array of \Metatavu\MantyharjuTheme\LinkedEvents\Model\Image, HTTP status code, HTTP response headers (array of strings)
      */
     public function imageCreateWithHttpInfo($imageFile = null, $imageObject = null)
     {
@@ -157,15 +157,15 @@ class ImageApi
                 $queryParams,
                 $httpBody,
                 $headerParams,
-                '\Metatavu\LinkedEvents\Model\Image',
+                '\Metatavu\MantyharjuTheme\LinkedEvents\Model\Image',
                 '/image/'
             );
 
-            return [$this->apiClient->getSerializer()->deserialize($response, '\Metatavu\LinkedEvents\Model\Image', $httpHeader), $statusCode, $httpHeader];
+            return [$this->apiClient->getSerializer()->deserialize($response, '\Metatavu\MantyharjuTheme\LinkedEvents\Model\Image', $httpHeader), $statusCode, $httpHeader];
         } catch (ApiException $e) {
             switch ($e->getCode()) {
                 case 201:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Metatavu\LinkedEvents\Model\Image', $e->getResponseHeaders());
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Metatavu\MantyharjuTheme\LinkedEvents\Model\Image', $e->getResponseHeaders());
                     $e->setResponseObject($data);
                     break;
             }
@@ -183,8 +183,8 @@ class ImageApi
      * @param int $pageSize request that server delivers page_size results in response (optional)
      * @param string[] $include Embed given reference-type fields directly into the response, otherwise they are returned as URI references. (optional)
      * @param string $sort return the results in ascending or descending order by the named field. sorting is only supported for some string, integer and datetime fields. (optional)
-     * @throws \Metatavu\LinkedEvents\ApiException on non-2xx response
-     * @return \Metatavu\LinkedEvents\Model\InlineResponse2001
+     * @throws \Metatavu\MantyharjuTheme\LinkedEvents\ApiException on non-2xx response
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\InlineResponse2001
      */
     public function imageList($page = null, $pageSize = null, $include = null, $sort = null)
     {
@@ -201,8 +201,8 @@ class ImageApi
      * @param int $pageSize request that server delivers page_size results in response (optional)
      * @param string[] $include Embed given reference-type fields directly into the response, otherwise they are returned as URI references. (optional)
      * @param string $sort return the results in ascending or descending order by the named field. sorting is only supported for some string, integer and datetime fields. (optional)
-     * @throws \Metatavu\LinkedEvents\ApiException on non-2xx response
-     * @return array of \Metatavu\LinkedEvents\Model\InlineResponse2001, HTTP status code, HTTP response headers (array of strings)
+     * @throws \Metatavu\MantyharjuTheme\LinkedEvents\ApiException on non-2xx response
+     * @return array of \Metatavu\MantyharjuTheme\LinkedEvents\Model\InlineResponse2001, HTTP status code, HTTP response headers (array of strings)
      */
     public function imageListWithHttpInfo($page = null, $pageSize = null, $include = null, $sort = null)
     {
@@ -252,15 +252,15 @@ class ImageApi
                 $queryParams,
                 $httpBody,
                 $headerParams,
-                '\Metatavu\LinkedEvents\Model\InlineResponse2001',
+                '\Metatavu\MantyharjuTheme\LinkedEvents\Model\InlineResponse2001',
                 '/image/'
             );
 
-            return [$this->apiClient->getSerializer()->deserialize($response, '\Metatavu\LinkedEvents\Model\InlineResponse2001', $httpHeader), $statusCode, $httpHeader];
+            return [$this->apiClient->getSerializer()->deserialize($response, '\Metatavu\MantyharjuTheme\LinkedEvents\Model\InlineResponse2001', $httpHeader), $statusCode, $httpHeader];
         } catch (ApiException $e) {
             switch ($e->getCode()) {
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Metatavu\LinkedEvents\Model\InlineResponse2001', $e->getResponseHeaders());
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Metatavu\MantyharjuTheme\LinkedEvents\Model\InlineResponse2001', $e->getResponseHeaders());
                     $e->setResponseObject($data);
                     break;
             }
@@ -275,8 +275,8 @@ class ImageApi
      * Return information for single image
      *
      * @param string $id The id for the image (required)
-     * @throws \Metatavu\LinkedEvents\ApiException on non-2xx response
-     * @return \Metatavu\LinkedEvents\Model\Image
+     * @throws \Metatavu\MantyharjuTheme\LinkedEvents\ApiException on non-2xx response
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\Image
      */
     public function imageRetrieve($id)
     {
@@ -290,8 +290,8 @@ class ImageApi
      * Return information for single image
      *
      * @param string $id The id for the image (required)
-     * @throws \Metatavu\LinkedEvents\ApiException on non-2xx response
-     * @return array of \Metatavu\LinkedEvents\Model\Image, HTTP status code, HTTP response headers (array of strings)
+     * @throws \Metatavu\MantyharjuTheme\LinkedEvents\ApiException on non-2xx response
+     * @return array of \Metatavu\MantyharjuTheme\LinkedEvents\Model\Image, HTTP status code, HTTP response headers (array of strings)
      */
     public function imageRetrieveWithHttpInfo($id)
     {
@@ -334,15 +334,15 @@ class ImageApi
                 $queryParams,
                 $httpBody,
                 $headerParams,
-                '\Metatavu\LinkedEvents\Model\Image',
+                '\Metatavu\MantyharjuTheme\LinkedEvents\Model\Image',
                 '/image/{id}/'
             );
 
-            return [$this->apiClient->getSerializer()->deserialize($response, '\Metatavu\LinkedEvents\Model\Image', $httpHeader), $statusCode, $httpHeader];
+            return [$this->apiClient->getSerializer()->deserialize($response, '\Metatavu\MantyharjuTheme\LinkedEvents\Model\Image', $httpHeader), $statusCode, $httpHeader];
         } catch (ApiException $e) {
             switch ($e->getCode()) {
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Metatavu\LinkedEvents\Model\Image', $e->getResponseHeaders());
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Metatavu\MantyharjuTheme\LinkedEvents\Model\Image', $e->getResponseHeaders());
                     $e->setResponseObject($data);
                     break;
             }
@@ -357,9 +357,9 @@ class ImageApi
      * Update an image
      *
      * @param string $id Identifier for the image to be updated (required)
-     * @param \Metatavu\LinkedEvents\Model\Image $imageObject Image object that should replace the existing image, note that some implementations may retain unspecified fields at their original values. (optional)
-     * @throws \Metatavu\LinkedEvents\ApiException on non-2xx response
-     * @return \Metatavu\LinkedEvents\Model\Image
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\Image $imageObject Image object that should replace the existing image, note that some implementations may retain unspecified fields at their original values. (optional)
+     * @throws \Metatavu\MantyharjuTheme\LinkedEvents\ApiException on non-2xx response
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\Image
      */
     public function imageUpdate($id, $imageObject = null)
     {
@@ -373,9 +373,9 @@ class ImageApi
      * Update an image
      *
      * @param string $id Identifier for the image to be updated (required)
-     * @param \Metatavu\LinkedEvents\Model\Image $imageObject Image object that should replace the existing image, note that some implementations may retain unspecified fields at their original values. (optional)
-     * @throws \Metatavu\LinkedEvents\ApiException on non-2xx response
-     * @return array of \Metatavu\LinkedEvents\Model\Image, HTTP status code, HTTP response headers (array of strings)
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\Image $imageObject Image object that should replace the existing image, note that some implementations may retain unspecified fields at their original values. (optional)
+     * @throws \Metatavu\MantyharjuTheme\LinkedEvents\ApiException on non-2xx response
+     * @return array of \Metatavu\MantyharjuTheme\LinkedEvents\Model\Image, HTTP status code, HTTP response headers (array of strings)
      */
     public function imageUpdateWithHttpInfo($id, $imageObject = null)
     {
@@ -423,15 +423,15 @@ class ImageApi
                 $queryParams,
                 $httpBody,
                 $headerParams,
-                '\Metatavu\LinkedEvents\Model\Image',
+                '\Metatavu\MantyharjuTheme\LinkedEvents\Model\Image',
                 '/image/{id}/'
             );
 
-            return [$this->apiClient->getSerializer()->deserialize($response, '\Metatavu\LinkedEvents\Model\Image', $httpHeader), $statusCode, $httpHeader];
+            return [$this->apiClient->getSerializer()->deserialize($response, '\Metatavu\MantyharjuTheme\LinkedEvents\Model\Image', $httpHeader), $statusCode, $httpHeader];
         } catch (ApiException $e) {
             switch ($e->getCode()) {
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Metatavu\LinkedEvents\Model\Image', $e->getResponseHeaders());
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Metatavu\MantyharjuTheme\LinkedEvents\Model\Image', $e->getResponseHeaders());
                     $e->setResponseObject($data);
                     break;
             }

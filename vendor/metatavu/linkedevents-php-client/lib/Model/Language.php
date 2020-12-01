@@ -27,7 +27,7 @@
  * Do not edit the class manually.
  */
 
-namespace Metatavu\LinkedEvents\Model;
+namespace Metatavu\MantyharjuTheme\LinkedEvents\Model;
 
 use \ArrayAccess;
 
@@ -56,7 +56,7 @@ class Language implements ArrayAccess
       */
     protected static $swaggerTypes = [
         'id' => 'string',
-        'name' => '\Metatavu\LinkedEvents\Model\LanguageName'
+        'name' => '\Metatavu\MantyharjuTheme\LinkedEvents\Model\LanguageName'
     ];
 
     /**
@@ -196,7 +196,7 @@ class Language implements ArrayAccess
 
     /**
      * Gets name
-     * @return \Metatavu\LinkedEvents\Model\LanguageName
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\LanguageName
      */
     public function getName()
     {
@@ -205,7 +205,7 @@ class Language implements ArrayAccess
 
     /**
      * Sets name
-     * @param \Metatavu\LinkedEvents\Model\LanguageName $name
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\LanguageName $name
      * @return $this
      */
     public function setName($name)
@@ -266,10 +266,10 @@ class Language implements ArrayAccess
     public function __toString()
     {
         if (defined('JSON_PRETTY_PRINT')) { // use JSON pretty print
-            return json_encode(\Metatavu\LinkedEvents\ObjectSerializer::sanitizeForSerialization($this), JSON_PRETTY_PRINT);
+            return json_encode(\Metatavu\MantyharjuTheme\LinkedEvents\ObjectSerializer::sanitizeForSerialization($this), JSON_PRETTY_PRINT);
         }
 
-        return json_encode(\Metatavu\LinkedEvents\ObjectSerializer::sanitizeForSerialization($this));
+        return json_encode(\Metatavu\MantyharjuTheme\LinkedEvents\ObjectSerializer::sanitizeForSerialization($this));
     }
 }
 
