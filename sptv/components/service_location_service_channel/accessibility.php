@@ -18,6 +18,7 @@
        * PTV accessibility information
        */
       if ($address['entrances']) {
+        echo "<p>";
         foreach ($address['entrances'] as $entrance) {
           foreach ($entrance['accessibilitySentences'] as $accessibilitySentence) {
             $sentenceGroups = $accessibilitySentence['sentenceGroup'];
@@ -31,7 +32,7 @@
             }
           }
         }
-        echo "<br/>";
+        echo "<p/>";
       }
     }
     
