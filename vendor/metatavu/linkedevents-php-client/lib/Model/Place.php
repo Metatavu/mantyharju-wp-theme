@@ -27,7 +27,7 @@
  * Do not edit the class manually.
  */
 
-namespace Metatavu\LinkedEvents\Model;
+namespace Metatavu\MantyharjuTheme\LinkedEvents\Model;
 
 use \ArrayAccess;
 
@@ -56,20 +56,20 @@ class Place implements ArrayAccess
       */
     protected static $swaggerTypes = [
         'id' => 'string',
-        'customData' => '\Metatavu\LinkedEvents\Model\PlaceCustomData[]',
-        'name' => '\Metatavu\LinkedEvents\Model\PlaceName',
-        'images' => '\Metatavu\LinkedEvents\Model\Image[]',
+        'customData' => '\Metatavu\MantyharjuTheme\LinkedEvents\Model\PlaceCustomData[]',
+        'name' => '\Metatavu\MantyharjuTheme\LinkedEvents\Model\PlaceName',
+        'images' => '\Metatavu\MantyharjuTheme\LinkedEvents\Model\Image[]',
         'originId' => 'string',
         'createdTime' => '\DateTime',
         'lastModifiedTime' => '\DateTime',
-        'infoUrl' => '\Metatavu\LinkedEvents\Model\PlaceInfoUrl',
-        'description' => '\Metatavu\LinkedEvents\Model\PlaceDescription',
-        'position' => '\Metatavu\LinkedEvents\Model\PlacePosition',
+        'infoUrl' => '\Metatavu\MantyharjuTheme\LinkedEvents\Model\PlaceInfoUrl',
+        'description' => '\Metatavu\MantyharjuTheme\LinkedEvents\Model\PlaceDescription',
+        'position' => '\Metatavu\MantyharjuTheme\LinkedEvents\Model\PlacePosition',
         'email' => 'string',
-        'telephone' => '\Metatavu\LinkedEvents\Model\PlaceTelephone',
+        'telephone' => '\Metatavu\MantyharjuTheme\LinkedEvents\Model\PlaceTelephone',
         'contactType' => 'string',
-        'streetAddress' => '\Metatavu\LinkedEvents\Model\PlaceStreetAddress',
-        'addressLocality' => '\Metatavu\LinkedEvents\Model\PlaceAddressLocality',
+        'streetAddress' => '\Metatavu\MantyharjuTheme\LinkedEvents\Model\PlaceStreetAddress',
+        'addressLocality' => '\Metatavu\MantyharjuTheme\LinkedEvents\Model\PlaceAddressLocality',
         'addressRegion' => 'string',
         'postalCode' => 'string',
         'postOfficeBoxNum' => 'string',
@@ -316,7 +316,7 @@ class Place implements ArrayAccess
 
     /**
      * Gets customData
-     * @return \Metatavu\LinkedEvents\Model\PlaceCustomData[]
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\PlaceCustomData[]
      */
     public function getCustomData()
     {
@@ -325,7 +325,7 @@ class Place implements ArrayAccess
 
     /**
      * Sets customData
-     * @param \Metatavu\LinkedEvents\Model\PlaceCustomData[] $customData Key value field for custom data. FIXME: is there 6Aika-wide use case for this?
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\PlaceCustomData[] $customData Key value field for custom data. FIXME: is there 6Aika-wide use case for this?
      * @return $this
      */
     public function setCustomData($customData)
@@ -337,7 +337,7 @@ class Place implements ArrayAccess
 
     /**
      * Gets name
-     * @return \Metatavu\LinkedEvents\Model\PlaceName
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\PlaceName
      */
     public function getName()
     {
@@ -346,7 +346,7 @@ class Place implements ArrayAccess
 
     /**
      * Sets name
-     * @param \Metatavu\LinkedEvents\Model\PlaceName $name
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\PlaceName $name
      * @return $this
      */
     public function setName($name)
@@ -358,7 +358,7 @@ class Place implements ArrayAccess
 
     /**
      * Gets images
-     * @return \Metatavu\LinkedEvents\Model\Image[]
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\Image[]
      */
     public function getImages()
     {
@@ -367,7 +367,7 @@ class Place implements ArrayAccess
 
     /**
      * Sets images
-     * @param \Metatavu\LinkedEvents\Model\Image[] $images
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\Image[] $images
      * @return $this
      */
     public function setImages($images)
@@ -442,7 +442,7 @@ class Place implements ArrayAccess
 
     /**
      * Gets infoUrl
-     * @return \Metatavu\LinkedEvents\Model\PlaceInfoUrl
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\PlaceInfoUrl
      */
     public function getInfoUrl()
     {
@@ -451,7 +451,7 @@ class Place implements ArrayAccess
 
     /**
      * Sets infoUrl
-     * @param \Metatavu\LinkedEvents\Model\PlaceInfoUrl $infoUrl
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\PlaceInfoUrl $infoUrl
      * @return $this
      */
     public function setInfoUrl($infoUrl)
@@ -463,7 +463,7 @@ class Place implements ArrayAccess
 
     /**
      * Gets description
-     * @return \Metatavu\LinkedEvents\Model\PlaceDescription
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\PlaceDescription
      */
     public function getDescription()
     {
@@ -472,7 +472,7 @@ class Place implements ArrayAccess
 
     /**
      * Sets description
-     * @param \Metatavu\LinkedEvents\Model\PlaceDescription $description
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\PlaceDescription $description
      * @return $this
      */
     public function setDescription($description)
@@ -484,7 +484,7 @@ class Place implements ArrayAccess
 
     /**
      * Gets position
-     * @return \Metatavu\LinkedEvents\Model\PlacePosition
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\PlacePosition
      */
     public function getPosition()
     {
@@ -493,7 +493,7 @@ class Place implements ArrayAccess
 
     /**
      * Sets position
-     * @param \Metatavu\LinkedEvents\Model\PlacePosition $position
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\PlacePosition $position
      * @return $this
      */
     public function setPosition($position)
@@ -526,7 +526,7 @@ class Place implements ArrayAccess
 
     /**
      * Gets telephone
-     * @return \Metatavu\LinkedEvents\Model\PlaceTelephone
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\PlaceTelephone
      */
     public function getTelephone()
     {
@@ -535,7 +535,7 @@ class Place implements ArrayAccess
 
     /**
      * Sets telephone
-     * @param \Metatavu\LinkedEvents\Model\PlaceTelephone $telephone
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\PlaceTelephone $telephone
      * @return $this
      */
     public function setTelephone($telephone)
@@ -568,7 +568,7 @@ class Place implements ArrayAccess
 
     /**
      * Gets streetAddress
-     * @return \Metatavu\LinkedEvents\Model\PlaceStreetAddress
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\PlaceStreetAddress
      */
     public function getStreetAddress()
     {
@@ -577,7 +577,7 @@ class Place implements ArrayAccess
 
     /**
      * Sets streetAddress
-     * @param \Metatavu\LinkedEvents\Model\PlaceStreetAddress $streetAddress
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\PlaceStreetAddress $streetAddress
      * @return $this
      */
     public function setStreetAddress($streetAddress)
@@ -589,7 +589,7 @@ class Place implements ArrayAccess
 
     /**
      * Gets addressLocality
-     * @return \Metatavu\LinkedEvents\Model\PlaceAddressLocality
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\PlaceAddressLocality
      */
     public function getAddressLocality()
     {
@@ -598,7 +598,7 @@ class Place implements ArrayAccess
 
     /**
      * Sets addressLocality
-     * @param \Metatavu\LinkedEvents\Model\PlaceAddressLocality $addressLocality
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\PlaceAddressLocality $addressLocality
      * @return $this
      */
     public function setAddressLocality($addressLocality)
@@ -807,10 +807,10 @@ class Place implements ArrayAccess
     public function __toString()
     {
         if (defined('JSON_PRETTY_PRINT')) { // use JSON pretty print
-            return json_encode(\Metatavu\LinkedEvents\ObjectSerializer::sanitizeForSerialization($this), JSON_PRETTY_PRINT);
+            return json_encode(\Metatavu\MantyharjuTheme\LinkedEvents\ObjectSerializer::sanitizeForSerialization($this), JSON_PRETTY_PRINT);
         }
 
-        return json_encode(\Metatavu\LinkedEvents\ObjectSerializer::sanitizeForSerialization($this));
+        return json_encode(\Metatavu\MantyharjuTheme\LinkedEvents\ObjectSerializer::sanitizeForSerialization($this));
     }
 }
 

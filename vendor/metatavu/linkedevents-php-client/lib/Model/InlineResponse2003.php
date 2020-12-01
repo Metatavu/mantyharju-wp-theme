@@ -27,7 +27,7 @@
  * Do not edit the class manually.
  */
 
-namespace Metatavu\LinkedEvents\Model;
+namespace Metatavu\MantyharjuTheme\LinkedEvents\Model;
 
 use \ArrayAccess;
 
@@ -54,8 +54,8 @@ class InlineResponse2003 implements ArrayAccess
       * @var string[]
       */
     protected static $swaggerTypes = [
-        'meta' => '\Metatavu\LinkedEvents\Model\MetaDefinition',
-        'data' => '\Metatavu\LinkedEvents\Model\KeywordSet[]'
+        'meta' => '\Metatavu\MantyharjuTheme\LinkedEvents\Model\MetaDefinition',
+        'data' => '\Metatavu\MantyharjuTheme\LinkedEvents\Model\KeywordSet[]'
     ];
 
     /**
@@ -168,7 +168,7 @@ class InlineResponse2003 implements ArrayAccess
 
     /**
      * Gets meta
-     * @return \Metatavu\LinkedEvents\Model\MetaDefinition
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\MetaDefinition
      */
     public function getMeta()
     {
@@ -177,7 +177,7 @@ class InlineResponse2003 implements ArrayAccess
 
     /**
      * Sets meta
-     * @param \Metatavu\LinkedEvents\Model\MetaDefinition $meta
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\MetaDefinition $meta
      * @return $this
      */
     public function setMeta($meta)
@@ -189,7 +189,7 @@ class InlineResponse2003 implements ArrayAccess
 
     /**
      * Gets data
-     * @return \Metatavu\LinkedEvents\Model\KeywordSet[]
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\KeywordSet[]
      */
     public function getData()
     {
@@ -198,7 +198,7 @@ class InlineResponse2003 implements ArrayAccess
 
     /**
      * Sets data
-     * @param \Metatavu\LinkedEvents\Model\KeywordSet[] $data
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\Model\KeywordSet[] $data
      * @return $this
      */
     public function setData($data)
@@ -259,10 +259,10 @@ class InlineResponse2003 implements ArrayAccess
     public function __toString()
     {
         if (defined('JSON_PRETTY_PRINT')) { // use JSON pretty print
-            return json_encode(\Metatavu\LinkedEvents\ObjectSerializer::sanitizeForSerialization($this), JSON_PRETTY_PRINT);
+            return json_encode(\Metatavu\MantyharjuTheme\LinkedEvents\ObjectSerializer::sanitizeForSerialization($this), JSON_PRETTY_PRINT);
         }
 
-        return json_encode(\Metatavu\LinkedEvents\ObjectSerializer::sanitizeForSerialization($this));
+        return json_encode(\Metatavu\MantyharjuTheme\LinkedEvents\ObjectSerializer::sanitizeForSerialization($this));
     }
 }
 

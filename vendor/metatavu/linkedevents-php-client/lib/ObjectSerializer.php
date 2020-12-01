@@ -27,7 +27,7 @@
  * Do not edit the class manually.
  */
 
-namespace Metatavu\LinkedEvents;
+namespace Metatavu\MantyharjuTheme\LinkedEvents;
 
 class DateTimeExt extends \DateTime {
   
@@ -303,7 +303,7 @@ class ObjectSerializer
             // If a discriminator is defined and points to a valid subclass, use it.
             $discriminator = $class::DISCRIMINATOR;
             if (!empty($discriminator) && isset($data->{$discriminator}) && is_string($data->{$discriminator})) {
-                $subclass = '\Metatavu\LinkedEvents\Model\\' . $data->{$discriminator};
+                $subclass = '\Metatavu\MantyharjuTheme\LinkedEvents\Model\\' . $data->{$discriminator};
                 if (is_subclass_of($subclass, $class)) {
                     $class = $subclass;
                 }

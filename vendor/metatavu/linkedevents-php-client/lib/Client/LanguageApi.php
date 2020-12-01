@@ -26,12 +26,12 @@
  * Do not edit the class manually.
  */
 
-namespace Metatavu\LinkedEvents\Client;
+namespace Metatavu\MantyharjuTheme\LinkedEvents\Client;
 
-use \Metatavu\LinkedEvents\ApiClient;
-use \Metatavu\LinkedEvents\ApiException;
-use \Metatavu\LinkedEvents\Configuration;
-use \Metatavu\LinkedEvents\ObjectSerializer;
+use \Metatavu\MantyharjuTheme\LinkedEvents\ApiClient;
+use \Metatavu\MantyharjuTheme\LinkedEvents\ApiException;
+use \Metatavu\MantyharjuTheme\LinkedEvents\Configuration;
+use \Metatavu\MantyharjuTheme\LinkedEvents\ObjectSerializer;
 
 /**
  * LanguageApi Class Doc Comment
@@ -46,16 +46,16 @@ class LanguageApi
     /**
      * API Client
      *
-     * @var \Metatavu\LinkedEvents\ApiClient instance of the ApiClient
+     * @var \Metatavu\MantyharjuTheme\LinkedEvents\ApiClient instance of the ApiClient
      */
     protected $apiClient;
 
     /**
      * Constructor
      *
-     * @param \Metatavu\LinkedEvents\ApiClient|null $apiClient The api client to use
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\ApiClient|null $apiClient The api client to use
      */
-    public function __construct(\Metatavu\LinkedEvents\ApiClient $apiClient = null)
+    public function __construct(\Metatavu\MantyharjuTheme\LinkedEvents\ApiClient $apiClient = null)
     {
         if ($apiClient === null) {
             $apiClient = new ApiClient();
@@ -67,7 +67,7 @@ class LanguageApi
     /**
      * Get API client
      *
-     * @return \Metatavu\LinkedEvents\ApiClient get the API client
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\ApiClient get the API client
      */
     public function getApiClient()
     {
@@ -77,11 +77,11 @@ class LanguageApi
     /**
      * Set the API client
      *
-     * @param \Metatavu\LinkedEvents\ApiClient $apiClient set the API client
+     * @param \Metatavu\MantyharjuTheme\LinkedEvents\ApiClient $apiClient set the API client
      *
      * @return LanguageApi
      */
-    public function setApiClient(\Metatavu\LinkedEvents\ApiClient $apiClient)
+    public function setApiClient(\Metatavu\MantyharjuTheme\LinkedEvents\ApiClient $apiClient)
     {
         $this->apiClient = $apiClient;
         return $this;
@@ -92,8 +92,8 @@ class LanguageApi
      *
      * Return a list of languages used for describing events
      *
-     * @throws \Metatavu\LinkedEvents\ApiException on non-2xx response
-     * @return \Metatavu\LinkedEvents\Model\InlineResponse2005
+     * @throws \Metatavu\MantyharjuTheme\LinkedEvents\ApiException on non-2xx response
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\InlineResponse2005
      */
     public function languageList()
     {
@@ -106,8 +106,8 @@ class LanguageApi
      *
      * Return a list of languages used for describing events
      *
-     * @throws \Metatavu\LinkedEvents\ApiException on non-2xx response
-     * @return array of \Metatavu\LinkedEvents\Model\InlineResponse2005, HTTP status code, HTTP response headers (array of strings)
+     * @throws \Metatavu\MantyharjuTheme\LinkedEvents\ApiException on non-2xx response
+     * @return array of \Metatavu\MantyharjuTheme\LinkedEvents\Model\InlineResponse2005, HTTP status code, HTTP response headers (array of strings)
      */
     public function languageListWithHttpInfo()
     {
@@ -138,15 +138,15 @@ class LanguageApi
                 $queryParams,
                 $httpBody,
                 $headerParams,
-                '\Metatavu\LinkedEvents\Model\InlineResponse2005',
+                '\Metatavu\MantyharjuTheme\LinkedEvents\Model\InlineResponse2005',
                 '/language/'
             );
 
-            return [$this->apiClient->getSerializer()->deserialize($response, '\Metatavu\LinkedEvents\Model\InlineResponse2005', $httpHeader), $statusCode, $httpHeader];
+            return [$this->apiClient->getSerializer()->deserialize($response, '\Metatavu\MantyharjuTheme\LinkedEvents\Model\InlineResponse2005', $httpHeader), $statusCode, $httpHeader];
         } catch (ApiException $e) {
             switch ($e->getCode()) {
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Metatavu\LinkedEvents\Model\InlineResponse2005', $e->getResponseHeaders());
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Metatavu\MantyharjuTheme\LinkedEvents\Model\InlineResponse2005', $e->getResponseHeaders());
                     $e->setResponseObject($data);
                     break;
             }
@@ -161,8 +161,8 @@ class LanguageApi
      * Return information for single language
      *
      * @param string $id  (required)
-     * @throws \Metatavu\LinkedEvents\ApiException on non-2xx response
-     * @return \Metatavu\LinkedEvents\Model\Language
+     * @throws \Metatavu\MantyharjuTheme\LinkedEvents\ApiException on non-2xx response
+     * @return \Metatavu\MantyharjuTheme\LinkedEvents\Model\Language
      */
     public function languageRetrieve($id)
     {
@@ -176,8 +176,8 @@ class LanguageApi
      * Return information for single language
      *
      * @param string $id  (required)
-     * @throws \Metatavu\LinkedEvents\ApiException on non-2xx response
-     * @return array of \Metatavu\LinkedEvents\Model\Language, HTTP status code, HTTP response headers (array of strings)
+     * @throws \Metatavu\MantyharjuTheme\LinkedEvents\ApiException on non-2xx response
+     * @return array of \Metatavu\MantyharjuTheme\LinkedEvents\Model\Language, HTTP status code, HTTP response headers (array of strings)
      */
     public function languageRetrieveWithHttpInfo($id)
     {
@@ -220,15 +220,15 @@ class LanguageApi
                 $queryParams,
                 $httpBody,
                 $headerParams,
-                '\Metatavu\LinkedEvents\Model\Language',
+                '\Metatavu\MantyharjuTheme\LinkedEvents\Model\Language',
                 '/language/{id}/'
             );
 
-            return [$this->apiClient->getSerializer()->deserialize($response, '\Metatavu\LinkedEvents\Model\Language', $httpHeader), $statusCode, $httpHeader];
+            return [$this->apiClient->getSerializer()->deserialize($response, '\Metatavu\MantyharjuTheme\LinkedEvents\Model\Language', $httpHeader), $statusCode, $httpHeader];
         } catch (ApiException $e) {
             switch ($e->getCode()) {
                 case 200:
-                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Metatavu\LinkedEvents\Model\Language', $e->getResponseHeaders());
+                    $data = $this->apiClient->getSerializer()->deserialize($e->getResponseBody(), '\Metatavu\MantyharjuTheme\LinkedEvents\Model\Language', $e->getResponseHeaders());
                     $e->setResponseObject($data);
                     break;
             }

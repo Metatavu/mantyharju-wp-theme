@@ -26,12 +26,12 @@
  * Please update the test case below to test the endpoint.
  */
 
-namespace Metatavu\LinkedEvents;
+namespace Metatavu\MantyharjuTheme\LinkedEvents;
 
-use \Metatavu\LinkedEvents\Configuration;
-use \Metatavu\LinkedEvents\ApiClient;
-use \Metatavu\LinkedEvents\ApiException;
-use \Metatavu\LinkedEvents\ObjectSerializer;
+use \Metatavu\MantyharjuTheme\LinkedEvents\Configuration;
+use \Metatavu\MantyharjuTheme\LinkedEvents\ApiClient;
+use \Metatavu\MantyharjuTheme\LinkedEvents\ApiException;
+use \Metatavu\MantyharjuTheme\LinkedEvents\ObjectSerializer;
 
 /**
  * EventApiTest Class Doc Comment

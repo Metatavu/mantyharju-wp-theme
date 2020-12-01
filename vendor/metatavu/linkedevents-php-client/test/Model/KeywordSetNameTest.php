@@ -27,7 +27,7 @@
  * Please update the test case below to test the model.
  */
 
-namespace Metatavu\LinkedEvents;
+namespace Metatavu\MantyharjuTheme\LinkedEvents;
 
 /**
  * KeywordSetNameTest Class Doc Comment
