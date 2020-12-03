@@ -25,7 +25,7 @@
       echo "<b>$additionalInformation<br/></b>";
     }
 
-    echo "$prefixNumber $number $chargeInfo";
+    echo "$prefixNumber $number $chargeInfo<br/>";
 
   }
 
