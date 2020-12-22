@@ -7,6 +7,7 @@ import { Post } from "src/generated/client/src";
 import strings from "../../localization/strings";
 import { withStyles, WithStyles, Typography } from "@material-ui/core";
 import ReadSpeaker from "../generic/ReadSpeaker";
+import hero from "../../resources/img/mantyharju-images/mantyharju-images/hero-image-mantyharju.jpg";
 
 /**
  * Component props
@@ -23,6 +24,8 @@ interface State {
   post?: Post;
   postTitle?: string;
   postContent?: React.ReactElement[];
+  postThumbnail?: string;
+  loading: boolean;
 }
 
 /**
@@ -38,6 +41,8 @@ class ArticlePage extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
+      postThumbnail: "",
+      loading: true
     };
   }
 
@@ -54,21 +59,25 @@ class ArticlePage extends React.Component<Props, State> {
    */
   public render() {
     const { lang, classes, slug } = this.props;
-    const { postTitle } = this.state;
+    const { postTitle, postThumbnail } = this.state;
 
-    return (
+    return (       
+      <> 
+      { !this.state.loading &&
       <BasicLayout lang={ lang } slug={ slug }>
-        <div className={ classes.heroImageDiv }>
-          <div className={ classes.heroContent }>
-            <Typography variant="h1" className={ classes.heroText }>
-              { postTitle }
-            </Typography>
+          <div className={classes.heroImageDiv} style={{ backgroundImage: `url(${postThumbnail ? postThumbnail : hero})` }}>
+            <div className={classes.heroContent}>
+              <Typography variant="h1" className={classes.heroText}>
+                {postTitle}
+              </Typography>
+            </div>
           </div>
-        </div>
-        <div>
-          { this.renderContent() }
-        </div>
+          <div>
+            { this.renderContent() }
+          </div>
       </BasicLayout>
+      }
+      </>
     );
   }
 
@@ -76,21 +85,29 @@ class ArticlePage extends React.Component<Props, State> {
    * Method for loading page content
    */
   private loadContent = async () => {
+    this.setState({
+      loading: true
+    });
+
     const { lang, slug } = this.props;
     const api = ApiUtils.getApi();
 
-    const [posts] = await Promise.all([
-      api.getWpV2Posts({ lang: [ lang ], slug: [ slug ], per_page: 1 })
+    const apiCalls = await Promise.all([
+      api.getWpV2Posts({ lang: [ lang ], slug: [ slug ], per_page: 1 }),
+      api.getPostThumbnail({ slug: slug })
     ]);
 
-    const post = posts ? posts[0] : undefined;
+    const post = apiCalls ? apiCalls[0][0] : undefined;
+    const postThumbnail = apiCalls[1];
     const postTitle = this.getPostTitle(post);
     const postContent = this.getPostContent(post);
 
     this.setState({
       post: post,
       postTitle: postTitle,
-      postContent: postContent
+      postContent: postContent,
+      postThumbnail: postThumbnail,
+      loading: false
     });
   }
 

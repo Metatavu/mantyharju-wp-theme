@@ -16,7 +16,6 @@ export default createStyles({
   heroImageDiv: {
     display: "flex",
     alignItems: "center",
-    backgroundImage: `url(${hero})`,
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center center",
     backgroundSize: "cover",
