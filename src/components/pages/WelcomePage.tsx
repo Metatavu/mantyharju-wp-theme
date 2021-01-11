@@ -832,7 +832,8 @@ class WelcomePage extends React.Component<Props, State> {
 
       const meta = res.meta;
       if (meta.next) {
-        fetchAddress = res.meta.next;
+        const url = res.meta.next;
+        fetchAddress = url.replace(/^http:\/\//i, 'https://')
         i -= 1;
       }
     }
