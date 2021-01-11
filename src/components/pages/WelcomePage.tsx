@@ -807,7 +807,7 @@ class WelcomePage extends React.Component<Props, State> {
   private returnPlaces = async () => {
     const { fetchData } = this.state;
 
-    return await fetchData.map((place: Place) => {
+    return await fetchData.map(place => {
       return {
         name: place.name && place.name.fi ? place.name.fi : place.id,
         value: place.id
