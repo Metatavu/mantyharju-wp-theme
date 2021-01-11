@@ -74,6 +74,9 @@ interface PostItem {
   date?: moment.Moment;
 }
 
+/**
+ * Interface representing component Place
+ */
 interface Place {
   id: string;
   name: {
