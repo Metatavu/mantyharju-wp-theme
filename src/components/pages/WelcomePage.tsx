@@ -795,7 +795,7 @@ class WelcomePage extends React.Component<Props, State> {
       this.setState({
         fetchData: data,
         fethingData: false
-      })
+      });
       await this.returnPlaces();
     }
     return this.returnPlaces();
