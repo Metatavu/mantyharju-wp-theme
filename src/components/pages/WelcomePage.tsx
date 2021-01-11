@@ -59,7 +59,7 @@ interface State {
   announcements?: PostItem[],
   jobsLink?: string,
   jobs?: PostItem[],
-  fetchData: any,
+  fetchData: Object[],
   fethingData: boolean
 }
 
@@ -123,7 +123,7 @@ class WelcomePage extends React.Component<Props, State> {
       showDefaultImages: false,
       addPlaceVisibility: false,
       imageUrl: "",
-      fetchData: {},
+      fetchData: [],
       fethingData: false
     };
 
