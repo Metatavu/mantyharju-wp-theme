@@ -59,7 +59,8 @@ interface State {
   announcements?: PostItem[],
   jobsLink?: string,
   jobs?: PostItem[],
-  fetchData: any
+  fetchData: any,
+  fethingData: boolean
 }
 
 interface Dictionary<T> {
@@ -122,7 +123,8 @@ class WelcomePage extends React.Component<Props, State> {
       showDefaultImages: false,
       addPlaceVisibility: false,
       imageUrl: "",
-      fetchData: {}
+      fetchData: {},
+      fethingData: false
     };
 
     this.onPick = this.onPick.bind(this);
@@ -770,20 +772,33 @@ class WelcomePage extends React.Component<Props, State> {
    */
   private setAutocompleteOptions = async (input: string) => {
 
-    const { fetchData } = this.state;
+    const { fethingData, fetchData } = this.state;
     // Handle place autocomplete
     if (!input) {
       return [];
     }
 
-    if (Object.keys(fetchData).length === 0) {
+    if (Object.keys(fetchData).length === 0 && !fethingData) {
+      this.setState({
+        fethingData: true
+      })
       const data = await this.fetchPlaces();
       this.setState({
-        fetchData: data
+        fetchData: data,
+        fethingData: false
       })
+      await this.returnPlaces();
     }
+    return this.returnPlaces();
+  }
 
-    return await fetchData.data.map((place: any) => {
+  /**
+   * Return list of places
+   */
+  private returnPlaces = async () => {
+    const { fetchData } = this.state;
+
+    return await fetchData.map((place: any) => {
       return {
         name: place.name && place.name.fi ? place.name.fi : place.id,
         value: place.id
@@ -795,8 +810,20 @@ class WelcomePage extends React.Component<Props, State> {
    * Fetching data if not having any
    */
   private fetchPlaces = async () => {
-    const res = await fetch(`https://mantyharju.linkedevents.fi/v1/place/?&data_source=mantyharju`);
-    return res.json();
+    let data: string | any[] = [];
+    let i;
+    let fetchAddress = `https://mantyharju.linkedevents.fi/v1/place/?&data_source=mantyharju`;
+    for(i=0; i < 1; i++)
+    {
+      const res = (await (await fetch(fetchAddress)).json());
+      data = data.concat(res.data);
+      const meta = res.meta;
+      if (meta.next) {
+        fetchAddress = res.meta.next;
+        i -= 1;
+      }
+    }
+    return data;
   }
 
   /**
