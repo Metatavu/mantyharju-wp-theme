@@ -1,6 +1,5 @@
 import { createStyles } from "@material-ui/core";
 import theme from "./theme";
-import hero from "../resources/img/mantyharju-images/mantyharju-images/hero-image-mantyharju.jpg";
 
 const { breakpoints } = theme;
 
@@ -108,6 +107,13 @@ export default createStyles({
     [breakpoints.up("xl")]: {
       padding: "0 8rem 2rem"
     },
+    "& .wp-block-image": {
+      margin: 0,
+      "& img": {
+        width: "100%",
+        height: "auto",
+      }
+    }
   },
   contentarea: {
     display: "flex",
