@@ -59,7 +59,7 @@ interface State {
   announcements?: PostItem[],
   jobsLink?: string,
   jobs?: PostItem[],
-  fetchData: Object[],
+  fetchData: Place[]
   fethingData: boolean
 }
 
@@ -72,6 +72,15 @@ interface PostItem {
   link: string;
   content?: any;
   date?: moment.Moment;
+}
+
+interface Place {
+  id: string;
+  name: {
+    fi: string;
+    en: string;
+    sv: string;
+  }
 }
 
 interface PageWithImgUrl extends Page {
@@ -798,7 +807,7 @@ class WelcomePage extends React.Component<Props, State> {
   private returnPlaces = async () => {
     const { fetchData } = this.state;
 
-    return await fetchData.map((place: any) => {
+    return await fetchData.map((place: Place) => {
       return {
         name: place.name && place.name.fi ? place.name.fi : place.id,
         value: place.id
@@ -810,7 +819,7 @@ class WelcomePage extends React.Component<Props, State> {
    * Fetching data if not having any
    */
   private fetchPlaces = async () => {
-    let data: string | any[] = [];
+    let data: Place[] = [];
     let i;
     let fetchAddress = `https://mantyharju.linkedevents.fi/v1/place/?&data_source=mantyharju`;
     for(i=0; i < 1; i++)
