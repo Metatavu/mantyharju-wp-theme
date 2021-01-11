@@ -822,8 +822,7 @@ class WelcomePage extends React.Component<Props, State> {
     let data: Place[] = [];
     let i;
     let fetchAddress = `https://mantyharju.linkedevents.fi/v1/place/?&data_source=mantyharju`;
-    for(i=0; i < 1; i++)
-    {
+    for (i=0; i < 1; i++) {
       const res = (await (await fetch(fetchAddress)).json());
       data = data.concat(res.data);
       const meta = res.meta;
@@ -832,6 +831,7 @@ class WelcomePage extends React.Component<Props, State> {
         i -= 1;
       }
     }
+
     return data;
   }
 
