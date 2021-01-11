@@ -790,7 +790,7 @@ class WelcomePage extends React.Component<Props, State> {
     if (Object.keys(fetchData).length === 0 && !fethingData) {
       this.setState({
         fethingData: true
-      })
+      });
       const data = await this.fetchPlaces();
       this.setState({
         fetchData: data,
