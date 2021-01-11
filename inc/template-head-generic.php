@@ -8,7 +8,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,600&family=Rubik&display=swap" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="<?php bloginfo('template_url') ?>/inc/styles.css" />
 <link rel="stylesheet" type="text/css" href="<?php bloginfo('template_url') ?>/inc/loader.css">
-<link rel="icon" type="image/png" href="<?php bloginfo('template_url') ?>/inc/favicon.png" sizes="196x196" />
+<link rel="icon" href="https://www.mantyharju.fi/favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="https://www.mantyharju.fi/favicon.ico" type="image/x-icon" />
 <title>Mäntyharju</title>
 <script>
   window.THEME_PATH = "<?php bloginfo('template_url');?>";
