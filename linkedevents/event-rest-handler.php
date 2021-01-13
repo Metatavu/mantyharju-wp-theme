@@ -157,10 +157,26 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
     }
     
     protected function ensureEventOffers($event, $body) {
-      $price[fi] = $body->{'has-price'} == 'checked' ? $body->{'price-fi'} : $body->{'free-price-fi'};
-      $price[sv] = $body->{'has-price'} == 'checked' ? $body->{'price-sv'} : $body->{'free-price-sv'};
-      $price[en] = $body->{'has-price'} == 'checked' ? $body->{'price-en'} : $body->{'free-price-en'};
+      $price[fi] = "";
+      $price[sv] = "";
+      $price[en] = "";
+
+      $price_fi = $body->{'has-price'} == 'checked' ? $body->{'price-fi'} : $body->{'free-price-fi'};
+      $price_sv = $body->{'has-price'} == 'checked' ? $body->{'price-sv'} : $body->{'free-price-sv'};
+      $price_en = $body->{'has-price'} == 'checked' ? $body->{'price-en'} : $body->{'free-price-en'};
       
+      if ($price_fi) {
+        $price[fi] = $price_fi;
+      }
+
+      if ($price_en) {
+        $price[en] = $price_en;
+      }
+
+      if ($price_sv) {
+        $price[sv] = $price_sv;
+      }
+
       $is_free = $body->{'has-price'} == 'checked' ? 'true' : 'false';
       $offers = [        
         is_free => $is_free,
