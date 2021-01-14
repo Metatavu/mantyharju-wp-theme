@@ -6,6 +6,7 @@ import BasicLayout from "../BasicLayout";
 import { DomElement } from "domhandler";
 import * as moment from "moment";
 import ReadSpeaker from "../generic/ReadSpeaker";
+import { Place } from "src/types/Place";
 
 /**
  * Component props
@@ -23,6 +24,7 @@ interface Props extends WithStyles<typeof styles> {
  */
 interface State {
   fetchedContent?: any;
+  eventPlace?: Place;
 }
 
 /**
@@ -79,7 +81,7 @@ class SingleEventPage extends React.Component<Props, State> {
    */
   private renderEventContent() {
     const { classes } = this.props;
-    const { fetchedContent } = this.state;
+    const { fetchedContent, eventPlace } = this.state;
     const start_time = fetchedContent ? moment(fetchedContent.start_time).format("DD.MM.YYYY HH:mm") : null;
     const end_time = fetchedContent ? moment(fetchedContent.end_time).format("DD.MM.YYYY HH:mm"): null;
     if (!fetchedContent) {
@@ -111,6 +113,11 @@ class SingleEventPage extends React.Component<Props, State> {
                   <Typography variant="h6">
                     Tapahtuman tiedot
                   </Typography>
+                  { eventPlace &&
+                    <Typography variant="body2">
+                      Tapahtumapaikka: { eventPlace.name.fi }
+                    </Typography>
+                  }
                   { start_time &&
                     <Typography variant="body2">
                       Alkaa: { start_time }
@@ -205,19 +212,24 @@ class SingleEventPage extends React.Component<Props, State> {
       null;
     } else {
       console.log("Event id is: ", eventId);
-      const response = await fetch("https://mantyharju.linkedevents.fi/v1/event/" + eventId, {
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-        },
-        method: "GET",
-      });
-      if (response.status !== 400) {
+      try {
+        const response = await fetch("https://mantyharju.linkedevents.fi/v1/event/" + eventId, {
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+          },
+          method: "GET",
+        });
         const content = await response.json();
+        const placeResponse = await fetch(content.location["@id"]);        
+        const place: Place = await placeResponse.json();
 
         this.setState({
-          fetchedContent: content
+          fetchedContent: content,
+          eventPlace: place
         });
+      } catch (error) {
+        console.error(error);
       }
     }
   }
