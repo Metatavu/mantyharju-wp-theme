@@ -221,7 +221,7 @@ class SingleEventPage extends React.Component<Props, State> {
           method: "GET",
         });
         const content = await response.json();
-        const placeResponse = await fetch(content.location["@id"]);        
+        const placeResponse = await fetch(content.location["@id"].replace(/^http:\/\//i, 'https://'));        
         const place: Place = await placeResponse.json();
 
         this.setState({
