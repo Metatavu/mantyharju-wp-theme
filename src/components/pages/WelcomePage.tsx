@@ -17,6 +17,7 @@ import ImageUpload from "./image-upload";
 import { MetaformComponent, IconName, FieldValue, Metaform } from "metaform-react";
 import strings from "../../localization/strings";
 import defaultimage from "../../resources/img/postHeader.png";
+import { Place } from "../../types/Place"
 
 /**
  * Interface representing component properties
@@ -72,18 +73,6 @@ interface PostItem {
   link: string;
   content?: any;
   date?: moment.Moment;
-}
-
-/**
- * Interface representing component Place
- */
-interface Place {
-  id: string;
-  name: {
-    fi: string;
-    en: string;
-    sv: string;
-  }
 }
 
 interface PageWithImgUrl extends Page {
