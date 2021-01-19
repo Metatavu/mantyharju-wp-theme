@@ -142,7 +142,6 @@ class PostsPage extends React.Component<Props, State> {
     if (!displayPages) {
       return null;
     } else {
-      displayPages = displayPages.length > 6 ? displayPages.splice(0, 6) : displayPages;
       return (
         displayPages.map(page => {
           if (page.post_status === "publish") {
