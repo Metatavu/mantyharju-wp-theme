@@ -591,10 +591,28 @@ export default createStyles({
         "& fieldset": {
           border: 0,
         },
-        "& .metaform-field": { 
+        "& .metaform-field": {
+          alignContent: "center",
           "& textarea": {
             width: "100%",
             height: 100
+          },
+          "& input[type='button']": {
+            cursor: "pointer",
+            fontSize: 18,
+            width: 210
+          },
+          "& input[type='checkbox']": {
+            cursor: "pointer"
+          },
+          "& input[type='submit']": {
+            fontSize: 24,
+            background: "#fff",
+            cursor: "pointer",
+            height: 50
+          },
+          "& input[type='submit']:hover": {
+            background: "#F5F5F5"
           }
         },
         "& .metaform-autocomplete-field": {

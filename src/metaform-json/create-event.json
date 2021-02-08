@@ -130,7 +130,7 @@
       "fields": [
         {
           "title": "Järjestäjä",
-          "name": "provider",
+          "name": "provider-fi",
           "type": "text",
           "required": true
         },
@@ -141,13 +141,13 @@
         },
         {
           "title": "Puhelinnumero",
-          "name": "provider-phone-number",
+          "name": "provider-phone",
           "type": "text",
           "required": false
         },
         {
           "title": "Sähköpostiosoite",
-          "name": "provider-email-address",
+          "name": "provider-email",
           "type": "email",
           "required": false
         }
@@ -158,7 +158,7 @@
       "fields": [
         {
           "title": "Vastuuhenkilö",
-          "name": "responsible",
+          "name": "responsible-fi",
           "type": "text",
           "required": true
         },
@@ -169,13 +169,13 @@
         },
         {
           "title": "Puhelinnumero",
-          "name": "responsible-phone-number",
+          "name": "responsible-phone",
           "type": "text",
           "required": true
         },
         {
           "title": "Sähköpostiosoite",
-          "name": "responsible-email-address",
+          "name": "responsible-email",
           "type": "email",
           "required": true
         }
@@ -254,7 +254,7 @@
       "title": "Tapahtuman ilmoittautuminen",
       "fields": [
         {
-          "name": "is-registration",
+          "name": "is_registration",
           "type": "boolean",
           "title": "Pakollinen ilmoittautuminen"
         },
@@ -264,7 +264,7 @@
           "title": "Ilmoittautuminen",
           "required": false,
           "visibleIf": {
-            "field": "is-registration",
+            "field": "is_registration",
             "equals": "checked"
           }
         },
@@ -274,7 +274,7 @@
           "title": "Ilmoittautuminen",
           "required": false,
           "visibleIf": {
-            "field": "is-registration",
+            "field": "is_registration",
             "notEquals": "checked"
           }
         },
@@ -284,7 +284,7 @@
           "html": "<div class='help-container'><p>Kerro mahdollisesta ennakkoilmoittautumisesta tai anna lisätietoja esimerkiksi paikkavarauksista.</p><p>Voit lisätä linkin ilmoittautumissivulle.</p></div>"
         },
         {
-          "name": "registration-url",
+          "name": "registration_url",
           "type": "url",
           "title": "Linkki ilmoittautumissivulle",
           "placeholder": "http://www verkkosivun osoite",
