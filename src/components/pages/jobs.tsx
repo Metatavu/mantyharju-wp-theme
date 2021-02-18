@@ -113,7 +113,8 @@ class Jobs extends React.Component<Props, State> {
    * @returns string array
    */
   private parseJobs = (postContent: string): string[] => {
-    const matches = postContent.match(/<article.*?>.*?<\/article>/g); // Mathes <article> tags and their content
+    const postContentWithoutLinebreaks = postContent.replace(/\n/g, '<br>');
+    const matches = postContentWithoutLinebreaks.match(/<article.*?>.*?<\/article>/g); // Matches <article> tags and their content
     if (matches) {
       const jobs = matches.map(match => match);
       return jobs;
