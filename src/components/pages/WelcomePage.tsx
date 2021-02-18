@@ -534,7 +534,8 @@ class WelcomePage extends React.Component<Props, State> {
    * @returns post item array
    */
   parseJobs = (postContent: string): PostItem[] => {
-    const articles = postContent.match(/<article.*?>.*?<\/article>/g); // Match <article> tags and their content
+    const postContentWithoutLinebreaks = postContent.replace(/\n/g, '<br>');
+    const articles = postContentWithoutLinebreaks.match(/<article.*?>.*?<\/article>/g); // Match <article> tags and their content
     if (articles) {
       const postItems = articles.map(article => {
         const title = article.replace(/^.*?<strong.*?>|<\/strong>.*$/g, ""); // Replace everything but <strong> tag content
