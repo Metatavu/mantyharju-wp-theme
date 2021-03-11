@@ -160,20 +160,6 @@ class PostsPage extends React.Component<Props, State> {
   }
 
   /**
-   * Render content method
-   */
-  private renderContent = () => {
-    const { classes } = this.props;
-    const page = this.state.currentPage;
-    return (
-      <Container className={ classNames( classes.root ) }>
-        <h2>{ page ? ReactHtmlParser(page.title ? page.title.rendered || "" : "") : null }</h2>
-        { this.renderPostContent() }
-      </Container>
-    );
-  }
-
-  /**
    * Set html source for page content
    */
   private setTitleSource = () => {

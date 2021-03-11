@@ -200,15 +200,12 @@ class PostPage extends React.Component<Props, State> {
 
     const api = ApiUtils.getApi();
 
-    api.getWpV2Pages({ lang: [ lang ], slug: [ slug ] }).then((res) => {
-      this.setState({ loading: false, currentPage: res[0] });
-      this.hidePageLoader();
-    });
-
-
-    api.getWpV2Posts({ lang: [ lang ], slug: [ slug ] }).then((res) => {
-      const post = res[0];
-      this.setState({ loading: false, post: post, isArticle: !!post });
+    Promise.all([
+      api.getWpV2Pages({ lang: [ lang ], slug: [ slug ] }),
+      api.getWpV2Posts({ lang: [ lang ], slug: [ slug ] })
+    ]).then(([pagesRes, postsRes]) => {
+      const post = postsRes[0];
+      this.setState({ loading: false, currentPage: pagesRes[0], post: post, isArticle: !!post });
       this.hidePageLoader();
     });
 
