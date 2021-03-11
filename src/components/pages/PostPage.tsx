@@ -200,42 +200,46 @@ class PostPage extends React.Component<Props, State> {
 
     const api = ApiUtils.getApi();
 
-    const apiCalls = await Promise.all([
-      api.getWpV2Pages({ lang: [ lang ], slug: [ slug ] }),
-      api.getWpV2Posts({ lang: [ lang ], slug: [ slug ] }),
-      api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
-      api.getWpV2Pages({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
-      api.getWpV2Posts({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
-      api.getCustomPages({ parent_slug: "sivut" }),
-      api.getWpV2Pages({ slug: [ "sivut" ] }),
-      api.getWpV2Pages({ slug: [ loacationPathnameArray[1] ] }),
-      api.getPostThumbnail({ slug: slug })
-    ]);
-
-    const currentPage = apiCalls[0][0];
-    const post = apiCalls[1][0];
-    const nav = apiCalls[2];
-    const pageTitle = apiCalls[3][0].title || apiCalls[4][0].title;
-    const pages = apiCalls[5];
-    const parentPage = apiCalls[6][0];
-    const leftMenuCurrentTopPage = apiCalls[7][0];
-    const postThumbnail = apiCalls[8];
-
-    this.setState({
-      currentPage: currentPage,
-      post: post,
-      isArticle: !!post,
-      loading: false,
-      nav: nav,
-      pageTitle: pageTitle,
-      pages: pages,
-      parentPage: parentPage,
-      leftMenuCurrentTopPage: leftMenuCurrentTopPage,
-      postThumbnail: postThumbnail
+    api.getWpV2Pages({ lang: [ lang ], slug: [ slug ] }).then((res) => {
+      this.setState({ loading: false, currentPage: res[0] });
+      this.hidePageLoader();
     });
 
-    this.breadcrumbPath(pages);
-    this.hidePageLoader();
+
+    api.getWpV2Posts({ lang: [ lang ], slug: [ slug ] }).then((res) => {
+      const post = res[0];
+      this.setState({ loading: false, post: post, isArticle: !!post });
+      this.hidePageLoader();
+    });
+
+    api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }).then((nav) => {
+      this.setState({ nav });
+    });
+
+    Promise.all([
+      api.getWpV2Pages({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
+      api.getWpV2Posts({ lang: [ lang ], slug: [ this.props.mainPageSlug ] })
+    ]).then(([pages, posts]) => {
+      const pageTitle = pages[0].title || posts[0].title;
+      this.setState({ pageTitle });
+    });
+
+    api.getCustomPages({ parent_slug: "posts" }).then((pages) => {
+      this.setState({ pages });
+      this.breadcrumbPath(pages);
+    });
+
+    api.getWpV2Pages({ slug: [ "sivut" ] }).then((res) => {
+      this.setState({ parentPage: res[0] });
+    });
+
+    api.getWpV2Pages({ slug: [ loacationPathnameArray[1] ] }).then((res) => {
+      this.setState({ leftMenuCurrentTopPage: res[0] });
+    });
+
+    api.getPostThumbnail({ slug: slug }).then((postThumbnail) => {
+      this.setState({ postThumbnail });
+    });
   }
 
   /**

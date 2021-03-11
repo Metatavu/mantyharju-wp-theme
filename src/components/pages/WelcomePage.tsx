@@ -150,26 +150,35 @@ class WelcomePage extends React.Component<Props, State> {
       loading: true
     });
 
-    const api = ApiUtils.getApi();
-    const customizeFields = await api.getWpV2Customize();
+    this.hidePageLoader();
 
-    this.setState({
-      customizeFields: customizeFields,
-      loading: false
+    const api = ApiUtils.getApi();
+    api.getWpV2Customize().then((customizeFields) => {
+      this.setState({
+        customizeFields: customizeFields,
+        loading: false
+      });
     });
 
-    const [posts, mainMenu, localeMenu, popularCategory] = await Promise.all(
-      [
-        api.getCustomPosts({}),
-        api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
-        api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }),
-        api.getWpV2Categories({ slug: ["suosittu"] })
-      ]
-    );
+    api.getCustomPosts({}).then((posts) => {
+      this.setState({ posts });
+    });
 
-    const categoryIdArray = [(popularCategory.length > 0 ? popularCategory[0].id || -1 : -1)];
+    api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }).then((mainMenu) => {
+      this.setState({ mainMenu });
+    });
 
-    const popularPages = await api.getWpV2Pages({ categories: categoryIdArray, per_page: 6});
+    api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }).then((localeMenu) => {
+      this.setState({ localeMenu });
+    });
+
+    api.getWpV2Categories({ slug: ["suosittu"] }).then((popularCategory) => {
+      const categoryIdArray = [(popularCategory.length > 0 ? popularCategory[0].id || -1 : -1)];
+      api.getWpV2Pages({ categories: categoryIdArray, per_page: 6}).then((popularPages) => {
+        this.setState({ popularPages });
+      })
+    });
+
     const placeForm: Metaform = require("../../metaform-json/create-place.json");
     const form: Metaform = require("../../metaform-json/create-event.json");
     const keywordRes = await fetch("https://mantyharju.linkedevents.fi/v1/keyword/?page_size=1000&data_source=mantyharju");
@@ -191,15 +200,9 @@ class WelcomePage extends React.Component<Props, State> {
     form.sections = sections;
 
     this.setState({
-      posts: posts,
       form: form,
-      placeForm: placeForm,
-      mainMenu: mainMenu,
-      localeMenu: localeMenu,
-      popularPages: popularPages
+      placeForm: placeForm
     });
-
-    this.hidePageLoader();
 
     this.getNews();
     this.getJobs();

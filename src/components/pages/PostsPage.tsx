@@ -227,37 +227,35 @@ class PostsPage extends React.Component<Props, State> {
     }
     const api = ApiUtils.getApi();
 
-    const apiCalls = await Promise.all([
-      api.getWpV2Pages({ lang: [ lang ], slug: [ slug ] }),
-      api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
-      api.getWpV2Pages({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
-      api.getWpV2Posts({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
-      api.getCustomPages({ parent_slug: "posts" }),
-      api.getWpV2Pages({ slug: [ "sivut" ] }),
-      api.getPostThumbnail({ slug: slug })
-    ]);
-
-    const currentPage = apiCalls[0][0];
-    const page = apiCalls[0][0];
-    const nav = apiCalls[1];
-    const pageTitle = apiCalls[2][0].title || apiCalls[3][0].title;
-    const pages = apiCalls[4];
-    const parentPage = apiCalls[5][0];
-    const postThumbnail = apiCalls[6];
-
-    this.setState({
-      currentPage: currentPage,
-      page: page,
-      loading: false,
-      nav: nav,
-      pageTitle: pageTitle,
-      pages: pages,
-      parentPage: parentPage,
-      postThumbnail: postThumbnail,
+    api.getWpV2Pages({ lang: [ lang ], slug: [ slug ] }).then((res) => {
+      this.setState({ loading: false, currentPage: res[0], page: res[0] });
+      this.hidePageLoader();
     });
 
-    this.breadcrumbPath(pages);
-    this.hidePageLoader();
+    api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }).then((nav) => {
+      this.setState({ nav });
+    });
+
+    Promise.all([
+      api.getWpV2Pages({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
+      api.getWpV2Posts({ lang: [ lang ], slug: [ this.props.mainPageSlug ] })
+    ]).then(([pages, posts]) => {
+      const pageTitle = pages[0].title || posts[0].title;
+      this.setState({ pageTitle });
+    });
+
+    api.getCustomPages({ parent_slug: "posts" }).then((pages) => {
+      this.setState({ pages });
+      this.breadcrumbPath(pages);
+    });
+
+    api.getWpV2Pages({ slug: [ "sivut" ] }).then((parentPages) => {
+      this.setState({ parentPage: parentPages[0] });
+    });
+
+    api.getPostThumbnail({ slug: slug }).then((postThumbnail) => {
+      this.setState({ postThumbnail });
+    });
   }
 
   /**
