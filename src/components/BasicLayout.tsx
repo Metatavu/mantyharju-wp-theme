@@ -1,6 +1,6 @@
 import * as React from "react";
 import { WithStyles, withStyles } from "@material-ui/core";
-import { MenuLocationData, Page, CustomPage } from "../generated/client/src";
+import { MenuLocationData, CustomPage } from "../generated/client/src";
 import ApiUtils from "../utils/ApiUtils";
 import styles from "../styles/basic-layout";
 import Header from "./generic/Header";
@@ -46,25 +46,21 @@ class BasicLayout extends React.Component<Props, State> {
    * Component did mount life-cycle handler
    */
   public componentDidMount = async () => {
-
     const api = ApiUtils.getApi();
-    const [localeMenu, topMenu, allPages, parentPage] = await Promise.all(
-      [
-        api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }),
-        api.getMenusV1LocationsById({ lang: this.props.lang, id: "topmenu" }),
-        api.getCustomPages({ parent_slug: "sivut" }),
-        api.getWpV2Pages({ slug: [ "sivut" ] })
-      ]
-    );
+    ApiUtils.cachedGetMenusV1LocationsById(api, this.props.lang, "locale")
+      .then((localeMenu) => this.setState({ localeMenu }));
+    
+    ApiUtils.cachedGetMenusV1LocationsById(api, this.props.lang, "topmenu")
+      .then((topMenu) => this.setState({topMenu}));
 
-    const parentPageId = (parentPage.length > 0 ? parentPage[0].id || -1 : -1);
+    ApiUtils.cachedGetCustomPages(api, "sivut")
+      .then((pages) => this.setState({ pages }));
 
-    this.setState({
-      topMenu: topMenu,
-      localeMenu: localeMenu,
-      pages: allPages,
-      parentPage: parentPageId
-    });
+    ApiUtils.cachedGetWpV2Pages(api, "sivut")
+      .then((parentPage) => {
+        const parentPageId = (parentPage.length > 0 ? parentPage[0].id || -1 : -1);
+        this.setState({ parentPage: parentPageId });
+      })
   }
 
   /**

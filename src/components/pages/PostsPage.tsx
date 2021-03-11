@@ -33,7 +33,6 @@ interface State {
   currentPage?: Page;
   page?: Page;
   loading: boolean;
-  nav?: MenuLocationData;
   breadcrumb: Breadcrumb[];
   pageTitle?: PostTitle;
   title: string;
@@ -218,10 +217,6 @@ class PostsPage extends React.Component<Props, State> {
       this.hidePageLoader();
     });
 
-    api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }).then((nav) => {
-      this.setState({ nav });
-    });
-
     Promise.all([
       api.getWpV2Pages({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
       api.getWpV2Posts({ lang: [ lang ], slug: [ this.props.mainPageSlug ] })
@@ -230,12 +225,12 @@ class PostsPage extends React.Component<Props, State> {
       this.setState({ pageTitle });
     });
 
-    api.getCustomPages({ parent_slug: "posts" }).then((pages) => {
+    ApiUtils.cachedGetCustomPages(api, "posts").then((pages) => {
       this.setState({ pages });
       this.breadcrumbPath(pages);
     });
 
-    api.getWpV2Pages({ slug: [ "sivut" ] }).then((parentPages) => {
+    ApiUtils.cachedGetWpV2Pages(api, "sivut").then((parentPages) => {
       this.setState({ parentPage: parentPages[0] });
     });
 

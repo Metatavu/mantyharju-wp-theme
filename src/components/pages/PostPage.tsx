@@ -31,19 +31,15 @@ interface Props extends WithStyles<typeof styles> {
  */
 interface State {
   currentPage?: Page;
-  parentPage?: Page;
   post?: Post;
   title: string;
   loading: boolean;
   isArticle: boolean;
   pageTitle?: PostTitle;
-  nav?: MenuLocationData;
   breadcrumb: Breadcrumb[];
   mainContent?: React.ReactElement;
   sideContent?: React.ReactElement;
   pages: CustomPage[];
-  sideMenuParentPage?: Page;
-  leftMenuCurrentTopPage?: Page;
   postThumbnail: string;
 }
 
@@ -187,9 +183,6 @@ class PostPage extends React.Component<Props, State> {
       loading: true
     });
 
-    const { locationPath } = this.props;
-    const loactionPathnameArrayRaw = (locationPath ? locationPath.replace(/\//g, " ") || "" : "").split(" ");
-    const loacationPathnameArray = loactionPathnameArrayRaw.splice(1, (loactionPathnameArrayRaw.length -1 ) - 1);
     const lang = this.props.lang;
     const slugParts = this.props.slug.split("/");
     const slug = slugParts.pop() || slugParts.pop();
@@ -209,10 +202,6 @@ class PostPage extends React.Component<Props, State> {
       this.hidePageLoader();
     });
 
-    api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }).then((nav) => {
-      this.setState({ nav });
-    });
-
     Promise.all([
       api.getWpV2Pages({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
       api.getWpV2Posts({ lang: [ lang ], slug: [ this.props.mainPageSlug ] })
@@ -221,17 +210,9 @@ class PostPage extends React.Component<Props, State> {
       this.setState({ pageTitle });
     });
 
-    api.getCustomPages({ parent_slug: "posts" }).then((pages) => {
+    ApiUtils.cachedGetCustomPages(api, "posts").then((pages) => {
       this.setState({ pages });
       this.breadcrumbPath(pages);
-    });
-
-    api.getWpV2Pages({ slug: [ "sivut" ] }).then((res) => {
-      this.setState({ parentPage: res[0] });
-    });
-
-    api.getWpV2Pages({ slug: [ loacationPathnameArray[1] ] }).then((res) => {
-      this.setState({ leftMenuCurrentTopPage: res[0] });
     });
 
     api.getPostThumbnail({ slug: slug }).then((postThumbnail) => {

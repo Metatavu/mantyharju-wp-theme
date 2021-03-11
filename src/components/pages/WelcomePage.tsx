@@ -40,8 +40,6 @@ interface State {
   linkedEventsPost?: Post,
   loading: boolean,
   popularPages: PageWithImgUrl[],
-  mainMenu?: MenuLocationData,
-  localeMenu?: MenuLocationData,
   scrollPosition: number,
   siteMenuVisible: boolean,
   siteSearchVisible: boolean,
@@ -162,14 +160,6 @@ class WelcomePage extends React.Component<Props, State> {
 
     api.getCustomPosts({}).then((posts) => {
       this.setState({ posts });
-    });
-
-    api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }).then((mainMenu) => {
-      this.setState({ mainMenu });
-    });
-
-    api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }).then((localeMenu) => {
-      this.setState({ localeMenu });
     });
 
     api.getWpV2Categories({ slug: ["suosittu"] }).then((popularCategory) => {
