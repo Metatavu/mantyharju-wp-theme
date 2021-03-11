@@ -28,6 +28,11 @@ export default createStyles({
       }
     }
   },
+  loadingIconContainer: {
+    display: "flex",
+    margin: "5rem",
+    justifyContent: "center"
+  },
   logoBar: {
     display: "flex",
     flexDirection: "row",

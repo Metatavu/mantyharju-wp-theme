@@ -1,6 +1,6 @@
 import * as React from "react";
 import BasicLayout from "../BasicLayout";
-import { Container, WithStyles, withStyles, Button, Breadcrumbs, Link, Typography, Grid } from "@material-ui/core";
+import { Container, WithStyles, withStyles, Button, Breadcrumbs, Link, Typography, Grid, CircularProgress } from "@material-ui/core";
 import styles from "../../styles/page-content";
 import ApiUtils from "../../../src/utils/ApiUtils";
 import { Page, Post, MenuLocationData, PostTitle, CustomPage } from "../../../src/generated/client/src";
@@ -190,7 +190,7 @@ class PostPage extends React.Component<Props, State> {
       // TODO: handle error
       return;
     }
-
+    this.hidePageLoader();    
     const api = ApiUtils.getApi();
 
     Promise.all([
@@ -199,7 +199,7 @@ class PostPage extends React.Component<Props, State> {
     ]).then(([pagesRes, postsRes]) => {
       const post = postsRes[0];
       this.setState({ loading: false, currentPage: pagesRes[0], post: post, isArticle: !!post });
-      this.hidePageLoader();
+      
     });
 
     Promise.all([
@@ -266,6 +266,11 @@ class PostPage extends React.Component<Props, State> {
         this.state.isArticle && "article")
         }
       >
+      { this.state.loading && 
+        <div className={ classes.loadingIconContainer }>
+          <CircularProgress />
+        </div>
+      }
       { !this.state.loading && !mainContent &&
         content
       }
