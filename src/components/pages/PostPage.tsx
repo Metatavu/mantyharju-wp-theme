@@ -41,6 +41,7 @@ interface State {
   sideContent?: React.ReactElement;
   pages: CustomPage[];
   postThumbnail: string;
+  postThumbnailLoading: boolean;
 }
 
 /**
@@ -71,7 +72,8 @@ class PostPage extends React.Component<Props, State> {
       breadcrumb: [],
       title: "",
       pages: [],
-      postThumbnail: ""
+      postThumbnail: "",
+      postThumbnailLoading: false
     };
   }
 
@@ -96,15 +98,16 @@ class PostPage extends React.Component<Props, State> {
    */
   public render() {
     const { classes, lang, slug, locationPath } = this.props;
-    const { sideContent, currentPage, postThumbnail } = this.state;
+    const { sideContent, currentPage, postThumbnail, postThumbnailLoading } = this.state;
     const loactionPathnameArrayRaw = (locationPath ? locationPath.replace(/\//g, " ") || "" : "").split(" ");
     const loacationPathnameArray = loactionPathnameArrayRaw.splice(1, (loactionPathnameArrayRaw.length -1 ) - 1);
     const checkContent = React.Children.map(sideContent, child => child ? child.props.children.length : 0);
     const isContent = (checkContent ? (checkContent[0] === 0 ? false : true) : false);
+    const heroDivStyle = postThumbnailLoading ? { background: "#eee"  } : { backgroundImage: `url(${ postThumbnail ? postThumbnail : hero })` };
     return (
       <BasicLayout lang={ lang } slug={ slug } title={ this.setTitleSource() }>
-        <div className={ classes.heroImageDiv } style={{ backgroundImage: `url(${ postThumbnail ? postThumbnail : hero })` }}>
-          <h1 className={ classes.heroText }>{ currentPage ? ReactHtmlParser(currentPage.title ? currentPage.title.rendered || "" : "") : null }</h1>
+        <div className={ classes.heroImageDiv } style={heroDivStyle}>
+          <h1 className={ classes.heroText }>{ currentPage ? ReactHtmlParser(currentPage.title ? currentPage.title.rendered || "" : "") : "..." }</h1>
         </div>
         <div className={ classes.wrapper }>
           <div className={ classes.pageContent }>
@@ -147,6 +150,8 @@ class PostPage extends React.Component<Props, State> {
     );
   }
 
+
+
   /**
    * Renders breadcrumb
    */
@@ -180,7 +185,8 @@ class PostPage extends React.Component<Props, State> {
    */
   private loadContent = async () => {
     this.setState({
-      loading: true
+      loading: true,
+      postThumbnailLoading: true
     });
 
     const lang = this.props.lang;
@@ -216,7 +222,7 @@ class PostPage extends React.Component<Props, State> {
     });
 
     api.getPostThumbnail({ slug: slug }).then((postThumbnail) => {
-      this.setState({ postThumbnail });
+      this.setState({ postThumbnail, postThumbnailLoading: false });
     });
   }
 

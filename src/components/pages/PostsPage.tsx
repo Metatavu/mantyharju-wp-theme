@@ -43,6 +43,7 @@ interface State {
   mainContent?: React.ReactElement;
   sideContent?: React.ReactElement;
   postThumbnail: string;
+  postThumbnailLoading: boolean;
 }
 
 /**
@@ -73,7 +74,8 @@ class PostsPage extends React.Component<Props, State> {
       secondPageCategoryId: 6,
       limitedPosts: [],
       pages: [],
-      postThumbnail: ""
+      postThumbnail: "",
+      postThumbnailLoading: false
     };
   }
 
@@ -98,11 +100,12 @@ class PostsPage extends React.Component<Props, State> {
    */
   public render() {
     const { lang, slug, classes } = this.props;
-    const { currentPage, postThumbnail } = this.state;
+    const { currentPage, postThumbnail, postThumbnailLoading } = this.state;
+    const heroDivStyle = postThumbnailLoading ? { background: "#eee"  } : { backgroundImage: `url(${ postThumbnail ? postThumbnail : hero })` };
     return (
       <BasicLayout lang={ lang } slug={ slug } title={ this.setTitleSource() }>
-        <div className={ classes.heroImageDiv } style={{ backgroundImage: `url(${ postThumbnail ? postThumbnail : hero })` }}>
-          <h1 className={ classes.heroText }>{ currentPage ? ReactHtmlParser(currentPage.title ? currentPage.title.rendered || "" : "") : null }</h1>
+        <div className={ classes.heroImageDiv } style={heroDivStyle}>
+          <h1 className={ classes.heroText }>{ currentPage ? ReactHtmlParser(currentPage.title ? currentPage.title.rendered || "" : "") : "..." }</h1>
         </div>
         <div className={ classes.wrapper }>
           <div className={ classes.pageContent }>
@@ -200,7 +203,8 @@ class PostsPage extends React.Component<Props, State> {
    */
   private loadContent = async () => {
     this.setState({
-      loading: true
+      loading: true,
+      postThumbnailLoading: true
     });
 
     const lang = this.props.lang;
@@ -235,7 +239,7 @@ class PostsPage extends React.Component<Props, State> {
     });
 
     api.getPostThumbnail({ slug: slug }).then((postThumbnail) => {
-      this.setState({ postThumbnail });
+      this.setState({ postThumbnail, postThumbnailLoading: false });
     });
   }
 
