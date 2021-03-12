@@ -166,6 +166,7 @@ class WelcomePage extends React.Component<Props, State> {
       const categoryIdArray = [(popularCategory.length > 0 ? popularCategory[0].id || -1 : -1)];
       api.getWpV2Pages({ categories: categoryIdArray, per_page: 6}).then((popularPages) => {
         this.setState({ popularPages });
+        this.getPopularPagesImageUrl();
       })
     });
 
@@ -198,7 +199,6 @@ class WelcomePage extends React.Component<Props, State> {
     this.getJobs();
     this.getAnnouncements();
     this.getLinkedEvents();
-    this.getPopularPagesImageUrl();
   }
 
   /**
