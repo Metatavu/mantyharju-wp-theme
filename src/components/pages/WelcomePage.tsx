@@ -166,7 +166,7 @@ class WelcomePage extends React.Component<Props, State> {
       const categoryIdArray = [(popularCategory.length > 0 ? popularCategory[0].id || -1 : -1)];
       api.getWpV2Pages({ categories: categoryIdArray, per_page: 6}).then((popularPages) => {
         this.setState({ popularPages });
-        this.getPopularPagesImageUrl();
+        this.getPopularPagesImageUrl(popularPages);
       })
     });
 
@@ -395,23 +395,16 @@ class WelcomePage extends React.Component<Props, State> {
   /**
    * Fetch PopularPages featured image URL
    */
-  private getPopularPagesImageUrl = () => {
-    const { popularPages } = this.state;
+  private getPopularPagesImageUrl = async (popularPages: PageWithImgUrl[]) => {
     const api = ApiUtils.getApi();
-    const result : PageWithImgUrl[] = [];
-
-    popularPages.forEach(async (page) => {
-      const pageId = page.id ? page.id.toString() : "";
-      const popularImageUrl = await api.getPostThumbnail({ id: pageId });
-      const pageAndUrl = { ...page, featureImageUrl: popularImageUrl ? popularImageUrl : "" };
-
-      return result.push(pageAndUrl);
-    });
-
-    this.setState({
-      popularPages: result
-    });
-
+    let result : PageWithImgUrl[] = [ ...popularPages ];
+    for(let i = 0; i < result.length; i++) {
+      let imageUrl = await api.getPostThumbnail({ id: result[i].id ? result[i].id?.toString() : ""});
+      result[i].featureImageUrl = imageUrl;
+      this.setState({
+        popularPages: [...result]
+      });
+    }
   }
 
   /**
