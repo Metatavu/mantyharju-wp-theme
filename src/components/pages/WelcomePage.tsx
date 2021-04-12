@@ -16,7 +16,7 @@ import fi from "date-fns/esm/locale/fi";
 import ImageUpload from "./image-upload";
 import { MetaformComponent, IconName, FieldValue, Metaform } from "metaform-react";
 import strings from "../../localization/strings";
-import defaultimage from "../../resources/img/postHeader.png";
+import defaultimage from "../../resources/img/postHeader.jpg";
 import { Place } from "../../types/Place"
 
 /**

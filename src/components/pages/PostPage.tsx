@@ -13,7 +13,7 @@ import * as moment from "moment";
 import "../../../node_modules/react-simple-tree-menu/dist/main.css";
 import TreeView from "../generic/TreeView";
 import RightSideBar from "../generic/RightSideBar";
-import hero from "../../resources/img/postHeader.png";
+import hero from "../../resources/img/postHeader.jpg";
 import ReadSpeaker from "../generic/ReadSpeaker";
 
 /**
