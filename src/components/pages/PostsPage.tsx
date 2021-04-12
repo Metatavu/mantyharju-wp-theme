@@ -9,7 +9,7 @@ import { Page, Post, MenuLocationData, PostTitle, Attachment, CustomPage } from 
 import strings from "../../localization/strings";
 import * as moment from "moment";
 import * as classNames from "classnames";
-import hero from "../../resources/img/postHeader.png";
+import hero from "../../resources/img/postHeader.jpg";
 import ReadSpeaker from '../generic/ReadSpeaker';
 
 /**
