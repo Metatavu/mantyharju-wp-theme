@@ -100,8 +100,11 @@ class SingleEventPage extends React.Component<Props, State> {
                   <Typography variant="h3" className={ classes.heroText }>
                     { fetchedContent ? fetchedContent.name.fi || "Event" : "Event" }
                   </Typography>
-                  <Typography variant="body2">
-                    { fetchedContent.description.fi }
+                  <Typography
+                    dangerouslySetInnerHTML={{
+                    __html: fetchedContent.description.fi
+                    }}
+                  >
                   </Typography>
                   <Typography variant="body2">
                     { fetchedContent.location.id }
