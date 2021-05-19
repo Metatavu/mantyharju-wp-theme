@@ -211,10 +211,8 @@ class SingleEventPage extends React.Component<Props, State> {
   private getEventWithId = async () => {
     const { eventId } = this.props;
     if (!eventId || eventId == null) {
-      console.log("Event id is: ", eventId);
       null;
     } else {
-      console.log("Event id is: ", eventId);
       try {
         const response = await fetch("https://mantyharju.linkedevents.fi/v1/event/" + eventId, {
           headers: {

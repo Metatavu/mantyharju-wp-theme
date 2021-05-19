@@ -643,6 +643,14 @@ export default createStyles({
     width: "100%",
   },
 
+  centered: {
+    height: "17vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+  },
+
   imageUploadWrapper: {
     marginTop: 10,
     marginBottom: 10,
@@ -650,7 +658,24 @@ export default createStyles({
     color: "#1068B3",
     border: "1px solid #000",
     }
-  }
+  },
+
+  statusBar: {
+    height: 6,
+    width: 120,
+    marginRight: "1rem",
+    marginBottom: 12
+  },
+
+  card: {
+    
+    "&:hover": {
+      boxShadow: "7px 8px 12px 0px rgba(0,0,0,0.1)",
+    },
+  },
+
+
+ 
 
   // Mantyharju-theme ends, rest of the code can be deleted before production
 
