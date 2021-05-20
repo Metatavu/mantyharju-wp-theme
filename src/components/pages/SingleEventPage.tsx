@@ -176,7 +176,7 @@ class SingleEventPage extends React.Component<Props, State> {
                   }
                   { fetchedContent.custom_data['registration_url'] &&
                   <Typography variant="body2">
-                    { fetchedContent.custom_data['registration_url'] }
+                    <a href={ fetchedContent.custom_data['registration_url'] }>{ fetchedContent.custom_data['registration_url'] }</a>
                   </Typography>
                   }
                 </CardContent>
