@@ -4828,6 +4828,122 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/menu_item_data'
+    movie:
+      type: object
+      required:
+        - date
+        - title
+        - content
+        - ACF
+      properties:
+        date:
+          description: The date the object was published, in the site's timezone.
+          type: string
+          format: date-time
+        date_gmt:
+          description: The date the object was published, as GMT.
+          type: string
+          format: date-time
+        id:
+          description: Unique identifier for the object.
+          type: integer
+        modified:
+          description: The date the object was last modified, in the site's timezone.
+          type: string
+          format: date-time
+        modified_gmt:
+          description: The date the object was last modified, as GMT.
+          type: string
+          format: date-time
+        slug:
+          type: string
+        status:
+          description: A named status for the object.
+          type: string
+          enum:
+            - publish
+            - future
+            - draft
+            - pending
+            - private
+        link:
+          description: URL to the object.
+          type: string
+          format: uri
+        title:
+          description: The title for the object.
+          type: object
+          required:
+            - rendered
+          properties:
+            raw:
+              description: Title for the object, as it exists in the database.
+              type: string
+            rendered:
+              description: HTML title for the object, transformed for display.
+              type: string
+        content:
+          description: The content for the object.
+          type: object
+          required:
+            - rendered
+          properties:
+            raw:
+              description: Content for the object, as it exists in the database.
+              type: string
+            rendered:
+              description: HTML content for the object, transformed for display.
+              type: string
+            block_version:
+              description: Version of the content block format used by the object.
+              type: integer
+            protected:
+              description: Whether the content is protected with a password.
+              type: boolean
+        featured_media:
+          description: The ID of the featured media for the object.
+          type: integer
+        template:
+          description: The theme file to use to display the object.
+          type: string
+        categories:
+          description: The terms assigned to the object in the category taxonomy.
+          type: array
+          items:
+            type: integer
+        yoast_head:
+          type: string
+        ACF:
+          description: Advanced custom fields.
+          type: object
+          properties:
+            agelimit:
+              description: age limit of movie.
+              type: string
+            runtime:
+              description: run time of movie.
+              type: string
+            classification:
+              type: array
+              items:
+                type: integer
+            ticketprice: 
+              description: ticket price of movie.
+              type: string
+            trailerurl:
+              description: trailer url of movie.
+              type: string
+              format: uri
+            ticketsalesurl:
+              description: sale url of movie.
+              type: string
+              format: uri
+            director: 
+              description: director of movie.
+              type: string
+            cast: 
+              description: cast of movie.
+              type: string
     menu_item_data:
       type: object
       properties:

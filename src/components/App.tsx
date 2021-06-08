@@ -6,6 +6,7 @@ import PostsPage from "./pages/PostsPage";
 import SingleEventPage from "./pages/SingleEventPage";
 import ArticlePage from "./pages/article-page";
 import Announcements from "./pages/announcements";
+import Movies from "./pages/movies";
 import News from "./pages/news";
 import Jobs from "./pages/jobs";
 import { CssBaseline, responsiveFontSizes } from "@material-ui/core";
@@ -96,10 +97,20 @@ class App extends React.Component<Props, State> {
               path="/jobs/"
               exact={ true }
               render={ (props) => (
-                <Jobs
-                  lang={ language }
-                  slug={ this.pathToSlug(props.location.pathname) }
-                />
+              <Jobs
+                lang={ language }
+                slug={ this.pathToSlug(props.location.pathname) }
+              />
+              )}
+            />
+            <Route
+              path="/movies/"
+              exact={ true }
+              render={ (props) => (
+              <Movies
+                lang={ language }
+                slug={ this.pathToSlug(props.location.pathname) }
+              />
               )}
             />
             <Route  
@@ -135,7 +146,7 @@ class App extends React.Component<Props, State> {
               path="/:page"
               render={ (props) => {
                 // Check for special pages
-                if (/^\/event\/|\/announcements\/$|^\/news\/$|^\/jobs\/$|^\/sivut\//.test(props.location.pathname)) {
+                if (/^\/event\/|\/announcements\/$|^\/news\/$|^\/jobs\/$|^\/movies\/$|^\/sivut\//.test(props.location.pathname)) {
                   return null;
                 }
 
