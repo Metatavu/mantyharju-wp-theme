@@ -1,6 +1,7 @@
 import { createStyles } from "@material-ui/core";
 import theme from "./theme";
 import hero from "../resources/img/mantyharju-images/mantyharju-images/hero-image-mantyharju.jpg";
+import strings from "../localization/strings";
 
 const { breakpoints } = theme;
 
@@ -97,6 +98,7 @@ export default createStyles({
     flex: 1,
     display: "grid",
     gridGap: 20,
+    alignItems: "baseline",
     gridTemplateColumns: "1fr",
     [theme.breakpoints.up("sm")]: {
       gridTemplateColumns: "repeat(2, 1fr)",
@@ -138,7 +140,17 @@ export default createStyles({
   },
 
   button: {
-    color: "#fff"
+    color: "primary",
+    variant: "contained",
+    marginTop: theme.spacing(1)
+  },
+
+  iFrame: {
+    width: 560,
+    height: 315,
+    frameBorder: 0,
+    allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
+    title: strings.movie.watchTrailer
   }
 
 });

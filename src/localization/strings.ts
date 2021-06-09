@@ -38,12 +38,15 @@ export interface IStrings extends LocalizedStringsMethods {
     errorWhenAddingPlace: string
   },
   movie: {
+    buyTickets: string;
     showDescription: string;
     movies: string;
     duration: string;
     category: string;
     noReleaseDate: string;
     price: string;
+    showTimes: string;
+    watchTrailer: string;
   }
 }
 

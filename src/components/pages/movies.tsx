@@ -1,10 +1,11 @@
 import * as React from "react";
-import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Typography, withStyles, WithStyles } from "@material-ui/core";
+import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Dialog, DialogContent, DialogTitle, IconButton, Link, Typography, withStyles, WithStyles } from "@material-ui/core";
 import styles from "../../styles/movies";
 import BasicLayout from "../BasicLayout";
 import ReactHtmlParser from "react-html-parser";
 import { Movie } from "src/generated/client/src/models";
 import strings from "../../localization/strings";
+import CloseIcon from '@material-ui/icons/Close';
 
 /**
  * Component props
@@ -21,6 +22,7 @@ interface State {
   movies: Movie[];
   openDescriptions: Boolean[]
   videoOpen: boolean;
+  videoUrl?: string;
 }
 
 /**
@@ -65,6 +67,8 @@ class Movies extends React.Component<Props, State> {
     const { lang, classes, slug } = this.props;
 
     return (
+      <>
+      { this.renderVideoDialog() }
       <BasicLayout lang={ lang } slug={ slug }>
         <div className={ classes.heroImageDiv }>
           <div className={ classes.heroContent }>
@@ -79,6 +83,7 @@ class Movies extends React.Component<Props, State> {
           </div>
         </div>
       </BasicLayout>
+      </>
     );
   }
 
@@ -93,9 +98,19 @@ class Movies extends React.Component<Props, State> {
     })
 
     this.initDescriptionState();
-
   }
 
+  /**
+   * Toggle video dialog event handler
+   * 
+   * @param index index of clicked item
+   */
+  private toggleVideoDialog = (trailerUrl?: string) => {
+    this.setState({
+      videoOpen: !this.state.videoOpen,
+      videoUrl: trailerUrl ?? undefined
+    });
+  }
 
   /**
    * Handles open description
@@ -129,6 +144,26 @@ class Movies extends React.Component<Props, State> {
     })
   }
 
+  /**
+   * Format url for embedding the video
+   * TODO: Add other sites alongside youtube, if requested
+   * 
+   * @param trailerUrl trailer url
+   * @returns embed url
+   */
+  private formatUrl = (trailerUrl: string): string => {
+    if (/youtu\.be/.test(trailerUrl) || /youtube/.test(trailerUrl)) {
+      const baseUrl = "https://www.youtube-nocookie.com/embed/";
+      if (/youtu\.be/.test(trailerUrl)) {
+        return `${baseUrl}${trailerUrl.split("/")[ trailerUrl.split("/").length-1 ]}`;
+      }
+      if(/watch/.test(trailerUrl)) {
+        return `${baseUrl}${trailerUrl.split("/")[ trailerUrl.split("/").length-1 ].replace("watch?v=", "")}`;
+      }
+      return trailerUrl;
+    }
+    return trailerUrl;
+  }
 
   /**
    * Method for rendering event cards
@@ -140,12 +175,6 @@ class Movies extends React.Component<Props, State> {
 
     return movies.map((movie: Movie, index: number) => {
 
-      const title = ReactHtmlParser(movie.title.rendered);
-      const content = ReactHtmlParser(movie.content.rendered);
-      const ticketPrice = movie.ACF.ticketprice;
-      const ageLimit = movie.ACF.agelimit;
-      const category = movie.ACF.classification
-      const runTime = movie.ACF.runtime;
       const showTimes: CustomDate[] = movie.ACF.showtimes ? movie.ACF.showtimes.map(showTime => {
         if (showTime?.datetime) {
           const dayTime = showTime.datetime.toString().split(" ");
@@ -176,58 +205,133 @@ class Movies extends React.Component<Props, State> {
             className={ classes.card }
           >
             <CardContent>
-              <div>
-                <Typography gutterBottom variant="h5">
-                  { title }
-                </Typography>
-                <Typography >
-                  { ageLimit }
-                </Typography>
-                <Typography >
-                  <b>{ strings.movie.duration}</b> { runTime }
-                </Typography>
-                <Typography >
-                <b>{ strings.movie.category}</b> { category }
-                </Typography>
-                <Typography >
-                <b>{ strings.movie.price}</b> { ticketPrice }
-                </Typography>
-                { openDescriptions[index] &&
-                  <Typography >
-                    { content }
-                  </Typography>
-                }
-                { (showTimes && showTimes.length !== 0) && 
-                  showTimes.filter(item =>
-                    item.datetime && item.datetime.toString() !== "0" && item.unix && item.unix !== 0 && item.unix >= dateNow)
-                    .map(showTime =>
-                      <Typography>
-                        { showTime.datetime }
-                      </Typography>
-                    )
-                }
-                { !showTimes.length &&
-                  <Typography>
-                  { strings.movie.noReleaseDate }
-                  </Typography>
-                }
-                <Typography >
-                <Button variant="contained" color="primary" onClick={ () => this.onDescriptionClick(index)} >
-                  { strings.movie.showDescription }
-                </Button>
-                </Typography>
-              </div>
+              { this.renderCardContent(movie, index, showTimes, dateNow) }
             </CardContent>
           </Card>
         );
       }
-    
       return null;
     });
   }
 
+  /**
+   * Renders card content
+   * 
+   * @param movie movie
+   * @param index index
+   * @param showTimes array of showtimes
+   * @param dateNow date now in unix
+   */
+  private renderCardContent = (movie: Movie, index: number, showTimes: CustomDate[], dateNow: number) => {
+    const { classes } = this.props;
+    const { openDescriptions } = this.state;
+    const title = ReactHtmlParser(movie.title.rendered);
+    const content = ReactHtmlParser(movie.content.rendered);
+    const ticketPrice = movie.ACF.ticketprice;
+    const ageLimit = movie.ACF.agelimit;
+    const category = movie.ACF.classification
+    const runTime = movie.ACF.runtime;
 
-  
+    return (
+      <>
+        <Typography gutterBottom variant="h5">
+          { title }
+        </Typography>
+        <Typography >
+          { ageLimit }
+        </Typography>
+        { runTime &&
+          <Typography >
+            <b>{ strings.movie.duration}</b> { runTime }
+          </Typography>
+        }
+        { category &&
+          <Typography >
+            <b>{ strings.movie.category}</b> { category }
+          </Typography>
+        }
+        { ticketPrice &&
+          <Typography >
+            <b>{ strings.movie.price}</b> { ticketPrice }
+          </Typography>
+        }
+        { openDescriptions[index] &&
+          <Typography >
+            { content }
+          </Typography>
+        }
+        <Typography >
+        <b>{ strings.movie.showTimes }</b>
+        </Typography>
+        { (showTimes && showTimes.length !== 0) && 
+          showTimes.filter(item =>
+            item.datetime && item.datetime.toString() !== "0" && item.unix && item.unix !== 0 && item.unix >= dateNow)
+            .map(showTime =>
+              <Typography>
+                { showTime.datetime }
+              </Typography>
+            )
+        }
+        { !showTimes.length &&
+          <Typography>
+          { strings.movie.noReleaseDate }
+          </Typography>
+        }
+        <Typography >
+        <Button className={ classes.button } onClick={ () => this.onDescriptionClick(index)} >
+          { strings.movie.showDescription }
+        </Button>
+        <Button className={ classes.button } onClick={ () => this.toggleVideoDialog(movie.ACF.trailerurl)} >
+          { strings.movie.watchTrailer }
+        </Button>
+        <Link href={ movie.ACF.ticketsalesurl } target="_blank">
+          <Button className={ classes.button }>
+          { strings.movie.buyTickets }
+          </Button>
+        </Link>
+        </Typography>
+      </>
+    );
+  }
+
+  /**
+   * Renders video dialog
+   */
+  private renderVideoDialog = () => {
+    const { classes } = this.props;
+    const { videoOpen, videoUrl } = this.state;
+
+    return (
+      <Dialog
+        open={ videoOpen }
+        onClose={ () => this.toggleVideoDialog() }
+        aria-labelledby="dialog-title"
+        aria-describedby="dialog-description"
+      >
+        <DialogTitle
+          disableTypography
+          id="dialog-title"
+        >
+          <Box display="flex" justifyContent="space-between">
+            <Box/>
+            <IconButton
+              size="small"
+              onClick={ () => this.toggleVideoDialog() }
+            >
+              <CloseIcon />
+            </IconButton>
+          </Box>
+        </DialogTitle>
+        <DialogContent>
+          <iframe
+            className={ classes.iFrame }
+            src={ videoUrl ? this.formatUrl(videoUrl) : "#" }
+            allowFullScreen>
+          </iframe>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   /**
    * Hide page loader

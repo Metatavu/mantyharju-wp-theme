@@ -36,11 +36,14 @@
     "errorWhenAddingPlace": "Error when adding place. Check required fields."
   },
   "movie": {
+    "buyTickets": "Buy tickets",
     "showDescription": "Show description",
     "movies": "Movies",
     "duration": "Duration:",
     "category": "Category:",
     "noReleaseDate": "No release date",
-    "price": "Price:"
+    "price": "Price:",
+    "showTimes": "Show times:",
+    "watchTrailer": "Watch trailer"
   }
 }

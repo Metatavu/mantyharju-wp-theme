@@ -36,11 +36,14 @@
     "errorWhenAddingPlace": "Virhe paikan lisäämisessä, tarkista pakolliset kentät ja yritä uudelleen"
   },
   "movie": {
+    "buyTickets": "Osta liput",
     "showDescription": "Näytä Kuvaus",
     "movies": "Elokuvat",
     "duration": "kesto:",
     "category": "Luokitus:",
     "noReleaseDate": "Ei julkaisupäiväystä",
-    "price": "Hinta:"
+    "price": "Hinta:",
+    "showTimes": "Näytösajat:",
+    "watchTrailer": "Katso traileri"
   }
 }
