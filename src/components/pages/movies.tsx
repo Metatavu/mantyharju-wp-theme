@@ -2,9 +2,9 @@ import * as React from "react";
 import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Typography, withStyles, WithStyles } from "@material-ui/core";
 import styles from "../../styles/movies";
 import BasicLayout from "../BasicLayout";
-import ApiUtils from "../../utils/ApiUtils";
 import ReactHtmlParser from "react-html-parser";
 import { Movie } from "src/generated/client/src/models";
+import strings from "../../localization/strings";
 
 /**
  * Component props
@@ -19,6 +19,8 @@ interface Props extends WithStyles<typeof styles> {
  */
 interface State {
   movies: Movie[];
+  openDescriptions: Boolean[]
+  videoOpen: boolean;
 }
 
 /**
@@ -34,7 +36,9 @@ class Movies extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      movies: []
+      movies: [],
+      openDescriptions: [],
+      videoOpen: false
     };
   }
 
@@ -57,13 +61,11 @@ class Movies extends React.Component<Props, State> {
         <div className={ classes.heroImageDiv }>
           <div className={ classes.heroContent }>
             <Typography variant="h1" className={ classes.heroText }>
-              Elokuvat
+              { strings.movie.movies }
             </Typography>
           </div>
         </div>
-        <div
-        className={ classes.container }
-        >
+        <div className={ classes.container } >
           <div className={ classes.grid }>
             { this.renderMovieCards() }
           </div>
@@ -81,22 +83,63 @@ class Movies extends React.Component<Props, State> {
     this.setState({
       movies: movies
     })
-    console.log(movies)
+
+    this.initDescriptionState();
+
   }
+
+
+  /**
+   * Handles open description
+   * 
+   * @param index index of clicked item
+   */
+  private onDescriptionClick = (index: number) => {
+    const { openDescriptions } = this.state;
+
+    openDescriptions[index] = !openDescriptions[index]
+
+    this.setState({
+      openDescriptions: openDescriptions
+    })
+  }
+
+  /**
+   * Inits state of show description
+   */
+  private initDescriptionState = () => {
+    const { movies } = this.state;
+
+    const emptyState: Boolean[] = [];
+
+    movies.map(movie => {
+      emptyState.push(false)
+    })
+
+    this.setState({
+      openDescriptions: emptyState
+    })
+  }
+
 
   /**
    * Method for rendering event cards
    */
   private renderMovieCards = () => {
     const { classes } = this.props;
-    const { movies } = this.state;
+    const { movies, openDescriptions } = this.state;
+    console.log(movies)
 
     return movies.map((movie: Movie, index: number) => {
 
+
       const title = ReactHtmlParser(movie.title.rendered);
       const content = ReactHtmlParser(movie.content.rendered);
-      const ticketPrice = movie.ACF.ticketprice
-
+      const ticketPrice = movie.ACF.ticketprice;
+      const ageLimit = movie.ACF.agelimit;
+      const category = movie.ACF.classification
+      const runTime = movie.ACF.runtime;
+    
       return (
         <Card
           key={ index }
@@ -104,21 +147,39 @@ class Movies extends React.Component<Props, State> {
         >
             <CardContent>
               <div>
-                <Typography gutterBottom variant="caption">
+                <Typography gutterBottom variant="h5">
                   { title }
                 </Typography>
-                <Typography  gutterBottom variant="h5">
-                  { content }
+                <Typography >
+                  { ageLimit }
+                </Typography>
+                <Typography >
+                  <b>{ strings.movie.duration}</b> { runTime }
+                </Typography>
+                <Typography >
+                <b>{ strings.movie.category}</b> { category }
+                </Typography>
+                <Typography >
+                <b>{ strings.movie.price}</b> { ticketPrice }
+                </Typography>
+                { openDescriptions[index] &&
+                  <Typography >
+                    { content }
+                  </Typography>
+                }
+                <Typography >
+                <Button variant="contained" color="primary" onClick={ () => this.onDescriptionClick(index)} >
+                  { strings.movie.showDescription }
+                </Button>
                 </Typography>
               </div>
-              <Typography gutterBottom variant="caption">
-                { ticketPrice }
-              </Typography>
             </CardContent>
         </Card>
       );
     });
   }
+
+
   
 
   /**

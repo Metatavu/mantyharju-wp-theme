@@ -34,5 +34,12 @@
     "successfullyAdded": "Event added successfully!",
     "errorWhenAddingEvent": "Error when adding event. Check required fields.",
     "errorWhenAddingPlace": "Error when adding place. Check required fields."
+  },
+  "movie": {
+    "showDescription": "Show description",
+    "movies": "Movies",
+    "duration": "Duration:",
+    "category": "Category:",
+    "price": "Price:"
   }
 }

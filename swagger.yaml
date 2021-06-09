@@ -4944,6 +4944,15 @@ components:
             cast: 
               description: cast of movie.
               type: string
+            showtimes:
+              description: showtimes of movie
+              type: array
+              items:
+                type: object
+                properties: 
+                  datetime:
+                    type: string
+                    format: date-time
     menu_item_data:
       type: object
       properties:

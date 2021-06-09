@@ -36,6 +36,13 @@ export interface IStrings extends LocalizedStringsMethods {
     successfullyAdded: string,
     errorWhenAddingEvent: string,
     errorWhenAddingPlace: string
+  },
+  movie: {
+    showDescription: string;
+    movies: string;
+    duration: string;
+    category: string;
+    price: string;
   }
 }
 

@@ -28,6 +28,7 @@
     "react-dom": "^16.10.2",
     "react-html-parser": "^2.0.2",
     "react-image-picker": "^1.1.1",
+    "react-image-video-lightbox": "^2.0.3",
     "react-masonry-css": "^1.0.14",
     "react-router-dom": "^5.1.2",
     "react-simple-tree-menu": "^1.1.15",

@@ -85,24 +85,8 @@ export default createStyles({
     }
   },
 
-  cards: {
-    display: "grid",
-    gridTemplateColumns: "repeat(3, 1fr)",
-    height: "fit-content",
-    [breakpoints.down("md")]: {
-      gridTemplateColumns: "repeat(2, 1fr)",
-    },
-    [breakpoints.down("sm")]: {
-      gridTemplateColumns: "repeat(1, 1fr)"
-    },
-  },
-
   card: {
-    margin: "2rem",
-    padding: "2rem",
-    "& a, a:hover, a:visited, a:focus": {
-      color: theme.palette.primary.dark
-    }
+    background: theme.palette.background.paper
   },
 
   media: {
@@ -112,13 +96,13 @@ export default createStyles({
   grid: {
     flex: 1,
     display: "grid",
-    gridGap: 1,
+    gridGap: 20,
     gridTemplateColumns: "1fr",
     [theme.breakpoints.up("sm")]: {
       gridTemplateColumns: "repeat(2, 1fr)",
     },
     [theme.breakpoints.up("md")]: {
-      gridGap: 1,
+      gridGap: 20,
     },
     [theme.breakpoints.up("lg")]: {
       gridTemplateColumns: "repeat(4, 1fr)",
@@ -129,6 +113,7 @@ export default createStyles({
   },
 
   container: {
+    padding: "15px",
     margin: "0 auto",
     display: "flex",
     flexDirection: "column",
@@ -145,6 +130,12 @@ export default createStyles({
     }
   },
 
+  videoResponsive: {
+    overflow: "hidden",
+    paddingBottom: "20px",
+    position: "relative",
+    height: "100%"
+  },
 
   button: {
     color: "#fff"

@@ -34,5 +34,12 @@
     "successfullyAdded": "Tapahtuma lisätty onnistuneesti!",
     "errorWhenAddingEvent": "Virhe tapahtuman lisäämisessä, tarkista pakolliset kentät ja yritä uudelleen",
     "errorWhenAddingPlace": "Virhe paikan lisäämisessä, tarkista pakolliset kentät ja yritä uudelleen"
+  },
+  "movie": {
+    "showDescription": "Näytä Kuvaus",
+    "movies": "Elokuvat",
+    "duration": "kesto:",
+    "category": "Luokitus:",
+    "price": "Hinta:"
   }
 }

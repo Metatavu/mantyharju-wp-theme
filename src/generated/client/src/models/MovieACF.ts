@@ -12,6 +12,13 @@
  */
 
 import { exists, mapValues } from '../runtime';
+import {
+    MovieACFShowtimes,
+    MovieACFShowtimesFromJSON,
+    MovieACFShowtimesFromJSONTyped,
+    MovieACFShowtimesToJSON,
+} from './';
+
 /**
  * Advanced custom fields.
  * @export
@@ -66,6 +73,12 @@ export interface MovieACF {
      * @memberof MovieACF
      */
     cast?: string;
+    /**
+     * showtimes of movie
+     * @type {Array<MovieACFShowtimes>}
+     * @memberof MovieACF
+     */
+    showtimes?: Array<MovieACFShowtimes>;
 }
 
 export function MovieACFFromJSON(json: any): MovieACF {
@@ -86,6 +99,7 @@ export function MovieACFFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'ticketsalesurl': !exists(json, 'ticketsalesurl') ? undefined : json['ticketsalesurl'],
         'director': !exists(json, 'director') ? undefined : json['director'],
         'cast': !exists(json, 'cast') ? undefined : json['cast'],
+        'showtimes': !exists(json, 'showtimes') ? undefined : (json['showtimes'] as Array<any>).map(MovieACFShowtimesFromJSON),
     };
 }
 
@@ -106,6 +120,7 @@ export function MovieACFToJSON(value?: MovieACF | null): any {
         'ticketsalesurl': value.ticketsalesurl,
         'director': value.director,
         'cast': value.cast,
+        'showtimes': value.showtimes == null ? undefined : (value.showtimes as Array<any>).map(MovieACFShowtimesToJSON),
     };
 }
 

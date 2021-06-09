@@ -40,6 +40,7 @@ export * from './MenuLocation';
 export * from './MenuLocationData';
 export * from './Movie';
 export * from './MovieACF';
+export * from './MovieACFShowtimes';
 export * from './MovieContent';
 export * from './MovieTitle';
 export * from './Page';
