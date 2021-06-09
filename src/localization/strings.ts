@@ -42,6 +42,7 @@ export interface IStrings extends LocalizedStringsMethods {
     movies: string;
     duration: string;
     category: string;
+    noReleaseDate: string;
     price: string;
   }
 }

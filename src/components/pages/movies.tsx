@@ -24,6 +24,14 @@ interface State {
 }
 
 /**
+ * Inteface for storing showtime date and unix 
+ */
+interface CustomDate {
+  datetime?: Date;
+  unix?: number;
+}
+
+/**
  * A component for displaying all jobs
  */
 class Movies extends React.Component<Props, State> {
@@ -128,10 +136,9 @@ class Movies extends React.Component<Props, State> {
   private renderMovieCards = () => {
     const { classes } = this.props;
     const { movies, openDescriptions } = this.state;
-    console.log(movies)
+    const dateNow = parseInt((new Date().getTime()/1000).toFixed(0));
 
     return movies.map((movie: Movie, index: number) => {
-
 
       const title = ReactHtmlParser(movie.title.rendered);
       const content = ReactHtmlParser(movie.content.rendered);
@@ -139,12 +146,36 @@ class Movies extends React.Component<Props, State> {
       const ageLimit = movie.ACF.agelimit;
       const category = movie.ACF.classification
       const runTime = movie.ACF.runtime;
-    
-      return (
-        <Card
-          key={ index }
-          className={ classes.card }
-        >
+      const showTimes: CustomDate[] = movie.ACF.showtimes ? movie.ACF.showtimes.map(showTime => {
+        if (showTime?.datetime) {
+          const dayTime = showTime.datetime.toString().split(" ");
+          const [ yy, MM ,dd ] = dayTime[0].split("-");
+          const [ hh, mm ] = dayTime[1].split(":");
+          const unix = parseInt(((new Date(`${yy}-${MM}-${dd}T${hh}:${mm}:00`).getTime())/1000).toFixed(0));
+          return {
+            datetime: showTime.datetime,
+            unix: unix
+          }
+        }
+        return {
+          datetime: undefined,
+          unix: undefined
+        };
+      }) : [];
+      
+      console.log(showTimes.length, showTimes);
+      let datesInFuture = false;
+      for (const date of showTimes) {
+        if (!date.unix || date.unix >= dateNow) {
+          datesInFuture = true;
+        }
+      }
+      if (showTimes.length === 0 || datesInFuture) {
+        return (
+          <Card
+            key={ index }
+            className={ classes.card }
+          >
             <CardContent>
               <div>
                 <Typography gutterBottom variant="h5">
@@ -167,6 +198,20 @@ class Movies extends React.Component<Props, State> {
                     { content }
                   </Typography>
                 }
+                { (showTimes && showTimes.length !== 0) && 
+                  showTimes.filter(item =>
+                    item.datetime && item.datetime.toString() !== "0" && item.unix && item.unix !== 0 && item.unix >= dateNow)
+                    .map(showTime =>
+                      <Typography>
+                        { showTime.datetime }
+                      </Typography>
+                    )
+                }
+                { !showTimes.length &&
+                  <Typography>
+                  { strings.movie.noReleaseDate }
+                  </Typography>
+                }
                 <Typography >
                 <Button variant="contained" color="primary" onClick={ () => this.onDescriptionClick(index)} >
                   { strings.movie.showDescription }
@@ -174,8 +219,11 @@ class Movies extends React.Component<Props, State> {
                 </Typography>
               </div>
             </CardContent>
-        </Card>
-      );
+          </Card>
+        );
+      }
+    
+      return null;
     });
   }
 
