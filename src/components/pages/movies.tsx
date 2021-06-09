@@ -163,7 +163,6 @@ class Movies extends React.Component<Props, State> {
         };
       }) : [];
       
-      console.log(showTimes.length, showTimes);
       let datesInFuture = false;
       for (const date of showTimes) {
         if (!date.unix || date.unix >= dateNow) {
