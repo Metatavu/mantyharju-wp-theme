@@ -40,6 +40,7 @@ export interface IStrings extends LocalizedStringsMethods {
   movie: {
     buyTickets: string;
     showDescription: string;
+    hideDescription: string;
     movies: string;
     duration: string;
     category: string;
@@ -47,6 +48,46 @@ export interface IStrings extends LocalizedStringsMethods {
     price: string;
     showTimes: string;
     watchTrailer: string;
+    nextShowTime: string;
+    movieTheatre: string;
+    ongoingMovies: string;
+    ageLimits: string;
+    festival: string;
+    buyTicets: string;
+    email: string;
+    addres: string;
+    postalCode: string;
+    placeAtMap: string;
+    showRoute : string;
+    basicTicket: string;
+    basicInfo: string;
+    flexoundTicket: string;
+    flexoundInfo: string;
+    flexoundExtraInfo: string;
+    meansOfPayment: string;
+    cash: string;
+    creditCard: string;
+    smartum: string;
+    ePassi: string;
+    virikeSeteli: string;
+    edenred: string;
+    eazyBreak: string;
+    giftCard: string;
+    commonInformation: string;
+
+    movieInformationText: {
+      text1: string;
+      text2: string;
+      text3: string;
+      text4: string;
+      text5: string;
+      text6: string;
+      text7: string;
+      text8: string;
+      text9: string;
+      text10: string;
+      text11: string;
+    }
   }
 }
 

@@ -38,12 +38,18 @@
   "movie": {
     "buyTickets": "Buy tickets",
     "showDescription": "Show description",
+    "hideDescription": "Hide description",
     "movies": "Movies",
     "duration": "Duration:",
     "category": "Category:",
     "noReleaseDate": "No release date",
     "price": "Price:",
-    "showTimes": "Show times:",
-    "watchTrailer": "Watch trailer"
+    "showTimes": "Other showtimes:",
+    "watchTrailer": "Watch trailer",
+    "nextShowTime": "Next showtime:",
+    "movieTheatre": "Elokuvateatteri Kino",
+    "ongoingMovies": "ongoingMovies",
+    "ageLimits": "Age limits",
+    "festival": "Ilokuvafestivaali"
   }
 }

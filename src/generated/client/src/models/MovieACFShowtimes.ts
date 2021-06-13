@@ -23,7 +23,7 @@ export interface MovieACFShowtimes {
      * @type {Date}
      * @memberof MovieACFShowtimes
      */
-    datetime?: Date;
+    datetime: Date;
 }
 
 export function MovieACFShowtimesFromJSON(json: any): MovieACFShowtimes {
@@ -36,7 +36,7 @@ export function MovieACFShowtimesFromJSONTyped(json: any, ignoreDiscriminator: b
     }
     return {
         
-        'datetime': !exists(json, 'datetime') ? undefined : new Date(json['datetime']),
+        'datetime': new Date(json['datetime']),
     };
 }
 
@@ -49,7 +49,7 @@ export function MovieACFShowtimesToJSON(value?: MovieACFShowtimes | null): any {
     }
     return {
         
-        'datetime': value.datetime == null ? undefined : value.datetime.toISOString(),
+        'datetime': value.datetime.toISOString(),
     };
 }
 

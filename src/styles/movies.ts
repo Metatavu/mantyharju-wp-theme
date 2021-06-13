@@ -2,6 +2,7 @@ import { createStyles } from "@material-ui/core";
 import theme from "./theme";
 import hero from "../resources/img/mantyharju-images/mantyharju-images/hero-image-mantyharju.jpg";
 import strings from "../localization/strings";
+import { Height } from "@material-ui/icons";
 
 const { breakpoints } = theme;
 
@@ -87,34 +88,120 @@ export default createStyles({
   },
 
   card: {
-    background: theme.palette.background.paper
+    background: theme.palette.background.paper,
+    marginBottom: "15px"
   },
 
   media: {
     height: "15rem"
   },
 
-  grid: {
-    flex: 1,
-    display: "grid",
-    gridGap: 20,
-    alignItems: "baseline",
-    gridTemplateColumns: "1fr",
-    [theme.breakpoints.up("sm")]: {
-      gridTemplateColumns: "repeat(2, 1fr)",
-    },
-    [theme.breakpoints.up("md")]: {
-      gridGap: 20,
-    },
-    [theme.breakpoints.up("lg")]: {
-      gridTemplateColumns: "repeat(4, 1fr)",
-    },
-    [theme.breakpoints.up("xl")]: {
-      gridTemplateColumns: "repeat(4, 1fr)",
-    }
+  masornyGrid: {
+    display: "flex",
+    marginLeft: "-30px",
+    width: "auto"
+  },
+
+  masornyColumn: {
+    paddingLeft: "15px",
+    backgroundClip: "padding-box"
   },
 
   container: {
+    padding: "15px",
+    margin: "0 auto",
+    display: "flex",
+    flexDirection: "row",
+    width: "100%",
+  },
+
+  button: {
+    color: "primary",
+    variant: "contained",
+    marginTop: theme.spacing(1)
+  },
+
+  dialogTitle: {
+    margin: "0",
+    background: "grey"
+  },
+
+  closeButton: {
+    position: "absolute",
+    right: 0,
+    top: -3,
+  },
+
+  dialogContent: {
+    paddingLeft: 0,
+    paddingRight: 0,
+    paddingTop: 0,
+    paddingBottom: 0
+  },
+
+  sideNavigation: {
+    paddingBottom: "15px",
+    margin: "0 auto",
+    display: "flex",
+    flexDirection: "column",
+    width: "25%",
+  },
+
+  sideInformation: {
+    paddingBottom: "15px",
+    margin: "0 auto",
+    display: "flex",
+    flexDirection: "column",
+    width: "33%",
+    background: "#e4e9f7",
+    height: 770
+  },
+
+  sideInfoContent: {
+    padding: "35"
+  },
+
+  box: {
+    paddingTop: 15,
+    fontSize: 16
+  },
+
+  boxBold: {
+    fontWeight: "bold",
+    fontSize: "h5",
+    paddingTop: 15
+  },
+
+  infoBox: {
+    fontWeight: "bold",
+    fontSize: "h5",
+    paddingTop: 25,
+  },
+
+  link: {
+    paddingRight: 5,
+    cursor: "pointer"
+  },
+
+  kinoInformation: {
+    padding: "15px",
+    margin: "0 auto",
+    display: "flex",
+    flexDirection: "row",
+    width: "100%",
+    maxWidth: 1310,
+    [theme.breakpoints.up("md")]: {
+      width: "90vw",
+    },
+    [theme.breakpoints.up("lg")]: {
+      width: "85vw",
+    },
+    [theme.breakpoints.up("xl")]: {
+      width: "75vw",
+    }
+  },
+
+  movieList: {
     padding: "15px",
     margin: "0 auto",
     display: "flex",
@@ -132,25 +219,17 @@ export default createStyles({
     }
   },
 
-  videoResponsive: {
-    overflow: "hidden",
-    paddingBottom: "20px",
-    position: "relative",
-    height: "100%"
-  },
-
-  button: {
-    color: "primary",
-    variant: "contained",
-    marginTop: theme.spacing(1)
+  coronaImage: {
+    maxWidth: "724px",
+    width: "724px",
+    height: "1024px"
   },
 
   iFrame: {
-    width: 560,
-    height: 315,
+    width: 600,
+    height: 600,
     frameBorder: 0,
     allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
     title: strings.movie.watchTrailer
   }
-
 });
