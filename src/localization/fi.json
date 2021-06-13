@@ -72,6 +72,8 @@
     "eazyBreak": "Eazybreak -mobiiliseteli",
     "giftCard": "lahjakortti",
     "commonInformation": "Yleisiä ohjeita",
+    "imageProgramLaw": "Kuvaohjelmalaki",
+    "nationalAudiovisualInstitute": "Kansallinen audiovisuaalinen instituutti",
 
     "movieInformationText": {
       "text1": "Elokuvateatteri Kino on toistaiseksi suljettu laiterikon vuoksi. Pyrimme avaamaan Kinon ovet mahdollisimman pian, viimeistään kesäkuun lopussa. Toimimme vallitsevien koronarajoitusten puitteissa. Lisätietoa kuntamme alueella voimassa olevista rajoituksista löydät täältä.",
@@ -85,6 +87,11 @@
       "text9": "Jos huomaat ikävää käytöstä, voit huomauttaa häirikölle asiasta suoraan. Usein kovaan ääneen jutteleva katsoja ei tullut ajatelleeksi tuottavansa häiriötä muille. Parilla suoralla sanalla tilanne on ratkaistu. Win Win!",
       "text10": "Elokuvien ikärajat eivät ole suosituksia, vaan perustuvat kuvaohjelmalakiin. Elokuvateattereiden on varmistettava, että elokuvakatsojan ikä riittää elokuvan katsomiseen. Varauduthan tarvittaessa todistamaan ikäsi lippukassalla sekä salin ovella. Ikärajat ovat: <b>S, 7, 12, 16 ja 18.</b> Ikärajoista <b>7,</b> <b>12</b> ja <b>16</b> voidaan joustaa lapsen kanssa elokuviin saapuvan aikuisen (yli 18-vuotiaan) vastuulla <b>kolme vuotta.</b>",
       "text11": "Jotta elokuva olisi elämys kaikille katsojille, ovat yhteiset pelisäännöt tarpeen. Oheiset ohjeet ovat tuttuja useimmille elokuvissa käyneille, mutta kertaus ei ole koskaan pahitteeksi."
+    },
+    
+    "ageLimitsInformationText": {
+      "text1": "Elokuvien ikärajat ja niiden merkintätapa uudistuivat 1.1.2012, kun uusi <b>kuvaohjelmalaki</b> tuli voimaan. Kuvaohjelmalaissa määritellään kuvaohjelmien, kuten elokuvien, esittämistä koskevat rajoitukset, joiden tarkoitus on suojella lapsia kuvaohjelmien haitallisilta sisällöiltä.",
+      "text2": "Kuvaohjelmaluokittelijat, joita <b>Kansallinen audiovisuaalinen</b> instituutti kouluttaa ja valvoo, asettavat elokuville <b>ikärajat</b> ja <b>sisältömerkinnät</b>. Ikärajat eivät ole suosituksia, vaan perustuvat lakiin. Elokuvateattereiden on varmistettava, että elokuvakatsojan ikä riittää elokuvan katsomiseen. Varauduthan tarvittaessa todistamaan ikäsi lippukassalla sekä salin ovella ostaessasi lippuja ikärajamerkittyyn elokuvaan."
     }
   }
 }

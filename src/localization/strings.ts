@@ -74,6 +74,8 @@ export interface IStrings extends LocalizedStringsMethods {
     eazyBreak: string;
     giftCard: string;
     commonInformation: string;
+    imageProgramLaw: string;
+    nationalAudiovisualInstitute: string;
 
     movieInformationText: {
       text1: string;
@@ -87,6 +89,11 @@ export interface IStrings extends LocalizedStringsMethods {
       text9: string;
       text10: string;
       text11: string;
+    },
+
+    ageLimitsInformationText: {
+      text1: string;
+      text2: string;
     }
   }
 }

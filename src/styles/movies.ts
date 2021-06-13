@@ -1,6 +1,6 @@
 import { createStyles } from "@material-ui/core";
 import theme from "./theme";
-import hero from "../resources/img/mantyharju-images/mantyharju-images/hero-image-mantyharju.jpg";
+import hero from "../resources/img/mantyharju-images/mantyharju-images/kino_1920x334.jpg";
 import strings from "../localization/strings";
 import { Height } from "@material-ui/icons";
 
@@ -88,7 +88,7 @@ export default createStyles({
   },
 
   card: {
-    background: theme.palette.background.paper,
+    //background: theme.palette.background.paper,
     marginBottom: "15px"
   },
 
@@ -140,7 +140,6 @@ export default createStyles({
   },
 
   sideNavigation: {
-    paddingBottom: "15px",
     margin: "0 auto",
     display: "flex",
     flexDirection: "column",
@@ -155,6 +154,16 @@ export default createStyles({
     width: "33%",
     background: "#e4e9f7",
     height: 770
+  },
+
+  ageLimitSideInformation: {
+    paddingBottom: "15px",
+    margin: "0 auto",
+    display: "flex",
+    flexDirection: "column",
+    width: "33%",
+    background: "#e4e9f7",
+    height: 140
   },
 
   sideInfoContent: {
@@ -179,12 +188,16 @@ export default createStyles({
   },
 
   link: {
-    paddingRight: 5,
+    paddingTop: 5,
     cursor: "pointer"
   },
 
+  empty: {
+    height: 200
+  },
+
   kinoInformation: {
-    padding: "15px",
+    paddingRight: "30px",
     margin: "0 auto",
     display: "flex",
     flexDirection: "row",
@@ -198,24 +211,6 @@ export default createStyles({
     },
     [theme.breakpoints.up("xl")]: {
       width: "75vw",
-    }
-  },
-
-  movieList: {
-    padding: "15px",
-    margin: "0 auto",
-    display: "flex",
-    flexDirection: "column",
-    width: "100%",
-    maxWidth: 1500,
-    [theme.breakpoints.up("md")]: {
-      width: "90vw",
-    },
-    [theme.breakpoints.up("lg")]: {
-      width: "85vw",
-    },
-    [theme.breakpoints.up("xl")]: {
-      width: "80vw",
     }
   },
 

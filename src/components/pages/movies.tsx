@@ -7,10 +7,7 @@ import { Movie, MovieACFShowtimes } from "src/generated/client/src/models";
 import strings from "../../localization/strings";
 import CloseIcon from '@material-ui/icons/Close';
 import Masonry from 'react-masonry-css'
-import { black } from "material-ui/styles/colors";
-import { ItemComponent } from "react-simple-tree-menu";
 import moment from "moment";
-import classNames from "classnames";
 
 /**
  * Component props
@@ -79,9 +76,9 @@ class Movies extends React.Component<Props, State> {
           </div>
         </div>
         <div className={ classes.container } >
-          { this.renderNavigation() }
+          { this.renderNavigationSideBar() }
           { pageOpen === "movieList" &&
-            <div className={ classes.movieList }>
+            <div className={ classes.kinoInformation }>
               <Masonry
                 breakpointCols={4}
                 className={ classes.masornyGrid }
@@ -92,9 +89,21 @@ class Movies extends React.Component<Props, State> {
             </div>
           }
           { pageOpen === "kino" &&
-              this.renderKinoInformation()
+              <div className={ classes.kinoInformation }>
+                { this.renderKinoInformation() }
+              </div>
           }
-        </div>
+          {
+            pageOpen === "ageLimits" &&
+              <div className={ classes.kinoInformation }>
+                { this.renderAgeLimitInformation() }
+              </div>
+          }
+          {
+            pageOpen === "ageLimits" ?
+              this.renderAgeLimitSideInformation() : this.renderMovieSideInformation()
+          }
+          </div>
       </BasicLayout>
       </>
     );
@@ -113,192 +122,144 @@ class Movies extends React.Component<Props, State> {
     this.initDescriptionState();
   }
 
-  private renderNavigation = () => {
+  /**
+   * Renders navigation sidebar
+   */
+  private renderNavigationSideBar = () => {
     const { classes } = this.props;
 
     return (
       <div className={ classes.sideNavigation }>
-          <Link
-            className={ classes.link }
-            onClick={ () => this.onChangePage("kino") }
-          >
-            { strings.movie.movieTheatre }
-          </Link>
-          <Link
-            className={ classes.link }
-            onClick={ () => this.onChangePage("movieList") }
-          >
-            { strings.movie.ongoingMovies }
-          </Link>
-          <Link
-            className={ classes.link }
-            href="https://ilokuvafestivaali.net/"
-          >
-            { strings.movie.festival }
-          </Link>
+        <Link
+          className={ classes.link }
+          onClick={ () => this.onChangePage("kino") }
+        >
+          { strings.movie.movieTheatre }
+        </Link>
+        <Link
+          className={ classes.link }
+          onClick={ () => this.onChangePage("movieList") }
+        >
+          { strings.movie.ongoingMovies }
+        </Link>
+        <Link
+          className={ classes.link }
+          onClick={ () => this.onChangePage("ageLimits") }
+        >
+          { strings.movie.ageLimits }
+        </Link>
+        <Link
+          target="_blank"
+          className={ classes.link }
+          href="https://ilokuvafestivaali.net/"
+        >
+          { strings.movie.festival }
+        </Link>
       </div>
     );
   }
+
+  /**
+   * Renders age limit information page
+   */
+    private renderAgeLimitInformation = () => {
+      const { classes } = this.props;
+  
+      return (
+        <Typography>
+          <Box className={ classes.boxBold }>
+            { strings.movie.ageLimits }
+          </Box>
+          <Box
+            className={ classes.box }
+            dangerouslySetInnerHTML={{
+            __html: strings.movie.ageLimitsInformationText.text1
+            }}
+          >
+          </Box>
+          <Box
+            className={ classes.box }
+            dangerouslySetInnerHTML={{
+            __html: strings.movie.ageLimitsInformationText.text2
+            }}
+          >
+          </Box>
+          <div className={ classes.empty }></div>
+        </Typography>
+      );
+    }
 
   private renderKinoInformation = () => {
     const { classes } = this.props;
 
     return (
-      <div className={ classes.container }>
-        <div className={ classes.kinoInformation }>
-          <Typography>
-            <Box className={ classes.boxBold }>
-              { strings.movie.movieTheatre }
-            </Box>
-            <Box className={ classes.box }>
-              { strings.movie.movieInformationText.text1 }
-            </Box>
-            <Box className={ classes.box }>
-              { strings.movie.movieInformationText.text2 }
-            </Box>
-            <Box className={ classes.box }>
-              { strings.movie.movieInformationText.text3 }
-            </Box>
-            <Box className={ classes.box }>
-              { strings.movie.movieInformationText.text4 }
-            </Box>
-            <Box className={ classes.box }>
-              <img
-                className={ classes.coronaImage }
-                src="https://mantyharju.metatavu.io/wp-content/uploads/2020/11/seol-opaste-teattereille_1-724x1024-1.jpg"
-                alt="Suomen Elokuvateatteriliiton korona-ohjeistus jpg 112KB"
-                width="260"
-                height="60"
-              />
-            </Box>
-            <Box
-              className={ classes.infoBox }
-              dangerouslySetInnerHTML={{
-                __html: strings.movie.movieInformationText.text5
-              }}
-            >
-            </Box>
-            <Box
-              className={ classes.infoBox }
-            >
-              { strings.movie.giftCard }
-            </Box>
-            <Box
-              dangerouslySetInnerHTML={{
-                __html: strings.movie.movieInformationText.text6
-              }}
-            >
-            </Box>
-            <Box
-              className={ classes.infoBox }
-            >
-              { strings.movie.commonInformation }
-            </Box>
-            <Box
-              className={ classes.box }  
-            >
-              { strings.movie.movieInformationText.text11 }
-            </Box>
-            <Box className={ classes.box }>
-                <ul>
-                  <li>{ strings.movie.movieInformationText.text7 }</li>
-                  <li>{ strings.movie.movieInformationText.text8 }</li>
-                  <li>{ strings.movie.movieInformationText.text9 }</li>
-                  <li
-                    dangerouslySetInnerHTML={{
-                    __html: strings.movie.movieInformationText.text10
-                    }}
-                  >
-                  </li>
-                </ul>
-              </Box>
-          </Typography>
-        </div>
-        <div className={ classes.sideInformation }>
-          <div className={ classes.sideInfoContent }>
-            <Typography>
-              <Box className={ classes.boxBold }>
-                { strings.movie.movieTheatre }
-              </Box>
-              <Box className={ classes.box}>
-                { strings.movie.email }
-              </Box>
-              <Box className={ classes.boxBold }>
-                { strings.movie.buyTicets }
-              </Box>
-              <Box className={ classes.box }>
-                { strings.movie.addres}
-              </Box>
-              <Box >
-                { strings.movie.postalCode}
-              </Box>
-              <Box>
-              <Link
-                target="_blank"
-                className={ classes.link }
-                href="https://www.suomi.fi/kartta/palvelupaikat/0dda06e2-f9b6-4bbe-a30e-d2feab6afc7f?lat=6809203.911&lon=492856.842&zoom=10&sl=e7af0351-9fe9-4b86-849b-afeb45dc8cc5/"
+      <Typography>
+        <Box className={ classes.boxBold }>
+            { strings.movie.movieTheatre }
+        </Box>
+        <Box className={ classes.box }>
+          { strings.movie.movieInformationText.text1 }
+        </Box>
+        <Box className={ classes.box }>
+          { strings.movie.movieInformationText.text2 }
+        </Box>
+        <Box className={ classes.box }>
+          { strings.movie.movieInformationText.text3 }
+        </Box>
+        <Box className={ classes.box }>
+          { strings.movie.movieInformationText.text4 }
+        </Box>
+        <Box className={ classes.box }>
+          <img
+            className={ classes.coronaImage }
+              src="https://mantyharju.metatavu.io/wp-content/uploads/2020/11/seol-opaste-teattereille_1-724x1024-1.jpg"
+              alt="Suomen Elokuvateatteriliiton korona-ohjeistus jpg 112KB"
+              width="260"
+              height="60"
+          />
+        </Box>
+        <Box
+          className={ classes.infoBox }
+          dangerouslySetInnerHTML={{
+          __html: strings.movie.movieInformationText.text5
+          }}
+        >
+        </Box>
+        <Box
+          className={ classes.infoBox }
+        >
+          { strings.movie.giftCard }
+        </Box>
+        <Box
+          dangerouslySetInnerHTML={{
+            __html: strings.movie.movieInformationText.text6
+          }}
+        >
+        </Box>
+        <Box
+          className={ classes.infoBox }
+        >
+          { strings.movie.commonInformation }
+        </Box>
+        <Box
+          className={ classes.box }  
+        >
+          { strings.movie.movieInformationText.text11 }
+        </Box>
+        <Box className={ classes.box }>
+            <ul>
+              <li>{ strings.movie.movieInformationText.text7 }</li>
+              <li>{ strings.movie.movieInformationText.text8 }</li>
+              <li>{ strings.movie.movieInformationText.text9 }</li>
+              <li
+                dangerouslySetInnerHTML={{
+                __html: strings.movie.movieInformationText.text10
+                }}
               >
-                { strings.movie.placeAtMap }
-              </Link>
-              </Box>
-              <Box>
-              <Link
-                target="_blank"
-                className={ classes.link }
-                href="https://www.suomi.fi/kartta/reitit?lat=6809203&lon=492476&zoom=10&to.lon=492856&to.lat=6809203"
-              >
-                { strings.movie.showRoute }
-              </Link>
-              </Box>
-              <Box className={ classes.box }>
-              <Link
-                target="_blank"
-                className={ classes.link }
-                href="https://www.nettilippu.fi/fi/event/2949"
-              >
-                <img
-                  src="https://mantyharju.metatavu.io/wp-content/uploads/2020/10/nettilippu_logo.jpg"
-                  alt=""
-                  width="260"
-                  height="60"
-                />
-              </Link>
-              </Box>
-              <Box className={ classes.boxBold }>
-                { strings.movie.basicTicket }
-              </Box>
-              <Box>
-                { strings.movie.basicInfo }
-              </Box>
-              <Box className={ classes.boxBold }>
-                { strings.movie.flexoundTicket }
-              </Box>
-              <Box>
-                { strings.movie.flexoundInfo }
-              </Box>
-              <Box
-                fontStyle="italic"
-                fontWeight="bold"
-              >
-                { strings.movie.flexoundExtraInfo }
-              </Box>
-              <Box className={ classes.boxBold }>
-                { strings.movie.meansOfPayment }
-              </Box>
-              <Box className={ classes.box }>
-                <ul>
-                  <li>{ strings.movie.cash }</li>
-                  <li>{ strings.movie.creditCard }</li>
-                  <li>{ strings.movie.smartum }</li>
-                  <li>{ strings.movie.ePassi }</li>
-                  <li>{ strings.movie.virikeSeteli }</li>
-                  <li>{ strings.movie.eazyBreak }</li>
-                </ul>
-              </Box>
-            </Typography>
-          </div>
-        </div>
-      </div>
+              </li>
+            </ul>
+        </Box>
+      </Typography>
     )
   }
 
@@ -324,9 +285,133 @@ class Movies extends React.Component<Props, State> {
     });
   }
 
-  private renderSideInformation = () => {
+  /**
+   * Renders movie information side bar
+   */
+  private renderMovieSideInformation = () => {
+    const { classes } = this.props;
 
+    return (
+      <div className={ classes.sideInformation }>
+        <div className={ classes.sideInfoContent }>
+          <Typography>
+            <Box className={ classes.boxBold }>
+              { strings.movie.movieTheatre }
+            </Box>
+            <Box className={ classes.box}>
+              { strings.movie.email }
+            </Box>
+            <Box className={ classes.boxBold }>
+              { strings.movie.buyTicets }
+            </Box>
+            <Box className={ classes.box }>
+              { strings.movie.addres}
+            </Box>
+            <Box >
+              { strings.movie.postalCode}
+            </Box>
+            <Box>
+            <Link
+              target="_blank"
+              className={ classes.link }
+              href="https://www.suomi.fi/kartta/palvelupaikat/0dda06e2-f9b6-4bbe-a30e-d2feab6afc7f?lat=6809203.911&lon=492856.842&zoom=10&sl=e7af0351-9fe9-4b86-849b-afeb45dc8cc5/"
+            >
+              { strings.movie.placeAtMap }
+            </Link>
+            </Box>
+            <Box>
+            <Link
+              target="_blank"
+              className={ classes.link }
+              href="https://www.suomi.fi/kartta/reitit?lat=6809203&lon=492476&zoom=10&to.lon=492856&to.lat=6809203"
+            >
+              { strings.movie.showRoute }
+            </Link>
+            </Box>
+            <Box className={ classes.box }>
+            <Link
+              target="_blank"
+              className={ classes.link }
+              href="https://www.nettilippu.fi/fi/event/2949"
+            >
+              <img
+                src="https://mantyharju.metatavu.io/wp-content/uploads/2020/10/nettilippu_logo.jpg"
+                alt=""
+                width="260"
+                height="60"
+              />
+            </Link>
+            </Box>
+            <Box className={ classes.boxBold }>
+              { strings.movie.basicTicket }
+            </Box>
+            <Box>
+              { strings.movie.basicInfo }
+            </Box>
+            <Box className={ classes.boxBold }>
+              { strings.movie.flexoundTicket }
+            </Box>
+            <Box>
+              { strings.movie.flexoundInfo }
+            </Box>
+            <Box
+              fontStyle="italic"
+              fontWeight="bold"
+            >
+              { strings.movie.flexoundExtraInfo }
+            </Box>
+            <Box className={ classes.boxBold }>
+              { strings.movie.meansOfPayment }
+            </Box>
+            <Box className={ classes.box }>
+              <ul>
+                <li>{ strings.movie.cash }</li>
+                <li>{ strings.movie.creditCard }</li>
+                <li>{ strings.movie.smartum }</li>
+                <li>{ strings.movie.ePassi }</li>
+                <li>{ strings.movie.virikeSeteli }</li>
+                <li>{ strings.movie.eazyBreak }</li>
+              </ul>
+            </Box>
+          </Typography>
+        </div>
+      </div>
+    )
   }
+
+  /**
+   * Renders age limit information side bar
+   */
+    private renderAgeLimitSideInformation = () => {
+      const { classes } = this.props;
+  
+      return (
+        <div className={ classes.ageLimitSideInformation }>
+          <div className={ classes.sideInfoContent }>
+            <Typography>
+              <Box className={ classes.box }>
+              <Link
+                target="_blank"
+                className={ classes.link }
+                href="https://finlex.fi/fi/laki/alkup/2011/20110710"
+              >
+                { strings.movie.imageProgramLaw }
+              </Link>
+              </Box>
+              <Box>
+              <Link
+                target="_blank"
+                className={ classes.link }
+                href="https://kavi.fi/"
+              >
+                { strings.movie.nationalAudiovisualInstitute }
+              </Link>
+              </Box>
+            </Typography>
+          </div>
+        </div>
+      )
+    }
 
   /**
    * Handles open description
@@ -387,7 +472,6 @@ class Movies extends React.Component<Props, State> {
   private getNextShowTime = (showTimes: MovieACFShowtimes[]) => {
 
     var min = Math.min.apply(null, showTimes.map(function(a){ return new Date(a.datetime).getTime() }));
-    
     const nextShowTime = showTimes.filter(showTime => new Date(showTime.datetime).getTime() === min);
 
     return nextShowTime;
