@@ -89,22 +89,12 @@ export default createStyles({
 
   card: {
     //background: theme.palette.background.paper,
-    marginBottom: "15px"
+    marginBottom: "15px",
+    width: 900
   },
 
   media: {
     height: "15rem"
-  },
-
-  masornyGrid: {
-    display: "flex",
-    marginLeft: "-30px",
-    width: "100%"
-  },
-
-  masornyColumn: {
-    paddingLeft: "15px",
-    backgroundClip: "padding-box"
   },
 
   container: {
@@ -118,9 +108,7 @@ export default createStyles({
   button: {
     color: "primary",
     variant: "contained",
-    marginTop: theme.spacing(1),
-    borderRadius: 10,
-    height: 35
+    marginTop: theme.spacing(1)
   },
 
   dialogTitle: {
@@ -146,12 +134,12 @@ export default createStyles({
     cursor: "pointer"
   },
 
-  kinoInformation: {
+  content: {
     margin: "0 auto",
     display: "flex",
-    flexDirection: "row",
+    flexDirection: "column",
     width: "100%",
-    maxWidth: 2050,
+    maxWidth: 1310,
     [theme.breakpoints.up("md")]: {
       width: "90vw",
     },
@@ -159,7 +147,7 @@ export default createStyles({
       width: "85vw",
     },
     [theme.breakpoints.up("xl")]: {
-      width: "80vw",
+      width: "75vw",
     }
   },
 
@@ -169,5 +157,9 @@ export default createStyles({
     frameBorder: 0,
     allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
     title: strings.movie.watchTrailer
+  },
+
+  title: {
+    paddingBottom: 30
   }
 });

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Dialog, DialogContent, DialogTitle, Grid, IconButton, Link, Typography, withStyles, WithStyles } from "@material-ui/core";
-import styles from "../../styles/movies";
+import styles from "../../styles/premiers";
 import BasicLayout from "../BasicLayout";
 import ReactHtmlParser from "react-html-parser";
 import { Movie, MovieACFShowtimes } from "src/generated/client/src/models";
@@ -8,6 +8,7 @@ import strings from "../../localization/strings";
 import CloseIcon from '@material-ui/icons/Close';
 import Masonry from 'react-masonry-css'
 import moment from "moment";
+import RightSideBar from "../generic/RightSideBar";
 import TreeView from "../generic/TreeView";
 
 /**
@@ -28,13 +29,12 @@ interface State {
   videoOpen: boolean;
   videoUrl?: string;
   pageOpen: string;
-  movieMedia: any;
 }
 
 /**
  * A component for displaying movies
  */
-class Movies extends React.Component<Props, State> {
+class Premiers extends React.Component<Props, State> {
 
   /**
    * Constructor
@@ -48,8 +48,7 @@ class Movies extends React.Component<Props, State> {
       openDescriptions: [],
       videoOpen: false,
       pageOpen: "kino",
-      categories: [],
-      movieMedia: []
+      categories: []
     };
   }
 
@@ -67,6 +66,7 @@ class Movies extends React.Component<Props, State> {
    */
   public render() {
     const { lang, classes, slug } = this.props;
+    const { pageOpen, categories } = this.state;
 
     return (
       <>
@@ -85,15 +85,14 @@ class Movies extends React.Component<Props, State> {
             <TreeView slug={ slug }/>
           </div>
         </Grid>
-        <Grid item xs={12} md={12} lg={12} key={"456"}>
-          <div className={ classes.kinoInformation }>
-            <Masonry
-              breakpointCols={5}
-              className={ classes.masornyGrid }
-              columnClassName={ classes.masornyColumn }
-            >
-              { this.renderMovieCards() }
-            </Masonry>
+        <Grid item xs={10} md={6} lg={7} key={"456"}>
+          <div className={ classes.title }>
+            <h1>
+              { strings.movie.comingPremiers }
+            </h1>
+          </div>
+          <div className={ classes.content }>
+            { this.renderMovieCards() }
           </div>
         </Grid>
         </div>
@@ -109,16 +108,11 @@ class Movies extends React.Component<Props, State> {
     try {
       const movieResponse = await fetch("/wp-json/wp/v2/mantyharju-elokuva");
       const categoryResponse = await fetch("/wp-json/wp/v2/mantyharju-elokuva-categories")
-      const movieMediaResponse = await fetch("/wp-json/wp/v2/media")
-
       const categories = await categoryResponse.json();
       const movies = await movieResponse.json();
-      const movieMedia = await movieMediaResponse.json();
-
       this.setState({
-        movies,
-        categories,
-        movieMedia
+        movies: movies,
+        categories: categories
       })
     } catch(error) {
       console.error(error)
@@ -136,6 +130,16 @@ class Movies extends React.Component<Props, State> {
     this.setState({
       videoOpen: !this.state.videoOpen,
       videoUrl: trailerUrl ?? undefined
+    });
+  }
+
+  /**
+   * Changes page on click
+   * @param page to change
+   */
+  private onChangePage = (page: string) => {
+    this.setState({
+      pageOpen: page
     });
   }
 
@@ -204,9 +208,8 @@ class Movies extends React.Component<Props, State> {
     }
 
   /**
-  * 
   * @param movie movie whitch showtimes are filtered
-  * @returns filtered showtimes
+  * @returns premier if movie has any
  */
   private filterShowTimes = (movie: Movie) => {
     const dateNow = new Date().getTime();
@@ -215,53 +218,33 @@ class Movies extends React.Component<Props, State> {
       return;
     }
 
-    const hasOngoingMovies = movie.ACF.showtimes.some(showTime => {
-      return new Date(showTime.datetime).getTime() <= dateNow
-    })
-
-    for (const showTime of movie.ACF.showtimes) {
-      if (new Date(showTime.datetime).getTime() > dateNow && !hasOngoingMovies) {
-        return undefined;
-      }
-    }
-
     const filteredShowTimes: MovieACFShowtimes[] = []
 
-    movie.ACF.showtimes.forEach(showTime => {
-      if (showTime.datetime) {
-        if (new Date(showTime.datetime).getTime() > dateNow) {
-          filteredShowTimes.push(showTime)
-        }
+    for (const showTime of movie.ACF.showtimes) {
+      if (new Date(showTime.datetime).getTime() < dateNow) {
+        return undefined;
+      } else {
+        filteredShowTimes.push(showTime);
       }
-    })
-    return filteredShowTimes;
-  }
-
-  private getImageUrl = (movie: Movie) => {
-    const { movieMedia } = this.state;
-
-    console.log(movieMedia)
-
-    if (!movie.featured_media || !movieMedia) {
-      return undefined;
     }
 
-    return undefined;
-    
-    // const foundMedia = movieMedia.filter((media: any) => media.id === movie.featured_media)
-
-    // return foundMedia.guid.rendered;
+    const premier = filteredShowTimes.reduce((prev, curr) => {
+      return new Date(prev.datetime).getTime() < new Date(curr.datetime).getTime() ? prev : curr;
+    });
+  
+    return premier;
   }
+
 
   /**
    * Parses date to string
    */
   private parseDate = (showTime: Date) => {
-    const datee = moment(showTime)
-    const dateName = datee.locale('fi').format('dd');
-    const day = datee.format('DD')
-    const month = datee.format('MM')
-    const hoursMins = datee.format('HH:mm')
+    const date = moment(showTime)
+    const dateName = date.locale('fi').format('dd');
+    const day = date.format('DD')
+    const month = date.format('MM')
+    const hoursMins = date.format('HH:mm')
 
     const dateString = `${dateName} ${day}.${month}. klo: ${hoursMins}`;
     return dateString;
@@ -276,20 +259,19 @@ class Movies extends React.Component<Props, State> {
     const { movies } = this.state;
 
     return movies.map((movie: Movie, index: number) => {
-      const showTimes = this.filterShowTimes(movie);
+      const premier = this.filterShowTimes(movie);
 
-        return (
-          (showTimes && showTimes.length !== 0) ?
-              <Card
-                key={ index }
-                className={ classes.card }
-              >
-                <CardContent>
-                  { this.renderCardContent(movie, index, showTimes) }
-                </CardContent>
-              </Card>
-            : null
-          );
+      return (
+        (premier ?
+            <div
+              key={ index }
+              className={ classes.card }
+            >
+                { this.renderCardContent(movie, index, premier) }
+                <hr />
+            </div>
+          : null
+        ));
     });
   }
 
@@ -301,7 +283,7 @@ class Movies extends React.Component<Props, State> {
    * @param showTimes array of showtimes
    * @param showTimes show times of movie
    */
-  private renderCardContent = (movie: Movie, index: number, showTimes: MovieACFShowtimes[]) => {
+  private renderCardContent = (movie: Movie, index: number, premier: MovieACFShowtimes) => {
     const { classes } = this.props;
     const { openDescriptions } = this.state;
     const title = ReactHtmlParser(movie.title.rendered);
@@ -310,57 +292,27 @@ class Movies extends React.Component<Props, State> {
     const ageLimit = movie.ACF.agelimit;
     const category = this.parseMovieCategories(movie);
     const runTime = movie.ACF.runtime;
-    const nextShowTime = this.getNextShowTime(showTimes);
-    const comingShowtimes = showTimes.filter(showTime => showTime.datetime !== nextShowTime[0].datetime);
-    const imageUrl = this.getImageUrl(movie);
 
     return (
       <>
-      { imageUrl &&
-        <Typography gutterBottom variant="h4">
-          { imageUrl }
-        </Typography>
-      }
         <Typography gutterBottom variant="h4">
           { title }
         </Typography>
         <Typography gutterBottom variant="h5">
-          { strings.movie.nextShowTime } 
+        <b>{ strings.movie.premier }</b> { this.parseDate(premier.datetime) } 
         </Typography>
         <Typography >
-          { this.parseDate(nextShowTime[0].datetime) } 
+          <b>{ strings.movie.ageLimit }</b> { ageLimit }
         </Typography>
         <Typography >
-          <b>{ strings.movie.ageLimit}</b> { ageLimit }
+          { ageLimit }
         </Typography>
-        { runTime &&
-          <Typography >
-            <b>{ strings.movie.duration}</b> { runTime }
-          </Typography>
-        }
         { category &&
           <Typography >
             <b>{ strings.movie.category}</b> { category }
           </Typography>
         }
-        { ticketPrice &&
-          <Typography >
-            <b>{ strings.movie.price}</b> { ticketPrice }
-          </Typography>
-        }
-        { comingShowtimes.length > 0 &&
-          <Typography >
-            <b>{ strings.movie.showTimes }</b>
-          </Typography>
-        }
         <Typography >
-        { (comingShowtimes && comingShowtimes.length > 0) && 
-          comingShowtimes.map(showTime =>
-            <Typography>
-              { this.parseDate(showTime.datetime) }
-            </Typography>
-          )
-        }
           <Button className={ classes.button } onClick={ () => this.onDescriptionClick(index)} >
             { openDescriptions[index] ? strings.movie.hideDescription : strings.movie.showDescription }
           </Button>
@@ -375,13 +327,6 @@ class Movies extends React.Component<Props, State> {
             { strings.movie.watchTrailer }
           </Button>
         }
-        <Typography >
-        <Link href={ movie.ACF.ticketsalesurl ? movie.ACF.ticketsalesurl : "https://www.nettilippu.fi/fi/event/2949" }target="_blank">
-          <Button className={ classes.button }>
-          { strings.movie.buyTickets }
-          </Button>
-        </Link>
-        </Typography>
       </>
     );
   }
@@ -463,4 +408,4 @@ class Movies extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(Movies);
+export default withStyles(styles)(Premiers);

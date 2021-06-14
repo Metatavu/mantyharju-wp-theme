@@ -7,6 +7,7 @@ import SingleEventPage from "./pages/SingleEventPage";
 import ArticlePage from "./pages/article-page";
 import Announcements from "./pages/announcements";
 import Movies from "./pages/movies";
+import Premiers from "./pages/premiers";
 import News from "./pages/news";
 import Jobs from "./pages/jobs";
 import { CssBaseline, responsiveFontSizes } from "@material-ui/core";
@@ -109,7 +110,17 @@ class App extends React.Component<Props, State> {
               render={ (props) => (
               <Movies
                 lang={ language }
-                slug={ this.pathToSlug(props.location.pathname) }
+                slug={ "elokuvateatteri-kino" }
+              />
+              )}
+            />
+            <Route
+              path="/premiers/"
+              exact={ true }
+              render={ (props) => (
+              <Premiers
+                lang={ language }
+                slug={ "elokuvateatteri-kino" }
               />
               )}
             />
