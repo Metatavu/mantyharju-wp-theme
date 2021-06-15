@@ -105,7 +105,7 @@ class App extends React.Component<Props, State> {
               )}
             />
             <Route
-              path="/movies/"
+              path="/movies"
               exact={ true }
               render={ (props) => (
               <Movies
@@ -115,7 +115,7 @@ class App extends React.Component<Props, State> {
               )}
             />
             <Route
-              path="/premiers/"
+              path="/premiers"
               exact={ true }
               render={ (props) => (
               <Premiers
@@ -157,7 +157,7 @@ class App extends React.Component<Props, State> {
               path="/:page"
               render={ (props) => {
                 // Check for special pages
-                if (/^\/event\/|\/announcements\/$|^\/news\/$|^\/jobs\/$|^\/movies\/$|^\/sivut\//.test(props.location.pathname)) {
+                if (/^\/event\/|\/announcements\/$|^\/news\/$|^\/jobs\/$|^\/movies$|^\/premiers$|^\/sivut\//.test(props.location.pathname)) {
                   return null;
                 }
 

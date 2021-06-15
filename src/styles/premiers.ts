@@ -28,7 +28,7 @@ export default createStyles({
     overflow: "hidden",
     [breakpoints.up("sm")]: {
       padding: sidePaddingMd,
-      height: "40vh",
+      height: "23vh",
       fontSize: "1.25em",
     },
     [breakpoints.up("md")]: {
@@ -37,10 +37,10 @@ export default createStyles({
     },
     [breakpoints.up("lg")]: {
       padding: sidePaddingXl,
-      height: "40vh",
+      height: "23vh",
     },
     [breakpoints.up("xl")]: {
-      height: "40vh",
+      height: "23vh",
     },
     "&:after": {
       zIndex: 1,
@@ -98,17 +98,38 @@ export default createStyles({
   },
 
   container: {
-    padding: "15px",
+    paddingTop: "50px",
+    paddingLeft: "15px",
     margin: "0 auto",
     display: "flex",
     flexDirection: "row",
     width: "100%",
   },
 
+  column: {
+    paddingTop: "50px",
+    paddingLeft: "125px",
+    margin: "0 auto",
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
+  },
+
+
+  line: {
+    border: "1px solid rgba(0,0,0,0.1);"
+  },
+
+  cardLine: {
+    border: "1px solid rgba(0,0,0,0.1);",
+    marginTop: 20
+  },
+
   button: {
     color: "primary",
     variant: "contained",
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(1),
+    height: 35
   },
 
   dialogTitle: {
@@ -151,12 +172,22 @@ export default createStyles({
     }
   },
 
+  image: {
+    width: "100%",
+  },
+
   iFrame: {
     width: 600,
     height: 600,
     frameBorder: 0,
     allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
     title: strings.movie.watchTrailer
+  },
+
+  treeView: {
+    maxWidth: "16,666%",
+    flexBasis: "16,666%",
+    flexGrow: 0
   },
 
   title: {

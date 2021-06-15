@@ -28,7 +28,7 @@ export default createStyles({
     overflow: "hidden",
     [breakpoints.up("sm")]: {
       padding: sidePaddingMd,
-      height: "40vh",
+      height: "23vh",
       fontSize: "1.25em",
     },
     [breakpoints.up("md")]: {
@@ -37,10 +37,10 @@ export default createStyles({
     },
     [breakpoints.up("lg")]: {
       padding: sidePaddingXl,
-      height: "40vh",
+      height: "23vh",
     },
     [breakpoints.up("xl")]: {
-      height: "40vh",
+      height: "23vh",
     },
     "&:after": {
       zIndex: 1,
@@ -89,7 +89,7 @@ export default createStyles({
 
   card: {
     //background: theme.palette.background.paper,
-    marginBottom: "15px"
+    marginBottom: "15px",
   },
 
   media: {
@@ -108,18 +108,31 @@ export default createStyles({
   },
 
   container: {
-    padding: "15px",
+    paddingTop: "50px",
+    paddingLeft: "15px",
     margin: "0 auto",
     display: "flex",
     flexDirection: "row",
     width: "100%",
   },
 
+  column: {
+    paddingTop: "50px",
+    paddingLeft: "125px",
+    margin: "0 auto",
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
+  },
+
+  line: {
+    border: "1px solid rgba(0,0,0,0.1);"
+  },
+
   button: {
     color: "primary",
     variant: "contained",
     marginTop: theme.spacing(1),
-    borderRadius: 10,
     height: 35
   },
 
@@ -141,6 +154,17 @@ export default createStyles({
     paddingBottom: 0
   },
 
+  image: {
+    width: "100%",
+    paddingBottom: 10,
+  },
+
+  treeView: {
+    maxWidth: "16,666%",
+    flexBasis: "16,666%",
+    flexGrow: 0
+  },
+
   link: {
     paddingTop: 5,
     cursor: "pointer"
@@ -151,7 +175,7 @@ export default createStyles({
     display: "flex",
     flexDirection: "row",
     width: "100%",
-    maxWidth: 2050,
+    maxWidth: 2150,
     [theme.breakpoints.up("md")]: {
       width: "90vw",
     },

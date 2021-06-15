@@ -10,6 +10,7 @@ import Masonry from 'react-masonry-css'
 import moment from "moment";
 import RightSideBar from "../generic/RightSideBar";
 import TreeView from "../generic/TreeView";
+import movies from "./movies";
 
 /**
  * Component props
@@ -28,11 +29,11 @@ interface State {
   openDescriptions: Boolean[]
   videoOpen: boolean;
   videoUrl?: string;
-  pageOpen: string;
+  movieMedia: any;
 }
 
 /**
- * A component for displaying movies
+ * A component for displaying movie premiers
  */
 class Premiers extends React.Component<Props, State> {
 
@@ -47,8 +48,8 @@ class Premiers extends React.Component<Props, State> {
       movies: [],
       openDescriptions: [],
       videoOpen: false,
-      pageOpen: "kino",
-      categories: []
+      categories: [],
+      movieMedia: []
     };
   }
 
@@ -56,7 +57,6 @@ class Premiers extends React.Component<Props, State> {
    * Component did mount life-cycle handler
    */
   public componentDidMount = () => {
-    this.hidePageLoader();
     this.fetchData();
   }
 
@@ -66,37 +66,35 @@ class Premiers extends React.Component<Props, State> {
    */
   public render() {
     const { lang, classes, slug } = this.props;
-    const { pageOpen, categories } = this.state;
 
     return (
       <>
-      { this.renderVideoDialog() }
-      <BasicLayout lang={ lang } slug={ slug }>
-        <div className={ classes.heroImageDiv }>
-          <div className={ classes.heroContent }>
-            <Typography variant="h1" className={ classes.heroText }>
-              { strings.movie.movies }
-            </Typography>
+        { this.renderVideoDialog() }
+        <BasicLayout lang={ lang } slug={ slug }>
+          <div className={ classes.heroImageDiv }>
+            <div
+              className={ classes.heroContent }>
+                <Typography variant="h1" className={ classes.heroText }>
+                  { strings.movie.comingPremiers }
+                </Typography>
+            </div>
           </div>
-        </div>
-        <div className={ classes.container } >
-        <Grid item xs={12} md={3} lg={2} key={"123"}>
-          <div className="rs_skip">
-            <TreeView slug={ slug }/>
+          <div className={ classes.column }>
+            <div className={ classes.line }></div>
+            <div className={ classes.container } >
+              <Grid item xs={ 12 } md={ 3 } lg={ 2 } key={"123"}>
+                <div className={ classes.treeView }>
+                  <TreeView slug={ slug }/>
+                </div>
+              </Grid>
+              <Grid item xs={12} md={6} lg={7} key={"456"}>
+                <div className={ classes.content }>
+                  { this.renderMovieCards() }
+                </div>
+              </Grid>
+            </div>
           </div>
-        </Grid>
-        <Grid item xs={10} md={6} lg={7} key={"456"}>
-          <div className={ classes.title }>
-            <h1>
-              { strings.movie.comingPremiers }
-            </h1>
-          </div>
-          <div className={ classes.content }>
-            { this.renderMovieCards() }
-          </div>
-        </Grid>
-        </div>
-      </BasicLayout>
+        </BasicLayout>
       </>
     );
   }
@@ -106,16 +104,23 @@ class Premiers extends React.Component<Props, State> {
    */
   private fetchData = async () => {
     try {
-      const movieResponse = await fetch("/wp-json/wp/v2/mantyharju-elokuva");
-      const categoryResponse = await fetch("/wp-json/wp/v2/mantyharju-elokuva-categories")
+      const movieResponse = await fetch("/wp-json/wp/v2/mantyharju-elokuva?per_page=100");
+      const categoryResponse = await fetch("/wp-json/wp/v2/mantyharju-elokuva-categories?per_page=100");
+      const movieMediaResponse = await fetch("/wp-json/wp/v2/media?per_page=100");
+
       const categories = await categoryResponse.json();
       const movies = await movieResponse.json();
+      const movieMedia = await movieMediaResponse.json();
+
       this.setState({
-        movies: movies,
-        categories: categories
+        movies,
+        categories,
+        movieMedia
       })
+      this.hidePageLoader();
     } catch(error) {
       console.error(error)
+      this.hidePageLoader();
     }
 
     this.initDescriptionState();
@@ -124,22 +129,12 @@ class Premiers extends React.Component<Props, State> {
   /**
    * Toggle video dialog event handler
    * 
-   * @param index index of clicked item
+   * @param trailerUrl trailer url
    */
   private toggleVideoDialog = (trailerUrl?: string) => {
     this.setState({
       videoOpen: !this.state.videoOpen,
       videoUrl: trailerUrl ?? undefined
-    });
-  }
-
-  /**
-   * Changes page on click
-   * @param page to change
-   */
-  private onChangePage = (page: string) => {
-    this.setState({
-      pageOpen: page
     });
   }
 
@@ -177,7 +172,6 @@ class Premiers extends React.Component<Props, State> {
 
   /**
    * Format url for embedding the video
-   * TODO: Add other sites alongside youtube, if requested
    * 
    * @param trailerUrl trailer url
    * @returns embed url
@@ -197,35 +191,27 @@ class Premiers extends React.Component<Props, State> {
   }
 
   /**
-   * Gets next showtime of a movie
-   */
-  private getNextShowTime = (showTimes: MovieACFShowtimes[]) => {
-
-    var min = Math.min.apply(null, showTimes.map(function(a){ return new Date(a.datetime).getTime() }));
-    const nextShowTime = showTimes.filter(showTime => new Date(showTime.datetime).getTime() === min);
-
-    return nextShowTime;
-    }
-
-  /**
-  * @param movie movie whitch showtimes are filtered
+  * @param showTimes movie whitch showtimes are filtered
   * @returns premier if movie has any
  */
   private filterShowTimes = (movie: Movie) => {
     const dateNow = new Date().getTime();
+    const showTimes = movie.ACF.showtimes;
 
-    if (!movie.ACF.showtimes) {
+    if (!showTimes) {
       return;
     }
 
-    const filteredShowTimes: MovieACFShowtimes[] = []
-
-    for (const showTime of movie.ACF.showtimes) {
+    for (const showTime of showTimes) {
       if (new Date(showTime.datetime).getTime() < dateNow) {
-        return undefined;
-      } else {
-        filteredShowTimes.push(showTime);
+        return;
       }
+    }
+
+    const filteredShowTimes = showTimes.filter(showTime => showTime.datetime.toString() !== "");
+
+    if (!filteredShowTimes) {
+      return;
     }
 
     const premier = filteredShowTimes.reduce((prev, curr) => {
@@ -238,6 +224,9 @@ class Premiers extends React.Component<Props, State> {
 
   /**
    * Parses date to string
+   * 
+   * @param showTime show time
+   * @returns Parsed date string
    */
   private parseDate = (showTime: Date) => {
     const date = moment(showTime)
@@ -252,7 +241,7 @@ class Premiers extends React.Component<Props, State> {
 
 
   /**
-   * Method for rendering event cards
+   * Method for rendering movie cards
    */
   private renderMovieCards = () => {
     const { classes } = this.props;
@@ -268,7 +257,7 @@ class Premiers extends React.Component<Props, State> {
               className={ classes.card }
             >
                 { this.renderCardContent(movie, index, premier) }
-                <hr />
+                <div className={ classes.cardLine }></div>
             </div>
           : null
         ));
@@ -280,37 +269,41 @@ class Premiers extends React.Component<Props, State> {
    * 
    * @param movie movie
    * @param index index
-   * @param showTimes array of showtimes
-   * @param showTimes show times of movie
+   * @param premier premier of the movie
    */
   private renderCardContent = (movie: Movie, index: number, premier: MovieACFShowtimes) => {
     const { classes } = this.props;
     const { openDescriptions } = this.state;
     const title = ReactHtmlParser(movie.title.rendered);
     const content = ReactHtmlParser(movie.content.rendered);
-    const ticketPrice = movie.ACF.ticketprice;
     const ageLimit = movie.ACF.agelimit;
     const category = this.parseMovieCategories(movie);
-    const runTime = movie.ACF.runtime;
+    const imageUrl = this.getImageUrl(movie);
 
     return (
       <>
+        { imageUrl &&
+          <Box mt={ 1 } >
+            <img 
+              className={ classes.image }
+              src={ imageUrl }
+              alt="Elokuva"
+            />
+          </Box>
+        }
         <Typography gutterBottom variant="h4">
           { title }
         </Typography>
         <Typography gutterBottom variant="h5">
-        <b>{ strings.movie.premier }</b> { this.parseDate(premier.datetime) } 
+          <b>{ strings.movie.premier }</b> { this.parseDate(premier.datetime) } 
         </Typography>
-        <Typography >
+        <Box mt={ 1 } >
           <b>{ strings.movie.ageLimit }</b> { ageLimit }
-        </Typography>
-        <Typography >
-          { ageLimit }
-        </Typography>
+        </Box>
         { category &&
-          <Typography >
+          <Box mt={ 1 } >
             <b>{ strings.movie.category}</b> { category }
-          </Typography>
+          </Box>
         }
         <Typography >
           <Button className={ classes.button } onClick={ () => this.onDescriptionClick(index)} >
@@ -350,13 +343,13 @@ class Premiers extends React.Component<Props, State> {
           disableTypography
           id="dialog-title"
         >
-            <IconButton
-              className={ classes.closeButton }
-              size="small"
-              onClick={ () => this.toggleVideoDialog() }
-            >
-              <CloseIcon />
-            </IconButton>
+          <IconButton
+            className={ classes.closeButton }
+            size="small"
+            onClick={ () => this.toggleVideoDialog() }
+          >
+            <CloseIcon />
+          </IconButton>
         </DialogTitle>
         <DialogContent
           className={ classes.dialogContent }
@@ -375,6 +368,7 @@ class Premiers extends React.Component<Props, State> {
    * Parses movie's categories to a string
    * 
    * @param movie movie 
+   * @returns Parsed categories
    */
   private parseMovieCategories = (movie: Movie) => {
     const { categories } = this.state;
@@ -390,9 +384,30 @@ class Premiers extends React.Component<Props, State> {
           foundCategories.push(categories[i].name);
         }
       }
+    }
+    
+    return foundCategories.toString().replace(/,/g, '/');
   }
-  return foundCategories.toString().replace(/,/g, '/');
-}
+
+  /**
+   * @param movie movie 
+   * @returns Url of image
+   */
+  private getImageUrl = (movie: Movie) => {
+    const { movieMedia } = this.state;
+
+    if (!movie.featured_media || !movieMedia) {
+      return undefined;
+    }
+
+    const foundMedia = movieMedia.filter((media: any) => media.id === movie.featured_media);
+
+    if (!foundMedia) {
+      return undefined;
+    }
+
+    return foundMedia[0].guid.rendered;
+  }
 
   /**
    * Hide page loader
