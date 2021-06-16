@@ -174,6 +174,7 @@ export default createStyles({
 
   image: {
     width: "100%",
+    paddingBottom: 10
   },
 
   iFrame: {
