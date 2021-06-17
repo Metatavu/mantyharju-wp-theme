@@ -55,6 +55,10 @@ export interface IStrings extends LocalizedStringsMethods {
     festival: string;
     comingPremiers: string;
     premier: string;
+    director: string;
+    cast: string;
+    noMovies: string;
+    noPremiers: string;
   }
 }
 

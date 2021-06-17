@@ -31,6 +31,7 @@ interface State {
   videoUrl?: string;
   movieMedia: any;
   isMobile?: boolean;
+  hasPremiers?: boolean;
 }
 
 /**
@@ -52,6 +53,7 @@ class Premiers extends React.Component<Props, State> {
       categories: [],
       movieMedia: []
     };
+    window.addEventListener("resize", this.checkScreenWidth);
   }
 
   /**
@@ -62,12 +64,21 @@ class Premiers extends React.Component<Props, State> {
     this.checkScreenWidth();
   }
 
-    /**
+  /**
+   * Component did mount life-cycle handler
+   */
+    public componentWillUnmount = () => {
+      window.removeEventListener("resize", this.checkScreenWidth);
+    }
+
+  /**
    * Checks screen width
    */
     private checkScreenWidth = () => {
       this.setState({ isMobile: window.innerWidth <= 760 });
     }
+
+
   
 
 
@@ -76,7 +87,7 @@ class Premiers extends React.Component<Props, State> {
    */
   public render() {
     const { lang, classes, slug } = this.props;
-    const { isMobile } = this.state;
+    const { isMobile, hasPremiers } = this.state;
 
     return (
       <>
@@ -90,23 +101,26 @@ class Premiers extends React.Component<Props, State> {
                 </Typography>
             </div>
           </div>
-          <div className={ !isMobile ? classes.column : classes.mobileColumn }>
-            <div className={ classes.line }></div>
-            <div className={ classes.container } >
-              { !isMobile &&
-                <Grid item xs={ 12 } md={ 3 } lg={ 2 } key={"123"}>
-                  <div className={ classes.treeView }>
-                    <TreeView slug={ slug }/>
-                  </div>
-                </Grid>
-              }
-                <Grid item xs={12} md={6} lg={7} key={"456"}>
-                  <div className={ !isMobile ? classes.content : classes.mobileContent }>
-                    { this.renderMovieCards() }
-                  </div>
-                </Grid>
+            <div className={ !isMobile ? classes.column : classes.mobileColumn }>
+              <div className={ classes.line }></div>
+              <div className={ classes.container } >
+                { !isMobile &&
+                  <Grid item xs={ 12 } md={ 3 } lg={ 2 } key={"123"}>
+                    <div className={ classes.treeView }>
+                      <TreeView slug={ slug }/>
+                    </div>
+                  </Grid>
+                }
+                {
+                  hasPremiers ?
+                  <Grid item xs={12} md={6} lg={7} key={"456"}>
+                    <div className={ !isMobile ? classes.content : classes.mobileContent }>
+                      { this.renderMovieCards() }
+                    </div>
+                  </Grid> : <h1>{strings.movie.noPremiers }</h1>
+                }
               </div>
-            </div>
+            </div> 
         </BasicLayout>
       </>
     );
@@ -137,6 +151,7 @@ class Premiers extends React.Component<Props, State> {
     }
 
     this.initDescriptionState();
+    this.hasPremier();
   }
 
   /**
@@ -181,6 +196,26 @@ class Premiers extends React.Component<Props, State> {
     this.setState({
       openDescriptions: emptyState
     })
+  }
+
+  /**
+   * Check if movie has any premiers
+   */
+  private hasPremier = () => {
+    const { movies } = this.state;
+    const premiers = [];
+
+    movies.forEach(movie => {
+      if (this.filterShowTimes(movie)) {
+        premiers.push(movie)
+      }
+    })
+
+    if (premiers.length > 0) {
+      this.setState({ hasPremiers: true })
+    } else {
+      this.setState({ hasPremiers: false})
+    }
   }
 
   /**
@@ -259,6 +294,7 @@ class Premiers extends React.Component<Props, State> {
   private renderMovieCards = () => {
     const { classes } = this.props;
     const { movies } = this.state;
+    const hasOngoingMovies = [];
 
     return movies.map((movie: Movie, index: number) => {
       const premier = this.filterShowTimes(movie);
@@ -274,7 +310,7 @@ class Premiers extends React.Component<Props, State> {
             </div>
           : null
         ));
-    });
+    })
   }
 
   /**
@@ -310,9 +346,11 @@ class Premiers extends React.Component<Props, State> {
         <Typography gutterBottom variant="h5">
           <b>{ strings.movie.premier }</b> { this.parseDate(premier.datetime) } 
         </Typography>
-        <Box mt={ 1 } >
-          <b>{ strings.movie.ageLimit }</b> { ageLimit }
-        </Box>
+        { ageLimit &&
+          <Box mt={ 1 }>
+            <b>{ strings.movie.ageLimit}</b> { ageLimit }
+          </Box>
+        }
         { category &&
           <Box mt={ 1 } >
             <b>{ strings.movie.category}</b> { category }

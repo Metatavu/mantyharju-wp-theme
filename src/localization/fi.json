@@ -43,7 +43,7 @@
     "duration": "kesto:",
     "category": "Luokitus:",
     "noReleaseDate": "Ei julkaisupäiväystä",
-    "price": "Hinta:",
+    "price": "Hinta ovelta:",
     "showTimes": "Muita näytösaikoja:",
     "watchTrailer": "Katso traileri",
     "nextShowTime": "Seuraava näytösaika:",
@@ -52,6 +52,10 @@
     "festival": "Ilokuvafestivaali",
     "comingPremiers": "Tulevat ensi-illat",
     "premier": "Ensi ilta:",
-    "ageLimit": "Ikäraja:"
+    "ageLimit": "Ikäraja:",
+    "director": "Ohjaaja:",
+    "cast": "Näyttelijät:",
+    "noMovies": "Ei meneillään olevia elokuvia",
+    "noPremiers": "Ei tulevia ensi-iltoja"
   }
 }

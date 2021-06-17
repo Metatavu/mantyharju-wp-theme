@@ -30,6 +30,7 @@ interface State {
   videoUrl?: string;
   movieMedia: any;
   isMobile?: boolean
+  hasOngoingMovies?: boolean;
 }
 
 /**
@@ -51,6 +52,7 @@ class Movies extends React.Component<Props, State> {
       categories: [],
       movieMedia: []
     };
+    window.addEventListener("resize", this.checkScreenWidth);
   }
 
   /**
@@ -62,10 +64,17 @@ class Movies extends React.Component<Props, State> {
   }
 
   /**
+   * Component did mount life-cycle handler
+   */
+    public componentWillUnmount = () => {
+      window.removeEventListener("resize", this.checkScreenWidth);
+    }
+
+  /**
    * Checks screen width
    */
   private checkScreenWidth = () => {
-    this.setState({ isMobile: window.innerWidth <= 760 });
+    this.setState({ isMobile: window.innerWidth <= 1280 });
   }
 
   /**
@@ -73,7 +82,7 @@ class Movies extends React.Component<Props, State> {
    */
   public render() {
     const { lang, classes, slug } = this.props;
-    const { isMobile } = this.state;
+    const { isMobile, hasOngoingMovies } = this.state;
 
     console.log(window.screen.width)
     return (
@@ -97,17 +106,19 @@ class Movies extends React.Component<Props, State> {
                 </div>
               </Grid>
               }
-              <Grid item xs={12} md={12} lg={12} key={"456"}>
-                <div className={ classes.kinoInformation }>
-                  <Masonry
-                    breakpointCols={ !isMobile ? 4 : 1 }
-                    className={ classes.masornyGrid }
-                    columnClassName={ classes.masornyColumn }
-                  >
-                    { this.renderMovieCards() }
-                  </Masonry>
-                </div>
-              </Grid>
+              { hasOngoingMovies ?
+                <Grid item xs={12} md={12} lg={12} key={"456"}>
+                  <div className={ classes.kinoInformation }>
+                    <Masonry
+                      breakpointCols={ !isMobile ? 4 : 1 }
+                      className={ classes.masornyGrid }
+                      columnClassName={ classes.masornyColumn }
+                    >
+                      { this.renderMovieCards() }
+                    </Masonry>
+                  </div>
+                </Grid> : <h1>{strings.movie.noMovies }</h1>
+              }
             </div>
           </div>
         </BasicLayout>
@@ -140,7 +151,28 @@ class Movies extends React.Component<Props, State> {
     }
 
     this.initDescriptionState();
+    this.hasOngoingMovies();
   }
+
+    /**
+   * Check if there is any ongoing movies
+   */
+    private hasOngoingMovies = () => {
+      const { movies } = this.state;
+      const ongoingMovies = [];
+  
+      movies.forEach(movie => {
+        if (this.filterShowTimes(movie)) {
+          ongoingMovies.push(movie);
+        }
+      })
+  
+      if (ongoingMovies.length > 0) {
+        this.setState({ hasOngoingMovies: true });
+      } else {
+        this.setState({ hasOngoingMovies: false});
+      }
+    }
 
   /**
    * Toggle video dialog event handler
@@ -181,9 +213,7 @@ class Movies extends React.Component<Props, State> {
       emptyState.push(false)
     })
 
-    this.setState({
-      openDescriptions: emptyState
-    })
+    this.setState({ openDescriptions: emptyState });
   }
 
   /**
@@ -211,11 +241,11 @@ class Movies extends React.Component<Props, State> {
    */
   private getNextShowTime = (showTimes: MovieACFShowtimes[]) => {
 
-    var min = Math.min.apply(null, showTimes.map(function(a){ return new Date(a.datetime).getTime() }));
+    var min = Math.min.apply(null, showTimes.map(showtime => new Date(showtime.datetime).getTime() ));
     const nextShowTime = showTimes.filter(showTime => new Date(showTime.datetime).getTime() === min);
 
     return nextShowTime;
-    }
+  }
 
   /**
   * 
@@ -229,7 +259,6 @@ class Movies extends React.Component<Props, State> {
     const dateSoonNumber = dateSoon.getTime();
     const dateNow = new Date().getTime();
     
-
     if (!movie.ACF.showtimes) {
       return;
     }
@@ -249,7 +278,7 @@ class Movies extends React.Component<Props, State> {
     movie.ACF.showtimes.forEach(showTime => {
       if (showTime.datetime) {
         if (new Date(showTime.datetime).getTime() > dateNow) {
-          filteredShowTimes.push(showTime)
+          filteredShowTimes.push(showTime);
         }
       }
     });
@@ -337,6 +366,8 @@ class Movies extends React.Component<Props, State> {
     const nextShowTime = this.getNextShowTime(showTimes);
     const comingShowtimes = showTimes.filter(showTime => showTime.datetime !== nextShowTime[0].datetime);
     const imageUrl = this.getImageUrl(movie);
+    const director = movie.ACF.director;
+    const cast = movie.ACF.cast;
 
     comingShowtimes.sort((a, b) => new Date(a.datetime).getTime() - new Date(b.datetime).getTime());
 
@@ -360,9 +391,11 @@ class Movies extends React.Component<Props, State> {
         <Typography >
           { this.parseDate(nextShowTime[0].datetime) } 
         </Typography>
-        <Box mt={ 1 }>
-          <b>{ strings.movie.ageLimit}</b> { ageLimit }
-        </Box>
+        { ageLimit &&
+          <Box mt={ 1 }>
+            <b>{ strings.movie.ageLimit}</b> { ageLimit }
+          </Box>
+        }
         { runTime &&
           <Box mt={ 1 }>
             <b>{ strings.movie.duration}</b> { runTime }
@@ -372,6 +405,16 @@ class Movies extends React.Component<Props, State> {
           <Box mt={ 1 }>
             <b>{ strings.movie.category}</b> { category }
           </Box>
+        }
+        { cast &&
+            <Box mt={ 1 }>
+              <b>{ strings.movie.cast}</b> { cast }
+            </Box>
+        }
+        { director &&
+            <Box mt={ 1 }>
+              <b>{ strings.movie.director}</b> { director }
+            </Box>
         }
         { ticketPrice &&
           <Box mt={ 1 }>
