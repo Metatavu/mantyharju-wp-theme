@@ -88,9 +88,13 @@ export default createStyles({
   },
 
   card: {
-    //background: theme.palette.background.paper,
     marginBottom: "15px",
-    width: 900
+    width: "100%"
+  },
+
+  mobileCard: {
+    marginBottom: "15px",
+    width: "100%"
   },
 
   media: {
@@ -115,6 +119,15 @@ export default createStyles({
     width: "100%",
   },
 
+  mobileColumn: {
+    paddingTop: "50px",
+    paddingLeft: "10px",
+    paddingRight: "10px",
+    margin: "0 auto",
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
+  },
 
   line: {
     border: "1px solid rgba(0,0,0,0.1);"
@@ -161,15 +174,13 @@ export default createStyles({
     flexDirection: "column",
     width: "100%",
     maxWidth: 1310,
-    [theme.breakpoints.up("md")]: {
-      width: "90vw",
-    },
-    [theme.breakpoints.up("lg")]: {
-      width: "85vw",
-    },
-    [theme.breakpoints.up("xl")]: {
-      width: "75vw",
-    }
+  },
+
+  mobileContent: {
+    margin: "0 auto",
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
   },
 
   image: {
@@ -180,6 +191,14 @@ export default createStyles({
   iFrame: {
     width: 600,
     height: 600,
+    frameBorder: 0,
+    allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
+    title: strings.movie.watchTrailer
+  },
+
+  mobileiFrame: {
+    width: "100%",
+    height: 400,
     frameBorder: 0,
     allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
     title: strings.movie.watchTrailer

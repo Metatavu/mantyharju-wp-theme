@@ -88,7 +88,6 @@ export default createStyles({
   },
 
   card: {
-    //background: theme.palette.background.paper,
     marginBottom: "15px",
   },
 
@@ -98,7 +97,7 @@ export default createStyles({
 
   masornyGrid: {
     display: "flex",
-    marginLeft: "-30px",
+    marginLeft: "-15px",
     width: "100%"
   },
 
@@ -119,6 +118,14 @@ export default createStyles({
   column: {
     paddingTop: "50px",
     paddingLeft: "125px",
+    margin: "0 auto",
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
+  },
+
+  mobileColumn: {
+    paddingTop: "50px",
     margin: "0 auto",
     display: "flex",
     flexDirection: "column",
@@ -176,15 +183,6 @@ export default createStyles({
     flexDirection: "row",
     width: "100%",
     maxWidth: 2150,
-    [theme.breakpoints.up("md")]: {
-      width: "90vw",
-    },
-    [theme.breakpoints.up("lg")]: {
-      width: "85vw",
-    },
-    [theme.breakpoints.up("xl")]: {
-      width: "80vw",
-    }
   },
 
   iFrame: {
@@ -193,5 +191,14 @@ export default createStyles({
     frameBorder: 0,
     allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
     title: strings.movie.watchTrailer
+  },
+
+  mobileiFrame: {
+    width: "100%",
+    height: 400,
+    frameBorder: 0,
+    allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
+    title: strings.movie.watchTrailer
   }
+
 });

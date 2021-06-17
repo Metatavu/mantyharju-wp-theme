@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Box, Button, Card, CardContent, Dialog, DialogContent, DialogTitle, Grid, IconButton, Link, Typography, withStyles, WithStyles } from "@material-ui/core";
+import { Box, Button, Card, CardContent, Dialog, DialogContent, DialogTitle, Grid, IconButton, Link, Typography, useMediaQuery, withStyles, WithStyles } from "@material-ui/core";
 import styles from "../../styles/movies";
 import BasicLayout from "../BasicLayout";
 import ReactHtmlParser from "react-html-parser";
@@ -9,6 +9,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Masonry from 'react-masonry-css'
 import moment from "moment";
 import TreeView from "../generic/TreeView";
+import theme from "../../styles/theme";
 
 /**
  * Component props
@@ -28,6 +29,7 @@ interface State {
   videoOpen: boolean;
   videoUrl?: string;
   movieMedia: any;
+  isMobile?: boolean
 }
 
 /**
@@ -56,15 +58,24 @@ class Movies extends React.Component<Props, State> {
    */
   public componentDidMount = () => {
     this.fetchData();
+    this.checkScreenWidth();
   }
 
+  /**
+   * Checks screen width
+   */
+  private checkScreenWidth = () => {
+    this.setState({ isMobile: window.innerWidth <= 760 });
+  }
 
   /**
    * Component render
    */
   public render() {
     const { lang, classes, slug } = this.props;
+    const { isMobile } = this.state;
 
+    console.log(window.screen.width)
     return (
       <>
         { this.renderVideoDialog() }
@@ -76,18 +87,20 @@ class Movies extends React.Component<Props, State> {
               </Typography>
             </div>
           </div>
-          <div className={ classes.column }>
+          <div className={ !isMobile ? classes.column : classes.mobileColumn }>
             <div className={ classes.line }></div>
             <div className={ classes.container } >
+              { !isMobile && 
               <Grid item xs={12} md={3} lg={2} key={"123"}>
                 <div className={ classes.treeView }>
                   <TreeView slug={ slug }/>
                 </div>
               </Grid>
+              }
               <Grid item xs={12} md={12} lg={12} key={"456"}>
                 <div className={ classes.kinoInformation }>
                   <Masonry
-                    breakpointCols={4}
+                    breakpointCols={ !isMobile ? 4 : 1 }
                     className={ classes.masornyGrid }
                     columnClassName={ classes.masornyColumn }
                   >
@@ -211,7 +224,7 @@ class Movies extends React.Component<Props, State> {
  */
   private filterShowTimes = (movie: Movie) => {
     const dateSoon = new Date();
-    dateSoon.setDate(dateSoon.getDate() + 2);
+    dateSoon.setDate(dateSoon.getDate() + 7);
 
     const dateSoonNumber = dateSoon.getTime();
     const dateNow = new Date().getTime();
@@ -409,7 +422,7 @@ class Movies extends React.Component<Props, State> {
    */
   private renderVideoDialog = () => {
     const { classes } = this.props;
-    const { videoOpen, videoUrl } = this.state;
+    const { videoOpen, videoUrl, isMobile } = this.state;
 
     return (
       <Dialog
@@ -435,7 +448,7 @@ class Movies extends React.Component<Props, State> {
           className={ classes.dialogContent }
         >
           <iframe
-            className={ classes.iFrame }
+            className={ !isMobile ? classes.iFrame : classes.mobileiFrame }
             src={ videoUrl ? this.formatUrl(videoUrl) : "#" }
             allowFullScreen>
           </iframe>
