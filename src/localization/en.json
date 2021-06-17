@@ -34,5 +34,21 @@
     "successfullyAdded": "Event added successfully!",
     "errorWhenAddingEvent": "Error when adding event. Check required fields.",
     "errorWhenAddingPlace": "Error when adding place. Check required fields."
+  },
+  "movie": {
+    "buyTickets": "Buy tickets",
+    "showDescription": "Show description",
+    "hideDescription": "Hide description",
+    "movies": "Movies",
+    "duration": "Duration:",
+    "category": "Category:",
+    "noReleaseDate": "No release date",
+    "price": "Price:",
+    "showTimes": "Other showtimes:",
+    "watchTrailer": "Watch trailer",
+    "nextShowTime": "Next showtime:",
+    "movieTheatre": "Elokuvateatteri Kino",
+    "ongoingMovies": "ongoingMovies",
+    "festival": "Ilokuvafestivaali"
   }
 }

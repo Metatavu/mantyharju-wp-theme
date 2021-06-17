@@ -414,8 +414,9 @@ class Header extends React.Component<Props, State> {
     });
     if (value) {
       const results = await api.getWpV2Search({ search: value, type: GetWpV2SearchTypeEnum.Post });
+      const filtered =  results.filter(result => result.subtype?.toString() !== "mantyharju-elokuva");
       this.setState({
-        results: results
+        results: filtered
       });
     } else {
       this.setState({
