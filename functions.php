@@ -27,11 +27,10 @@
         register_rest_field( $post_type, 'ACF', [
             'get_callback'    => 'expose_ACF_fields',
             'schema'          => null,
-      ]
-    );
+        ]
+      );
     }
-
-}
+  }
 
 function expose_ACF_fields( $object ) {
     $ID = $object['id'];
