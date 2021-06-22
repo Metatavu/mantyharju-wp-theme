@@ -254,7 +254,7 @@ class Movies extends React.Component<Props, State> {
  */
   private filterShowTimes = (movie: Movie) => {
     const dateSoon = new Date();
-    dateSoon.setDate(dateSoon.getDate() + 7);
+    dateSoon.setDate(dateSoon.getDate() + 30);
 
     const dateSoonNumber = dateSoon.getTime();
     const dateNow = new Date().getTime();
