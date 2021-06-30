@@ -84,7 +84,6 @@ class Movies extends React.Component<Props, State> {
     const { lang, classes, slug } = this.props;
     const { isMobile, hasOngoingMovies } = this.state;
 
-    console.log(window.screen.width)
     return (
       <>
         { this.renderVideoDialog() }
@@ -299,7 +298,7 @@ class Movies extends React.Component<Props, State> {
 
     const foundMedia = movieMedia.filter((media: any) => media.id === movie.featured_media);
 
-    if (!foundMedia) {
+    if (!foundMedia || foundMedia[0].guid.rendered) {
       return undefined;
     }
 
