@@ -453,7 +453,7 @@ class Premiers extends React.Component<Props, State> {
 
     const foundMedia = movieMedia.filter((media: any) => media.id === movie.featured_media);
 
-    if (!foundMedia) {
+    if (!foundMedia || foundMedia[0].guid.rendered) {
       return undefined;
     }
 
