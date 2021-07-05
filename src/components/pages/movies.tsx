@@ -9,7 +9,6 @@ import CloseIcon from '@material-ui/icons/Close';
 import Masonry from 'react-masonry-css'
 import moment from "moment";
 import TreeView from "../generic/TreeView";
-import theme from "../../styles/theme";
 
 /**
  * Component props
@@ -298,7 +297,7 @@ class Movies extends React.Component<Props, State> {
 
     const foundMedia = movieMedia.filter((media: any) => media.id === movie.featured_media);
 
-    if (!foundMedia || foundMedia[0].guid.rendered) {
+    if (!foundMedia || !foundMedia[0].guid.rendered) {
       return undefined;
     }
 
@@ -309,7 +308,7 @@ class Movies extends React.Component<Props, State> {
    * Parses date to string
    * @returns date string
    */
-  private parseDate = (showTime: Date) => {
+  private parseDate = (showTime: Date, isPremier: boolean) => {
     const date = moment(showTime);
     const dateName = date.locale('fi').format('dd');
     const day = date.format('DD');
@@ -317,8 +316,13 @@ class Movies extends React.Component<Props, State> {
     const hoursMins = date.format('HH:mm');
 
     const dateString = `${dateName} ${day}.${month}. klo: ${hoursMins}`;
+    const premierDateString = `${dateName} ${day}.${month}`;
 
-    return dateString;
+    if (isPremier) {
+      return premierDateString
+    } else {
+      return dateString; 
+    }
   }
 
   /**
@@ -388,7 +392,7 @@ class Movies extends React.Component<Props, State> {
           { strings.movie.nextShowTime } 
         </Typography>
         <Typography >
-          { this.parseDate(nextShowTime[0].datetime) } 
+          { showTimes.length > 1 || movie.ACF.ticketsalesurl ? this.parseDate(nextShowTime[0].datetime, false) : this.parseDate(nextShowTime[0].datetime, true) } 
         </Typography>
         { ageLimit &&
           <Box mt={ 1 }>
@@ -430,7 +434,7 @@ class Movies extends React.Component<Props, State> {
         { (comingShowtimes && comingShowtimes.length > 0) && 
           comingShowtimes.map(showTime =>
             <Typography>
-              { this.parseDate(showTime.datetime) }
+              { this.parseDate(showTime.datetime, false) }
             </Typography>
           )
         }
@@ -448,13 +452,16 @@ class Movies extends React.Component<Props, State> {
             { strings.movie.watchTrailer }
           </Button>
         }
-        <Typography >
-          <Link href={ movie.ACF.ticketsalesurl ? movie.ACF.ticketsalesurl : "https://www.nettilippu.fi/fi/event/2949" }target="_blank">
-            <Button className={ classes.button }>
-            { strings.movie.buyTickets }
-            </Button>
-          </Link>
-        </Typography>
+        {
+          movie.ACF.ticketsalesurl &&
+            <Typography >
+            <Link href={ movie.ACF.ticketsalesurl }target="_blank">
+              <Button className={ classes.button }>
+                { strings.movie.buyTickets }
+              </Button>
+            </Link>
+          </Typography>
+        }
       </>
     );
   }

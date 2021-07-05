@@ -184,7 +184,8 @@ export default createStyles({
   },
 
   image: {
-    width: "100%",
+    maxWidth: 750,
+    maxHeight: 750,
     paddingBottom: 10
   },
 
