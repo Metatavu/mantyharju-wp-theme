@@ -274,19 +274,25 @@ class Premiers extends React.Component<Props, State> {
    * Parses date to string
    * 
    * @param showTime show time
+   * @param isPremier is movie premier or not
    * @returns Parsed date string
    */
-  private parseDate = (showTime: Date) => {
-    const date = moment(showTime)
-    const dateName = date.locale('fi').format('dd');
-    const day = date.format('DD')
-    const month = date.format('MM')
-    const hoursMins = date.format('HH:mm')
+    private parseDate = (showTime: Date, isPremier: boolean) => {
+      const date = moment(showTime);
+      const dateName = date.locale('fi').format('dd');
+      const day = date.format('DD');
+      const month = date.format('MM');
+      const hoursMins = date.format('HH:mm');
 
-    const dateString = `${dateName} ${day}.${month}. klo: ${hoursMins}`;
-    return dateString;
+      const dateString = `${dateName} ${day}.${month}. klo: ${hoursMins}`;
+      const premierDateString = `${dateName} ${day}.${month}`;
+
+      if (isPremier) {
+        return premierDateString
+      } else {
+        return dateString; 
+      }
   }
-
 
   /**
    * Method for rendering movie cards
@@ -344,7 +350,7 @@ class Premiers extends React.Component<Props, State> {
           { title }
         </Typography>
         <Typography gutterBottom variant="h5">
-          <b>{ strings.movie.premier }</b> { this.parseDate(premier.datetime) } 
+          <b>{ strings.movie.premier }</b> { movie.ACF.ticketsalesurl ? this.parseDate(premier.datetime, false) : this.parseDate(premier.datetime, true) } 
         </Typography>
         { ageLimit &&
           <Box mt={ 1 }>
@@ -453,7 +459,7 @@ class Premiers extends React.Component<Props, State> {
 
     const foundMedia = movieMedia.filter((media: any) => media.id === movie.featured_media);
 
-    if (!foundMedia || foundMedia[0].guid.rendered) {
+    if (!foundMedia || !foundMedia[0].guid.rendered) {
       return undefined;
     }
 
