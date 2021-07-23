@@ -722,6 +722,7 @@ export default createStyles({
       },
       "& img": {
         width: "100%",
+        marginBottom: 20
       },
       "& figure": {
         margin: 0,
