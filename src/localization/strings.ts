@@ -62,6 +62,7 @@ export interface IStrings extends LocalizedStringsMethods {
     info: string;
     gallery: string;
     ageLimits: string;
+    coming: string;
   }
 }
 

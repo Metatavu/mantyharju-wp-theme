@@ -163,7 +163,7 @@ class Movies extends React.Component<Props, State> {
     const { classes } = this.props;
     return (
       <div>
-        <a className={ classes.link } href = "/movies">{ strings.movie.movies }</a>
+        <a className={ classes.link } href = "/premiers">{ strings.movie.coming }</a>
         <a className={ classes.link } href = "sivut/vapaa-aika-kulttuuri/kino/infoa-elokuvateatteri-kinosta/">{ strings.movie.info }</a>
         <a className={ classes.link } href = "https://ilokuvafestivaali.net/">{ strings.movie.festival }</a>
         <a className={ classes.link } href = "sivut/vapaa-aika-kulttuuri/kino/kuvagalleria/">{ strings.movie.gallery }</a>
