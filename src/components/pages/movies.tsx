@@ -163,14 +163,14 @@ class Movies extends React.Component<Props, State> {
     const { classes } = this.props;
     return (
       <div>
-        <a className={ classes.link } href = "/premiers">Tulossa</a>
-        <a className={ classes.link } href = "sivut/vapaa-aika-kulttuuri/kino/infoa-elokuvateatteri-kinosta/">Info</a>
-        <a className={ classes.link } href = "https://ilokuvafestivaali.net/">IlokuvaFestivaali</a>
-        <a className={ classes.link } href = "sivut/vapaa-aika-kulttuuri/kino/kuvagalleria/">Galleria</a>
-        <a className={ classes.link } href = "sivut/vapaa-aika-kulttuuri/elokuvateatteri-kino/elokuvien-ikarajat/">Ikärajat</a>
+        <a className={ classes.link } href = "/movies">{ strings.movie.movies }</a>
+        <a className={ classes.link } href = "sivut/vapaa-aika-kulttuuri/kino/infoa-elokuvateatteri-kinosta/">{ strings.movie.info }</a>
+        <a className={ classes.link } href = "https://ilokuvafestivaali.net/">{ strings.movie.festival }</a>
+        <a className={ classes.link } href = "sivut/vapaa-aika-kulttuuri/kino/kuvagalleria/">{ strings.movie.gallery }</a>
+        <a className={ classes.link } href = "sivut/vapaa-aika-kulttuuri/elokuvateatteri-kino/elokuvien-ikarajat/">{ strings.movie.ageLimits }</a>
       </div>
     )
-  }
+  } 
 
     /**
    * Check if there is any ongoing movies

@@ -49,6 +49,9 @@
     "nextShowTime": "Next showtime:",
     "movieTheatre": "Elokuvateatteri Kino",
     "ongoingMovies": "ongoingMovies",
-    "festival": "Ilokuvafestivaali"
+    "festival": "Ilokuvafestivaali",
+    "info": "Info",
+    "gallery": "Gallery",
+    "ageLimits": "Age limits"
   }
 }
