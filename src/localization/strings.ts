@@ -59,6 +59,10 @@ export interface IStrings extends LocalizedStringsMethods {
     cast: string;
     noMovies: string;
     noPremiers: string;
+    info: string;
+    gallery: string;
+    ageLimits: string;
+    coming: string;
   }
 }
 
