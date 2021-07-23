@@ -96,13 +96,17 @@ class Movies extends React.Component<Props, State> {
           </div>
           <div className={ !isMobile ? classes.column : classes.mobileColumn }>
             <div className={ classes.line }></div>
-            <div className={ classes.container } >
+            <div className={ !isMobile ? classes.container : classes.mobileContainer } >
               { !isMobile && 
               <Grid item xs={12} md={3} lg={2} key={"123"}>
                 <div className={ classes.treeView }>
                   <TreeView slug={ slug }/>
                 </div>
               </Grid>
+              }
+              {
+                isMobile &&
+                  this.renderNavigationLinks() 
               }
               { hasOngoingMovies ?
                 <Grid item xs={12} md={12} lg={12} key={"456"}>
@@ -313,7 +317,7 @@ class Movies extends React.Component<Props, State> {
 
     const foundMedia = movieMedia.filter((media: any) => media.id === movie.featured_media);
 
-    if (!foundMedia || !foundMedia[0].guid.rendered) {
+    if (!foundMedia || !foundMedia[0] || !foundMedia[0].guid.rendered) {
       return undefined;
     }
 

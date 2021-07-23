@@ -110,6 +110,16 @@ export default createStyles({
     width: "100%",
   },
 
+  mobileContainer: {
+    paddingTop: "50px",
+    paddingLeft: "15px",
+    paddingRight: "15px",
+    margin: "0 auto",
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
+  },
+
   column: {
     paddingTop: "50px",
     paddingLeft: "125px",
@@ -164,7 +174,7 @@ export default createStyles({
   },
 
   link: {
-    paddingTop: 5,
+    paddingRight: 10,
     cursor: "pointer"
   },
 
@@ -186,6 +196,11 @@ export default createStyles({
   image: {
     maxWidth: 750,
     maxHeight: 750,
+    paddingBottom: 10
+  },
+
+  mobileImage: {
+    width: "100%",
     paddingBottom: 10
   },
 
