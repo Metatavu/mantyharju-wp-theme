@@ -96,13 +96,17 @@ class Movies extends React.Component<Props, State> {
           </div>
           <div className={ !isMobile ? classes.column : classes.mobileColumn }>
             <div className={ classes.line }></div>
-            <div className={ classes.container } >
+            <div className={ !isMobile ? classes.container : classes.mobileContainer } >
               { !isMobile && 
               <Grid item xs={12} md={3} lg={2} key={"123"}>
                 <div className={ classes.treeView }>
                   <TreeView slug={ slug }/>
                 </div>
               </Grid>
+              }
+              {
+                isMobile &&
+                  this.renderNavigationLinks() 
               }
               { hasOngoingMovies ?
                 <Grid item xs={12} md={12} lg={12} key={"456"}>
@@ -151,6 +155,22 @@ class Movies extends React.Component<Props, State> {
     this.initDescriptionState();
     this.hasOngoingMovies();
   }
+
+  /**
+   * Renders navigation links
+   */
+  private renderNavigationLinks = () => {
+    const { classes } = this.props;
+    return (
+      <div>
+        <a className={ classes.link } href = "/movies">{ strings.movie.movies }</a>
+        <a className={ classes.link } href = "sivut/vapaa-aika-kulttuuri/kino/infoa-elokuvateatteri-kinosta/">{ strings.movie.info }</a>
+        <a className={ classes.link } href = "https://ilokuvafestivaali.net/">{ strings.movie.festival }</a>
+        <a className={ classes.link } href = "sivut/vapaa-aika-kulttuuri/kino/kuvagalleria/">{ strings.movie.gallery }</a>
+        <a className={ classes.link } href = "sivut/vapaa-aika-kulttuuri/elokuvateatteri-kino/elokuvien-ikarajat/">{ strings.movie.ageLimits }</a>
+      </div>
+    )
+  } 
 
     /**
    * Check if there is any ongoing movies

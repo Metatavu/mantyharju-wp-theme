@@ -115,6 +115,15 @@ export default createStyles({
     width: "100%",
   },
 
+  mobileContainer: {
+    paddingTop: "20px",
+    paddingLeft: "15px",
+    margin: "0 auto",
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
+  },
+
   column: {
     paddingTop: "50px",
     paddingLeft: "125px",
@@ -173,7 +182,7 @@ export default createStyles({
   },
 
   link: {
-    paddingTop: 5,
+    paddingRight: 10,
     cursor: "pointer"
   },
 

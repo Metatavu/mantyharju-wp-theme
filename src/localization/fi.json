@@ -56,6 +56,9 @@
     "director": "Ohjaaja:",
     "cast": "Näyttelijät:",
     "noMovies": "Ei meneillään olevia elokuvia",
-    "noPremiers": "Ei tulevia ensi-iltoja"
+    "noPremiers": "Ei tulevia ensi-iltoja",
+    "info": "Info",
+    "gallery": "Galleria",
+    "ageLimits": "Ikärajat"
   }
 }
