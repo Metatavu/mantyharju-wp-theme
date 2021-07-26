@@ -110,7 +110,7 @@ class App extends React.Component<Props, State> {
               render={ (props) => (
               <Movies
                 lang={ language }
-                slug={ "elokuvateatteri-kino" }
+                slug={ "kino" }
               />
               )}
             />
@@ -120,7 +120,7 @@ class App extends React.Component<Props, State> {
               render={ (props) => (
               <Premiers
                 lang={ language }
-                slug={ "elokuvateatteri-kino" }
+                slug={ "/tulevat-ensi-illat" }
               />
               )}
             />

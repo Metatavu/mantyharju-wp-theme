@@ -104,17 +104,11 @@ class Premiers extends React.Component<Props, State> {
             <div className={ !isMobile ? classes.column : classes.mobileColumn }>
               <div className={ classes.line }></div>
               <div className={ !isMobile ? classes.container : classes.mobileContainer } >
-                { !isMobile &&
-                  <Grid item xs={ 12 } md={ 3 } lg={ 2 } key={"123"}>
-                    <div className={ classes.treeView }>
-                      <TreeView slug={ slug }/>
-                    </div>
-                  </Grid>
-                }
-                {
-                  isMobile &&
-                    this.renderNavigationLinks() 
-                }
+              <Grid item xs={ 12 } md={ 3 } lg={ 2 } key={"123"}>
+                <div className={ classes.treeView }>
+                  <TreeView slug={ slug }/>
+                </div>
+              </Grid>
                 {
                   hasPremiers ?
                   <Grid item xs={12} md={6} lg={7} key={"456"}>
@@ -297,22 +291,6 @@ class Premiers extends React.Component<Props, State> {
         return dateString; 
       }
   }
-
-  /**
-   * Renders navigation links
-   */
-  private renderNavigationLinks = () => {
-    const { classes } = this.props;
-    return (
-      <div>
-        <a className={ classes.link } href = "/movies">{ strings.movie.movies }</a>
-        <a className={ classes.link } href = "sivut/vapaa-aika-kulttuuri/kino/infoa-elokuvateatteri-kinosta/">{ strings.movie.info }</a>
-        <a className={ classes.link } href = "https://ilokuvafestivaali.net/">{ strings.movie.festival }</a>
-        <a className={ classes.link } href = "sivut/vapaa-aika-kulttuuri/kino/kuvagalleria/">{ strings.movie.gallery }</a>
-        <a className={ classes.link } href = "sivut/vapaa-aika-kulttuuri/elokuvateatteri-kino/elokuvien-ikarajat/">{ strings.movie.ageLimits }</a>
-      </div>
-    )
-  } 
 
   /**
    * Method for rendering movie cards
