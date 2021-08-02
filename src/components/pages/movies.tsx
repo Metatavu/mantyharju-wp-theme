@@ -236,11 +236,19 @@ class Movies extends React.Component<Props, State> {
    * Gets next showtime of a movie
    */
   private getNextShowTime = (showTimes: MovieACFShowtimes[]) => {
-
-    var min = Math.min.apply(null, showTimes.map(showtime => new Date(showtime.datetime).getTime() ));
-    const nextShowTime = showTimes.filter(showTime => new Date(showTime.datetime).getTime() === min);
-
+    const min = Math.min.apply(null, showTimes.map(showtime => this.parseShowTime(showtime)));
+    const nextShowTime = showTimes.filter(showTime => this.parseShowTime(showTime) === min);
     return nextShowTime;
+  }
+
+  /**
+   * Parses showtime field as unix timestamp
+   * 
+   * @param showTime showtime field
+   * @returns unix timestamp
+   */
+  private parseShowTime = (showTime: any) => {
+    return moment(String(showTime.datetime)).toDate().getTime();
   }
 
   /**
@@ -260,11 +268,11 @@ class Movies extends React.Component<Props, State> {
     }
 
     const hasOngoingMovies = movie.ACF.showtimes.some(showTime => {
-      return new Date(showTime.datetime).getTime() <= dateSoonNumber;
+      return this.parseShowTime(showTime) <= dateSoonNumber;
     });
 
     for (const showTime of movie.ACF.showtimes) {
-      if (new Date(showTime.datetime).getTime() > dateNow && !hasOngoingMovies) {
+      if (this.parseShowTime(showTime) > dateNow && !hasOngoingMovies) {
         return;
       }
     }
@@ -273,7 +281,7 @@ class Movies extends React.Component<Props, State> {
 
     movie.ACF.showtimes.forEach(showTime => {
       if (showTime.datetime) {
-        if (new Date(showTime.datetime).getTime() > dateNow) {
+        if (this.parseShowTime(showTime) > dateNow) {
           filteredShowTimes.push(showTime);
         }
       }
@@ -370,7 +378,7 @@ class Movies extends React.Component<Props, State> {
     const director = movie.ACF.director;
     const cast = movie.ACF.cast;
 
-    comingShowtimes.sort((a, b) => new Date(a.datetime).getTime() - new Date(b.datetime).getTime());
+    comingShowtimes.sort((a, b) => this.parseShowTime(a) - this.parseShowTime(b));
 
     return (
       <>
