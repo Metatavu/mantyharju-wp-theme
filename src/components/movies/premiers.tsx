@@ -1,24 +1,16 @@
 import * as React from "react";
-import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Dialog, DialogContent, DialogTitle, Grid, IconButton, Link, Typography, withStyles, WithStyles } from "@material-ui/core";
+import { Box, Button, Dialog, DialogContent, DialogTitle, Grid, IconButton, Typography, withStyles, WithStyles } from "@material-ui/core";
 import styles from "../../styles/premiers";
-import BasicLayout from "../BasicLayout";
 import ReactHtmlParser from "react-html-parser";
 import { Movie, MovieACFShowtimes } from "src/generated/client/src/models";
 import strings from "../../localization/strings";
 import CloseIcon from '@material-ui/icons/Close';
-import Masonry from 'react-masonry-css'
 import moment from "moment";
-import RightSideBar from "../generic/RightSideBar";
-import TreeView from "../generic/TreeView";
-import movies from "./movies";
 
 /**
  * Component props
  */
-interface Props extends WithStyles<typeof styles> {
-    slug: string;
-    lang: string;
-}
+interface Props extends WithStyles<typeof styles> {}
 
 /**
  * Component state
@@ -78,48 +70,32 @@ class Premiers extends React.Component<Props, State> {
       this.setState({ isMobile: window.innerWidth <= 760 });
     }
 
-
-  
-
-
   /**
    * Component render
    */
   public render() {
-    const { lang, classes, slug } = this.props;
+    const { classes } = this.props;
     const { isMobile, hasPremiers } = this.state;
 
     return (
       <>
         { this.renderVideoDialog() }
-        <BasicLayout lang={ lang } slug={ slug }>
-          <div className={ classes.heroImageDiv }>
-            <div
-              className={ classes.heroContent }>
-                <Typography variant="h1" className={ classes.heroText }>
-                  { strings.movie.comingPremiers }
+          <div className={ !isMobile ? classes.column : classes.mobileColumn }>
+            <div className={ !isMobile ? classes.container : classes.mobileContainer } >
+              {
+                hasPremiers ?
+                <Grid item xs={12} md={6} lg={7} key={"456"}>
+                  <div className={ !isMobile ? classes.content : classes.mobileContent }>
+                    { this.renderMovieCards() }
+                  </div>
+                </Grid>
+                :
+                <Typography variant="h3" component="h3">
+                  {strings.movie.noPremiers }
                 </Typography>
+              }
             </div>
           </div>
-            <div className={ !isMobile ? classes.column : classes.mobileColumn }>
-              <div className={ classes.line }></div>
-              <div className={ !isMobile ? classes.container : classes.mobileContainer } >
-              <Grid item xs={ 12 } md={ 3 } lg={ 2 } key={"123"}>
-                <div className={ classes.treeView }>
-                  <TreeView slug={ slug }/>
-                </div>
-              </Grid>
-                {
-                  hasPremiers ?
-                  <Grid item xs={12} md={6} lg={7} key={"456"}>
-                    <div className={ !isMobile ? classes.content : classes.mobileContent }>
-                      { this.renderMovieCards() }
-                    </div>
-                  </Grid> : <h1>{strings.movie.noPremiers }</h1>
-                }
-              </div>
-            </div> 
-        </BasicLayout>
       </>
     );
   }
@@ -366,9 +342,9 @@ class Premiers extends React.Component<Props, State> {
           </Button>
         </Typography>
         { openDescriptions[index] &&
-          <Typography >
+          <Box mt={ 2 } className={ classes.descriptionContainer }>
             { content }
-          </Typography>
+          </Box>
         }
         { movie.ACF.trailerurl &&
           <Button className={ classes.button } onClick={ () => this.toggleVideoDialog(movie.ACF.trailerurl)} >
@@ -384,33 +360,41 @@ class Premiers extends React.Component<Props, State> {
    */
   private renderVideoDialog = () => {
     const { classes } = this.props;
-    const { videoOpen, videoUrl, isMobile } = this.state;
+    const { videoOpen, videoUrl } = this.state;
 
     return (
       <Dialog
+        PaperProps={{
+          elevation: 0,
+          className: classes.dialogPaper
+        }}
         open={ videoOpen }
         onClose={ () => this.toggleVideoDialog() }
         aria-labelledby="dialog-title"
         aria-describedby="dialog-description"
+        maxWidth="xl"
+        className={ classes.trailerDialog }
       >
         <DialogTitle
           className={ classes.dialogTitle }
           disableTypography
           id="dialog-title"
         >
+          <Typography variant="h6">
+            { strings.movie.watchTrailer }
+          </Typography>
           <IconButton
-            className={ classes.closeButton }
-            size="small"
+            color="inherit"
             onClick={ () => this.toggleVideoDialog() }
           >
-            <CloseIcon />
+            <CloseIcon htmlColor="#fff" />
           </IconButton>
         </DialogTitle>
         <DialogContent
           className={ classes.dialogContent }
         >
           <iframe
-            className={ !isMobile ? classes.iFrame : classes.mobileiFrame }
+            className={ classes.iFrame }
             src={ videoUrl ? this.formatUrl(videoUrl) : "#" }
             allowFullScreen>
           </iframe>

@@ -1,35 +1,33 @@
 import * as React from "react";
-import { Box, Button, Card, CardContent, Dialog, DialogContent, DialogTitle, Grid, IconButton, Link, Typography, useMediaQuery, withStyles, WithStyles } from "@material-ui/core";
+import { Box, Button, Card, CardContent, CircularProgress, Dialog, DialogContent, DialogTitle, Grid, IconButton, Link, Typography, withStyles, WithStyles } from "@material-ui/core";
 import styles from "../../styles/movies";
-import BasicLayout from "../BasicLayout";
 import ReactHtmlParser from "react-html-parser";
 import { Movie, MovieACFShowtimes } from "src/generated/client/src/models";
 import strings from "../../localization/strings";
-import CloseIcon from '@material-ui/icons/Close';
-import Masonry from 'react-masonry-css'
+import CloseIcon from "@material-ui/icons/Close";
+import Masonry from "react-masonry-css";
 import moment from "moment";
-import TreeView from "../generic/TreeView";
 
 /**
  * Component props
  */
-interface Props extends WithStyles<typeof styles> {
-    slug: string;
-    lang: string;
-}
+interface Props extends WithStyles<typeof styles> {}
 
 /**
  * Component state
  */
 interface State {
+  loading: boolean;
   movies: Movie[];
   categories: any;
-  openDescriptions: Boolean[]
+  openDescriptions: Boolean[];
   videoOpen: boolean;
   videoUrl?: string;
   movieMedia: any;
   isMobile?: boolean
+  masonryColumns: number;
   hasOngoingMovies?: boolean;
+  sideContent?: React.ReactElement;
 }
 
 /**
@@ -45,79 +43,71 @@ class Movies extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
+      masonryColumns: 3,
+      loading: true,
       movies: [],
       openDescriptions: [],
       videoOpen: false,
       categories: [],
       movieMedia: []
     };
-    window.addEventListener("resize", this.checkScreenWidth);
   }
 
   /**
-   * Component did mount life-cycle handler
+   * Component did mount life cycle handler
    */
-  public componentDidMount = () => {
-    this.fetchData();
-    this.checkScreenWidth();
+  public componentDidMount = async () => {
+    window.addEventListener("resize", this.setPageLayout);
+    this.setPageLayout();
+    await this.fetchData();
+    this.setState({ loading: false });
   }
 
   /**
-   * Component did mount life-cycle handler
+   * Component did mount life cycle handler
    */
     public componentWillUnmount = () => {
-      window.removeEventListener("resize", this.checkScreenWidth);
+      window.removeEventListener("resize", this.setPageLayout);
     }
 
   /**
-   * Checks screen width
+   * Sets page layout according to screen width
    */
-  private checkScreenWidth = () => {
-    this.setState({ isMobile: window.innerWidth <= 1280 });
+  private setPageLayout = () => {
+    this.setState({
+      isMobile: window.innerWidth <= 1280,
+      masonryColumns: this.getMasonryColumnCount()
+    });
+  }
+
+  /**
+   * Returns column amount for Masonry
+   */
+  private getMasonryColumnCount = () => {
+    if (window.innerWidth <= 1280) {
+      return 1;
+    } else if (window.innerWidth > 1280 && window.innerWidth <= 1600) {
+      return 2;
+    } else {
+      return 3;
+    }
   }
 
   /**
    * Component render
    */
   public render() {
-    const { lang, classes, slug } = this.props;
-    const { isMobile, hasOngoingMovies } = this.state;
+    const { classes } = this.props;
+    const { isMobile } = this.state;
 
     return (
       <>
         { this.renderVideoDialog() }
-        <BasicLayout lang={ lang } slug={ slug }>
-          <div className={ classes.heroImageDiv }>
-            <div className={ classes.heroContent }>
-              <Typography variant="h1" className={ classes.heroText }>
-                { strings.movie.kinoName }
-              </Typography>
-            </div>
+        <div className={ !isMobile ? classes.column : classes.mobileColumn }>
+          <div className={ !isMobile ? classes.container : classes.mobileContainer }>
+            { this.renderContent() }
           </div>
-          <div className={ !isMobile ? classes.column : classes.mobileColumn }>
-            <div className={ classes.line }></div>
-            <div className={ !isMobile ? classes.container : classes.mobileContainer } >
-              <Grid item xs={12} md={3} lg={2} key={"123"}>
-                <div className={ classes.treeView }>
-                  <TreeView slug={ slug }/>
-                </div>
-              </Grid>
-              { hasOngoingMovies ?
-                <Grid item xs={12} md={12} lg={12} key={"456"}>
-                  <div className={ classes.kinoInformation }>
-                    <Masonry
-                      breakpointCols={ !isMobile ? 4 : 1 }
-                      className={ classes.masornyGrid }
-                      columnClassName={ classes.masornyColumn }
-                    >
-                      { this.renderMovieCards() }
-                    </Masonry>
-                  </div>
-                </Grid> : <h1>{strings.movie.noMovies }</h1>
-              }
-            </div>
-          </div>
-        </BasicLayout>
+        </div>
       </>
     );
   }
@@ -127,22 +117,21 @@ class Movies extends React.Component<Props, State> {
    */
   private fetchData = async () => {
     try {
-      const movieResponse = await fetch("/wp-json/wp/v2/mantyharju-elokuva?per_page=100");
-      const categoryResponse = await fetch("/wp-json/wp/v2/mantyharju-elokuva-categories?per_page=100");
-      const movieMediaResponse = await fetch("/wp-json/wp/v2/media?per_page=100");
-
-      const categories = await categoryResponse.json();
-      const movies = await movieResponse.json();
-      const movieMedia = await movieMediaResponse.json();
+      const [ movies, categories, movieMedia ] = await Promise.all([
+        this.fetchFromUrl("/wp-json/wp/v2/mantyharju-elokuva?per_page=100"),
+        this.fetchFromUrl("/wp-json/wp/v2/mantyharju-elokuva-categories?per_page=100"),
+        this.fetchFromUrl("/wp-json/wp/v2/media?per_page=100")
+      ]);
 
       this.setState({
         movies,
         categories,
         movieMedia
-      })
+      });
+
       this.hidePageLoader();
     } catch(error) {
-      console.error(error)
+      console.error(error);
       this.hidePageLoader();
     }
 
@@ -150,24 +139,23 @@ class Movies extends React.Component<Props, State> {
     this.hasOngoingMovies();
   }
 
+  /**
+   * Fetch data from given URL
+   *
+   * @param url URL
+   */
+  private fetchFromUrl = async (url: string) => {
+    const response = await fetch(url);
+    return await response.json();
+  }
+
     /**
    * Check if there is any ongoing movies
    */
     private hasOngoingMovies = () => {
-      const { movies } = this.state;
-      const ongoingMovies = [];
-  
-      movies.forEach(movie => {
-        if (this.filterShowTimes(movie)) {
-          ongoingMovies.push(movie);
-        }
-      })
-  
-      if (ongoingMovies.length > 0) {
-        this.setState({ hasOngoingMovies: true });
-      } else {
-        this.setState({ hasOngoingMovies: false});
-      }
+      const hasOngoingMovies = this.state.movies.some(movie => !!this.filterShowTimes(movie).length);
+
+      this.setState({ hasOngoingMovies });
     }
 
   /**
@@ -255,39 +243,19 @@ class Movies extends React.Component<Props, State> {
   * 
   * @param movie movie whitch showtimes are filtered
   * @returns filtered showtimes
- */
+  */
   private filterShowTimes = (movie: Movie) => {
-    const dateSoon = new Date();
-    dateSoon.setDate(dateSoon.getDate() + 30);
-
-    const dateSoonNumber = dateSoon.getTime();
-    const dateNow = new Date().getTime();
-    
     if (!movie.ACF.showtimes) {
-      return;
+      return [];
     }
 
-    const hasOngoingMovies = movie.ACF.showtimes.some(showTime => {
-      return this.parseShowTime(showTime) <= dateSoonNumber;
+    const now = moment().valueOf();
+    const monthFromNow = moment(now).add(1, "month").valueOf();
+
+    return movie.ACF.showtimes.filter(showTime => {
+      const parsedShowTime = this.parseShowTime(showTime);
+      return now < parsedShowTime && parsedShowTime <= monthFromNow;
     });
-
-    for (const showTime of movie.ACF.showtimes) {
-      if (this.parseShowTime(showTime) > dateNow && !hasOngoingMovies) {
-        return;
-      }
-    }
-
-    const filteredShowTimes: MovieACFShowtimes[] = []
-
-    movie.ACF.showtimes.forEach(showTime => {
-      if (showTime.datetime) {
-        if (this.parseShowTime(showTime) > dateNow) {
-          filteredShowTimes.push(showTime);
-        }
-      }
-    });
-
-    return filteredShowTimes;
   }
 
   /**
@@ -332,28 +300,70 @@ class Movies extends React.Component<Props, State> {
   }
 
   /**
-   * Method for rendering event cards
+   * Renders content
    */
-  private renderMovieCards = () => {
+  private renderContent = () => {
     const { classes } = this.props;
-    const { movies } = this.state;
+    const { loading, masonryColumns, hasOngoingMovies, movies } = this.state;
 
-    return movies.map((movie: Movie, index: number) => {
-      const showTimes = this.filterShowTimes(movie);
+    if (loading) {
+      return (
+        <Box className={ classes.loadingIconContainer }>
+          <CircularProgress/>
+        </Box>
+      );
+    }
 
-        return (
-          (showTimes && showTimes.length !== 0) ?
-              <Card
-                key={ index }
-                className={ classes.card }
-              >
-                <CardContent>
-                  { this.renderCardContent(movie, index, showTimes) }
-                </CardContent>
-              </Card>
-            : null
-          );
-    });
+    if (!hasOngoingMovies) {
+      return (
+        <Box className={ classes.loadingIconContainer }>
+          <Typography variant="h3" component="h3">
+            { strings.movie.noMovies }
+          </Typography>
+        </Box>
+      );
+    }
+
+    return (
+      <Grid item xs={ 12 } md={ 12 } lg={ 12 }>
+        <Box className={ classes.kinoInformation }>
+          <Masonry
+            breakpointCols={ masonryColumns }
+            className={ classes.masornyGrid }
+            columnClassName={ classes.masornyColumn }
+          >
+            { movies.map(this.renderMovieCard) }
+          </Masonry>
+        </Box>
+      </Grid>
+    );
+  }
+
+  /**
+   * Method for rendering movie card
+   *
+   * @param movie movie
+   * @param index index
+   */
+  private renderMovieCard = (movie: Movie, index: number) => {
+    const { classes } = this.props;
+
+    const showTimes = this.filterShowTimes(movie);
+
+    if (!showTimes.length) {
+      return null;
+    }
+
+    return (
+      <Card
+        key={ index }
+        className={ classes.card }
+      >
+        <CardContent>
+          { this.renderCardContent(movie, index, showTimes) }
+        </CardContent>
+      </Card>
+    );
   }
 
   /**
@@ -391,48 +401,62 @@ class Movies extends React.Component<Props, State> {
             />
           </Typography>
         }
-        <Typography gutterBottom variant="h4">
+        <Typography gutterBottom variant="h5">
           { title }
         </Typography>
-        <Typography gutterBottom variant="h5">
+        <Typography gutterBottom variant="body1">
           { strings.movie.nextShowTime } 
         </Typography>
-        <Typography >
+        <Typography variant="h6">
           { showTimes.length > 1 || movie.ACF.ticketsalesurl ? this.parseDate(nextShowTime[0].datetime, false) : this.parseDate(nextShowTime[0].datetime, true) } 
         </Typography>
         { ageLimit &&
           <Box mt={ 1 }>
-            <b>{ strings.movie.ageLimit}</b> { ageLimit }
+            <Typography component="p">
+            <b>{ strings.movie.ageLimit }</b> { ageLimit }
+            </Typography>
           </Box>
         }
         { runTime &&
           <Box mt={ 1 }>
-            <b>{ strings.movie.duration}</b> { runTime }
+            <Typography component="p">
+              <b>{ strings.movie.duration }</b> { runTime }
+            </Typography>
           </Box>
         }
         { category &&
           <Box mt={ 1 }>
-            <b>{ strings.movie.category}</b> { category }
+            <Typography component="p">
+              <b>{ strings.movie.category }</b> { category }
+            </Typography>
           </Box>
         }
         { cast &&
             <Box mt={ 1 }>
-              <b>{ strings.movie.cast}</b> { cast }
+              <Typography component="p">
+                <b>{ strings.movie.cast }</b> { cast }
+              </Typography>
             </Box>
         }
         { director &&
             <Box mt={ 1 }>
-              <b>{ strings.movie.director}</b> { director }
+              <Typography component="p">
+                <b>{ strings.movie.director }</b> { director }
+              </Typography>
             </Box>
         }
         { ticketPrice &&
           <Box mt={ 1 }>
-            <b>{ strings.movie.price}</b> { ticketPrice }
+            <Typography component="p">
+              <b>{ strings.movie.price }</b> { ticketPrice }
+            </Typography>
           </Box>
         }
         { comingShowtimes.length > 0 &&
-          <Box mt={ 1 }> 
-            <b>{ strings.movie.showTimes }</b>
+          <Box mt={ 1 }>
+            <Typography component="p">
+              <b>{ strings.movie.showTimes }</b>
+            </Typography>
           </Box>
         }
         <Box mt={ 1 }>
@@ -449,9 +473,11 @@ class Movies extends React.Component<Props, State> {
           </Button>
         </Box>
         { openDescriptions[index] &&
-          <Typography >
-            { content }
-          </Typography>
+          <Box mt={ 2 } className={ classes.descriptionContainer }>
+            <Typography variant="body1">
+              { content }
+            </Typography>
+          </Box>
         }
         { movie.ACF.trailerurl &&
           <Button className={ classes.button } onClick={ () => this.toggleVideoDialog(movie.ACF.trailerurl)} >
@@ -460,13 +486,13 @@ class Movies extends React.Component<Props, State> {
         }
         {
           movie.ACF.ticketsalesurl &&
-            <Typography >
-            <Link href={ movie.ACF.ticketsalesurl }target="_blank">
+          <Box>
+            <Link href={ movie.ACF.ticketsalesurl } target="_blank">
               <Button className={ classes.button }>
                 { strings.movie.buyTickets }
               </Button>
             </Link>
-          </Typography>
+          </Box>
         }
       </>
     );
@@ -477,33 +503,41 @@ class Movies extends React.Component<Props, State> {
    */
   private renderVideoDialog = () => {
     const { classes } = this.props;
-    const { videoOpen, videoUrl, isMobile } = this.state;
+    const { videoOpen, videoUrl } = this.state;
 
     return (
       <Dialog
+        PaperProps={{
+          elevation: 0,
+          className: classes.dialogPaper
+        }}
         open={ videoOpen }
         onClose={ () => this.toggleVideoDialog() }
         aria-labelledby="dialog-title"
         aria-describedby="dialog-description"
+        maxWidth="xl"
+        className={ classes.trailerDialog }
       >
         <DialogTitle
           className={ classes.dialogTitle }
           disableTypography
           id="dialog-title"
         >
+          <Typography variant="h6">
+            { strings.movie.watchTrailer }
+          </Typography>
           <IconButton
-            className={ classes.closeButton }
-            size="small"
+            color="inherit"
             onClick={ () => this.toggleVideoDialog() }
           >
-            <CloseIcon />
+            <CloseIcon htmlColor="#fff" />
           </IconButton>
         </DialogTitle>
         <DialogContent
           className={ classes.dialogContent }
         >
           <iframe
-            className={ !isMobile ? classes.iFrame : classes.mobileiFrame }
+            className={ classes.iFrame }
             src={ videoUrl ? this.formatUrl(videoUrl) : "#" }
             allowFullScreen>
           </iframe>

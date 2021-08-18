@@ -2,7 +2,6 @@ import { createStyles } from "@material-ui/core";
 import theme from "./theme";
 import hero from "../resources/img/mantyharju-images/mantyharju-images/kino_1920x334.jpg";
 import strings from "../localization/strings";
-import { Height } from "@material-ui/icons";
 
 const { breakpoints } = theme;
 
@@ -102,8 +101,6 @@ export default createStyles({
   },
 
   container: {
-    paddingTop: "50px",
-    paddingLeft: "15px",
     margin: "0 auto",
     display: "flex",
     flexDirection: "row",
@@ -121,8 +118,6 @@ export default createStyles({
   },
 
   column: {
-    paddingTop: "50px",
-    paddingLeft: "125px",
     margin: "0 auto",
     display: "flex",
     flexDirection: "column",
@@ -156,14 +151,11 @@ export default createStyles({
   },
 
   dialogTitle: {
-    margin: "0",
-    background: "grey"
-  },
-
-  closeButton: {
-    position: "absolute",
-    right: 0,
-    top: -3,
+    display: "flex",
+    margin: 0,
+    justifyContent: "space-between",
+    alignItems: "center",
+    color: "#fff"
   },
 
   dialogContent: {
@@ -205,19 +197,19 @@ export default createStyles({
   },
 
   iFrame: {
-    width: 600,
-    height: 600,
-    frameBorder: 0,
-    allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
-    title: strings.movie.watchTrailer
-  },
-
-  mobileiFrame: {
     width: "100%",
     height: 400,
-    frameBorder: 0,
-    allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
-    title: strings.movie.watchTrailer
+    [breakpoints.up("md")]: {
+      height: 620
+    },
+    [breakpoints.up("lg")]: {
+      width: 1200,
+      height: 720
+    },
+    [breakpoints.up("xl")]: {
+      width: 1720,
+      height: 840
+    }
   },
 
   treeView: {
@@ -228,5 +220,28 @@ export default createStyles({
 
   title: {
     paddingBottom: 30
+  },
+
+  trailerDialog: {
+    width: "100%",
+    "& .MuiDialog-paperWidthXl": {
+      [breakpoints.down("md")]: {
+        width: "100%"
+      },
+    }
+  },
+
+  descriptionContainer: {
+    "& p.MuiTypography-body1 p": {
+      fontSize: 14,
+      [breakpoints.up("xl")]: {
+        fontSize: 16,
+      },
+    }
+  },
+
+  dialogPaper: {
+    backgroundColor: "rgba(0,0,0,0)"
   }
+
 });
