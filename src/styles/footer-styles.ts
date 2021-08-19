@@ -15,9 +15,9 @@ export default createStyles({
         display: "flex",
         flexDirection: "row",
         justifyContent: "center",
-        padding: 0,
+        padding: sidePaddingSm,
         [breakpoints.up("sm")]: {
-            padding: 0
+            padding: sidePaddingMd
         },
         [breakpoints.up("md")]: {
             padding: sidePaddingLg

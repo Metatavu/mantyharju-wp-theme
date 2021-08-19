@@ -1,9 +1,9 @@
 import * as React from "react";
 import BasicLayout from "../BasicLayout";
-import { Container, WithStyles, withStyles, Button, Breadcrumbs, Link, Typography, Grid, CircularProgress } from "@material-ui/core";
+import { Container, WithStyles, withStyles, Button, Breadcrumbs, Link, Grid, CircularProgress } from "@material-ui/core";
 import styles from "../../styles/page-content";
 import ApiUtils from "../../../src/utils/ApiUtils";
-import { Page, Post, MenuLocationData, PostTitle, CustomPage } from "../../../src/generated/client/src";
+import { Page, Post, PostTitle, CustomPage } from "../../../src/generated/client/src";
 import ReactHtmlParser, { convertNodeToElement } from "react-html-parser";
 import { DomElement } from "domhandler";
 import strings from "../../localization/strings";
@@ -15,6 +15,8 @@ import TreeView from "../generic/TreeView";
 import RightSideBar from "../generic/RightSideBar";
 import hero from "../../resources/img/postHeader.jpg";
 import ReadSpeaker from "../generic/ReadSpeaker";
+import Movies from "../movies/movies";
+import Premiers from "../movies/premiers";
 
 /**
  * Interface representing component properties
@@ -42,6 +44,7 @@ interface State {
   pages: CustomPage[];
   postThumbnail: string;
   postThumbnailLoading: boolean;
+  isMoviePage?: boolean;
 }
 
 /**
@@ -105,39 +108,48 @@ class PostPage extends React.Component<Props, State> {
     const isContent = (checkContent ? (checkContent[0] === 0 ? false : true) : false);
     const heroDivStyle = postThumbnailLoading ? { background: "#eee"  } : { backgroundImage: `url(${ postThumbnail ? postThumbnail : hero })` };
     return (
-      <BasicLayout lang={ lang } slug={ slug } title={ this.setTitleSource() }>
-        <div className={ classes.heroImageDiv } style={heroDivStyle}>
-          <h1 className={ classes.heroText }>{ currentPage ? ReactHtmlParser(currentPage.title ? currentPage.title.rendered || "" : "") : "..." }</h1>
+      <BasicLayout
+        lang={ lang }
+        slug={ slug }
+        title={ this.setTitleSource() }
+      >
+        <div className={ classes.heroImageDiv } style={ heroDivStyle }>
+          <h1 className={ classes.heroText }>
+            { currentPage ? ReactHtmlParser(currentPage.title ? currentPage.title.rendered || "" : "") : "..." }
+          </h1>
         </div>
         <div className={ classes.wrapper }>
           <div className={ classes.pageContent }>
             <div className={ classes.breadcrumb }>
-              <Grid container spacing={0}>
-                <Grid item xs={12} md={8} key={"123"}>
+              <Grid container spacing={ 0 }>
+                <Grid item xs={ 12 } md={ 8 } key={ "123" }>
                   <Breadcrumbs separator=">">
                     { this.state.breadcrumb && this.renderBreadcrumb() }
                   </Breadcrumbs>
                 </Grid>
-                <Grid item xs={12} md={4} key={"456"}>
+                <Grid item xs={ 12 } md={ 4 } key={ "456" }>
                   <ReadSpeaker />
                 </Grid>
               </Grid>
             </div>
             <div id="readthis" className={ classes.columns }>
-              <Grid container spacing={0}>
-                <Grid item xs={12} md={3} lg={2} key={"123"}>
+              <Grid container spacing={ 0 }>
+                <Grid item xs={ 12 } md={ 3 } lg={ 2 } key={ "123" }>
                   <div className="rs_skip">
                     <TreeView slug={ slug }/>
                   </div>
                 </Grid>
-                <Grid item xs={12} md={6} lg={7} key={"456"}>
-                  <div className={ classes.contentarea } >       
+                <Grid item xs={ 12 } md={ 6 } lg={ 7 } key={ "456" }>
+                  <div className={ classes.contentarea }>       
                       { this.renderContent() }
                   </div>
                 </Grid>
-                <Grid item xs={12} md={3} lg={3} key={"789"}>
+                <Grid item xs={ 12 } md={ 3 } lg={ 3 } key={ "789" }>
                   { sideContent &&
-                  <div className={ classes.sidebar } style={ isContent ? { display: "block" } : { display: "none" } }>
+                  <div
+                    className={ classes.sidebar }
+                    style={ isContent ? { display: "block" } : { display: "none" } }
+                  >
                     <RightSideBar content={ sideContent } />
                   </div>
                   }
@@ -171,10 +183,16 @@ class PostPage extends React.Component<Props, State> {
    */
   private renderContent = () => {
     const { classes } = this.props;
+    const { isMoviePage } = this.state;
+
     const page = this.state.currentPage;
     return (
       <Container className={ classNames( classes.root, this.state.isArticle && "article") }>
-        <h2>{ page ? ReactHtmlParser(page.title ? page.title.rendered || "" : "") : null }</h2>
+        { !isMoviePage &&
+          <h2>
+            { page ? ReactHtmlParser(page.title ? page.title.rendered || "" : "") : null }
+          </h2>
+        }
         { this.renderPostContent() }
       </Container>
     );
@@ -372,6 +390,18 @@ class PostPage extends React.Component<Props, State> {
    * @param index DomElement index
    */
   private transform = (node: DomElement, index: number) => {
+    const content = this.getElementTextContent(node);
+
+    if (content && content.indexOf("[movies]") > -1) {
+      this.setState({ isMoviePage: true });
+      return <Movies/>;
+    }
+
+    if (content && content.indexOf("[premiers]") > -1) {
+      this.setState({ isMoviePage: true });
+      return <Premiers/>;
+    }
+
     return convertNodeToElement(node, index, this.transform);
   }
 

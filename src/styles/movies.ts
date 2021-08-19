@@ -1,8 +1,6 @@
 import { createStyles } from "@material-ui/core";
 import theme from "./theme";
 import hero from "../resources/img/mantyharju-images/mantyharju-images/kino_1920x334.jpg";
-import strings from "../localization/strings";
-import { Height } from "@material-ui/icons";
 
 const { breakpoints } = theme;
 
@@ -88,7 +86,13 @@ export default createStyles({
   },
 
   card: {
-    marginBottom: "15px",
+    marginBottom: 15,
+    "& p.MuiTypography-body1": {
+      fontSize: 14,
+      [breakpoints.up("xl")]: {
+        fontSize: 16,
+      },
+    }
   },
 
   media: {
@@ -97,27 +101,29 @@ export default createStyles({
 
   masornyGrid: {
     display: "flex",
-    marginLeft: "-15px",
+    [breakpoints.up("md")]: {
+      marginLeft: "-15px",
+    },
     width: "100%"
   },
 
   masornyColumn: {
-    paddingLeft: "15px",
+    [breakpoints.up("md")]: {
+      paddingLeft: 15,
+    },
     backgroundClip: "padding-box"
   },
 
   container: {
-    paddingTop: "50px",
-    paddingLeft: "15px",
     margin: "0 auto",
     display: "flex",
     flexDirection: "row",
     width: "100%",
+    height: "100%"
   },
 
   mobileContainer: {
-    paddingTop: "20px",
-    paddingLeft: "15px",
+    paddingTop: 20,
     margin: "0 auto",
     display: "flex",
     flexDirection: "column",
@@ -125,8 +131,7 @@ export default createStyles({
   },
 
   column: {
-    paddingTop: "50px",
-    paddingLeft: "125px",
+    height: "100%",
     margin: "0 auto",
     display: "flex",
     flexDirection: "column",
@@ -134,7 +139,7 @@ export default createStyles({
   },
 
   mobileColumn: {
-    paddingTop: "50px",
+    paddingTop: 50,
     margin: "0 auto",
     display: "flex",
     flexDirection: "column",
@@ -146,21 +151,17 @@ export default createStyles({
   },
 
   button: {
-    color: "primary",
-    variant: "contained",
+    width: "100%",
     marginTop: theme.spacing(1),
     height: 35
   },
 
   dialogTitle: {
-    margin: "0",
-    background: "grey"
-  },
-
-  closeButton: {
-    position: "absolute",
-    right: 0,
-    top: -3,
+    display: "flex",
+    margin: 0,
+    justifyContent: "space-between",
+    alignItems: "center",
+    color: "#fff"
   },
 
   dialogContent: {
@@ -195,19 +196,58 @@ export default createStyles({
   },
 
   iFrame: {
-    width: 600,
-    height: 600,
-    frameBorder: 0,
-    allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
-    title: strings.movie.watchTrailer
-  },
-
-  mobileiFrame: {
     width: "100%",
     height: 400,
-    frameBorder: 0,
-    allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
-    title: strings.movie.watchTrailer
+    [breakpoints.up("md")]: {
+      height: 620
+    },
+    [breakpoints.up("lg")]: {
+      width: 1200,
+      height: 720
+    },
+    [breakpoints.up("xl")]: {
+      width: 1720,
+      height: 840
+    }
+  },
+
+  sidebar: {
+    flex: 1,
+    backgroundColor: "#e4e9f7",
+    padding: "2rem"
+  },
+
+  loadingIconContainer: {
+    flex: 1,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingBottom: theme.spacing(2),
+    [breakpoints.up("md")]: {
+      paddingBottom: 0
+    }
+  },
+
+  descriptionContainer: {
+    "& p.MuiTypography-body1 p": {
+      fontSize: 14,
+      [breakpoints.up("xl")]: {
+        fontSize: 16,
+      },
+    }
+  },
+
+  trailerDialog: {
+    width: "100%",
+    "& .MuiDialog-paperWidthXl": {
+      [breakpoints.down("md")]: {
+        width: "100%"
+      },
+    }
+  },
+
+  dialogPaper: {
+    backgroundColor: "rgba(0,0,0,0)"
   }
 
 });
