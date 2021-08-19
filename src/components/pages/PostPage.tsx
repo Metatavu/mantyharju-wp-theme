@@ -394,7 +394,7 @@ class PostPage extends React.Component<Props, State> {
 
     if (content && content.indexOf("[movies]") > -1) {
       this.setState({ isMoviePage: true });
-      return <Movies />;
+      return <Movies/>;
     }
 
     if (content && content.indexOf("[premiers]") > -1) {
