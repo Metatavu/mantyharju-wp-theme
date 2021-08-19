@@ -242,6 +242,18 @@ export default createStyles({
 
   dialogPaper: {
     backgroundColor: "rgba(0,0,0,0)"
+  },
+
+  loadingIconContainer: {
+    flex: 1,
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingBottom: theme.spacing(2),
+    [breakpoints.up("md")]: {
+      paddingBottom: 0
+    }
   }
 
 });
