@@ -84,7 +84,7 @@ class Premiers extends React.Component<Props, State> {
             <div className={ !isMobile ? classes.container : classes.mobileContainer } >
               {
                 hasPremiers ?
-                <Grid item xs={12} md={6} lg={7} key={"456"}>
+                <Grid item xs={ 12 } md={ 6 } lg={ 7 } key={ "456" }>
                   <div className={ !isMobile ? classes.content : classes.mobileContent }>
                     { this.renderMovieCards() }
                   </div>
