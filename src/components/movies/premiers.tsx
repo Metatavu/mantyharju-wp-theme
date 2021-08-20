@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Box, Button, Dialog, DialogContent, DialogTitle, Grid, IconButton, Typography, withStyles, WithStyles } from "@material-ui/core";
+import { Box, Button, CircularProgress, Dialog, DialogContent, DialogTitle, Grid, IconButton, Typography, withStyles, WithStyles } from "@material-ui/core";
 import styles from "../../styles/premiers";
 import ReactHtmlParser from "react-html-parser";
 import { Movie, MovieACFShowtimes } from "src/generated/client/src/models";
@@ -16,6 +16,7 @@ interface Props extends WithStyles<typeof styles> {}
  * Component state
  */
 interface State {
+  loading: boolean;
   movies: Movie[];
   categories: any;
   openDescriptions: Boolean[]
@@ -39,6 +40,7 @@ class Premiers extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
+      loading: true,
       movies: [],
       openDescriptions: [],
       videoOpen: false,
@@ -75,7 +77,15 @@ class Premiers extends React.Component<Props, State> {
    */
   public render() {
     const { classes } = this.props;
-    const { isMobile, hasPremiers } = this.state;
+    const { isMobile, hasPremiers, loading } = this.state;
+
+    if (loading) {
+      return (
+        <Box className={ classes.loadingIconContainer }>
+          <CircularProgress/>
+        </Box>
+      );
+    }
 
     return (
       <>
@@ -84,11 +94,9 @@ class Premiers extends React.Component<Props, State> {
             <div className={ !isMobile ? classes.container : classes.mobileContainer } >
               {
                 hasPremiers ?
-                <Grid item xs={ 12 } md={ 6 } lg={ 7 } key={ "456" }>
-                  <div className={ !isMobile ? classes.content : classes.mobileContent }>
-                    { this.renderMovieCards() }
-                  </div>
-                </Grid>
+                <Box className={ !isMobile ? classes.content : classes.mobileContent }>
+                  { this.renderMovieCards() }
+                </Box>
                 :
                 <Typography variant="h3" component="h3">
                   {strings.movie.noPremiers }
@@ -105,6 +113,7 @@ class Premiers extends React.Component<Props, State> {
    */
   private fetchData = async () => {
     try {
+      this.setState({ loading: true });
       const movieResponse = await fetch("/wp-json/wp/v2/mantyharju-elokuva?per_page=100");
       const categoryResponse = await fetch("/wp-json/wp/v2/mantyharju-elokuva-categories?per_page=100");
       const movieMediaResponse = await fetch("/wp-json/wp/v2/media?per_page=100");
@@ -116,7 +125,8 @@ class Premiers extends React.Component<Props, State> {
       this.setState({
         movies,
         categories,
-        movieMedia
+        movieMedia,
+        loading: false
       })
       this.hidePageLoader();
     } catch(error) {
@@ -225,7 +235,7 @@ class Premiers extends React.Component<Props, State> {
     }
 
     for (const showTime of showTimes) {
-      if (new Date(showTime.datetime).getTime() < dateNow) {
+      if (this.parseShowTime(showTime) < dateNow) {
         return;
       }
     }
@@ -460,6 +470,18 @@ class Premiers extends React.Component<Props, State> {
       }, 500);
     }
   }
+
+  /**
+   * Parses showtime field as unix timestamp
+   * 
+   * @param showTime showtime field
+   * @returns unix timestamp
+   */
+    private parseShowTime = (showTime: any) => {
+      return moment(String(showTime.datetime)).toDate().getTime();
+    }
+
+    
 }
 
 export default withStyles(styles)(Premiers);
