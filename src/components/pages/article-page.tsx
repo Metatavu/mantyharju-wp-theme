@@ -51,7 +51,6 @@ class ArticlePage extends React.Component<Props, State> {
    */
   public componentDidMount = () => {
     this.loadContent();
-    this.hidePageLoader();
   }
 
   /**
@@ -92,22 +91,16 @@ class ArticlePage extends React.Component<Props, State> {
     const { lang, slug } = this.props;
     const api = ApiUtils.getApi();
 
-    const apiCalls = await Promise.all([
-      api.getWpV2Posts({ lang: [ lang ], slug: [ slug ], per_page: 1 }),
-      api.getPostThumbnail({ slug: slug })
-    ]);
+    api.getWpV2Posts({ lang: [ lang ], slug: [ slug ], per_page: 1 }).then((res) => {
+      const post = res ? res[0] : undefined;
+      const postTitle = this.getPostTitle(post);
+      const postContent = this.getPostContent(post);
+      this.setState({ postTitle, postContent, loading: false });
+      this.hidePageLoader();
+    });
 
-    const post = apiCalls ? apiCalls[0][0] : undefined;
-    const postThumbnail = apiCalls[1];
-    const postTitle = this.getPostTitle(post);
-    const postContent = this.getPostContent(post);
-
-    this.setState({
-      post: post,
-      postTitle: postTitle,
-      postContent: postContent,
-      postThumbnail: postThumbnail,
-      loading: false
+    api.getPostThumbnail({ slug: slug }).then((postThumbnail) => {
+      this.setState({ postThumbnail });
     });
   }
 

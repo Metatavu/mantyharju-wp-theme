@@ -34,5 +34,33 @@
     "successfullyAdded": "Tapahtuma lisätty onnistuneesti!",
     "errorWhenAddingEvent": "Virhe tapahtuman lisäämisessä, tarkista pakolliset kentät ja yritä uudelleen",
     "errorWhenAddingPlace": "Virhe paikan lisäämisessä, tarkista pakolliset kentät ja yritä uudelleen"
+  },
+  "movie": {
+    "buyTickets": "Osta liput",
+    "showDescription": "Näytä Kuvaus",
+    "hideDescription": "Piilota Kuvaus",
+    "movies": "Elokuvat",
+    "duration": "kesto:",
+    "category": "Luokitus:",
+    "noReleaseDate": "Ei julkaisupäiväystä",
+    "price": "Hinta ovelta:",
+    "showTimes": "Muita näytösaikoja:",
+    "watchTrailer": "Katso traileri",
+    "nextShowTime": "Seuraava näytösaika:",
+    "movieTheatre": "Elokuvateatteri Kino",
+    "ongoingMovies": "Meneillään olevat elokuvat",
+    "festival": "Ilokuvafestivaali",
+    "comingPremiers": "Tulevat ensi-illat",
+    "premier": "Ensi ilta:",
+    "ageLimit": "Ikäraja:",
+    "director": "Ohjaaja:",
+    "cast": "Näyttelijät:",
+    "noMovies": "Ei meneillään olevia elokuvia",
+    "noPremiers": "Ei tulevia ensi-iltoja",
+    "info": "Info",
+    "gallery": "Galleria",
+    "ageLimits": "Ikärajat",
+    "coming": "Tulossa",
+    "kinoName": "Elokuvateatteri Kino"
   }
 }

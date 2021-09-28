@@ -9,7 +9,7 @@ import { Page, Post, MenuLocationData, PostTitle, Attachment, CustomPage } from 
 import strings from "../../localization/strings";
 import * as moment from "moment";
 import * as classNames from "classnames";
-import hero from "../../resources/img/postHeader.png";
+import hero from "../../resources/img/postHeader.jpg";
 import ReadSpeaker from '../generic/ReadSpeaker';
 
 /**
@@ -33,7 +33,6 @@ interface State {
   currentPage?: Page;
   page?: Page;
   loading: boolean;
-  nav?: MenuLocationData;
   breadcrumb: Breadcrumb[];
   pageTitle?: PostTitle;
   title: string;
@@ -44,6 +43,7 @@ interface State {
   mainContent?: React.ReactElement;
   sideContent?: React.ReactElement;
   postThumbnail: string;
+  postThumbnailLoading: boolean;
 }
 
 /**
@@ -74,7 +74,8 @@ class PostsPage extends React.Component<Props, State> {
       secondPageCategoryId: 6,
       limitedPosts: [],
       pages: [],
-      postThumbnail: ""
+      postThumbnail: "",
+      postThumbnailLoading: false
     };
   }
 
@@ -99,11 +100,12 @@ class PostsPage extends React.Component<Props, State> {
    */
   public render() {
     const { lang, slug, classes } = this.props;
-    const { currentPage, postThumbnail } = this.state;
+    const { currentPage, postThumbnail, postThumbnailLoading } = this.state;
+    const heroDivStyle = postThumbnailLoading ? { background: "#eee"  } : { backgroundImage: `url(${ postThumbnail ? postThumbnail : hero })` };
     return (
       <BasicLayout lang={ lang } slug={ slug } title={ this.setTitleSource() }>
-        <div className={ classes.heroImageDiv } style={{ backgroundImage: `url(${ postThumbnail ? postThumbnail : hero })` }}>
-          <h1 className={ classes.heroText }>{ currentPage ? ReactHtmlParser(currentPage.title ? currentPage.title.rendered || "" : "") : null }</h1>
+        <div className={ classes.heroImageDiv } style={heroDivStyle}>
+          <h1 className={ classes.heroText }>{ currentPage ? ReactHtmlParser(currentPage.title ? currentPage.title.rendered || "" : "") : "..." }</h1>
         </div>
         <div className={ classes.wrapper }>
           <div className={ classes.pageContent }>
@@ -160,20 +162,6 @@ class PostsPage extends React.Component<Props, State> {
   }
 
   /**
-   * Render content method
-   */
-  private renderContent = () => {
-    const { classes } = this.props;
-    const page = this.state.currentPage;
-    return (
-      <Container className={ classNames( classes.root ) }>
-        <h2>{ page ? ReactHtmlParser(page.title ? page.title.rendered || "" : "") : null }</h2>
-        { this.renderPostContent() }
-      </Container>
-    );
-  }
-
-  /**
    * Set html source for page content
    */
   private setTitleSource = () => {
@@ -215,7 +203,8 @@ class PostsPage extends React.Component<Props, State> {
    */
   private loadContent = async () => {
     this.setState({
-      loading: true
+      loading: true,
+      postThumbnailLoading: true
     });
 
     const lang = this.props.lang;
@@ -227,37 +216,31 @@ class PostsPage extends React.Component<Props, State> {
     }
     const api = ApiUtils.getApi();
 
-    const apiCalls = await Promise.all([
-      api.getWpV2Pages({ lang: [ lang ], slug: [ slug ] }),
-      api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
-      api.getWpV2Pages({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
-      api.getWpV2Posts({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
-      api.getCustomPages({ parent_slug: "posts" }),
-      api.getWpV2Pages({ slug: [ "sivut" ] }),
-      api.getPostThumbnail({ slug: slug })
-    ]);
-
-    const currentPage = apiCalls[0][0];
-    const page = apiCalls[0][0];
-    const nav = apiCalls[1];
-    const pageTitle = apiCalls[2][0].title || apiCalls[3][0].title;
-    const pages = apiCalls[4];
-    const parentPage = apiCalls[5][0];
-    const postThumbnail = apiCalls[6];
-
-    this.setState({
-      currentPage: currentPage,
-      page: page,
-      loading: false,
-      nav: nav,
-      pageTitle: pageTitle,
-      pages: pages,
-      parentPage: parentPage,
-      postThumbnail: postThumbnail,
+    api.getWpV2Pages({ lang: [ lang ], slug: [ slug ] }).then((res) => {
+      this.setState({ loading: false, currentPage: res[0], page: res[0] });
+      this.hidePageLoader();
     });
 
-    this.breadcrumbPath(pages);
-    this.hidePageLoader();
+    Promise.all([
+      api.getWpV2Pages({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
+      api.getWpV2Posts({ lang: [ lang ], slug: [ this.props.mainPageSlug ] })
+    ]).then(([pages, posts]) => {
+      const pageTitle = pages[0].title || posts[0].title;
+      this.setState({ pageTitle });
+    });
+
+    ApiUtils.cachedGetCustomPages(api, "posts").then((pages) => {
+      this.setState({ pages });
+      this.breadcrumbPath(pages);
+    });
+
+    ApiUtils.cachedGetWpV2Pages(api, "sivut").then((parentPages) => {
+      this.setState({ parentPage: parentPages[0] });
+    });
+
+    api.getPostThumbnail({ slug: slug }).then((postThumbnail) => {
+      this.setState({ postThumbnail, postThumbnailLoading: false });
+    });
   }
 
   /**

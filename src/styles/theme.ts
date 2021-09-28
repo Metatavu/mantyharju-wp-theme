@@ -111,7 +111,7 @@ export default createMuiTheme({
           fontSize: 16,
         },
         [breakpoints.up("md")]: {
-          fontSize: 20,
+          fontSize: 16,
         }
       },
       text: {

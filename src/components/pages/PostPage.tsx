@@ -1,9 +1,9 @@
 import * as React from "react";
 import BasicLayout from "../BasicLayout";
-import { Container, WithStyles, withStyles, Button, Breadcrumbs, Link, Typography, Grid } from "@material-ui/core";
+import { Container, WithStyles, withStyles, Button, Breadcrumbs, Link, Grid, CircularProgress } from "@material-ui/core";
 import styles from "../../styles/page-content";
 import ApiUtils from "../../../src/utils/ApiUtils";
-import { Page, Post, MenuLocationData, PostTitle, CustomPage } from "../../../src/generated/client/src";
+import { Page, Post, PostTitle, CustomPage } from "../../../src/generated/client/src";
 import ReactHtmlParser, { convertNodeToElement } from "react-html-parser";
 import { DomElement } from "domhandler";
 import strings from "../../localization/strings";
@@ -13,8 +13,10 @@ import * as moment from "moment";
 import "../../../node_modules/react-simple-tree-menu/dist/main.css";
 import TreeView from "../generic/TreeView";
 import RightSideBar from "../generic/RightSideBar";
-import hero from "../../resources/img/postHeader.png";
+import hero from "../../resources/img/postHeader.jpg";
 import ReadSpeaker from "../generic/ReadSpeaker";
+import Movies from "../movies/movies";
+import Premiers from "../movies/premiers";
 
 /**
  * Interface representing component properties
@@ -31,20 +33,18 @@ interface Props extends WithStyles<typeof styles> {
  */
 interface State {
   currentPage?: Page;
-  parentPage?: Page;
   post?: Post;
   title: string;
   loading: boolean;
   isArticle: boolean;
   pageTitle?: PostTitle;
-  nav?: MenuLocationData;
   breadcrumb: Breadcrumb[];
   mainContent?: React.ReactElement;
   sideContent?: React.ReactElement;
   pages: CustomPage[];
-  sideMenuParentPage?: Page;
-  leftMenuCurrentTopPage?: Page;
   postThumbnail: string;
+  postThumbnailLoading: boolean;
+  isMoviePage?: boolean;
 }
 
 /**
@@ -75,7 +75,8 @@ class PostPage extends React.Component<Props, State> {
       breadcrumb: [],
       title: "",
       pages: [],
-      postThumbnail: ""
+      postThumbnail: "",
+      postThumbnailLoading: false
     };
   }
 
@@ -100,45 +101,55 @@ class PostPage extends React.Component<Props, State> {
    */
   public render() {
     const { classes, lang, slug, locationPath } = this.props;
-    const { sideContent, currentPage, postThumbnail } = this.state;
+    const { sideContent, currentPage, postThumbnail, postThumbnailLoading } = this.state;
     const loactionPathnameArrayRaw = (locationPath ? locationPath.replace(/\//g, " ") || "" : "").split(" ");
     const loacationPathnameArray = loactionPathnameArrayRaw.splice(1, (loactionPathnameArrayRaw.length -1 ) - 1);
     const checkContent = React.Children.map(sideContent, child => child ? child.props.children.length : 0);
     const isContent = (checkContent ? (checkContent[0] === 0 ? false : true) : false);
+    const heroDivStyle = postThumbnailLoading ? { background: "#eee"  } : { backgroundImage: `url(${ postThumbnail ? postThumbnail : hero })` };
     return (
-      <BasicLayout lang={ lang } slug={ slug } title={ this.setTitleSource() }>
-        <div className={ classes.heroImageDiv } style={{ backgroundImage: `url(${ postThumbnail ? postThumbnail : hero })` }}>
-          <h1 className={ classes.heroText }>{ currentPage ? ReactHtmlParser(currentPage.title ? currentPage.title.rendered || "" : "") : null }</h1>
+      <BasicLayout
+        lang={ lang }
+        slug={ slug }
+        title={ this.setTitleSource() }
+      >
+        <div className={ classes.heroImageDiv } style={ heroDivStyle }>
+          <h1 className={ classes.heroText }>
+            { currentPage ? ReactHtmlParser(currentPage.title ? currentPage.title.rendered || "" : "") : "..." }
+          </h1>
         </div>
         <div className={ classes.wrapper }>
           <div className={ classes.pageContent }>
             <div className={ classes.breadcrumb }>
-              <Grid container spacing={0}>
-                <Grid item xs={12} md={8} key={"123"}>
+              <Grid container spacing={ 0 }>
+                <Grid item xs={ 12 } md={ 8 } key={ "123" }>
                   <Breadcrumbs separator=">">
                     { this.state.breadcrumb && this.renderBreadcrumb() }
                   </Breadcrumbs>
                 </Grid>
-                <Grid item xs={12} md={4} key={"456"}>
+                <Grid item xs={ 12 } md={ 4 } key={ "456" }>
                   <ReadSpeaker />
                 </Grid>
               </Grid>
             </div>
             <div id="readthis" className={ classes.columns }>
-              <Grid container spacing={0}>
-                <Grid item xs={12} md={3} lg={2} key={"123"}>
+              <Grid container spacing={ 0 }>
+                <Grid item xs={ 12 } md={ 3 } lg={ 2 } key={ "123" }>
                   <div className="rs_skip">
                     <TreeView slug={ slug }/>
                   </div>
                 </Grid>
-                <Grid item xs={12} md={6} lg={7} key={"456"}>
-                  <div className={ classes.contentarea } >       
+                <Grid item xs={ 12 } md={ 6 } lg={ 7 } key={ "456" }>
+                  <div className={ classes.contentarea }>       
                       { this.renderContent() }
                   </div>
                 </Grid>
-                <Grid item xs={12} md={3} lg={3} key={"789"}>
+                <Grid item xs={ 12 } md={ 3 } lg={ 3 } key={ "789" }>
                   { sideContent &&
-                  <div className={ classes.sidebar } style={ isContent ? { display: "block" } : { display: "none" } }>
+                  <div
+                    className={ classes.sidebar }
+                    style={ isContent ? { display: "block" } : { display: "none" } }
+                  >
                     <RightSideBar content={ sideContent } />
                   </div>
                   }
@@ -150,6 +161,8 @@ class PostPage extends React.Component<Props, State> {
       </BasicLayout>
     );
   }
+
+
 
   /**
    * Renders breadcrumb
@@ -170,10 +183,16 @@ class PostPage extends React.Component<Props, State> {
    */
   private renderContent = () => {
     const { classes } = this.props;
+    const { isMoviePage } = this.state;
+
     const page = this.state.currentPage;
     return (
       <Container className={ classNames( classes.root, this.state.isArticle && "article") }>
-        <h2>{ page ? ReactHtmlParser(page.title ? page.title.rendered || "" : "") : null }</h2>
+        { !isMoviePage &&
+          <h2>
+            { page ? ReactHtmlParser(page.title ? page.title.rendered || "" : "") : null }
+          </h2>
+        }
         { this.renderPostContent() }
       </Container>
     );
@@ -184,12 +203,10 @@ class PostPage extends React.Component<Props, State> {
    */
   private loadContent = async () => {
     this.setState({
-      loading: true
+      loading: true,
+      postThumbnailLoading: true
     });
 
-    const { locationPath } = this.props;
-    const loactionPathnameArrayRaw = (locationPath ? locationPath.replace(/\//g, " ") || "" : "").split(" ");
-    const loacationPathnameArray = loactionPathnameArrayRaw.splice(1, (loactionPathnameArrayRaw.length -1 ) - 1);
     const lang = this.props.lang;
     const slugParts = this.props.slug.split("/");
     const slug = slugParts.pop() || slugParts.pop();
@@ -197,45 +214,34 @@ class PostPage extends React.Component<Props, State> {
       // TODO: handle error
       return;
     }
-
+    this.hidePageLoader();    
     const api = ApiUtils.getApi();
 
-    const apiCalls = await Promise.all([
+    Promise.all([
       api.getWpV2Pages({ lang: [ lang ], slug: [ slug ] }),
-      api.getWpV2Posts({ lang: [ lang ], slug: [ slug ] }),
-      api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
-      api.getWpV2Pages({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
-      api.getWpV2Posts({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
-      api.getCustomPages({ parent_slug: "sivut" }),
-      api.getWpV2Pages({ slug: [ "sivut" ] }),
-      api.getWpV2Pages({ slug: [ loacationPathnameArray[1] ] }),
-      api.getPostThumbnail({ slug: slug })
-    ]);
-
-    const currentPage = apiCalls[0][0];
-    const post = apiCalls[1][0];
-    const nav = apiCalls[2];
-    const pageTitle = apiCalls[3][0].title || apiCalls[4][0].title;
-    const pages = apiCalls[5];
-    const parentPage = apiCalls[6][0];
-    const leftMenuCurrentTopPage = apiCalls[7][0];
-    const postThumbnail = apiCalls[8];
-
-    this.setState({
-      currentPage: currentPage,
-      post: post,
-      isArticle: !!post,
-      loading: false,
-      nav: nav,
-      pageTitle: pageTitle,
-      pages: pages,
-      parentPage: parentPage,
-      leftMenuCurrentTopPage: leftMenuCurrentTopPage,
-      postThumbnail: postThumbnail
+      api.getWpV2Posts({ lang: [ lang ], slug: [ slug ] })
+    ]).then(([pagesRes, postsRes]) => {
+      const post = postsRes[0];
+      this.setState({ loading: false, currentPage: pagesRes[0], post: post, isArticle: !!post });
+      
     });
 
-    this.breadcrumbPath(pages);
-    this.hidePageLoader();
+    Promise.all([
+      api.getWpV2Pages({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
+      api.getWpV2Posts({ lang: [ lang ], slug: [ this.props.mainPageSlug ] })
+    ]).then(([pages, posts]) => {
+      const pageTitle = pages[0].title || posts[0].title;
+      this.setState({ pageTitle });
+    });
+
+    ApiUtils.cachedGetCustomPages(api, "posts").then((pages) => {
+      this.setState({ pages });
+      this.breadcrumbPath(pages);
+    });
+
+    api.getPostThumbnail({ slug: slug }).then((postThumbnail) => {
+      this.setState({ postThumbnail, postThumbnailLoading: false });
+    });
   }
 
   /**
@@ -284,6 +290,11 @@ class PostPage extends React.Component<Props, State> {
         this.state.isArticle && "article")
         }
       >
+      { this.state.loading && 
+        <div className={ classes.loadingIconContainer }>
+          <CircularProgress />
+        </div>
+      }
       { !this.state.loading && !mainContent &&
         content
       }
@@ -379,6 +390,18 @@ class PostPage extends React.Component<Props, State> {
    * @param index DomElement index
    */
   private transform = (node: DomElement, index: number) => {
+    const content = this.getElementTextContent(node);
+
+    if (content && content.indexOf("[movies]") > -1) {
+      this.setState({ isMoviePage: true });
+      return <Movies/>;
+    }
+
+    if (content && content.indexOf("[premiers]") > -1) {
+      this.setState({ isMoviePage: true });
+      return <Premiers/>;
+    }
+
     return convertNodeToElement(node, index, this.transform);
   }
 

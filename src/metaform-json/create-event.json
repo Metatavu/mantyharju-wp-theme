@@ -34,7 +34,7 @@
           }
         },
         {
-          "name": "start-date",
+          "name": "start-date-time",
           "type": "date",
           "title": "Alkamispäivämäärä",
           "required": false,
@@ -59,7 +59,7 @@
           }
         },
         {
-          "name": "end-date",
+          "name": "end-date-time",
           "type": "date",
           "title": "Loppumispäivämäärä",
           "required": false,

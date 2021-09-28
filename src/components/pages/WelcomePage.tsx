@@ -2,7 +2,7 @@ import * as React from "react";
 import BasicLayout from "../BasicLayout";
 import ReactHtmlParser from "react-html-parser";
 import ApiUtils from "../../utils/ApiUtils";
-import { WithStyles, withStyles, Button, CircularProgress, Typography, SvgIcon, Icon, Dialog, DialogTitle, DialogContent, DialogActions, Grid } from "@material-ui/core";
+import { WithStyles, withStyles, Button, CircularProgress, Typography, SvgIcon, Icon, Dialog, DialogTitle, DialogContent, DialogActions, Grid, Card, CardContent } from "@material-ui/core";
 import styles from "../../styles/welcome-page";
 import * as moment from "moment";
 import AddIcon from "@material-ui/icons/Add";
@@ -16,7 +16,7 @@ import fi from "date-fns/esm/locale/fi";
 import ImageUpload from "./image-upload";
 import { MetaformComponent, IconName, FieldValue, Metaform } from "metaform-react";
 import strings from "../../localization/strings";
-import defaultimage from "../../resources/img/postHeader.png";
+import defaultimage from "../../resources/img/postHeader.jpg";
 import { Place } from "../../types/Place"
 
 /**
@@ -40,8 +40,6 @@ interface State {
   linkedEventsPost?: Post,
   loading: boolean,
   popularPages: PageWithImgUrl[],
-  mainMenu?: MenuLocationData,
-  localeMenu?: MenuLocationData,
   scrollPosition: number,
   siteMenuVisible: boolean,
   siteSearchVisible: boolean,
@@ -61,7 +59,10 @@ interface State {
   jobsLink?: string,
   jobs?: PostItem[],
   fetchData: Place[]
-  fethingData: boolean
+  fethingData: boolean,
+  events?: any,
+  pageSize: number;
+  loadMoreEventsDisabled: boolean;
 }
 
 interface Dictionary<T> {
@@ -125,7 +126,9 @@ class WelcomePage extends React.Component<Props, State> {
       addPlaceVisibility: false,
       imageUrl: "",
       fetchData: [],
-      fethingData: false
+      fethingData: false,
+      pageSize: 1,
+      loadMoreEventsDisabled: false,
     };
 
     this.onPick = this.onPick.bind(this);
@@ -150,26 +153,28 @@ class WelcomePage extends React.Component<Props, State> {
       loading: true
     });
 
-    const api = ApiUtils.getApi();
-    const customizeFields = await api.getWpV2Customize();
+    this.hidePageLoader();
 
-    this.setState({
-      customizeFields: customizeFields,
-      loading: false
+    const api = ApiUtils.getApi();
+    api.getWpV2Customize().then((customizeFields) => {
+      this.setState({
+        customizeFields: customizeFields,
+        loading: false
+      });
     });
 
-    const [posts, mainMenu, localeMenu, popularCategory] = await Promise.all(
-      [
-        api.getCustomPosts({}),
-        api.getMenusV1LocationsById({ lang: this.props.lang, id: "main" }),
-        api.getMenusV1LocationsById({ lang: this.props.lang, id: "locale" }),
-        api.getWpV2Categories({ slug: ["suosittu"] })
-      ]
-    );
+    api.getCustomPosts({}).then((posts) => {
+      this.setState({ posts });
+    });
 
-    const categoryIdArray = [(popularCategory.length > 0 ? popularCategory[0].id || -1 : -1)];
+    api.getWpV2Categories({ slug: ["suosittu"] }).then((popularCategory) => {
+      const categoryIdArray = [(popularCategory.length > 0 ? popularCategory[0].id || -1 : -1)];
+      api.getWpV2Pages({ categories: categoryIdArray, per_page: 6}).then((popularPages) => {
+        this.setState({ popularPages });
+        this.getPopularPagesImageUrl(popularPages);
+      })
+    });
 
-    const popularPages = await api.getWpV2Pages({ categories: categoryIdArray, per_page: 6});
     const placeForm: Metaform = require("../../metaform-json/create-place.json");
     const form: Metaform = require("../../metaform-json/create-event.json");
     const keywordRes = await fetch("https://mantyharju.linkedevents.fi/v1/keyword/?page_size=1000&data_source=mantyharju");
@@ -191,21 +196,24 @@ class WelcomePage extends React.Component<Props, State> {
     form.sections = sections;
 
     this.setState({
-      posts: posts,
       form: form,
       placeForm: placeForm,
-      mainMenu: mainMenu,
-      localeMenu: localeMenu,
-      popularPages: popularPages
     });
-
-    this.hidePageLoader();
 
     this.getNews();
     this.getJobs();
     this.getAnnouncements();
     this.getLinkedEvents();
-    this.getPopularPagesImageUrl();
+
+    const eventData = await this.fetchEvents()
+
+    if(!eventData) {
+      return
+    }
+
+    this.setState({
+      events: eventData?.events
+    })
   }
 
   /**
@@ -220,7 +228,7 @@ class WelcomePage extends React.Component<Props, State> {
    */
   public render() {
     const { lang, slug, classes } = this.props;
-    const { announcementsPageLink, newsPageLink, jobsLink, linkedEventsPost, news, announcements, jobs } = this.state;
+    const { announcementsPageLink, newsPageLink, jobsLink, linkedEventsPost, news, announcements, jobs, loadMoreEventsDisabled } = this.state;
     const showcaseImage = this.getCustomizerValue("showcase_image");
     const showcaseTitle = this.getCustomizerValue("showcase_title");
     const showcaseText = this.getCustomizerValue("showcase_text");
@@ -354,6 +362,7 @@ class WelcomePage extends React.Component<Props, State> {
               className={ classes.allEventsButton }
               title= {strings.showMoreEvents}
               onClick={this.expandLinkedEvents}
+              disabled={ loadMoreEventsDisabled }
             >
               {strings.showMore}
             </Button>
@@ -402,23 +411,16 @@ class WelcomePage extends React.Component<Props, State> {
   /**
    * Fetch PopularPages featured image URL
    */
-  private getPopularPagesImageUrl = () => {
-    const { popularPages } = this.state;
+  private getPopularPagesImageUrl = async (popularPages: PageWithImgUrl[]) => {
     const api = ApiUtils.getApi();
-    const result : PageWithImgUrl[] = [];
-
-    popularPages.forEach(async (page) => {
-      const pageId = page.id ? page.id.toString() : "";
-      const popularImageUrl = await api.getPostThumbnail({ id: pageId });
-      const pageAndUrl = { ...page, featureImageUrl: popularImageUrl ? popularImageUrl : "" };
-
-      return result.push(pageAndUrl);
-    });
-
-    this.setState({
-      popularPages: result
-    });
-
+    let result : PageWithImgUrl[] = [ ...popularPages ];
+    for(let i = 0; i < result.length; i++) {
+      let imageUrl = await api.getPostThumbnail({ id: result[i].id ? result[i].id?.toString() : ""});
+      result[i].featureImageUrl = imageUrl;
+      this.setState({
+        popularPages: [...result]
+      });
+    }
   }
 
   /**
@@ -780,7 +782,7 @@ class WelcomePage extends React.Component<Props, State> {
       return [];
     }
 
-    if (Object.keys(fetchData).length === 0 && !fethingData) {
+    if (Object.keys(fetchData).length === 0 && !fethingData || input === "searchAgain") {
       this.setState({
         fethingData: true
       });
@@ -814,7 +816,7 @@ class WelcomePage extends React.Component<Props, State> {
   private fetchPlaces = async () => {
     let data: Place[] = [];
     let i;
-    let fetchAddress = `https://mantyharju.linkedevents.fi/v1/place/?&data_source=mantyharju`;
+    let fetchAddress = `https://mantyharju.linkedevents.fi/v1/place/?&show_all_places=true&data_source=mantyharju`;
     for (i=0; i < 1; i++) {
       const fetchResponse = await fetch(fetchAddress);
       const res = await fetchResponse.json();
@@ -830,6 +832,29 @@ class WelcomePage extends React.Component<Props, State> {
 
     return data;
   }
+
+  /**
+   * Fetching method for fetching events
+   */
+      private fetchEvents = async () => {
+        const { pageSize } = this.state;
+        try {
+          let startDate = moment().utcOffset(0, true).format()
+          let fetchAddress = `https://mantyharju.linkedevents.fi/v1/event/?&page_size=4&page=${ pageSize }&sort=start_time&start=${ startDate }`;
+
+          const apiData = await fetch(fetchAddress)
+          const response = await apiData.json();
+
+          const events = response.data || [];
+          const eventsMeta = response.meta || [];
+          
+          return { events, eventsMeta }
+
+        } catch (error) {
+          console.error(error)
+          return null;
+        }
+      }
 
   /**
    * Method for rendering form icons
@@ -916,6 +941,7 @@ class WelcomePage extends React.Component<Props, State> {
 
         api.postWpV2Event({ event: placeFormValues });
         this.setState({placeFormValues: {}});
+        this.setAutocompleteOptions("searchAgain")
       } catch (error) {
           alert(strings.eventAdd.errorWhenAddingPlace);
       }
@@ -987,28 +1013,50 @@ class WelcomePage extends React.Component<Props, State> {
    */
   private renderLinkedEvents = () => {
     const { classes } = this.props;
-    const { linkedEventsPost } = this.state;
-    if (!linkedEventsPost) {
+    const { linkedEventsPost, events } = this.state;
+
+    if (!events) {
       return null;
     } else {
-      const parsedContent = ReactHtmlParser(linkedEventsPost.content ? linkedEventsPost.content.rendered || "" : "");
       return (
-        parsedContent.splice(0, this.state.linkedEventsLimitingNumber).map((contentItem) => {
-          const link = this.getEventLink(contentItem);
+        events.map((event: any, index: number) => {
           return (
             <>
-              { link &&
-                <a className={ classes.event_link } href={ link ? link : "#" }>
-                  <figure className={ classes.events_item_universal }>
-                    { contentItem }
-                  </figure>
-                </a>
-              }
+              <a className={ classes.event_link } href={ "/event/" + event.id }>
+                <Card
+                  key={ index }
+                  className={ classes.card }
+                >
+                  <CardContent>
+                    <div className={ classes.centered }
+   
+                    >
+                      <Typography gutterBottom variant="h5">
+                        { moment(event.start_time).format("DD.MM.YYYY") }
+                      </Typography>
+                      <div className={ classes.statusBar } style={{ backgroundColor: this.compareDates(event.start_time) ? "#FFCF4E" : "#1068B3" }}/>
+                      <Typography gutterBottom variant="caption">
+                        { event.name.fi }
+                      </Typography>
+                    </div>
+                  </CardContent> 
+                </Card>
+              </a>
             </>
           );
         })
       );
     }
+  }
+
+  /**
+   * compares current date to events start time
+   * @returns true or false
+   */
+  private compareDates = (eventStartTime: Date) => {
+    const dateNow = moment();
+
+    return dateNow > moment(eventStartTime);
   }
 
   /**
@@ -1029,29 +1077,6 @@ class WelcomePage extends React.Component<Props, State> {
         </div>
       );
     });
-  }
-
-  /**
-   * Recursive search for event link
-   *
-   * @param element react element
-   * @returns link of the event or undefined
-   */
-  private getEventLink = (element: React.ReactElement): string | void => {
-    const { props } = element;
-    if (props) {
-      const { href } = props;
-      if (href) {
-        return href;
-      }
-      const { children } = props;
-      if (children) {
-        const match = children.find((child: React.ReactElement) => typeof this.getEventLink(child) === "string");
-        if (match) {
-          return this.getEventLink(match);
-        }
-      }
-    }
   }
 
   /**
@@ -1109,17 +1134,22 @@ class WelcomePage extends React.Component<Props, State> {
   /**
    * Action handler for "Show more" Linked events button
    */
-  private expandLinkedEvents = () => {
-    let newLimitingNumber: number;
-    if (this.state.linkedEventsLimitingNumber === 8) {
-      newLimitingNumber = 16;
-    } else {
-      newLimitingNumber = 8;
-    }
-
+  private expandLinkedEvents = async () => {
+    const { pageSize, events, loadMoreEventsDisabled } = this.state;
+ 
     this.setState({
-      linkedEventsLimitingNumber: newLimitingNumber
-    });
+      pageSize: pageSize + 1 
+    })
+
+    const eventData = await this.fetchEvents();
+
+    if(!eventData || !events) {
+      return;
+    }
+      this.setState({
+        events: [...events].concat(eventData.events),
+        loadMoreEventsDisabled: eventData.eventsMeta && eventData.eventsMeta.next === null ? true : false
+    })
   }
 
   /**

@@ -13,6 +13,7 @@ export default createStyles({
    * Page styles
    */
   root: {
+    height: "100%",
     "& .wp-block-column": {
       "& p": {
         marginBlockStart: "0 !important",
@@ -27,6 +28,12 @@ export default createStyles({
         }
       }
     }
+  },
+  loadingIconContainer: {
+    flex: 1,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center"
   },
   logoBar: {
     display: "flex",
@@ -313,7 +320,6 @@ export default createStyles({
     display: "flex",
     flexDirection: "column",
     width: "100%",
-    paddingLeft: 15,
     [breakpoints.up("sm")]: {
       padding: "0 2rem 1rem"
     },
@@ -348,6 +354,9 @@ export default createStyles({
     padding: "2rem"
   },
   contentarea: {
+    [breakpoints.up("md")]: {
+      height: "100%",
+    },
     display: "flex",
     flexDirection: "column",
     "& .wp-block-group__inner-container": {
@@ -400,6 +409,7 @@ export default createStyles({
   },
 
   htmlContainer: {
+    height: "100%",
     display: "flex",
     flexDirection: "column",
     [breakpoints.up("sm")]: {
@@ -635,8 +645,7 @@ export default createStyles({
           marginTop: 0,
           marginBottom: 0,
         },
-
-       "&.highlight-columns": {
+        "&.highlight-columns": {
           "& .wp-block-column": {
             position: "relative",
             [breakpoints.up("md")]: {
@@ -717,6 +726,7 @@ export default createStyles({
       },
       "& img": {
         width: "100%",
+        marginBottom: 20
       },
       "& figure": {
         margin: 0,
