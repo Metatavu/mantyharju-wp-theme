@@ -109,7 +109,7 @@ class Premiers extends React.Component<Props, State> {
     if (!premierMovies.length) {
       return (
         <Typography variant="h3" component="h3">
-          {strings.movie.noPremiers }
+          { strings.movie.noPremiers }
         </Typography>
       );
     }
