@@ -17,7 +17,7 @@ interface Props extends WithStyles<typeof styles> {}
  */
 interface State {
   loading: boolean;
-  movies: Movie[];
+  premierMovies: Movie[];
   categories: any;
   openDescriptions: Boolean[]
   videoOpen: boolean;
@@ -41,7 +41,7 @@ class Premiers extends React.Component<Props, State> {
     super(props);
     this.state = {
       loading: true,
-      movies: [],
+      premierMovies: [],
       openDescriptions: [],
       videoOpen: false,
       categories: [],
@@ -77,7 +77,7 @@ class Premiers extends React.Component<Props, State> {
    */
   public render() {
     const { classes } = this.props;
-    const { isMobile, hasPremiers, loading } = this.state;
+    const { isMobile, loading } = this.state;
 
     if (loading) {
       return (
@@ -90,21 +90,34 @@ class Premiers extends React.Component<Props, State> {
     return (
       <>
         { this.renderVideoDialog() }
-          <div className={ !isMobile ? classes.column : classes.mobileColumn }>
-            <div className={ !isMobile ? classes.container : classes.mobileContainer } >
-              {
-                hasPremiers ?
-                <Box className={ !isMobile ? classes.content : classes.mobileContent }>
-                  { this.renderMovieCards() }
-                </Box>
-                :
-                <Typography variant="h3" component="h3">
-                  {strings.movie.noPremiers }
-                </Typography>
-              }
-            </div>
+        <div className={ !isMobile ? classes.column : classes.mobileColumn }>
+          <div className={ !isMobile ? classes.container : classes.mobileContainer } >
+            { this.renderContent() }
           </div>
+        </div>
       </>
+    );
+  }
+
+  /**
+   * Renders content
+   */
+  private renderContent = () => {
+    const { classes } = this.props;
+    const { premierMovies, isMobile } = this.state;
+
+    if (!premierMovies.length) {
+      return (
+        <Typography variant="h3" component="h3">
+          { strings.movie.noPremiers }
+        </Typography>
+      );
+    }
+
+    return (
+      <Box className={ !isMobile ? classes.content : classes.mobileContent }>
+        { this.renderMovieCards() }
+      </Box>
     );
   }
 
@@ -114,33 +127,75 @@ class Premiers extends React.Component<Props, State> {
   private fetchData = async () => {
     try {
       this.setState({ loading: true });
-      const movieResponse = await fetch("/wp-json/wp/v2/mantyharju-elokuva?per_page=100");
-      const categoryResponse = await fetch("/wp-json/wp/v2/mantyharju-elokuva-categories?per_page=100");
-      const movieMediaResponse = await fetch("/wp-json/wp/v2/media?per_page=100");
 
-      const categories = await categoryResponse.json();
-      const movies = await movieResponse.json();
-      const movieMedia = await movieMediaResponse.json();
+      const [ movies, categories, movieMedia ] = await Promise.all([
+        this.fetchFromUrl("/wp-json/wp/v2/mantyharju-elokuva?per_page=100"),
+        this.fetchFromUrl("/wp-json/wp/v2/mantyharju-elokuva-categories?per_page=100"),
+        this.fetchFromUrl("/wp-json/wp/v2/media?per_page=100")
+      ]);
+
+      const premierMovies = this.getPremierMovies(movies);
+
+      this.initDescriptionState(premierMovies);
 
       this.setState({
-        movies,
+        premierMovies,
         categories,
         movieMedia,
         loading: false
       })
+
       this.hidePageLoader();
     } catch(error) {
       console.error(error)
       this.hidePageLoader();
     }
+  }
 
-    this.initDescriptionState();
-    this.hasPremier();
+  /**
+   * Fetch data from given URL
+   *
+   * @param url URL
+   */
+  private fetchFromUrl = async (url: string) => {
+    const response = await fetch(url);
+    return await response.json();
+  }
+
+  /**
+   * Returns premier movies
+   *
+   * @param movies all movies
+   */
+  private getPremierMovies = (movies: Movie[]) => {
+    return movies.filter(({ ACF: { showtimes } }) =>
+      showtimes ? !showtimes.some(this.hasPassed) && showtimes.some(this.isUpcoming) : false
+    );
+  }
+
+  /**
+   * Returns whether showtime has already passed or not
+   *
+   * @param showtime show time
+   * @returns true if showtime has passed, otherwise false
+   */
+  private hasPassed = (showtime: MovieACFShowtimes) => {
+    return this.parseShowTime(showtime) < moment().valueOf();
+  };
+
+  /**
+   * Returns if show time is upcoming or not
+   *
+   * @param showtime show time
+   * @returns true if show time is upcoming, otherwise false
+   */
+  private isUpcoming = (showtime: MovieACFShowtimes) => {
+    return !!showtime.datetime.toString() && moment(showtime.datetime).isBetween(moment(), moment().add(1, "week"));
   }
 
   /**
    * Toggle video dialog event handler
-   * 
+   *
    * @param trailerUrl trailer url
    */
   private toggleVideoDialog = (trailerUrl?: string) => {
@@ -152,111 +207,73 @@ class Premiers extends React.Component<Props, State> {
 
   /**
    * Handles open description
-   * 
+   *
    * @param index index of clicked item
    */
   private onDescriptionClick = (index: number) => {
-    const { openDescriptions } = this.state;
+    const openDescriptions = [ ...this.state.openDescriptions ];
 
-    openDescriptions[index] = !openDescriptions[index]
+    openDescriptions.splice(index, 1, !openDescriptions[index]);
 
-    this.setState({
-      openDescriptions: openDescriptions
-    })
+    this.setState({ openDescriptions: openDescriptions });
   }
 
   /**
-   * Inits state of show description
+   * Inits show description state for all movies
+   *
+   * @param premierMovies premier movies
    */
-  private initDescriptionState = () => {
-    const { movies } = this.state;
-
-    const emptyState: Boolean[] = [];
-
-    movies.map(movie => {
-      emptyState.push(false)
-    })
-
+  private initDescriptionState = (premierMovies: Movie[]) => {
     this.setState({
-      openDescriptions: emptyState
+      openDescriptions: Array.from({ length: premierMovies.length }, () => false)
     })
-  }
-
-  /**
-   * Check if movie has any premiers
-   */
-  private hasPremier = () => {
-    const { movies } = this.state;
-    const premiers = [];
-
-    movies.forEach(movie => {
-      if (this.filterShowTimes(movie)) {
-        premiers.push(movie)
-      }
-    })
-
-    if (premiers.length > 0) {
-      this.setState({ hasPremiers: true })
-    } else {
-      this.setState({ hasPremiers: false})
-    }
   }
 
   /**
    * Format url for embedding the video
-   * 
+   *
    * @param trailerUrl trailer url
    * @returns embed url
    */
   private formatUrl = (trailerUrl: string): string => {
-    if (/youtu\.be/.test(trailerUrl) || /youtube/.test(trailerUrl)) {
-      const baseUrl = "https://www.youtube-nocookie.com/embed/";
-      if (/youtu\.be/.test(trailerUrl)) {
-        return `${baseUrl}${trailerUrl.split("/")[ trailerUrl.split("/").length-1 ]}`;
-      }
-      if(/watch/.test(trailerUrl)) {
-        return `${baseUrl}${trailerUrl.split("/")[ trailerUrl.split("/").length-1 ].replace("watch?v=", "")}`;
-      }
-      return trailerUrl;
+    const baseUrl = "https://www.youtube-nocookie.com/embed/";
+
+    if (/youtu\.be/.test(trailerUrl)) {
+      return `${baseUrl}${trailerUrl.split("/")[ trailerUrl.split("/").length - 1 ]}`;
     }
+
+    if (/watch/.test(trailerUrl)) {
+      return `${baseUrl}${trailerUrl.split("/")[ trailerUrl.split("/").length - 1 ].replace("watch?v=", "")}`;
+    }
+
     return trailerUrl;
   }
 
   /**
-  * @param showTimes movie whitch showtimes are filtered
-  * @returns premier if movie has any
- */
-  private filterShowTimes = (movie: Movie) => {
-    const dateNow = new Date().getTime();
-    const showTimes = movie.ACF.showtimes;
-
-    if (!showTimes) {
-      return;
-    }
-
-    for (const showTime of showTimes) {
-      if (this.parseShowTime(showTime) < dateNow) {
-        return;
-      }
-    }
-
-    const filteredShowTimes = showTimes.filter(showTime => showTime.datetime.toString() !== "");
-
-    if (!filteredShowTimes) {
-      return;
-    }
-
-    const premier = filteredShowTimes.reduce((prev, curr) => {
-      return new Date(prev.datetime).getTime() < new Date(curr.datetime).getTime() ? prev : curr;
-    });
-  
-    return premier;
+   * Returns premier show time
+   *
+   * @param movie movie to get premier from
+   * @returns premier if movie has one, otherwise undefined
+   */
+  private getPremier = ({ ACF: { showtimes } }: Movie) => {
+    return showtimes?.filter(this.isUpcoming)
+      .sort(this.sortByEarliest)
+      .shift();
   }
 
+  /**
+   * Sorts show times by date
+   *
+   * @param showtimeA show time A
+   * @param showtimeB show time B
+   */
+  private sortByEarliest = (a: MovieACFShowtimes, b: MovieACFShowtimes) => {
+    return moment(a.datetime).diff(b.datetime);
+  };
 
   /**
    * Parses date to string
-   * 
+   *
    * @param showTime show time
    * @param isPremier is movie premier or not
    * @returns Parsed date string
@@ -268,14 +285,9 @@ class Premiers extends React.Component<Props, State> {
       const month = date.format('MM');
       const hoursMins = date.format('HH:mm');
 
-      const dateString = `${dateName} ${day}.${month}. klo: ${hoursMins}`;
-      const premierDateString = `${dateName} ${day}.${month}`;
-
-      if (isPremier) {
-        return premierDateString
-      } else {
-        return dateString; 
-      }
+      return isPremier ?
+        `${dateName} ${day}.${month}` :
+        `${dateName} ${day}.${month}. klo: ${hoursMins}`;
   }
 
   /**
@@ -283,29 +295,27 @@ class Premiers extends React.Component<Props, State> {
    */
   private renderMovieCards = () => {
     const { classes } = this.props;
-    const { movies } = this.state;
-    const hasOngoingMovies = [];
+    const { premierMovies } = this.state;
 
-    return movies.map((movie: Movie, index: number) => {
-      const premier = this.filterShowTimes(movie);
+    return premierMovies.reduce<JSX.Element[]>((list, movie, index) => {
+      const premier = this.getPremier(movie);
 
-      return (
-        (premier ?
-            <div
-              key={ index }
-              className={ classes.card }
-            >
-              { this.renderCardContent(movie, index, premier) }
-            <div className={ classes.cardLine }></div>
-            </div>
-          : null
-        ));
-    })
+      if (premier) {
+        list.push(
+          <div key={ index } className={ classes.card }>
+            { this.renderCardContent(movie, index, premier) }
+            <div className={ classes.cardLine }/>
+          </div>
+        );
+      }
+
+      return list;
+    }, []);
   }
 
   /**
    * Renders card content
-   * 
+   *
    * @param movie movie
    * @param index index
    * @param premier premier of the movie
@@ -323,7 +333,7 @@ class Premiers extends React.Component<Props, State> {
       <>
         { imageUrl &&
           <Box mt={ 1 } >
-            <img 
+            <img
               className={ !isMobile ? classes.image : classes.mobileImage }
               src={ imageUrl }
               alt="Elokuva"
@@ -334,7 +344,7 @@ class Premiers extends React.Component<Props, State> {
           { title }
         </Typography>
         <Typography gutterBottom variant="h5">
-          <b>{ strings.movie.premier }</b> { movie.ACF.ticketsalesurl ? this.parseDate(premier.datetime, false) : this.parseDate(premier.datetime, true) } 
+          <b>{ strings.movie.premier }</b> { movie.ACF.ticketsalesurl ? this.parseDate(premier.datetime, false) : this.parseDate(premier.datetime, true) }
         </Typography>
         { ageLimit &&
           <Box mt={ 1 }>
@@ -415,8 +425,8 @@ class Premiers extends React.Component<Props, State> {
 
   /**
    * Parses movie's categories to a string
-   * 
-   * @param movie movie 
+   *
+   * @param movie movie
    * @returns Parsed categories
    */
   private parseMovieCategories = (movie: Movie) => {
@@ -434,12 +444,12 @@ class Premiers extends React.Component<Props, State> {
         }
       }
     }
-    
+
     return foundCategories.toString().replace(/,/g, '/');
   }
 
   /**
-   * @param movie movie 
+   * @param movie movie
    * @returns Url of image
    */
   private getImageUrl = (movie: Movie) => {
@@ -473,15 +483,15 @@ class Premiers extends React.Component<Props, State> {
 
   /**
    * Parses showtime field as unix timestamp
-   * 
+   *
    * @param showTime showtime field
    * @returns unix timestamp
    */
     private parseShowTime = (showTime: any) => {
-      return moment(String(showTime.datetime)).toDate().getTime();
+      return moment(String(showTime.datetime)).valueOf();
     }
 
-    
+
 }
 
 export default withStyles(styles)(Premiers);
