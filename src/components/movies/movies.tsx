@@ -18,7 +18,7 @@ interface Props extends WithStyles<typeof styles> {}
  */
 interface State {
   loading: boolean;
-  movies: Movie[];
+  ongoingMovies?: Movie[];
   categories: any;
   openDescriptions: Boolean[];
   videoOpen: boolean;
@@ -26,7 +26,6 @@ interface State {
   movieMedia: any;
   isMobile?: boolean
   masonryColumns: number;
-  hasOngoingMovies?: boolean;
   sideContent?: React.ReactElement;
 }
 
@@ -45,7 +44,6 @@ class Movies extends React.Component<Props, State> {
     this.state = {
       masonryColumns: 3,
       loading: true,
-      movies: [],
       openDescriptions: [],
       videoOpen: false,
       categories: [],
@@ -123,20 +121,20 @@ class Movies extends React.Component<Props, State> {
         this.fetchFromUrl("/wp-json/wp/v2/media?per_page=100")
       ]);
 
+      const ongoingMovies = this.getOngoingMovies(movies);
+
+      this.initDescriptionState(ongoingMovies);
+
       this.setState({
-        movies,
+        ongoingMovies,
         categories,
         movieMedia
       });
-
-      this.hidePageLoader();
     } catch(error) {
       console.error(error);
-      this.hidePageLoader();
     }
 
-    this.initDescriptionState();
-    this.hasOngoingMovies();
+    this.hidePageLoader();
   }
 
   /**
@@ -149,19 +147,45 @@ class Movies extends React.Component<Props, State> {
     return await response.json();
   }
 
-    /**
-   * Check if there is any ongoing movies
+  /**
+   * Returns ongoing movies
+   *
+   * @param movies movies
    */
-    private hasOngoingMovies = () => {
-      const hasOngoingMovies = this.state.movies.some(movie => !!this.filterShowTimes(movie).length);
+  private getOngoingMovies = (movies: Movie[]) => {
+    return movies.filter(({ ACF: { showtimes } }) => {
+      if (!showtimes) {
+        return false;
+      }
 
-      this.setState({ hasOngoingMovies });
-    }
+      const validShowTimes = showtimes.filter(({ datetime }) => !!datetime);
+
+      return !validShowTimes.every(this.inPast) && !validShowTimes.every(this.inFuture);
+    });
+  }
+
+  /**
+   * Returns whether given movie show time is in the past or not
+   *
+   * @param showtime movie show time
+   */
+  private inPast = (showtime: MovieACFShowtimes) => {
+    return !!showtime.datetime && moment(showtime.datetime).isBefore(moment(), "day");
+  }
+
+  /**
+   * Returns whether given movie show time is in the past or not
+   *
+   * @param showtime movie show time
+   */
+  private inFuture = (showtime: MovieACFShowtimes) => {
+    return !!showtime.datetime && moment(showtime.datetime).isAfter(moment(), "day");
+  }
 
   /**
    * Toggle video dialog event handler
-   * 
-   * @param trilerurl url of trailer
+   *
+   * @param trailerUrl URL of trailer
    */
   private toggleVideoDialog = (trailerUrl?: string) => {
     this.setState({
@@ -172,7 +196,7 @@ class Movies extends React.Component<Props, State> {
 
   /**
    * Handles open description
-   * 
+   *
    * @param index index of clicked item
    */
   private onDescriptionClick = (index: number) => {
@@ -180,43 +204,37 @@ class Movies extends React.Component<Props, State> {
 
     openDescriptions[index] = !openDescriptions[index];
 
-    this.setState({
-      openDescriptions: openDescriptions
-    })
+    this.setState({ openDescriptions: openDescriptions });
   }
 
   /**
-   * Inits state of show description
+   * Inits show description state for all movies
+   *
+   * @param premierMovies premier movies
    */
-  private initDescriptionState = () => {
-    const { movies } = this.state;
-
-    const emptyState: Boolean[] = [];
-
-    movies.map(movie => {
-      emptyState.push(false)
-    })
-
-    this.setState({ openDescriptions: emptyState });
+  private initDescriptionState = (ongoingMovies: Movie[]) => {
+    this.setState({
+      openDescriptions: Array.from({ length: ongoingMovies.length }, () => false)
+    });
   }
 
   /**
    * Format url for embedding the video
-   * 
+   *
    * @param trailerUrl trailer url
    * @returns embed url
    */
   private formatUrl = (trailerUrl: string): string => {
-    if (/youtu\.be/.test(trailerUrl) || /youtube/.test(trailerUrl)) {
-      const baseUrl = "https://www.youtube-nocookie.com/embed/";
-      if (/youtu\.be/.test(trailerUrl)) {
-        return `${baseUrl}${trailerUrl.split("/")[ trailerUrl.split("/").length-1 ]}`;
-      }
-      if(/watch/.test(trailerUrl)) {
-        return `${baseUrl}${trailerUrl.split("/")[ trailerUrl.split("/").length-1 ].replace("watch?v=", "")}`;
-      }
-      return trailerUrl;
+    const baseUrl = "https://www.youtube-nocookie.com/embed/";
+
+    if (/youtu\.be/.test(trailerUrl)) {
+      return `${baseUrl}${trailerUrl.split("/")[ trailerUrl.split("/").length - 1 ]}`;
     }
+
+    if(/watch/.test(trailerUrl)) {
+      return `${baseUrl}${trailerUrl.split("/")[ trailerUrl.split("/").length - 1 ].replace("watch?v=", "")}`;
+    }
+
     return trailerUrl;
   }
 
@@ -231,7 +249,7 @@ class Movies extends React.Component<Props, State> {
 
   /**
    * Parses showtime field as unix timestamp
-   * 
+   *
    * @param showTime showtime field
    * @returns unix timestamp
    */
@@ -240,10 +258,11 @@ class Movies extends React.Component<Props, State> {
   }
 
   /**
-  * 
-  * @param movie movie whitch showtimes are filtered
-  * @returns filtered showtimes
-  */
+   * Filters show times
+   *
+   * @param movie movie which show times are filtered
+   * @returns filtered show times
+   */
   private filterShowTimes = (movie: Movie) => {
     if (!movie.ACF.showtimes) {
       return [];
@@ -259,7 +278,9 @@ class Movies extends React.Component<Props, State> {
   }
 
   /**
-   * @param movie movie 
+   * Returns image URL
+   *
+   * @param movie movie
    * @returns Url of image
    */
   private getImageUrl = (movie: Movie) => {
@@ -295,7 +316,7 @@ class Movies extends React.Component<Props, State> {
     if (isPremier) {
       return premierDateString
     } else {
-      return dateString; 
+      return dateString;
     }
   }
 
@@ -304,7 +325,7 @@ class Movies extends React.Component<Props, State> {
    */
   private renderContent = () => {
     const { classes } = this.props;
-    const { loading, masonryColumns, hasOngoingMovies, movies } = this.state;
+    const { loading, masonryColumns, ongoingMovies } = this.state;
 
     if (loading) {
       return (
@@ -314,7 +335,7 @@ class Movies extends React.Component<Props, State> {
       );
     }
 
-    if (!hasOngoingMovies) {
+    if (!ongoingMovies?.length) {
       return (
         <Box className={ classes.loadingIconContainer }>
           <Typography variant="h3" component="h3">
@@ -332,7 +353,7 @@ class Movies extends React.Component<Props, State> {
             className={ classes.masornyGrid }
             columnClassName={ classes.masornyColumn }
           >
-            { movies.map(this.renderMovieCard) }
+            { ongoingMovies.map(this.renderMovieCard) }
           </Masonry>
         </Box>
       </Grid>
@@ -368,7 +389,7 @@ class Movies extends React.Component<Props, State> {
 
   /**
    * Renders card content
-   * 
+   *
    * @param movie movie
    * @param index index
    * @param showTimes array of showtimes
@@ -394,7 +415,7 @@ class Movies extends React.Component<Props, State> {
       <>
         { imageUrl &&
           <Typography >
-            <img 
+            <img
               className={ classes.image }
               src={ imageUrl }
               alt="Elokuva"
@@ -405,10 +426,10 @@ class Movies extends React.Component<Props, State> {
           { title }
         </Typography>
         <Typography gutterBottom variant="body1">
-          { strings.movie.nextShowTime } 
+          { strings.movie.nextShowTime }
         </Typography>
         <Typography variant="h6">
-          { showTimes.length > 1 || movie.ACF.ticketsalesurl ? this.parseDate(nextShowTime[0].datetime, false) : this.parseDate(nextShowTime[0].datetime, true) } 
+          { showTimes.length > 1 || movie.ACF.ticketsalesurl ? this.parseDate(nextShowTime[0].datetime, false) : this.parseDate(nextShowTime[0].datetime, true) }
         </Typography>
         { ageLimit &&
           <Box mt={ 1 }>
@@ -452,7 +473,7 @@ class Movies extends React.Component<Props, State> {
             </Typography>
           </Box>
         }
-        { comingShowtimes.length > 0 &&
+        { comingShowtimes.length &&
           <Box mt={ 1 }>
             <Typography component="p">
               <b>{ strings.movie.showTimes }</b>
@@ -460,8 +481,7 @@ class Movies extends React.Component<Props, State> {
           </Box>
         }
         <Box mt={ 1 }>
-          
-        { (comingShowtimes && comingShowtimes.length > 0) && 
+        { comingShowtimes.length &&
           comingShowtimes.map(showTime =>
             <Typography>
               { this.parseDate(showTime.datetime, false) }
@@ -548,8 +568,8 @@ class Movies extends React.Component<Props, State> {
 
   /**
    * Parses movie's categories to a string
-   * 
-   * @param movie movie 
+   *
+   * @param movie movie
    * @returns Category string
    */
   private parseMovieCategories = (movie: Movie) => {

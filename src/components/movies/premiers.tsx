@@ -143,13 +143,12 @@ class Premiers extends React.Component<Props, State> {
         categories,
         movieMedia,
         loading: false
-      })
-
-      this.hidePageLoader();
+      });
     } catch(error) {
-      console.error(error)
-      this.hidePageLoader();
+      console.error(error);
     }
+
+    this.hidePageLoader();
   }
 
   /**
