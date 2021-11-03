@@ -189,7 +189,7 @@ class Premiers extends React.Component<Props, State> {
    * @returns true if show time is upcoming, otherwise false
    */
   private isUpcoming = (showtime: MovieACFShowtimes) => {
-    return !!showtime.datetime.toString() && moment(showtime.datetime).isBetween(moment(), moment().add(1, "week"));
+    return !!showtime.datetime.toString() && moment(showtime.datetime).isBetween(moment(), moment().add(3, "months"));
   }
 
   /**
