@@ -174,12 +174,13 @@ class Movies extends React.Component<Props, State> {
   }
 
   /**
-   * Returns whether given movie show time is in the past or not
+   * Returns whether given movie show time is in the future or not
+   * Shows premiers 5 days before showtime on movie listing
    *
    * @param showtime movie show time
    */
   private inFuture = (showtime: MovieACFShowtimes) => {
-    return !!showtime.datetime && moment(showtime.datetime).isAfter(moment(), "day");
+    return !!showtime.datetime && moment(showtime.datetime).isAfter(moment().add(5, "days"), "day");
   }
 
   /**
@@ -301,23 +302,13 @@ class Movies extends React.Component<Props, State> {
 
   /**
    * Parses date to string
+   *
+   * @param shotTime show time
+   *
    * @returns date string
    */
-  private parseDate = (showTime: Date, isPremier: boolean) => {
-    const date = moment(showTime);
-    const dateName = date.locale('fi').format('dd');
-    const day = date.format('DD');
-    const month = date.format('MM');
-    const hoursMins = date.format('HH:mm');
-
-    const dateString = `${dateName} ${day}.${month}. klo: ${hoursMins}`;
-    const premierDateString = `${dateName} ${day}.${month}`;
-
-    if (isPremier) {
-      return premierDateString
-    } else {
-      return dateString;
-    }
+  private parseDate = (showTime: Date) => {
+    return moment(showTime).locale("fi").format("dd D.MM. [klo] HH.mm");
   }
 
   /**
@@ -429,7 +420,7 @@ class Movies extends React.Component<Props, State> {
           { strings.movie.nextShowTime }
         </Typography>
         <Typography variant="h6">
-          { showTimes.length > 1 || movie.ACF.ticketsalesurl ? this.parseDate(nextShowTime[0].datetime, false) : this.parseDate(nextShowTime[0].datetime, true) }
+          { this.parseDate(nextShowTime[0].datetime) }
         </Typography>
         { ageLimit &&
           <Box mt={ 1 }>
@@ -473,7 +464,7 @@ class Movies extends React.Component<Props, State> {
             </Typography>
           </Box>
         }
-        { comingShowtimes.length &&
+        { !!comingShowtimes.length &&
           <Box mt={ 1 }>
             <Typography component="p">
               <b>{ strings.movie.showTimes }</b>
@@ -481,10 +472,10 @@ class Movies extends React.Component<Props, State> {
           </Box>
         }
         <Box mt={ 1 }>
-        { comingShowtimes.length &&
+        { !!comingShowtimes.length &&
           comingShowtimes.map(showTime =>
             <Typography>
-              { this.parseDate(showTime.datetime, false) }
+              { this.parseDate(showTime.datetime) }
             </Typography>
           )
         }
