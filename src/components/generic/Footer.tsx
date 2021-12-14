@@ -65,7 +65,7 @@ class Footer extends React.Component<Props, State> {
           </div>
 
           <div className = { classes.footerSocialInfo}>
-            <a href = "https://fi-fi.facebook.com/mantyharjussa/" target = "_blank">
+            <a href = "https://fi-fi.facebook.com/mantyharjunkunta/" target = "_blank">
               <img alt = "Linkki Facebookiin" className={ classes.social } src={ socialFb } />
             </a>
             <a href = "https://www.instagram.com/mantyharjunkunta/" target = "_blank">
