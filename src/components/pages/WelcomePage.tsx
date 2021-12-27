@@ -142,7 +142,7 @@ class WelcomePage extends React.Component<Props, State> {
   /**
    * Image picking method
    */
-  public o nPick(image: any) {
+  public onPick(image: any) {
     this.setState({defaultImageUrl: image.src});
   }
 
@@ -539,22 +539,29 @@ class WelcomePage extends React.Component<Props, State> {
    */
   private renderBeforeField = (fieldName?: string) => {
     const { classes } = this.props;
+    const { imageUrl } = this.state;
     const imageTextLabel = strings.eventAdd.addImage;
     if (fieldName === "default-image-url") {
       return (
         <div>
           <input type="checkbox" onChange={this.showDefaultImages}/>
-          <div  className={classes.reactAddLocationWrapper} style={this.state.showDefaultImages && !this.state.imageUrl ? {display:"block"} : {display:"none"}}>
+          <div className={classes.reactAddLocationWrapper} style={this.state.showDefaultImages && !imageUrl ? {display:"block"} : {display:"none"}}>
             <ImagePicker
               images={ imageList.map((image, i) => ({src: image, value: i})) }
               onPick={ this.onPick }
             />
           </div>
-          <div style={this.state.showDefaultImages && this.state.imageUrl ? {display: "block"} : {display: "none"}}>
+          <div style={this.state.showDefaultImages && imageUrl ? {display: "block"} : {display: "none"}}>
             <Typography variant="body2">{strings.eventAdd.deleteOwnPicture}</Typography>
           </div>
           <div className={classes.imageUploadWrapper}>
-            <ImageUpload userId="staging" onSave={ (url) => {this.setState({imageUrl: url})} } label={ imageTextLabel }  />
+            <ImageUpload 
+              userId="staging"
+              onSave={ url => { this.setState({imageUrl: url}) } }
+              onDelete={ () => { this.setState({imageUrl: ""}) } }
+              label={ imageTextLabel }
+              initialImageUrl={ imageUrl }
+            />
           </div>
         </div>
       )
