@@ -1062,7 +1062,18 @@ class WelcomePage extends React.Component<Props, State> {
     try {
       const api = ApiUtils.getApi();
       await api.postWpV2Event({ event: formValues });
-      !copy && this.setState({formValues: {}});
+      if (!copy) {
+        this.setState({
+          formValues: {},
+          modalOpen: false,
+          previewOpen: false
+        });
+      } else {
+        this.setState({
+          modalOpen: true,
+          previewOpen: false
+        });
+      }
       alert(strings.eventAdd.successfullyAdded);
     } catch (error) {
       alert(strings.eventAdd.errorWhenAddingEvent);
