@@ -146,8 +146,8 @@ class WelcomePage extends React.Component<Props, State> {
     this.setState({defaultImageUrl: image.src});
   }
 
-  /*  *
-    * Component did mount life-cycle handler
+  /**
+   * Component did mount life-cycle handler
    */
   public componentDidMount = async () => {
 
@@ -438,7 +438,7 @@ class WelcomePage extends React.Component<Props, State> {
   }
 
   /**
-   * Renders preview form
+   * Renders data cell
    */
   private renderDataCell = (value?: string | number | null, name?: string) => {
     if (!value) {
@@ -487,7 +487,6 @@ class WelcomePage extends React.Component<Props, State> {
     const startDate = this.getFieldValue("start-date-time") && moment(this.getFieldValue("start-date-time"), "x").format("DD.MM.YYYY");
     const endDate = this.getFieldValue("end-date-time") && moment(this.getFieldValue("end-date-time"), "x").format("DD.MM.YYYY");
 
-    // TODO picture
     return (
       <>
         { this.renderEventPicture() }
@@ -603,7 +602,7 @@ class WelcomePage extends React.Component<Props, State> {
       <Dialog
         fullScreen
         className={ classes.dialog }
-        onClose={ this.openPreview }
+        onClose={ this.closePreview }
         open={ previewOpen }
         scroll={ "paper" }
       >
@@ -788,15 +787,6 @@ class WelcomePage extends React.Component<Props, State> {
   private closeModal = () => {
     this.setState({
       modalOpen: false
-    });
-  }
-
-  /**
-   * Sets preview state to closed
-   */
-  private openPreview = () => {
-    this.setState({
-      previewOpen: true
     });
   }
 
