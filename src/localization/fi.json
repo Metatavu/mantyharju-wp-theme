@@ -14,6 +14,9 @@
   "moreCurrentNews": "Lisää ajankohtaista",
   "morePlus": "Lisää +",
   "newEvent": "Uusi tapahtuma",
+  "createEvent": "Create event",
+  "createAndCopyEvent": "Create and copy event",
+  "previewEvent": "Preview event",
   "ongoing": "Menossa",
   "pageNotFound": "Sivua ei löytynyt.",
   "past": "Menneet",
@@ -24,6 +27,17 @@
   "whoops": "Hups!",
   "requiredFieldMissing": "Pakollinen tieto puuttuu",
   "popularPages": "Suosituimmat sivut",
+  "event": {
+    "eventInformation": "Event information",
+    "start": "Start",
+    "end": "End",
+    "provider": "Provider",
+    "phone": "Phone",
+    "email": "Email",
+    "priceInfo": "Price information",
+    "link": "Link",
+    "registration": "Registration"
+  },
   "eventAdd": {
     "addImage": "Lisää kuva raahamalla tai klikkaamalla aluetta",
     "deleteOwnPicture": "Olet tuonut oman kuvan, mikäli haluat käyttää oletuskuvia, poista ensin lisätty kuva.",

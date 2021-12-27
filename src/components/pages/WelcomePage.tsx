@@ -33,7 +33,6 @@ interface Props extends WithStyles<typeof styles> {
 interface State {
   posts: CustomPost[],
   form: Metaform,
-  previewForm: Metaform,
   placeForm: Metaform,
   requiredFieldsMissing: boolean,
   formValues: Dictionary<string | number | null>
@@ -109,7 +108,6 @@ class WelcomePage extends React.Component<Props, State> {
     this.state = {
       posts: [],
       form: {},
-      previewForm: {},
       placeForm: {},
       formValues: {},
       placeFormValues: {},
@@ -181,7 +179,6 @@ class WelcomePage extends React.Component<Props, State> {
 
     const placeForm: Metaform = require("../../metaform-json/create-place.json");
     const form: Metaform = require("../../metaform-json/create-event.json");
-    const previewForm: Metaform = require("../../metaform-json/preview-event.json");
     const keywordRes = await fetch("https://mantyharju.linkedevents.fi/v1/keyword/?page_size=1000&data_source=mantyharju");
     const data = await keywordRes.json();
 
@@ -198,26 +195,11 @@ class WelcomePage extends React.Component<Props, State> {
       return section;
     });
 
-    const previewSections = (previewForm.sections || []).map((section: any) => {
-      if (section.name === "keywords") {
-        section.fields = data.data.map((keyword: any) => {
-          return {
-            name: `keyword__${ keyword.id }`,
-            type: "boolean",
-            title: keyword.name && keyword.name.fi ? keyword.name.fi : keyword.id
-          };
-        });
-      }
-      return section;
-    });
-
     form.sections = sections;
-    previewForm.sections = previewSections;
 
     this.setState({
       form: form,
-      placeForm: placeForm,
-      previewForm: previewForm
+      placeForm: placeForm
     });
 
     this.getNews();
@@ -458,31 +440,97 @@ class WelcomePage extends React.Component<Props, State> {
   /**
    * Renders preview form
    */
-  private renderPreviewForm = () => {
-    const { classes } = this.props;
-    const { requiredFieldsMissing, previewForm } = this.state;
+  private renderDataCell = (value?: string | number | null, name?: string) => {
+    if (!value) {
+      return null;
+    }
 
-    // TODO update renderer
-    // TODO update styles
-    // TODO update disable
+    if (!name) {
+      return (
+        <Typography variant="body2">
+          { value?.toString() }
+        </Typography>
+      );
+    } else {
+      return (
+        <Typography variant="body2">
+          { `${name}: ${value?.toString()}` }
+        </Typography>
+      );
+    }
+  }
+
+  /**
+   * Renders single LinkedEvent content content
+   */
+  private renderEventPicture() {
+    const imageUrl = this.getFieldValue("default-image-url")?.toString()
+
+    if (!imageUrl) {
+      return null;
+    } else {
+      return (
+        <div>
+          <img src={ imageUrl } alt=""/>
+        </div>
+      );
+    }
+  }
+
+  /**
+   * Renders preview form
+   */
+  private renderPreviewForm = () => {
+    const { fetchData } = this.state;
+
+    const locationName = fetchData.find(dataEntry => dataEntry.id === this.getFieldValue("location"))?.name.fi;
+    const startDate = this.getFieldValue("start-date-time") && moment(this.getFieldValue("start-date-time"), "x").format("DD.MM.YYYY");
+    const endDate = this.getFieldValue("end-date-time") && moment(this.getFieldValue("end-date-time"), "x").format("DD.MM.YYYY");
+
+    // TODO picture
     return (
-      <div className={ classes.metaformWrapper }>
-        <MetaformComponent
-          form={ previewForm }
-          formReadOnly={ false }
-          onSubmit={ this.onSubmit }
-          datePicker={ this.datePicker }
-          uploadFile={ this.uploadFile }
-          renderIcon={ this.renderIcon }
-          getFieldValue={ this.getFieldValue }
-          setFieldValue={ this.setFieldValue }
-          datetimePicker={ this.datetimePicker }
-          renderBeforeField={ this.renderBeforeField }
-          setAutocompleteOptions={ this.setAutocompleteOptions }
-          showRequiredFieldsMissingError={ requiredFieldsMissing }
-          requiredFieldsMissingError={ strings.requiredFieldMissing }
-        />
-      </div>
+      <>
+        { this.renderEventPicture() }
+        <Typography variant="h3">
+          { this.getFieldValue("name-fi")?.toString() }
+        </Typography>
+        <Typography>
+          { this.getFieldValue("description-fi")?.toString() }
+        </Typography>
+        <Typography variant="h6">
+          { strings.event.eventInformation }
+        </Typography>
+        { this.renderDataCell(locationName) }
+        { this.renderDataCell(startDate, strings.event.start) }
+        { this.renderDataCell(endDate, strings.event.end) }
+        { this.renderDataCell(this.getFieldValue("provider-fi"), strings.event.provider) }
+        { this.renderDataCell(this.getFieldValue("provider-phone"), strings.event.phone) }
+        { this.renderDataCell(this.getFieldValue("provider-email"), strings.event.email) }
+        { this.renderDataCell(this.getFieldValue("price-fi"), strings.event.priceInfo) }
+        { this.renderDataCell(this.getFieldValue("price-url"), strings.event.link) }
+        { this.getFieldValue('registration-fi') || this.getFieldValue('registration_url') &&
+          <>
+            <hr />
+            <Typography variant="h6">
+              { strings.event.registration }
+            </Typography>
+          </>
+        }
+        { this.renderDataCell(this.getFieldValue("registration-fi")) }
+        <Typography variant="body2">
+          <a href={ this.getFieldValue("registration_url")?.toString() || "" }>{ this.getFieldValue("registration_url") }</a>
+        </Typography>
+        <Button
+          onClick={ () => this.onSubmitEvent() }
+        >
+          { strings.createEvent }
+        </Button>
+        <Button
+          onClick={ () => this.onSubmitEvent(true) }
+        >
+          { strings.createAndCopyEvent }
+        </Button>
+      </>
     );
   }
 
@@ -554,8 +602,8 @@ class WelcomePage extends React.Component<Props, State> {
       >
         <DialogTitle>
           <Grid container alignItems="flex-start" justify="space-between" direction="row">
-            <Typography variant="h1" className={ classes.heroText } style={{ margin: 0 }}>{strings.newEvent}</Typography>
-            <Button onClick={ this.closePreview } style={{ color: "#fff", alignItems: "right" }}>{strings.close}</Button>
+            <Typography variant="h1" className={ classes.heroText } style={{ margin: 0 }}>{ strings.previewEvent }</Typography>
+            <Button onClick={ this.closePreview } style={{ color: "#fff", alignItems: "right" }}>{ strings.close }</Button>
           </Grid>
         </DialogTitle>
         <DialogContent>
@@ -978,14 +1026,7 @@ class WelcomePage extends React.Component<Props, State> {
   private onSubmitEvent = async (copy?: boolean) =>  {
     const { formValues } = this.state;
     if (!this.isFormValid()) {
-      this.setState({
-        requiredFieldsMissing: true
-      });
       return;
-    } else {
-      this.setState({
-        requiredFieldsMissing: false
-      });
     }
     const start = moment(formValues["start-date-time"] as number);
     const end = moment(formValues["end-date-time"] as number);
@@ -1035,6 +1076,17 @@ class WelcomePage extends React.Component<Props, State> {
    * Method for previewing event
    */
   private onPreviewEvent = async () =>  {
+    if (!this.isFormValid()) {
+      this.setState({
+        requiredFieldsMissing: true
+      });
+      return;
+    } else {
+      this.setState({
+        requiredFieldsMissing: false
+      });
+    }
+
     this.setState({
       previewOpen: true,
       modalOpen: false
@@ -1053,12 +1105,6 @@ class WelcomePage extends React.Component<Props, State> {
     switch (submitButtonName) {
       case "preview-event":
         this.onPreviewEvent();
-        break;
-      case "submit-copy-event":
-        this.onSubmitEvent(true);
-        break;
-      case "preview-event":
-        this.onSubmitEvent();
         break;
       case "submit-place":
         const { placeFormValues } = this.state;
