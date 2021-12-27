@@ -7,11 +7,6 @@
           "type": "text",
           "title": "Tapahtuman nimi",
           "required": true
-        },
-        {
-          "name": "name-help",
-          "type": "html",
-          "html": "<div class='help-container'><p>Lisää tapahtuman nimi. Mikäli haluat kuvata tapahtuman useammalla kielellä, rastita haluamasi kieli ja lisää nimi kyseisellä kielellä.</p></div>"
         }
       ]
     },
@@ -42,11 +37,6 @@
             "field": "all-day",
             "equals": "checked"
           }
-        },
-        {
-          "name": "time-help",
-          "type": "html",
-          "html": "<div class='help-container'><p>Valitse tapahtuman alkamispäivämäärä. Valitse alkamisaika, jos tapahtuma alkaa tiettyyn kellonaikaan.</p><p>Valitse myös päättymispäivä sekä päättymisaika.</p></div>"
         },
         {
           "name": "end-date-time",
@@ -81,11 +71,6 @@
           "sourceUrl": "/linkedevents/places/search"
         },
         {
-          "name": "location-help",
-          "type": "html",
-          "html": "<div class='help-container'><p>Kirjoita kenttään tapahtumapaikan nimen alkua ja valitse oikea paikka alle ilmestyvästä listasta.</p><p>Ilmoittautuminen kohdassa voit määritellä tarkemmin tapahtumaan saapumisesta.</p></div>"
-        },
-        {
           "name": "add-location",
           "type": "html",
           "html": "<strong>Mikäli paikkaa ei löydy haulla voit lisätä uuden klikkaamalla nappia</strong>"
@@ -112,16 +97,6 @@
             "field": "show-default-images",
             "equals": "checked"
           }
-        },
-        {
-          "name": "default-image-help",
-          "type": "html",
-          "html": "<div class='help-container'><p>Mikäli sinulla ei ole tapahtumaan liittyvää kuvaa, voit valita ‘Näytä oletuskuvat’ -kohdasta mieleisesi oletuskuvan.</p></div>"
-        },
-        {
-          "name": "image-help",
-          "type": "html",
-          "html": "<div class='help-container'><p>Lisää tapahtumalle laadukas ja hyvä kuva.</p><p>Sallitut tiedostotyypit: jpg, jpeg, png.</p><p>Kuvan on oltava mitoiltaan vähintään 1140x400 pikseliä.</p><p>Suurin sallittu tiedostokoko on 2 Mt.</p><p>Valitse mieluiten vaakamallinen kuva, koska kuvan ala- ja yläosasta rajautuu osa pois.</p><p>Parhaiten toimii kuva, jossa ei ole tekstiä.</p></div>"
         }
       ]
     },
@@ -133,11 +108,6 @@
           "name": "provider-fi",
           "type": "text",
           "required": true
-        },
-        {
-          "name": "provider-help",
-          "type": "html",
-          "html": "<div class='help-container'><p>Tapahtumajärjestäjän nimi, puhelinnumero ja sähköposti näytetään julkisesti tapahtumatietojen yhteydessä.</p></div>"
         },
         {
           "title": "Puhelinnumero",
@@ -161,11 +131,6 @@
           "name": "responsible-fi",
           "type": "text",
           "required": true
-        },
-        {
-          "name": "responsible-help",
-          "type": "html",
-          "html": "<div class='help-container'><p>Vastuuhenkilön tiedot näkyvät vain ylläpidolle.</p><p>Niitä käytetään tarvittaessa yhteydenottoon.</p></div>"
         },
         {
           "title": "Puhelinnumero",
@@ -223,11 +188,6 @@
           }
         },
         {
-          "name": "price-help",
-          "type": "html",
-          "html": "<div class='help-container'><p>Mikäli tapahtuma on maksullinen, lisää rasti ruutuun ‘Pääsymaksu’ ja lisää lipun hinta tekstimuodossa (esim. 10 euroa/hlö)</p><p>Mikäli käytössä on sähköinen lipunmyynti, voit lisätä linkin sivustolle.</p></div>"
-        },
-        {
           "name": "price-url",
           "type": "url",
           "title": "Linkki lipunmyyntisivulle",
@@ -240,15 +200,6 @@
       "title": "Tapahtumaluokat *",
       "name": "keywords",
       "fields": []
-    },
-    {
-      "fields": [
-        {
-          "name": "keyword-help",
-          "type": "html",
-          "html": "<div class='help-container'><p>Valitse tapahtumallesi 1-3 tapahtumaluokkaa.</p></div>"
-        }
-      ]
     },
     {
       "title": "Tapahtuman ilmoittautuminen",
@@ -279,11 +230,6 @@
           }
         },
         {
-          "name": "registration-help",
-          "type": "html",
-          "html": "<div class='help-container'><p>Kerro mahdollisesta ennakkoilmoittautumisesta tai anna lisätietoja esimerkiksi paikkavarauksista.</p><p>Voit lisätä linkin ilmoittautumissivulle.</p></div>"
-        },
-        {
           "name": "registration_url",
           "type": "url",
           "title": "Linkki ilmoittautumissivulle",
@@ -291,14 +237,14 @@
           "required": false
         },
         {
-          "name": "preview-event",
+          "name": "submit-event",
           "type": "submit",
-          "text": "Esikatselu"
+          "text": "Luo tapahtuma"
         },
         {
-          "name": "submit-help",
-          "type": "html",
-          "html": "<div class='help-container'><p>Mikäli tapahtuman lisääminen ei onnistu, voit olla yhteydessä: eija.kling@mantyharju.fi</p></div>"
+          "name": "submit-copy-event",
+          "type": "submit",
+          "text": "Luo ja kopioi tapahtuma"
         }
       ]
     }

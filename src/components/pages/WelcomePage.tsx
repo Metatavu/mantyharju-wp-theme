@@ -33,6 +33,7 @@ interface Props extends WithStyles<typeof styles> {
 interface State {
   posts: CustomPost[],
   form: Metaform,
+  previewForm: Metaform,
   placeForm: Metaform,
   requiredFieldsMissing: boolean,
   formValues: Dictionary<string | number | null>
@@ -48,6 +49,7 @@ interface State {
   linkedEventsLimitingNumber: number,
   customizeFields: CustomizeField[],
   modalOpen: boolean,
+  previewOpen: boolean,
   defaultImageUrl: string,
   showDefaultImages: boolean,
   addPlaceVisibility: boolean,
@@ -107,6 +109,7 @@ class WelcomePage extends React.Component<Props, State> {
     this.state = {
       posts: [],
       form: {},
+      previewForm: {},
       placeForm: {},
       formValues: {},
       placeFormValues: {},
@@ -121,6 +124,7 @@ class WelcomePage extends React.Component<Props, State> {
       linkedEventsLimitingNumber: 4,
       customizeFields: [],
       modalOpen: false,
+      previewOpen: false,
       defaultImageUrl: "",
       showDefaultImages: false,
       addPlaceVisibility: false,
@@ -177,6 +181,7 @@ class WelcomePage extends React.Component<Props, State> {
 
     const placeForm: Metaform = require("../../metaform-json/create-place.json");
     const form: Metaform = require("../../metaform-json/create-event.json");
+    const previewForm: Metaform = require("../../metaform-json/preview-event.json");
     const keywordRes = await fetch("https://mantyharju.linkedevents.fi/v1/keyword/?page_size=1000&data_source=mantyharju");
     const data = await keywordRes.json();
 
@@ -193,11 +198,26 @@ class WelcomePage extends React.Component<Props, State> {
       return section;
     });
 
+    const previewSections = (previewForm.sections || []).map((section: any) => {
+      if (section.name === "keywords") {
+        section.fields = data.data.map((keyword: any) => {
+          return {
+            name: `keyword__${ keyword.id }`,
+            type: "boolean",
+            title: keyword.name && keyword.name.fi ? keyword.name.fi : keyword.id
+          };
+        });
+      }
+      return section;
+    });
+
     form.sections = sections;
+    previewForm.sections = previewSections;
 
     this.setState({
       form: form,
       placeForm: placeForm,
+      previewForm: previewForm
     });
 
     this.getNews();
@@ -394,9 +414,7 @@ class WelcomePage extends React.Component<Props, State> {
             </Grid>
           </DialogTitle>
           <DialogContent>
-            {
-              this.renderForm(this.state.form)
-            }
+            { this.renderForm() }
           </DialogContent>
           <DialogActions>
             <Button autoFocus onClick={ this.closeModal } variant="text" color="primary">
@@ -404,7 +422,151 @@ class WelcomePage extends React.Component<Props, State> {
             </Button>
           </DialogActions>
         </Dialog>
+        { this.renderPreview() }
       </BasicLayout>
+    );
+  }
+
+  /**
+   * Renders single form
+   */
+  private renderForm = () => {
+    const { classes } = this.props;
+    const { requiredFieldsMissing, form } = this.state;
+
+    return (
+      <div className={ classes.metaformWrapper }>
+        <MetaformComponent
+          form={ form }
+          formReadOnly={ false }
+          onSubmit={ this.onSubmit }
+          datePicker={ this.datePicker }
+          uploadFile={ this.uploadFile }
+          renderIcon={ this.renderIcon }
+          getFieldValue={ this.getFieldValue }
+          setFieldValue={ this.setFieldValue }
+          datetimePicker={ this.datetimePicker }
+          renderBeforeField={ this.renderBeforeField }
+          setAutocompleteOptions={ this.setAutocompleteOptions }
+          showRequiredFieldsMissingError={ requiredFieldsMissing }
+          requiredFieldsMissingError={ strings.requiredFieldMissing }
+        />
+      </div>
+    );
+  }
+
+  /**
+   * Renders preview form
+   */
+  private renderPreviewForm = () => {
+    const { classes } = this.props;
+    const { requiredFieldsMissing, previewForm } = this.state;
+
+    // TODO update renderer
+    // TODO update styles
+    // TODO update disable
+    return (
+      <div className={ classes.metaformWrapper }>
+        <MetaformComponent
+          form={ previewForm }
+          formReadOnly={ false }
+          onSubmit={ this.onSubmit }
+          datePicker={ this.datePicker }
+          uploadFile={ this.uploadFile }
+          renderIcon={ this.renderIcon }
+          getFieldValue={ this.getFieldValue }
+          setFieldValue={ this.setFieldValue }
+          datetimePicker={ this.datetimePicker }
+          renderBeforeField={ this.renderBeforeField }
+          setAutocompleteOptions={ this.setAutocompleteOptions }
+          showRequiredFieldsMissingError={ requiredFieldsMissing }
+          requiredFieldsMissingError={ strings.requiredFieldMissing }
+        />
+      </div>
+    );
+  }
+
+  /**
+   * Renders before field
+   */
+  private renderBeforeField = (fieldName?: string) => {
+    const { classes } = this.props;
+    const imageTextLabel = strings.eventAdd.addImage;
+    if (fieldName === "default-image-url") {
+      return (
+        <div>
+          <input type="checkbox" onChange={this.showDefaultImages}/>
+          <div  className={classes.reactAddLocationWrapper} style={this.state.showDefaultImages && !this.state.imageUrl ? {display:"block"} : {display:"none"}}>
+            <ImagePicker
+              images={imageList.map((image, i) => ({src: image, value: i}))}
+              onPick={this.onPick}
+            />
+          </div>
+          <div style={this.state.showDefaultImages && this.state.imageUrl ? {display: "block"} : {display: "none"}}>
+            <Typography variant="body2">{strings.eventAdd.deleteOwnPicture}</Typography>
+          </div>
+          <div className={classes.imageUploadWrapper}>
+            <ImageUpload userId="staging" onSave={ (url) => {this.setState({imageUrl: url})} } label={ imageTextLabel }  />
+          </div>
+        </div>
+      )
+    }
+    if (fieldName === "add-location") {
+      return (
+        <div className={ classes.reactAddLocationWrapper }>
+          <input type="button" value={this.state.addPlaceVisibility ? strings.eventAdd.closeAddingPlace : strings.eventAdd.addPlace} onClick={this.addPlaceVisibility}/>
+          <div style={this.state.addPlaceVisibility ? { display:"block" } : { display:"none" }}>
+            <div className={ classes.metaformWrapper }>
+              <MetaformComponent
+                form={ this.state.placeForm }
+                formReadOnly={ false }
+                getFieldValue={ this.getPlaceFieldValue }
+                setFieldValue={ this.setPlaceFieldValue }
+                datePicker={ this.datePicker }
+                datetimePicker={ this.datetimePicker }
+                uploadFile={ this.uploadFile }
+                setAutocompleteOptions={ this.setAutocompleteOptions }
+                renderIcon={ this.renderIcon }
+                onSubmit={ this.onSubmit }
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return;
+  }
+
+  /**
+   * Render preview
+   */
+  private renderPreview = () => {
+    const { previewOpen } = this.state;
+    const { classes } = this.props;
+
+    return (
+      <Dialog
+        fullScreen
+        className={ classes.dialog }
+        onClose={ this.openPreview }
+        open={ previewOpen }
+        scroll={ "paper" }
+      >
+        <DialogTitle>
+          <Grid container alignItems="flex-start" justify="space-between" direction="row">
+            <Typography variant="h1" className={ classes.heroText } style={{ margin: 0 }}>{strings.newEvent}</Typography>
+            <Button onClick={ this.closePreview } style={{ color: "#fff", alignItems: "right" }}>{strings.close}</Button>
+          </Grid>
+        </DialogTitle>
+        <DialogContent>
+          { this.renderPreviewForm() }
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus onClick={ this.closePreview } variant="text" color="primary">
+            {strings.cancel}
+          </Button>
+        </DialogActions>
+      </Dialog>
     );
   }
 
@@ -575,6 +737,25 @@ class WelcomePage extends React.Component<Props, State> {
   }
 
   /**
+   * Sets preview state to closed
+   */
+  private openPreview = () => {
+    this.setState({
+      previewOpen: true
+    });
+  }
+
+  /**
+   * Sets preview state to closed
+   */
+  private closePreview = () => {
+    this.setState({
+      modalOpen: true,
+      previewOpen: false
+    });
+  }
+
+  /**
    * Method for getting customizer field value
    *
    * @param key field key
@@ -585,81 +766,6 @@ class WelcomePage extends React.Component<Props, State> {
     const field = customizeFields.find((field) => field.key === key);
     const value = field ? field.value : "";
     return value;
-  }
-
-  /**
-   * Render single form
-   */
-  private renderForm = (form: Metaform) => {
-    const { classes } = this.props;
-    const { requiredFieldsMissing } = this.state;
-    return (
-      <div className={ classes.metaformWrapper }>
-        <MetaformComponent
-          form={ form }
-          formReadOnly={ false }
-          onSubmit={ this.onSubmit }
-          datePicker={ this.datePicker }
-          uploadFile={ this.uploadFile }
-          renderIcon={ this.renderIcon }
-          getFieldValue={ this.getFieldValue }
-          setFieldValue={ this.setFieldValue }
-          datetimePicker={ this.datetimePicker }
-          renderBeforeField={ this.renderBeforeField }
-          setAutocompleteOptions={ this.setAutocompleteOptions }
-          showRequiredFieldsMissingError={ requiredFieldsMissing }
-          requiredFieldsMissingError={ strings.requiredFieldMissing }
-        />
-      </div>
-    );
-  }
-
-  private renderBeforeField = (fieldName?: string) => {
-    const { classes } = this.props;
-    const imageTextLabel = strings.eventAdd.addImage;
-    if (fieldName === "default-image-url") {
-      return (
-        <div>
-          <input type="checkbox" onChange={this.showDefaultImages}/>
-          <div  className={classes.reactAddLocationWrapper} style={this.state.showDefaultImages && !this.state.imageUrl ? {display:"block"} : {display:"none"}}>
-            <ImagePicker
-              images={imageList.map((image, i) => ({src: image, value: i}))}
-              onPick={this.onPick}
-            />
-          </div>
-          <div style={this.state.showDefaultImages && this.state.imageUrl ? {display: "block"} : {display: "none"}}>
-            <Typography variant="body2">{strings.eventAdd.deleteOwnPicture}</Typography>
-          </div>
-          <div className={classes.imageUploadWrapper}>
-            <ImageUpload userId="staging" onSave={ (url) => {this.setState({imageUrl: url})} } label={ imageTextLabel }  />
-          </div>
-        </div>
-      )
-    }
-    if (fieldName === "add-location") {
-      return (
-        <div className={ classes.reactAddLocationWrapper }>
-          <input type="button" value={this.state.addPlaceVisibility ? strings.eventAdd.closeAddingPlace : strings.eventAdd.addPlace} onClick={this.addPlaceVisibility}/>
-          <div style={this.state.addPlaceVisibility ? { display:"block" } : { display:"none" }}>
-            <div className={ classes.metaformWrapper }>
-              <MetaformComponent
-                form={ this.state.placeForm }
-                formReadOnly={ false }
-                getFieldValue={ this.getPlaceFieldValue }
-                setFieldValue={ this.setPlaceFieldValue }
-                datePicker={ this.datePicker }
-                datetimePicker={ this.datetimePicker }
-                uploadFile={ this.uploadFile }
-                setAutocompleteOptions={ this.setAutocompleteOptions }
-                renderIcon={ this.renderIcon }
-                onSubmit={ this.onSubmit }
-              />
-            </div>
-          </div>
-        </div>
-      );
-    }
-    return;
   }
 
   /**
@@ -867,6 +973,75 @@ class WelcomePage extends React.Component<Props, State> {
   }
 
   /**
+   * Method for submitting event
+   */
+  private onSubmitEvent = async (copy?: boolean) =>  {
+    const { formValues } = this.state;
+    if (!this.isFormValid()) {
+      this.setState({
+        requiredFieldsMissing: true
+      });
+      return;
+    } else {
+      this.setState({
+        requiredFieldsMissing: false
+      });
+    }
+    const start = moment(formValues["start-date-time"] as number);
+    const end = moment(formValues["end-date-time"] as number);
+
+    if (this.state.defaultImageUrl || this.state.imageUrl) {
+    formValues["image-url"] = this.state.imageUrl ? this.state.imageUrl : this.state.defaultImageUrl;
+    } else {
+      return alert(strings.eventAdd.notificationAddImage);
+    }
+
+    const hasStartTime = !(start.hour() === 0 && start.minute() === 0);
+    const hasEndTime = !(end.hour() === 0 && end.minute() === 0);
+
+    formValues["has-start-time"] = hasStartTime ? "true" : "false";
+    formValues["has-end-time"] = hasEndTime ? "true" : "false";
+
+    formValues["start-time-string"] = start.format();
+    formValues["end-time-string"] = end.format();
+
+    formValues["submit"] = "event";
+
+    const keywords: string[] = [];
+    const formKeys = Object.keys(formValues);
+    formKeys.forEach((formKey) => {
+      if (formKey.startsWith("keyword__") && formValues[formKey] == "checked") {
+        keywords.push(formKey.replace("keyword__", ""));
+      }
+    });
+
+    if (keywords.length < 1) {
+      return alert(strings.eventAdd.notificationAddKeyword);
+    }
+
+    formValues["keywords"] = keywords.join(",");
+
+    try {
+      const api = ApiUtils.getApi();
+      await api.postWpV2Event({ event: formValues });
+      !copy && this.setState({formValues: {}});
+      alert(strings.eventAdd.successfullyAdded);
+    } catch (error) {
+      alert(strings.eventAdd.errorWhenAddingEvent);
+    }
+  }
+
+  /**
+   * Method for previewing event
+   */
+  private onPreviewEvent = async () =>  {
+    this.setState({
+      previewOpen: true,
+      modalOpen: false
+    });
+  }
+
+  /**
    * Method for submitting form
    *
    * @param source submit input info
@@ -875,76 +1050,33 @@ class WelcomePage extends React.Component<Props, State> {
 
     const submitButtonName = source["name"];
 
-    if (submitButtonName === "submit-event") {
-      const { formValues } = this.state;
-      if (!this.isFormValid()) {
-        this.setState({
-          requiredFieldsMissing: true
-        });
-        return;
-      } else {
-        this.setState({
-          requiredFieldsMissing: false
-        });
-      }
-      const start = moment(formValues["start-date-time"] as number);
-      const end = moment(formValues["end-date-time"] as number);
+    switch (submitButtonName) {
+      case "preview-event":
+        this.onPreviewEvent();
+        break;
+      case "submit-copy-event":
+        this.onSubmitEvent(true);
+        break;
+      case "preview-event":
+        this.onSubmitEvent();
+        break;
+      case "submit-place":
+        const { placeFormValues } = this.state;
 
-      if (this.state.defaultImageUrl || this.state.imageUrl) {
-      formValues["image-url"] = this.state.imageUrl ? this.state.imageUrl : this.state.defaultImageUrl;
-      } else {
-        return alert(strings.eventAdd.notificationAddImage);
-      }
-
-      const hasStartTime = !(start.hour() === 0 && start.minute() === 0);
-      const hasEndTime = !(end.hour() === 0 && end.minute() === 0);
-
-      formValues["has-start-time"] = hasStartTime ? "true" : "false";
-      formValues["has-end-time"] = hasEndTime ? "true" : "false";
-
-      formValues["start-time-string"] = start.format();
-      formValues["end-time-string"] = end.format();
-
-      formValues["submit"] = "event";
-
-      const keywords: string[] = [];
-      const formKeys = Object.keys(formValues);
-      formKeys.forEach((formKey) => {
-        if (formKey.startsWith("keyword__") && formValues[formKey] == "checked") {
-          keywords.push(formKey.replace("keyword__", ""));
+        try {
+          const api = ApiUtils.getApi();
+  
+          placeFormValues["submit"] = "place";
+  
+          api.postWpV2Event({ event: placeFormValues });
+          this.setState({placeFormValues: {}});
+          this.setAutocompleteOptions("searchAgain")
+        } catch (error) {
+            alert(strings.eventAdd.errorWhenAddingPlace);
         }
-      });
-
-      if (keywords.length < 1) {
-        return alert(strings.eventAdd.notificationAddKeyword);
-      }
-
-      formValues["keywords"] = keywords.join(",");
-
-      try {
-        const api = ApiUtils.getApi();
-        await api.postWpV2Event({ event: formValues });
-        this.setState({formValues: {}});
-        alert(strings.eventAdd.successfullyAdded);
-      } catch (error) {
-        alert(strings.eventAdd.errorWhenAddingEvent);
-      }
-    }
-    if (submitButtonName === "submit-place") {
-
-      const { placeFormValues } = this.state;
-
-      try {
-        const api = ApiUtils.getApi();
-
-        placeFormValues["submit"] = "place";
-
-        api.postWpV2Event({ event: placeFormValues });
-        this.setState({placeFormValues: {}});
-        this.setAutocompleteOptions("searchAgain")
-      } catch (error) {
-          alert(strings.eventAdd.errorWhenAddingPlace);
-      }
+        break;
+      default:
+        break;
     }
   }
 
