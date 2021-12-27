@@ -63,6 +63,7 @@ interface State {
   events?: any,
   pageSize: number;
   loadMoreEventsDisabled: boolean;
+  loadMoreEventsVisible: boolean;
 }
 
 interface Dictionary<T> {
@@ -129,6 +130,7 @@ class WelcomePage extends React.Component<Props, State> {
       fethingData: false,
       pageSize: 1,
       loadMoreEventsDisabled: false,
+      loadMoreEventsVisible: true
     };
 
     this.onPick = this.onPick.bind(this);
@@ -212,7 +214,8 @@ class WelcomePage extends React.Component<Props, State> {
     }
 
     this.setState({
-      events: eventData?.events
+      events: eventData?.events,
+      loadMoreEventsVisible: eventData.eventsMeta && eventData.eventsMeta.next !== null
     })
   }
 
@@ -228,7 +231,17 @@ class WelcomePage extends React.Component<Props, State> {
    */
   public render() {
     const { lang, slug, classes } = this.props;
-    const { announcementsPageLink, newsPageLink, jobsLink, linkedEventsPost, news, announcements, jobs, loadMoreEventsDisabled } = this.state;
+    const {
+      announcementsPageLink,
+      newsPageLink,
+      jobsLink,
+      linkedEventsPost,
+      news,
+      announcements,
+      jobs,
+      loadMoreEventsDisabled,
+      loadMoreEventsVisible
+    } = this.state;
     const showcaseImage = this.getCustomizerValue("showcase_image");
     const showcaseTitle = this.getCustomizerValue("showcase_title");
     const showcaseText = this.getCustomizerValue("showcase_text");
@@ -358,14 +371,17 @@ class WelcomePage extends React.Component<Props, State> {
             </div>
           }
           <div className={ classes.eventsButtonRow }>
-            <Button
-              className={ classes.allEventsButton }
-              title= {strings.showMoreEvents}
-              onClick={this.expandLinkedEvents}
-              disabled={ loadMoreEventsDisabled }
-            >
-              {strings.showMore}
-            </Button>
+            {
+              loadMoreEventsVisible &&
+              <Button
+                className={ classes.allEventsButton }
+                title= {strings.showMoreEvents}
+                onClick={this.expandLinkedEvents}
+                disabled={ loadMoreEventsDisabled }
+              >
+                {strings.showMore}
+              </Button>
+            }
             <Button
               onClick={ this.openModal }
               className={ classes.addLinkedEventButton }
@@ -836,25 +852,25 @@ class WelcomePage extends React.Component<Props, State> {
   /**
    * Fetching method for fetching events
    */
-      private fetchEvents = async () => {
-        const { pageSize } = this.state;
-        try {
-          let startDate = moment().utcOffset(0, true).format()
-          let fetchAddress = `https://mantyharju.linkedevents.fi/v1/event/?&page_size=4&page=${ pageSize }&sort=start_time&start=${ startDate }`;
+  private fetchEvents = async () => {
+    const { pageSize } = this.state;
+    try {
+      let startDate = moment().utcOffset(0, true).format()
+      let fetchAddress = `https://mantyharju.linkedevents.fi/v1/event/?&page_size=4&page=${ pageSize }&sort=start_time&start=${ startDate }`;
 
-          const apiData = await fetch(fetchAddress)
-          const response = await apiData.json();
+      const apiData = await fetch(fetchAddress)
+      const response = await apiData.json();
 
-          const events = response.data || [];
-          const eventsMeta = response.meta || [];
-          
-          return { events, eventsMeta }
+      const events = response.data || [];
+      const eventsMeta = response.meta || [];
+      
+      return { events, eventsMeta }
 
-        } catch (error) {
-          console.error(error)
-          return null;
-        }
-      }
+    } catch (error) {
+      console.error(error)
+      return null;
+    }
+  }
 
   /**
    * Method for rendering form icons
@@ -1029,7 +1045,6 @@ class WelcomePage extends React.Component<Props, State> {
                 >
                   <CardContent>
                     <div className={ classes.centered }
-   
                     >
                       <Typography gutterBottom variant="h5">
                         { moment(event.start_time).format("DD.MM.YYYY") }
@@ -1136,7 +1151,7 @@ class WelcomePage extends React.Component<Props, State> {
    */
   private expandLinkedEvents = async () => {
     const { pageSize, events, loadMoreEventsDisabled } = this.state;
- 
+
     this.setState({
       pageSize: pageSize + 1 
     })
@@ -1147,7 +1162,7 @@ class WelcomePage extends React.Component<Props, State> {
       return;
     }
       this.setState({
-        events: [...events].concat(eventData.events),
+        events: eventData.events,
         loadMoreEventsDisabled: eventData.eventsMeta && eventData.eventsMeta.next === null ? true : false
     })
   }
