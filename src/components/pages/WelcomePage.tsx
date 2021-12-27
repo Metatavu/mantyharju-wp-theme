@@ -142,12 +142,12 @@ class WelcomePage extends React.Component<Props, State> {
   /**
    * Image picking method
    */
-  public onPick(image: any) {
+  public o nPick(image: any) {
     this.setState({defaultImageUrl: image.src});
   }
 
-  /**
-   * Component did mount life-cycle handler
+  /*  *
+    * Component did mount life-cycle handler
    */
   public componentDidMount = async () => {
 
@@ -461,17 +461,17 @@ class WelcomePage extends React.Component<Props, State> {
   }
 
   /**
-   * Renders single LinkedEvent content content
+   * Renders event picture
    */
   private renderEventPicture() {
-    const imageUrl = this.getFieldValue("default-image-url")?.toString()
+    const { imageUrl, defaultImageUrl } = this.state;
 
-    if (!imageUrl) {
+    if (!imageUrl && !defaultImageUrl) {
       return null;
     } else {
       return (
         <div>
-          <img src={ imageUrl } alt=""/>
+          <img src={ imageUrl || defaultImageUrl } alt=""/>
         </div>
       );
     }
@@ -546,8 +546,8 @@ class WelcomePage extends React.Component<Props, State> {
           <input type="checkbox" onChange={this.showDefaultImages}/>
           <div  className={classes.reactAddLocationWrapper} style={this.state.showDefaultImages && !this.state.imageUrl ? {display:"block"} : {display:"none"}}>
             <ImagePicker
-              images={imageList.map((image, i) => ({src: image, value: i}))}
-              onPick={this.onPick}
+              images={ imageList.map((image, i) => ({src: image, value: i})) }
+              onPick={ this.onPick }
             />
           </div>
           <div style={this.state.showDefaultImages && this.state.imageUrl ? {display: "block"} : {display: "none"}}>
