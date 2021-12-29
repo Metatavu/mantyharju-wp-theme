@@ -1,23 +1,23 @@
-import * as React from "react";
-import BasicLayout from "../BasicLayout";
-import ReactHtmlParser from "react-html-parser";
-import ApiUtils from "../../utils/ApiUtils";
-import { WithStyles, withStyles, Button, CircularProgress, Typography, SvgIcon, Icon, Dialog, DialogTitle, DialogContent, DialogActions, Grid, Card, CardContent } from "@material-ui/core";
-import styles from "../../styles/welcome-page";
-import * as moment from "moment";
+import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Icon, Paper, SvgIcon, Typography, WithStyles, withStyles } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import { Post, MenuLocationData, CustomizeField, Page, CustomPost } from "../../generated/client/src";
-import { jobsIconSvgPath, announcementIconSvgPath, currentNewsIconSvgPath } from "../../resources/icons/svgIcons";
+import fi from "date-fns/esm/locale/fi";
+import { FieldValue, IconName, Metaform, MetaformComponent } from "metaform-react";
+import * as moment from "moment";
+import * as React from "react";
 import DatePicker, { registerLocale } from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import ReactHtmlParser from "react-html-parser";
 import ImagePicker from "react-image-picker";
 import "react-image-picker/dist/index.css";
-import "react-datepicker/dist/react-datepicker.css";
-import fi from "date-fns/esm/locale/fi";
-import ImageUpload from "./image-upload";
-import { MetaformComponent, IconName, FieldValue, Metaform } from "metaform-react";
+import { CustomizeField, CustomPost, Page, Post } from "../../generated/client/src";
 import strings from "../../localization/strings";
+import { announcementIconSvgPath, currentNewsIconSvgPath, jobsIconSvgPath } from "../../resources/icons/svgIcons";
 import defaultimage from "../../resources/img/postHeader.jpg";
-import { Place } from "../../types/Place"
+import styles from "../../styles/welcome-page";
+import { Place } from "../../types/Place";
+import ApiUtils from "../../utils/ApiUtils";
+import BasicLayout from "../BasicLayout";
+import ImageUpload from "./image-upload";
 
 /**
  * Interface representing component properties
@@ -337,10 +337,6 @@ class WelcomePage extends React.Component<Props, State> {
           <Typography variant="h1">{strings.events}</Typography>
           <div className={ classes.legendWrapper }>
             <div className={ classes.legend }>
-              <div className={ classes.legendColor } style={{ backgroundColor: "#e43e3e" }} />
-              <Typography variant="subtitle1">{strings.past}</Typography>
-            </div>
-            <div className={ classes.legend }>
               <div className={ classes.legendColor } style={{ backgroundColor: "#FFCF4E" }} />
               <Typography variant="subtitle1">{strings.ongoing}</Typography>
             </div>
@@ -387,20 +383,40 @@ class WelcomePage extends React.Component<Props, State> {
           className={ classes.dialog }
           onClose={ this.closeModal }
           open={ this.state.modalOpen }
-          scroll={ "paper" }
+          scroll="paper"
         >
           <DialogTitle>
-            <Grid container alignItems="flex-start" justify="space-between" direction="row">
-              <Typography variant="h1" className={ classes.heroText } style={{ margin: 0 }}>{strings.newEvent}</Typography>
-              <Button onClick={ this.closeModal } style={{ color: "#fff", alignItems: "right" }}>{strings.close}</Button>
+            <Grid
+              container
+              alignItems="flex-start"
+              justify="space-between"
+              direction="row"
+            >
+              <Typography
+                variant="h4"
+                style={{ margin: 0 }}
+              >
+                { strings.newEvent }
+              </Typography>
+              <Button
+                onClick={ this.closeModal }
+                style={{ color: "#fff", alignItems: "right" }}
+              >
+                { strings.close }
+              </Button>
             </Grid>
           </DialogTitle>
           <DialogContent>
             { this.renderForm() }
           </DialogContent>
           <DialogActions>
-            <Button autoFocus onClick={ this.closeModal } variant="text" color="primary">
-              {strings.cancel}
+            <Button
+              autoFocus
+              onClick={ this.closeModal }
+              variant="text"
+              color="primary"
+            >
+              { strings.cancel }
             </Button>
           </DialogActions>
         </Dialog>
@@ -470,9 +486,13 @@ class WelcomePage extends React.Component<Props, State> {
       return null;
     } else {
       return (
-        <div>
-          <img src={ imageUrl || defaultImageUrl } alt=""/>
-        </div>
+        <Box width="100%">
+          <img
+            style={{ maxWidth: "100%"}}
+            src={ imageUrl || defaultImageUrl }
+            alt="Kuvituskuva"
+          />
+        </Box>
       );
     }
   }
@@ -488,25 +508,31 @@ class WelcomePage extends React.Component<Props, State> {
     const endDate = this.getFieldValue("end-date-time") && moment(this.getFieldValue("end-date-time"), "x").format("DD.MM.YYYY");
 
     return (
-      <>
-        { this.renderEventPicture() }
-        <Typography variant="h3">
+      <Box>
+        <Typography variant="h5">
           { this.getFieldValue("name-fi")?.toString() }
         </Typography>
-        <Typography>
-          { this.getFieldValue("description-fi")?.toString() }
-        </Typography>
+        <Box mt={ 2 } mb={ 2 }>
+          <Typography>
+            { this.getFieldValue("description-fi")?.toString() }
+          </Typography>
+        </Box>
+        { this.renderEventPicture() }
         <Typography variant="h6">
           { strings.event.eventInformation }
         </Typography>
         { this.renderDataCell(locationName) }
-        { this.renderDataCell(startDate, strings.event.start) }
-        { this.renderDataCell(endDate, strings.event.end) }
-        { this.renderDataCell(this.getFieldValue("provider-fi"), strings.event.provider) }
-        { this.renderDataCell(this.getFieldValue("provider-phone"), strings.event.phone) }
-        { this.renderDataCell(this.getFieldValue("provider-email"), strings.event.email) }
-        { this.renderDataCell(this.getFieldValue("price-fi"), strings.event.priceInfo) }
-        { this.renderDataCell(this.getFieldValue("price-url"), strings.event.link) }
+        <Box justifyContent="space-between">
+          { this.renderDataCell(startDate, strings.event.start) }
+          { this.renderDataCell(endDate, strings.event.end) }
+        </Box>
+        <Box mt={ 2 } mb={ 2 }>
+          { this.renderDataCell(this.getFieldValue("provider-fi"), strings.event.provider) }
+          { this.renderDataCell(this.getFieldValue("provider-phone"), strings.event.phone) }
+          { this.renderDataCell(this.getFieldValue("provider-email"), strings.event.email) }
+          { this.renderDataCell(this.getFieldValue("price-fi"), strings.event.priceInfo) }
+          { this.renderDataCell(this.getFieldValue("price-url"), strings.event.link) }
+        </Box>
         { this.getFieldValue('registration-fi') || this.getFieldValue('registration_url') &&
           <>
             <hr />
@@ -517,19 +543,11 @@ class WelcomePage extends React.Component<Props, State> {
         }
         { this.renderDataCell(this.getFieldValue("registration-fi")) }
         <Typography variant="body2">
-          <a href={ this.getFieldValue("registration_url")?.toString() || "" }>{ this.getFieldValue("registration_url") }</a>
+          <a href={ this.getFieldValue("registration_url")?.toString() || "" }>
+            { this.getFieldValue("registration_url") }
+          </a>
         </Typography>
-        <Button
-          onClick={ () => this.onSubmitEvent() }
-        >
-          { strings.createEvent }
-        </Button>
-        <Button
-          onClick={ () => this.onSubmitEvent(true) }
-        >
-          { strings.createAndCopyEvent }
-        </Button>
-      </>
+      </Box>
     );
   }
 
@@ -543,17 +561,22 @@ class WelcomePage extends React.Component<Props, State> {
     if (fieldName === "default-image-url") {
       return (
         <div>
-          <input type="checkbox" onChange={this.showDefaultImages}/>
-          <div className={classes.reactAddLocationWrapper} style={this.state.showDefaultImages && !imageUrl ? {display:"block"} : {display:"none"}}>
+          <input type="checkbox" onChange={ this.showDefaultImages }/>
+          <div
+            className={ classes.reactAddLocationWrapper }
+            style={ this.state.showDefaultImages && !imageUrl ? {display:"block"} : {display:"none"} }
+          >
             <ImagePicker
               images={ imageList.map((image, i) => ({src: image, value: i})) }
               onPick={ this.onPick }
             />
           </div>
-          <div style={this.state.showDefaultImages && imageUrl ? {display: "block"} : {display: "none"}}>
-            <Typography variant="body2">{strings.eventAdd.deleteOwnPicture}</Typography>
+          <div style={ this.state.showDefaultImages && imageUrl ? {display: "block"} : {display: "none"} }>
+            <Typography variant="body2">
+              { strings.eventAdd.deleteOwnPicture }
+            </Typography>
           </div>
-          <div className={classes.imageUploadWrapper}>
+          <div className={ classes.imageUploadWrapper }>
             <ImageUpload 
               userId="staging"
               onSave={ url => { this.setState({imageUrl: url}) } }
@@ -568,8 +591,12 @@ class WelcomePage extends React.Component<Props, State> {
     if (fieldName === "add-location") {
       return (
         <div className={ classes.reactAddLocationWrapper }>
-          <input type="button" value={this.state.addPlaceVisibility ? strings.eventAdd.closeAddingPlace : strings.eventAdd.addPlace} onClick={this.addPlaceVisibility}/>
-          <div style={this.state.addPlaceVisibility ? { display:"block" } : { display:"none" }}>
+          <input
+            type="button"
+            value={ this.state.addPlaceVisibility ? strings.eventAdd.closeAddingPlace : strings.eventAdd.addPlace }
+            onClick={this.addPlaceVisibility}
+          />
+          <div style={ this.state.addPlaceVisibility ? { display:"block" } : { display:"none" } }>
             <div className={ classes.metaformWrapper }>
               <MetaformComponent
                 form={ this.state.placeForm }
@@ -596,20 +623,23 @@ class WelcomePage extends React.Component<Props, State> {
    */
   private renderPreview = () => {
     const { previewOpen } = this.state;
-    const { classes } = this.props;
 
     return (
       <Dialog
-        fullScreen
-        className={ classes.dialog }
+        fullWidth
+        maxWidth="md"
         onClose={ this.closePreview }
         open={ previewOpen }
         scroll={ "paper" }
       >
         <DialogTitle>
           <Grid container alignItems="flex-start" justify="space-between" direction="row">
-            <Typography variant="h1" className={ classes.heroText } style={{ margin: 0 }}>{ strings.previewEvent }</Typography>
-            <Button onClick={ this.closePreview } style={{ color: "#fff", alignItems: "right" }}>{ strings.close }</Button>
+            <Typography
+              variant="h4"
+              style={{ margin: 0 }}
+            >
+              { strings.previewEvent }
+            </Typography>
           </Grid>
         </DialogTitle>
         <DialogContent>
@@ -617,7 +647,17 @@ class WelcomePage extends React.Component<Props, State> {
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={ this.closePreview } variant="text" color="primary">
-            {strings.cancel}
+            { strings.cancel }
+          </Button>
+          <Button
+            onClick={ () => this.onSubmitEvent(true) }
+          >
+            { strings.createAndCopyEvent }
+          </Button>
+          <Button
+            onClick={ () => this.onSubmitEvent() }
+          >
+            { strings.createEvent }
           </Button>
         </DialogActions>
       </Dialog>
@@ -1209,15 +1249,13 @@ class WelcomePage extends React.Component<Props, State> {
           return (
             <>
               <a className={ classes.event_link } href={ "/event/" + event.id }>
-                <Card
+                <Paper
                   key={ index }
                   className={ classes.card }
                 >
-                  <CardContent>
-                    <div className={ classes.centered }
-   
-                    >
-                      <Typography gutterBottom variant="h5">
+                  <Box>
+                    <div className={ classes.centered }>
+                      <Typography gutterBottom variant="h6">
                         { moment(event.start_time).format("DD.MM.YYYY") }
                       </Typography>
                       <div className={ classes.statusBar } style={{ backgroundColor: this.compareDates(event.start_time) ? "#FFCF4E" : "#1068B3" }}/>
@@ -1225,8 +1263,8 @@ class WelcomePage extends React.Component<Props, State> {
                         { event.name.fi }
                       </Typography>
                     </div>
-                  </CardContent> 
-                </Card>
+                  </Box> 
+                </Paper>
               </a>
             </>
           );

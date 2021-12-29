@@ -434,10 +434,13 @@ export default createStyles({
       gridColumnGap: "1.5rem",
     },
     [breakpoints.up("md")]: {
-      gridTemplateColumns: "repeat(3, 1fr)",
+      gridTemplateColumns: "repeat(4, 1fr)",
     },
     [breakpoints.up("lg")]: {
-      gridTemplateColumns: "repeat(4, 1fr)",
+      gridTemplateColumns: "repeat(5, 1fr)",
+    },
+    [breakpoints.up("xl")]: {
+      gridTemplateColumns: "repeat(6, 1fr)",
     }
   },
   events_item_universal: {
@@ -574,8 +577,8 @@ export default createStyles({
         width: "100%",
       },
       "& input[type='checkbox']": {
-        width: 40,
-        height: 40,
+        width: 26,
+        height: 26,
       },
       "& input[type='submit']": {
         marginTop: 10,
@@ -606,30 +609,35 @@ export default createStyles({
             cursor: "pointer"
           },
           "& input[type='submit']": {
+            color: "#fff",
             fontSize: 24,
-            background: "#fff",
+            background: "#0f67b2",
             cursor: "pointer",
-            height: 50
+            height: 50,
+            marginTop: theme.spacing(2),
+            marginBottom: theme.spacing(2)
           },
           "& input[type='submit']:hover": {
-            background: "#F5F5F5"
+            background: "#1076cc"
           }
         },
         "& .metaform-autocomplete-field": {
           width: "100%"
         },
         "& .help-container": {
-          marginTop: 10,
-          marginBottom: 10,
-          marginLeft: theme.spacing(0),
-          marginRight: theme.spacing(0),
-          backgroundColor: "#1068B3",
-          color: "#FFF",
-          padding: 20,
+          marginTop: theme.spacing(1),
+          marginBottom: theme.spacing(1),
+          marginLeft: 0,
+          marginRight: 0,
+          backgroundColor: "rgba(0,0,0,0.1)",
+          color: "#000",
+          padding: theme.spacing(2),
+          borderRadius: 5,
+          boxShadow: "inset 0 0 4px rgba(0,0,0,0.2)",
           "& p": {
-            fontSize: 18,
-            marginTop: 3,
-            marginBottom: 3,
+            fontSize: 16,
+            marginTop: theme.spacing(0.5),
+            marginBottom: theme.spacing(0.5)
           }
         }
       },
@@ -644,7 +652,7 @@ export default createStyles({
   },
 
   centered: {
-    height: "17vh",
+    height: 150,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -668,28 +676,8 @@ export default createStyles({
   },
 
   card: {
-    
     "&:hover": {
       boxShadow: "7px 8px 12px 0px rgba(0,0,0,0.1)",
     },
-  },
-
-
- 
-
-  // Mantyharju-theme ends, rest of the code can be deleted before production
-
-/*
-  root: {
-    height: "100vh"
-  },
-  content: {
-    display: "flex",
-    flexDirection: "column"
-  },
-  buttonSection: {
-    textAlign: "center",
-    opacity: 0.8
   }
-  */
 });

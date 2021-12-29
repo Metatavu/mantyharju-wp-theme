@@ -293,7 +293,7 @@
         {
           "name": "preview-event",
           "type": "submit",
-          "text": "Esikatselu"
+          "text": "Esikatsele ja luo"
         },
         {
           "name": "submit-help",
