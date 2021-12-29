@@ -518,9 +518,11 @@ class WelcomePage extends React.Component<Props, State> {
           </Typography>
         </Box>
         { this.renderEventPicture() }
-        <Typography variant="h6">
-          { strings.event.eventInformation }
-        </Typography>
+        <Box mt={ 2 }>
+          <Typography variant="h6">
+            { strings.event.eventInformation }
+          </Typography>
+        </Box>
         { this.renderDataCell(locationName) }
         <Box justifyContent="space-between">
           { this.renderDataCell(startDate, strings.event.start) }
