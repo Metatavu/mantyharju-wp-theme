@@ -14,6 +14,9 @@
   "moreCurrentNews": "More current news",
   "morePlus": "More +",
   "newEvent": "New event",
+  "createEvent": "Create event",
+  "createAndCopyEvent": "Create and copy event",
+  "previewEvent": "Preview event",
   "ongoing": "Ongoing",
   "pageNotFound": "Page not found.",
   "past": "Past",
@@ -24,6 +27,17 @@
   "whoops": "Whoops!",
   "requiredFieldMissing": "Required field is missing",
   "popularPages": "Popular pages",
+  "event": {
+    "eventInformation": "Event information",
+    "start": "Start",
+    "end": "End",
+    "provider": "Provider",
+    "phone": "Phone",
+    "email": "Email",
+    "priceInfo": "Price information",
+    "link": "Link",
+    "registration": "Registration"
+  },
   "eventAdd": {
     "addImage": "Click or drag to area if you want add image",
     "deleteOwnPicture": "You've brought own image. Delete own image if you want to use default images",

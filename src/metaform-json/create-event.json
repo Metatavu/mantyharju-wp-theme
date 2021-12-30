@@ -291,9 +291,9 @@
           "required": false
         },
         {
-          "name": "submit-event",
+          "name": "preview-event",
           "type": "submit",
-          "text": "Luo tapahtuma"
+          "text": "Esikatsele ja luo"
         },
         {
           "name": "submit-help",

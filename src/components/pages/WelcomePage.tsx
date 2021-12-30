@@ -1,23 +1,23 @@
-import * as React from "react";
-import BasicLayout from "../BasicLayout";
-import ReactHtmlParser from "react-html-parser";
-import ApiUtils from "../../utils/ApiUtils";
-import { WithStyles, withStyles, Button, CircularProgress, Typography, SvgIcon, Icon, Dialog, DialogTitle, DialogContent, DialogActions, Grid, Card, CardContent } from "@material-ui/core";
-import styles from "../../styles/welcome-page";
-import * as moment from "moment";
+import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Icon, Paper, SvgIcon, Typography, WithStyles, withStyles } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import { Post, MenuLocationData, CustomizeField, Page, CustomPost } from "../../generated/client/src";
-import { jobsIconSvgPath, announcementIconSvgPath, currentNewsIconSvgPath } from "../../resources/icons/svgIcons";
+import fi from "date-fns/esm/locale/fi";
+import { FieldValue, IconName, Metaform, MetaformComponent } from "metaform-react";
+import * as moment from "moment";
+import * as React from "react";
 import DatePicker, { registerLocale } from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import ReactHtmlParser from "react-html-parser";
 import ImagePicker from "react-image-picker";
 import "react-image-picker/dist/index.css";
-import "react-datepicker/dist/react-datepicker.css";
-import fi from "date-fns/esm/locale/fi";
-import ImageUpload from "./image-upload";
-import { MetaformComponent, IconName, FieldValue, Metaform } from "metaform-react";
+import { CustomizeField, CustomPost, Page, Post } from "../../generated/client/src";
 import strings from "../../localization/strings";
+import { announcementIconSvgPath, currentNewsIconSvgPath, jobsIconSvgPath } from "../../resources/icons/svgIcons";
 import defaultimage from "../../resources/img/postHeader.jpg";
-import { Place } from "../../types/Place"
+import styles from "../../styles/welcome-page";
+import { Place } from "../../types/Place";
+import ApiUtils from "../../utils/ApiUtils";
+import BasicLayout from "../BasicLayout";
+import ImageUpload from "./image-upload";
 
 /**
  * Interface representing component properties
@@ -48,6 +48,7 @@ interface State {
   linkedEventsLimitingNumber: number,
   customizeFields: CustomizeField[],
   modalOpen: boolean,
+  previewOpen: boolean,
   defaultImageUrl: string,
   showDefaultImages: boolean,
   addPlaceVisibility: boolean,
@@ -63,6 +64,7 @@ interface State {
   events?: any,
   pageSize: number;
   loadMoreEventsDisabled: boolean;
+  loadMoreEventsVisible: boolean;
 }
 
 interface Dictionary<T> {
@@ -121,6 +123,7 @@ class WelcomePage extends React.Component<Props, State> {
       linkedEventsLimitingNumber: 4,
       customizeFields: [],
       modalOpen: false,
+      previewOpen: false,
       defaultImageUrl: "",
       showDefaultImages: false,
       addPlaceVisibility: false,
@@ -129,6 +132,7 @@ class WelcomePage extends React.Component<Props, State> {
       fethingData: false,
       pageSize: 1,
       loadMoreEventsDisabled: false,
+      loadMoreEventsVisible: true
     };
 
     this.onPick = this.onPick.bind(this);
@@ -197,7 +201,7 @@ class WelcomePage extends React.Component<Props, State> {
 
     this.setState({
       form: form,
-      placeForm: placeForm,
+      placeForm: placeForm
     });
 
     this.getNews();
@@ -212,7 +216,8 @@ class WelcomePage extends React.Component<Props, State> {
     }
 
     this.setState({
-      events: eventData?.events
+      events: eventData?.events,
+      loadMoreEventsVisible: eventData.eventsMeta && eventData.eventsMeta.next !== null
     })
   }
 
@@ -228,7 +233,17 @@ class WelcomePage extends React.Component<Props, State> {
    */
   public render() {
     const { lang, slug, classes } = this.props;
-    const { announcementsPageLink, newsPageLink, jobsLink, linkedEventsPost, news, announcements, jobs, loadMoreEventsDisabled } = this.state;
+    const {
+      announcementsPageLink,
+      newsPageLink,
+      jobsLink,
+      linkedEventsPost,
+      news,
+      announcements,
+      jobs,
+      loadMoreEventsDisabled,
+      loadMoreEventsVisible
+    } = this.state;
     const showcaseImage = this.getCustomizerValue("showcase_image");
     const showcaseTitle = this.getCustomizerValue("showcase_title");
     const showcaseText = this.getCustomizerValue("showcase_text");
@@ -335,10 +350,6 @@ class WelcomePage extends React.Component<Props, State> {
           <Typography variant="h1">{strings.events}</Typography>
           <div className={ classes.legendWrapper }>
             <div className={ classes.legend }>
-              <div className={ classes.legendColor } style={{ backgroundColor: "#e43e3e" }} />
-              <Typography variant="subtitle1">{strings.past}</Typography>
-            </div>
-            <div className={ classes.legend }>
               <div className={ classes.legendColor } style={{ backgroundColor: "#FFCF4E" }} />
               <Typography variant="subtitle1">{strings.ongoing}</Typography>
             </div>
@@ -358,14 +369,17 @@ class WelcomePage extends React.Component<Props, State> {
             </div>
           }
           <div className={ classes.eventsButtonRow }>
-            <Button
-              className={ classes.allEventsButton }
-              title= {strings.showMoreEvents}
-              onClick={this.expandLinkedEvents}
-              disabled={ loadMoreEventsDisabled }
-            >
-              {strings.showMore}
-            </Button>
+            {
+              loadMoreEventsVisible &&
+              <Button
+                className={ classes.allEventsButton }
+                title= {strings.showMoreEvents}
+                onClick={this.expandLinkedEvents}
+                disabled={ loadMoreEventsDisabled }
+              >
+                {strings.showMore}
+              </Button>
+            }
             <Button
               onClick={ this.openModal }
               className={ classes.addLinkedEventButton }
@@ -385,26 +399,286 @@ class WelcomePage extends React.Component<Props, State> {
           className={ classes.dialog }
           onClose={ this.closeModal }
           open={ this.state.modalOpen }
-          scroll={ "paper" }
+          scroll="paper"
         >
           <DialogTitle>
-            <Grid container alignItems="flex-start" justify="space-between" direction="row">
-              <Typography variant="h1" className={ classes.heroText } style={{ margin: 0 }}>{strings.newEvent}</Typography>
-              <Button onClick={ this.closeModal } style={{ color: "#fff", alignItems: "right" }}>{strings.close}</Button>
+            <Grid
+              container
+              alignItems="flex-start"
+              justify="space-between"
+              direction="row"
+            >
+              <Typography
+                variant="h4"
+                style={{ margin: 0 }}
+              >
+                { strings.newEvent }
+              </Typography>
+              <Button
+                onClick={ this.closeModal }
+                style={{ color: "#fff", alignItems: "right" }}
+              >
+                { strings.close }
+              </Button>
             </Grid>
           </DialogTitle>
           <DialogContent>
-            {
-              this.renderForm(this.state.form)
-            }
+            { this.renderForm() }
           </DialogContent>
           <DialogActions>
-            <Button autoFocus onClick={ this.closeModal } variant="text" color="primary">
-              {strings.cancel}
+            <Button
+              autoFocus
+              onClick={ this.closeModal }
+              variant="text"
+              color="primary"
+            >
+              { strings.cancel }
             </Button>
           </DialogActions>
         </Dialog>
+        { this.renderPreview() }
       </BasicLayout>
+    );
+  }
+
+  /**
+   * Renders single form
+   */
+  private renderForm = () => {
+    const { classes } = this.props;
+    const { requiredFieldsMissing, form } = this.state;
+
+    return (
+      <div className={ classes.metaformWrapper }>
+        <MetaformComponent
+          form={ form }
+          formReadOnly={ false }
+          onSubmit={ this.onSubmit }
+          datePicker={ this.datePicker }
+          uploadFile={ this.uploadFile }
+          renderIcon={ this.renderIcon }
+          getFieldValue={ this.getFieldValue }
+          setFieldValue={ this.setFieldValue }
+          datetimePicker={ this.datetimePicker }
+          renderBeforeField={ this.renderBeforeField }
+          setAutocompleteOptions={ this.setAutocompleteOptions }
+          showRequiredFieldsMissingError={ requiredFieldsMissing }
+          requiredFieldsMissingError={ strings.requiredFieldMissing }
+        />
+      </div>
+    );
+  }
+
+  /**
+   * Renders data cell
+   */
+  private renderDataCell = (value?: string | number | null, name?: string) => {
+    if (!value) {
+      return null;
+    }
+
+    if (!name) {
+      return (
+        <Typography variant="body2">
+          { value?.toString() }
+        </Typography>
+      );
+    } else {
+      return (
+        <Typography variant="body2">
+          { `${name}: ${value?.toString()}` }
+        </Typography>
+      );
+    }
+  }
+
+  /**
+   * Renders event picture
+   */
+  private renderEventPicture() {
+    const { imageUrl, defaultImageUrl } = this.state;
+
+    if (!imageUrl && !defaultImageUrl) {
+      return null;
+    } else {
+      return (
+        <Box width="100%">
+          <img
+            style={{ maxWidth: "100%"}}
+            src={ imageUrl || defaultImageUrl }
+            alt="Kuvituskuva"
+          />
+        </Box>
+      );
+    }
+  }
+
+  /**
+   * Renders preview form
+   */
+  private renderPreviewForm = () => {
+    const { fetchData } = this.state;
+
+    const locationName = fetchData.find(dataEntry => dataEntry.id === this.getFieldValue("location"))?.name.fi;
+    const startDate = this.getFieldValue("start-date-time") && moment(this.getFieldValue("start-date-time"), "x").format("DD.MM.YYYY");
+    const endDate = this.getFieldValue("end-date-time") && moment(this.getFieldValue("end-date-time"), "x").format("DD.MM.YYYY");
+
+    return (
+      <Box>
+        <Typography variant="h5">
+          { this.getFieldValue("name-fi")?.toString() }
+        </Typography>
+        <Box mt={ 2 } mb={ 2 }>
+          <Typography>
+            { this.getFieldValue("description-fi")?.toString() }
+          </Typography>
+        </Box>
+        { this.renderEventPicture() }
+        <Box mt={ 2 }>
+          <Typography variant="h6">
+            { strings.event.eventInformation }
+          </Typography>
+        </Box>
+        { this.renderDataCell(locationName) }
+        <Box justifyContent="space-between">
+          { this.renderDataCell(startDate, strings.event.start) }
+          { this.renderDataCell(endDate, strings.event.end) }
+        </Box>
+        <Box mt={ 2 } mb={ 2 }>
+          { this.renderDataCell(this.getFieldValue("provider-fi"), strings.event.provider) }
+          { this.renderDataCell(this.getFieldValue("provider-phone"), strings.event.phone) }
+          { this.renderDataCell(this.getFieldValue("provider-email"), strings.event.email) }
+          { this.renderDataCell(this.getFieldValue("price-fi"), strings.event.priceInfo) }
+          { this.renderDataCell(this.getFieldValue("price-url"), strings.event.link) }
+        </Box>
+        { this.getFieldValue('registration-fi') || this.getFieldValue('registration_url') &&
+          <>
+            <hr />
+            <Typography variant="h6">
+              { strings.event.registration }
+            </Typography>
+          </>
+        }
+        { this.renderDataCell(this.getFieldValue("registration-fi")) }
+        <Typography variant="body2">
+          <a href={ this.getFieldValue("registration_url")?.toString() || "" }>
+            { this.getFieldValue("registration_url") }
+          </a>
+        </Typography>
+      </Box>
+    );
+  }
+
+  /**
+   * Renders before field
+   */
+  private renderBeforeField = (fieldName?: string) => {
+    const { classes } = this.props;
+    const { imageUrl } = this.state;
+    const imageTextLabel = strings.eventAdd.addImage;
+    if (fieldName === "default-image-url") {
+      return (
+        <div>
+          <input type="checkbox" onChange={ this.showDefaultImages }/>
+          <div
+            className={ classes.reactAddLocationWrapper }
+            style={ this.state.showDefaultImages && !imageUrl ? {display:"block"} : {display:"none"} }
+          >
+            <ImagePicker
+              images={ imageList.map((image, i) => ({src: image, value: i})) }
+              onPick={ this.onPick }
+            />
+          </div>
+          <div style={ this.state.showDefaultImages && imageUrl ? {display: "block"} : {display: "none"} }>
+            <Typography variant="body2">
+              { strings.eventAdd.deleteOwnPicture }
+            </Typography>
+          </div>
+          <div className={ classes.imageUploadWrapper }>
+            <ImageUpload 
+              userId="staging"
+              onSave={ url => { this.setState({imageUrl: url}) } }
+              onDelete={ () => { this.setState({imageUrl: ""}) } }
+              label={ imageTextLabel }
+              initialImageUrl={ imageUrl }
+            />
+          </div>
+        </div>
+      )
+    }
+    if (fieldName === "add-location") {
+      return (
+        <div className={ classes.reactAddLocationWrapper }>
+          <input
+            type="button"
+            value={ this.state.addPlaceVisibility ? strings.eventAdd.closeAddingPlace : strings.eventAdd.addPlace }
+            onClick={this.addPlaceVisibility}
+          />
+          <div style={ this.state.addPlaceVisibility ? { display:"block" } : { display:"none" } }>
+            <div className={ classes.metaformWrapper }>
+              <MetaformComponent
+                form={ this.state.placeForm }
+                formReadOnly={ false }
+                getFieldValue={ this.getPlaceFieldValue }
+                setFieldValue={ this.setPlaceFieldValue }
+                datePicker={ this.datePicker }
+                datetimePicker={ this.datetimePicker }
+                uploadFile={ this.uploadFile }
+                setAutocompleteOptions={ this.setAutocompleteOptions }
+                renderIcon={ this.renderIcon }
+                onSubmit={ this.onSubmit }
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return;
+  }
+
+  /**
+   * Render preview
+   */
+  private renderPreview = () => {
+    const { previewOpen } = this.state;
+
+    return (
+      <Dialog
+        fullWidth
+        maxWidth="md"
+        onClose={ this.closePreview }
+        open={ previewOpen }
+        scroll={ "paper" }
+      >
+        <DialogTitle>
+          <Grid container alignItems="flex-start" justify="space-between" direction="row">
+            <Typography
+              variant="h4"
+              style={{ margin: 0 }}
+            >
+              { strings.previewEvent }
+            </Typography>
+          </Grid>
+        </DialogTitle>
+        <DialogContent>
+          { this.renderPreviewForm() }
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus onClick={ this.closePreview } variant="text" color="primary">
+            { strings.cancel }
+          </Button>
+          <Button
+            onClick={ () => this.onSubmitEvent(true) }
+          >
+            { strings.createAndCopyEvent }
+          </Button>
+          <Button
+            onClick={ () => this.onSubmitEvent() }
+          >
+            { strings.createEvent }
+          </Button>
+        </DialogActions>
+      </Dialog>
     );
   }
 
@@ -575,6 +849,16 @@ class WelcomePage extends React.Component<Props, State> {
   }
 
   /**
+   * Sets preview state to closed
+   */
+  private closePreview = () => {
+    this.setState({
+      modalOpen: true,
+      previewOpen: false
+    });
+  }
+
+  /**
    * Method for getting customizer field value
    *
    * @param key field key
@@ -585,81 +869,6 @@ class WelcomePage extends React.Component<Props, State> {
     const field = customizeFields.find((field) => field.key === key);
     const value = field ? field.value : "";
     return value;
-  }
-
-  /**
-   * Render single form
-   */
-  private renderForm = (form: Metaform) => {
-    const { classes } = this.props;
-    const { requiredFieldsMissing } = this.state;
-    return (
-      <div className={ classes.metaformWrapper }>
-        <MetaformComponent
-          form={ form }
-          formReadOnly={ false }
-          onSubmit={ this.onSubmit }
-          datePicker={ this.datePicker }
-          uploadFile={ this.uploadFile }
-          renderIcon={ this.renderIcon }
-          getFieldValue={ this.getFieldValue }
-          setFieldValue={ this.setFieldValue }
-          datetimePicker={ this.datetimePicker }
-          renderBeforeField={ this.renderBeforeField }
-          setAutocompleteOptions={ this.setAutocompleteOptions }
-          showRequiredFieldsMissingError={ requiredFieldsMissing }
-          requiredFieldsMissingError={ strings.requiredFieldMissing }
-        />
-      </div>
-    );
-  }
-
-  private renderBeforeField = (fieldName?: string) => {
-    const { classes } = this.props;
-    const imageTextLabel = strings.eventAdd.addImage;
-    if (fieldName === "default-image-url") {
-      return (
-        <div>
-          <input type="checkbox" onChange={this.showDefaultImages}/>
-          <div  className={classes.reactAddLocationWrapper} style={this.state.showDefaultImages && !this.state.imageUrl ? {display:"block"} : {display:"none"}}>
-            <ImagePicker
-              images={imageList.map((image, i) => ({src: image, value: i}))}
-              onPick={this.onPick}
-            />
-          </div>
-          <div style={this.state.showDefaultImages && this.state.imageUrl ? {display: "block"} : {display: "none"}}>
-            <Typography variant="body2">{strings.eventAdd.deleteOwnPicture}</Typography>
-          </div>
-          <div className={classes.imageUploadWrapper}>
-            <ImageUpload userId="staging" onSave={ (url) => {this.setState({imageUrl: url})} } label={ imageTextLabel }  />
-          </div>
-        </div>
-      )
-    }
-    if (fieldName === "add-location") {
-      return (
-        <div className={ classes.reactAddLocationWrapper }>
-          <input type="button" value={this.state.addPlaceVisibility ? strings.eventAdd.closeAddingPlace : strings.eventAdd.addPlace} onClick={this.addPlaceVisibility}/>
-          <div style={this.state.addPlaceVisibility ? { display:"block" } : { display:"none" }}>
-            <div className={ classes.metaformWrapper }>
-              <MetaformComponent
-                form={ this.state.placeForm }
-                formReadOnly={ false }
-                getFieldValue={ this.getPlaceFieldValue }
-                setFieldValue={ this.setPlaceFieldValue }
-                datePicker={ this.datePicker }
-                datetimePicker={ this.datetimePicker }
-                uploadFile={ this.uploadFile }
-                setAutocompleteOptions={ this.setAutocompleteOptions }
-                renderIcon={ this.renderIcon }
-                onSubmit={ this.onSubmit }
-              />
-            </div>
-          </div>
-        </div>
-      );
-    }
-    return;
   }
 
   /**
@@ -836,25 +1045,25 @@ class WelcomePage extends React.Component<Props, State> {
   /**
    * Fetching method for fetching events
    */
-      private fetchEvents = async () => {
-        const { pageSize } = this.state;
-        try {
-          let startDate = moment().utcOffset(0, true).format()
-          let fetchAddress = `https://mantyharju.linkedevents.fi/v1/event/?&page_size=4&page=${ pageSize }&sort=start_time&start=${ startDate }`;
+  private fetchEvents = async () => {
+    const { pageSize } = this.state;
+    try {
+      let startDate = moment().utcOffset(0, true).format()
+      let fetchAddress = `https://mantyharju.linkedevents.fi/v1/event/?&page_size=4&page=${ pageSize }&sort=start_time&start=${ startDate }`;
 
-          const apiData = await fetch(fetchAddress)
-          const response = await apiData.json();
+      const apiData = await fetch(fetchAddress)
+      const response = await apiData.json();
 
-          const events = response.data || [];
-          const eventsMeta = response.meta || [];
-          
-          return { events, eventsMeta }
+      const events = response.data || [];
+      const eventsMeta = response.meta || [];
+      
+      return { events, eventsMeta }
 
-        } catch (error) {
-          console.error(error)
-          return null;
-        }
-      }
+    } catch (error) {
+      console.error(error)
+      return null;
+    }
+  }
 
   /**
    * Method for rendering form icons
@@ -867,6 +1076,90 @@ class WelcomePage extends React.Component<Props, State> {
   }
 
   /**
+   * Method for submitting event
+   */
+  private onSubmitEvent = async (copy?: boolean) =>  {
+    const { formValues } = this.state;
+    if (!this.isFormValid()) {
+      return;
+    }
+    const start = moment(formValues["start-date-time"] as number);
+    const end = moment(formValues["end-date-time"] as number);
+
+    if (this.state.defaultImageUrl || this.state.imageUrl) {
+    formValues["image-url"] = this.state.imageUrl ? this.state.imageUrl : this.state.defaultImageUrl;
+    } else {
+      return alert(strings.eventAdd.notificationAddImage);
+    }
+
+    const hasStartTime = !(start.hour() === 0 && start.minute() === 0);
+    const hasEndTime = !(end.hour() === 0 && end.minute() === 0);
+
+    formValues["has-start-time"] = hasStartTime ? "true" : "false";
+    formValues["has-end-time"] = hasEndTime ? "true" : "false";
+
+    formValues["start-time-string"] = start.format();
+    formValues["end-time-string"] = end.format();
+
+    formValues["submit"] = "event";
+
+    const keywords: string[] = [];
+    const formKeys = Object.keys(formValues);
+    formKeys.forEach((formKey) => {
+      if (formKey.startsWith("keyword__") && formValues[formKey] == "checked") {
+        keywords.push(formKey.replace("keyword__", ""));
+      }
+    });
+
+    if (keywords.length < 1) {
+      return alert(strings.eventAdd.notificationAddKeyword);
+    }
+
+    formValues["keywords"] = keywords.join(",");
+
+    try {
+      const api = ApiUtils.getApi();
+      await api.postWpV2Event({ event: formValues });
+      if (!copy) {
+        this.setState({
+          formValues: {},
+          modalOpen: false,
+          previewOpen: false
+        });
+      } else {
+        this.setState({
+          modalOpen: true,
+          previewOpen: false
+        });
+      }
+      alert(strings.eventAdd.successfullyAdded);
+    } catch (error) {
+      alert(strings.eventAdd.errorWhenAddingEvent);
+    }
+  }
+
+  /**
+   * Method for previewing event
+   */
+  private onPreviewEvent = async () =>  {
+    if (!this.isFormValid()) {
+      this.setState({
+        requiredFieldsMissing: true
+      });
+      return;
+    } else {
+      this.setState({
+        requiredFieldsMissing: false
+      });
+    }
+
+    this.setState({
+      previewOpen: true,
+      modalOpen: false
+    });
+  }
+
+  /**
    * Method for submitting form
    *
    * @param source submit input info
@@ -875,76 +1168,27 @@ class WelcomePage extends React.Component<Props, State> {
 
     const submitButtonName = source["name"];
 
-    if (submitButtonName === "submit-event") {
-      const { formValues } = this.state;
-      if (!this.isFormValid()) {
-        this.setState({
-          requiredFieldsMissing: true
-        });
-        return;
-      } else {
-        this.setState({
-          requiredFieldsMissing: false
-        });
-      }
-      const start = moment(formValues["start-date-time"] as number);
-      const end = moment(formValues["end-date-time"] as number);
+    switch (submitButtonName) {
+      case "preview-event":
+        this.onPreviewEvent();
+        break;
+      case "submit-place":
+        const { placeFormValues } = this.state;
 
-      if (this.state.defaultImageUrl || this.state.imageUrl) {
-      formValues["image-url"] = this.state.imageUrl ? this.state.imageUrl : this.state.defaultImageUrl;
-      } else {
-        return alert(strings.eventAdd.notificationAddImage);
-      }
-
-      const hasStartTime = !(start.hour() === 0 && start.minute() === 0);
-      const hasEndTime = !(end.hour() === 0 && end.minute() === 0);
-
-      formValues["has-start-time"] = hasStartTime ? "true" : "false";
-      formValues["has-end-time"] = hasEndTime ? "true" : "false";
-
-      formValues["start-time-string"] = start.format();
-      formValues["end-time-string"] = end.format();
-
-      formValues["submit"] = "event";
-
-      const keywords: string[] = [];
-      const formKeys = Object.keys(formValues);
-      formKeys.forEach((formKey) => {
-        if (formKey.startsWith("keyword__") && formValues[formKey] == "checked") {
-          keywords.push(formKey.replace("keyword__", ""));
+        try {
+          const api = ApiUtils.getApi();
+  
+          placeFormValues["submit"] = "place";
+  
+          api.postWpV2Event({ event: placeFormValues });
+          this.setState({placeFormValues: {}});
+          this.setAutocompleteOptions("searchAgain")
+        } catch (error) {
+            alert(strings.eventAdd.errorWhenAddingPlace);
         }
-      });
-
-      if (keywords.length < 1) {
-        return alert(strings.eventAdd.notificationAddKeyword);
-      }
-
-      formValues["keywords"] = keywords.join(",");
-
-      try {
-        const api = ApiUtils.getApi();
-        await api.postWpV2Event({ event: formValues });
-        this.setState({formValues: {}});
-        alert(strings.eventAdd.successfullyAdded);
-      } catch (error) {
-        alert(strings.eventAdd.errorWhenAddingEvent);
-      }
-    }
-    if (submitButtonName === "submit-place") {
-
-      const { placeFormValues } = this.state;
-
-      try {
-        const api = ApiUtils.getApi();
-
-        placeFormValues["submit"] = "place";
-
-        api.postWpV2Event({ event: placeFormValues });
-        this.setState({placeFormValues: {}});
-        this.setAutocompleteOptions("searchAgain")
-      } catch (error) {
-          alert(strings.eventAdd.errorWhenAddingPlace);
-      }
+        break;
+      default:
+        break;
     }
   }
 
@@ -1023,14 +1267,12 @@ class WelcomePage extends React.Component<Props, State> {
           return (
             <>
               <a className={ classes.event_link } href={ "/event/" + event.id }>
-                <Card
+                <Paper
                   key={ index }
                   className={ classes.card }
                 >
-                  <CardContent>
-                    <div className={ classes.centered }
-   
-                    >
+                  <Box>
+                    <div className={ classes.centered }>
                       <Typography gutterBottom variant="h5">
                         { moment(event.start_time).format("DD.MM.YYYY") }
                       </Typography>
@@ -1039,8 +1281,8 @@ class WelcomePage extends React.Component<Props, State> {
                         { event.name.fi }
                       </Typography>
                     </div>
-                  </CardContent> 
-                </Card>
+                  </Box> 
+                </Paper>
               </a>
             </>
           );
@@ -1136,7 +1378,7 @@ class WelcomePage extends React.Component<Props, State> {
    */
   private expandLinkedEvents = async () => {
     const { pageSize, events, loadMoreEventsDisabled } = this.state;
- 
+
     this.setState({
       pageSize: pageSize + 1 
     })
@@ -1147,7 +1389,7 @@ class WelcomePage extends React.Component<Props, State> {
       return;
     }
       this.setState({
-        events: [...events].concat(eventData.events),
+        events: eventData.events,
         loadMoreEventsDisabled: eventData.eventsMeta && eventData.eventsMeta.next === null ? true : false
     })
   }
