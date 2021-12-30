@@ -163,6 +163,11 @@ export default createMuiTheme({
       root: {
         flexDirection: "column"
       }
+    },
+    MuiDialogTitle: {
+      root: {
+        borderBottom: "1px solid rgba(0,0,0,0.2)"
+      }
     }
   },
   props: {

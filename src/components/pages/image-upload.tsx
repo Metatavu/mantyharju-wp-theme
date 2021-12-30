@@ -12,8 +12,9 @@ import theme from "../../styles/image-upload";
 interface Props {
   userId?: string
   initialImageUrl?: string | null
-  label: string
-  onSave: (url: string) => void
+  label: string;
+  onDelete: () => void;
+  onSave: (url: string) => void;
 }
 
 /**
@@ -128,6 +129,9 @@ export default class ImageUpload extends React.Component<Props, State> {
    * Remove uploaded image
    */
   private removeImage = () => {
+    const { onDelete } = this.props;
+
+    onDelete();
     this.setState({
       uploadedImageUrl: undefined,
       uploadedImage: undefined

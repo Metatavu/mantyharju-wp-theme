@@ -16,6 +16,9 @@ export interface IStrings extends LocalizedStringsMethods {
   moreCurrentNews: string,
   morePlus: string,
   newEvent: string,
+  createEvent: string;
+  createAndCopyEvent: string;
+  previewEvent: string;
   ongoing: string,
   pageNotFound: string,
   past: string,
@@ -26,6 +29,17 @@ export interface IStrings extends LocalizedStringsMethods {
   whoops: string,
   requiredFieldMissing: string,
   popularPages: string,
+  event: {
+    eventInformation: string;
+    phone: string;
+    email: string;
+    start: string;
+    end: string;
+    provider: string;
+    priceInfo: string;
+    link: string;
+    registration: string;
+  };
   eventAdd: {
     addImage: string,
     deleteOwnPicture: string,
