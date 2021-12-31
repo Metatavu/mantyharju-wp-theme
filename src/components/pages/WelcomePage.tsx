@@ -51,8 +51,8 @@ interface State {
   form: Metaform,
   placeForm: Metaform,
   requiredFieldsMissing: boolean,
-  formValues: FieldValue[];
-  placeFormValues: FieldValue[];
+  formValues: Dictionary<FieldValue>;
+  placeFormValues: Dictionary<FieldValue>;
   linkedEventsPost?: Post,
   loading: boolean,
   popularPages: PageWithImgUrl[],
@@ -127,8 +127,8 @@ class WelcomePage extends React.Component<Props, State> {
       posts: [],
       form: {},
       placeForm: {},
-      formValues: [],
-      placeFormValues: [],
+      formValues: {},
+      placeFormValues: {},
       loading: false,
       popularPages: [],
       scrollPosition: 0,
@@ -741,6 +741,7 @@ class WelcomePage extends React.Component<Props, State> {
     this.setState({
       autocompleteInput: newInputValue
     });
+
   }
 
   /**
@@ -750,8 +751,10 @@ class WelcomePage extends React.Component<Props, State> {
    * @param value new value
    */
   private onAutocompleteChange = (_event: React.ChangeEvent<{}>, value: AutocompleteItem | null) => {
+    const { formValues } = this.state;
+    this.setFieldValue("location", value?.value || null);
     this.setState({
-      autocompleteValue: value || undefined
+      autocompleteValue: value || undefined,
     });
   }
 
@@ -1061,7 +1064,6 @@ class WelcomePage extends React.Component<Props, State> {
     const placeData = await this.fetchPlaces();
 
     const autocompleteOptions = this.convertPlaces(placeData);
-    console.log("autocompleteOptions", autocompleteOptions)
 
     this.setState({
       autocompleteOptions: autocompleteOptions
@@ -1182,7 +1184,7 @@ class WelcomePage extends React.Component<Props, State> {
       await api.postWpV2Event({ event: formValues });
       if (!copy) {
         this.setState({
-          formValues: [],
+          formValues: {},
           modalOpen: false,
           previewOpen: false
         });
@@ -1241,7 +1243,7 @@ class WelcomePage extends React.Component<Props, State> {
           placeFormValues["submit"] = "place";
   
           api.postWpV2Event({ event: placeFormValues });
-          this.setState({placeFormValues: []});
+          this.setState({placeFormValues: {}});
         } catch (error) {
             alert(strings.eventAdd.errorWhenAddingPlace);
         }
