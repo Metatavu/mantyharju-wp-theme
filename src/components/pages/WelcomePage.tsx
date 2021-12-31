@@ -45,7 +45,6 @@ interface State {
   siteSearchVisible: boolean,
   announcementsCategoryId: number,
   newsCategoryId: number,
-  linkedEventsLimitingNumber: number,
   customizeFields: CustomizeField[],
   modalOpen: boolean,
   previewOpen: boolean,
@@ -120,7 +119,6 @@ class WelcomePage extends React.Component<Props, State> {
       requiredFieldsMissing: false,
       announcementsCategoryId: 4,
       newsCategoryId: 5,
-      linkedEventsLimitingNumber: 4,
       customizeFields: [],
       modalOpen: false,
       previewOpen: false,
@@ -347,7 +345,7 @@ class WelcomePage extends React.Component<Props, State> {
         </div>
 
         <div className = { classes.linkedEventsContainer }>
-          <Typography variant="h1">{strings.events}</Typography>
+          <Typography variant="h1">{ strings.events }</Typography>
           <div className={ classes.legendWrapper }>
             <div className={ classes.legend }>
               <div className={ classes.legendColor } style={{ backgroundColor: "#FFCF4E" }} />
@@ -373,19 +371,19 @@ class WelcomePage extends React.Component<Props, State> {
               loadMoreEventsVisible &&
               <Button
                 className={ classes.allEventsButton }
-                title= {strings.showMoreEvents}
-                onClick={this.expandLinkedEvents}
+                title= { strings.showMoreEvents }
+                onClick={ this.expandLinkedEvents }
                 disabled={ loadMoreEventsDisabled }
               >
-                {strings.showMore}
+                { strings.showMore }
               </Button>
             }
             <Button
               onClick={ this.openModal }
               className={ classes.addLinkedEventButton }
-              title= {strings.addEvent}
+              title= { strings.addEvent }
             >
-              {strings.addEvent}
+              { strings.addEvent }
             </Button>
           </div>
         </div>
@@ -1049,7 +1047,7 @@ class WelcomePage extends React.Component<Props, State> {
     const { pageSize } = this.state;
     try {
       let startDate = moment().utcOffset(0, true).format()
-      let fetchAddress = `https://mantyharju.linkedevents.fi/v1/event/?&page_size=4&page=${ pageSize }&sort=start_time&start=${ startDate }`;
+      let fetchAddress = `https://mantyharju.linkedevents.fi/v1/event/?&page_size=6&page=${ pageSize }&sort=start_time&start=${ startDate }`;
 
       const apiData = await fetch(fetchAddress)
       const response = await apiData.json();
@@ -1257,7 +1255,7 @@ class WelcomePage extends React.Component<Props, State> {
    */
   private renderLinkedEvents = () => {
     const { classes } = this.props;
-    const { linkedEventsPost, events } = this.state;
+    const { events } = this.state;
 
     if (!events) {
       return null;
@@ -1265,26 +1263,24 @@ class WelcomePage extends React.Component<Props, State> {
       return (
         events.map((event: any, index: number) => {
           return (
-            <>
-              <a className={ classes.event_link } href={ "/event/" + event.id }>
-                <Paper
-                  key={ index }
-                  className={ classes.card }
-                >
-                  <Box>
-                    <div className={ classes.centered }>
-                      <Typography gutterBottom variant="h5">
-                        { moment(event.start_time).format("DD.MM.YYYY") }
-                      </Typography>
-                      <div className={ classes.statusBar } style={{ backgroundColor: this.compareDates(event.start_time) ? "#FFCF4E" : "#1068B3" }}/>
-                      <Typography gutterBottom variant="caption">
-                        { event.name.fi }
-                      </Typography>
-                    </div>
-                  </Box> 
-                </Paper>
-              </a>
-            </>
+            <a className={ classes.event_link } href={ "/event/" + event.id }>
+              <Paper
+                key={ index }
+                className={ classes.card }
+              >
+                <Box>
+                  <div className={ classes.centered }>
+                    <Typography gutterBottom variant="h5">
+                      { moment(event.start_time).format("DD.MM.YYYY") }
+                    </Typography>
+                    <div className={ classes.statusBar } style={{ backgroundColor: this.compareDates(event.start_time) ? "#FFCF4E" : "#1068B3" }}/>
+                    <Typography gutterBottom variant="caption">
+                      { event.name.fi }
+                    </Typography>
+                  </div>
+                </Box> 
+              </Paper>
+            </a>
           );
         })
       );
@@ -1377,7 +1373,7 @@ class WelcomePage extends React.Component<Props, State> {
    * Action handler for "Show more" Linked events button
    */
   private expandLinkedEvents = async () => {
-    const { pageSize, events, loadMoreEventsDisabled } = this.state;
+    const { pageSize, events } = this.state;
 
     this.setState({
       pageSize: pageSize + 1 
@@ -1392,20 +1388,6 @@ class WelcomePage extends React.Component<Props, State> {
         events: eventData.events,
         loadMoreEventsDisabled: eventData.eventsMeta && eventData.eventsMeta.next === null ? true : false
     })
-  }
-
-  /**
-   * Gets limited posts array
-   */
-  private getLimitedPosts = (categoryId: number, delimiter: number) => {
-    const postsArray: CustomPost[] = new Array();
-    this.state.posts.map((post) => {
-      if ((post.categories ? post.categories : new Array()).includes(categoryId)) {
-        postsArray.push(post);
-      }
-    });
-
-    return postsArray.splice(0, delimiter);
   }
 }
 
