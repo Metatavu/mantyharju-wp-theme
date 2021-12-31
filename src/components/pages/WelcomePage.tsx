@@ -19,6 +19,8 @@ import ApiUtils from "../../utils/ApiUtils";
 import BasicLayout from "../BasicLayout";
 import ImageUpload from "./image-upload";
 
+const INITIAL_EVENT_PAGE_SIZE = 6;
+
 /**
  * Interface representing component properties
  */
@@ -61,9 +63,9 @@ interface State {
   fetchData: Place[]
   fethingData: boolean,
   events?: any,
-  pageSize: number;
   loadMoreEventsDisabled: boolean;
   loadMoreEventsVisible: boolean;
+  eventPageSize: number;
 }
 
 interface Dictionary<T> {
@@ -128,9 +130,9 @@ class WelcomePage extends React.Component<Props, State> {
       imageUrl: "",
       fetchData: [],
       fethingData: false,
-      pageSize: 1,
       loadMoreEventsDisabled: false,
-      loadMoreEventsVisible: true
+      loadMoreEventsVisible: true,
+      eventPageSize: INITIAL_EVENT_PAGE_SIZE
     };
 
     this.onPick = this.onPick.bind(this);
@@ -207,7 +209,7 @@ class WelcomePage extends React.Component<Props, State> {
     this.getAnnouncements();
     this.getLinkedEvents();
 
-    const eventData = await this.fetchEvents()
+    const eventData = await this.fetchEvents(INITIAL_EVENT_PAGE_SIZE);
 
     if(!eventData) {
       return
@@ -1043,11 +1045,10 @@ class WelcomePage extends React.Component<Props, State> {
   /**
    * Fetching method for fetching events
    */
-  private fetchEvents = async () => {
-    const { pageSize } = this.state;
+  private fetchEvents = async (eventPageSize: number) => {
     try {
       let startDate = moment().utcOffset(0, true).format()
-      let fetchAddress = `https://mantyharju.linkedevents.fi/v1/event/?&page_size=6&page=${ pageSize }&sort=start_time&start=${ startDate }`;
+      let fetchAddress = `https://mantyharju.linkedevents.fi/v1/event/?&page_size=${eventPageSize}&page=1&sort=start_time&start=${startDate}`;
 
       const apiData = await fetch(fetchAddress)
       const response = await apiData.json();
@@ -1373,13 +1374,15 @@ class WelcomePage extends React.Component<Props, State> {
    * Action handler for "Show more" Linked events button
    */
   private expandLinkedEvents = async () => {
-    const { pageSize, events } = this.state;
+    const { eventPageSize, events } = this.state;
+
+    const updatedEventPageSize = eventPageSize + INITIAL_EVENT_PAGE_SIZE;
 
     this.setState({
-      pageSize: pageSize + 1 
+      eventPageSize: updatedEventPageSize 
     })
 
-    const eventData = await this.fetchEvents();
+    const eventData = await this.fetchEvents(updatedEventPageSize);
 
     if(!eventData || !events) {
       return;
