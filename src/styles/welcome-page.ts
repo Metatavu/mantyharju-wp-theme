@@ -238,7 +238,6 @@ export default createStyles({
     },
   },
   event_link: {
-    display: "grid",
     textDecoration: "none",
     "&:link": {
       color: "#000"
@@ -251,6 +250,9 @@ export default createStyles({
     },
     "&:active": {
       color: "#000"
+    },
+    [breakpoints.down("lg")]: {
+      marginBottom: theme.spacing(2)
     }
   },
   postsHeading: {
@@ -343,7 +345,7 @@ export default createStyles({
       paddingTop: "2rem"
     },
     [breakpoints.up("lg")]: {
-      padding: sidePaddingXl,
+      padding: "3rem 4rem 3rem 4rem",
       paddingTop: "3rem"
     },
     [breakpoints.up("xl")]: {
@@ -385,12 +387,17 @@ export default createStyles({
     width: 25,
     marginRight: "1rem"
   },
+
   eventsButtonRow: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    margin: "2rem 0"
+    margin: "2rem 0",
+    [breakpoints.down("sm")]: {
+      flexDirection: "column"
+    }
   },
+
   eventsTopRow: {
     display: "flex",
     flexDirection: "row",
@@ -407,22 +414,31 @@ export default createStyles({
     width: "100%",
     objectFit: "cover",
   },
+
   allEventsButton: {
     backgroundColor: "#1068B3",
     textTransform: "uppercase",
     marginTop: "2rem",
-    marginRight: "1rem",
+    marginRight: theme.spacing(2),
     color: "#fff",
-    width: 270
+    width: 270,
+    [breakpoints.down("sm")]: {
+      marginRight: 0
+    }
   },
+
   addLinkedEventButton: {
     backgroundColor: "#1068B3",
     textTransform: "uppercase",
-    marginLeft: "1rem",
+    marginLeft: theme.spacing(2),
     color: "#fff",
     marginTop: "2rem",
-    width: 270
+    width: 270,
+    [breakpoints.down("sm")]: {
+      marginLeft: 0
+    }
   },
+
   wrapper: {
     display: "flex",
     flexDirection: "column",
@@ -430,14 +446,13 @@ export default createStyles({
     [breakpoints.up("sm")]: {
       display: "grid",
       gridTemplateColumns: "repeat(2, 1fr)",
-      gridRowGap: "2rem",
-      gridColumnGap: "1.5rem",
+      gridGap: theme.spacing(2),
     },
     [breakpoints.up("md")]: {
-      gridTemplateColumns: "repeat(4, 1fr)",
+      gridTemplateColumns: "repeat(3, 1fr)",
     },
     [breakpoints.up("lg")]: {
-      gridTemplateColumns: "repeat(5, 1fr)",
+      gridTemplateColumns: "repeat(6, 1fr)",
     },
     [breakpoints.up("xl")]: {
       gridTemplateColumns: "repeat(6, 1fr)",
