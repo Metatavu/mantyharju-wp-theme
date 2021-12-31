@@ -1185,6 +1185,8 @@ class WelcomePage extends React.Component<Props, State> {
       if (!copy) {
         this.setState({
           formValues: {},
+          autocompleteInput: "",
+          autocompleteValue: undefined,
           modalOpen: false,
           previewOpen: false
         });
