@@ -8,7 +8,7 @@ import * as React from "react";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ReactHtmlParser from "react-html-parser";
-import ImagePicker from "react-image-picker";
+import ImagePicker from "./image-picker";
 import "react-image-picker/dist/index.css";
 import { CustomizeField, CustomPost, Page, Post } from "../../generated/client/src";
 import strings from "../../localization/strings";
@@ -594,7 +594,7 @@ class WelcomePage extends React.Component<Props, State> {
    */
   private renderBeforeField = (fieldName?: string) => {
     const { classes } = this.props;
-    const { imageUrl } = this.state;
+    const { imageUrl, defaultImageUrl } = this.state;
     const imageTextLabel = strings.eventAdd.addImage;
     if (fieldName === "default-image-url") {
       return (
@@ -605,7 +605,7 @@ class WelcomePage extends React.Component<Props, State> {
             style={ this.state.showDefaultImages && !imageUrl ? {display:"block"} : {display:"none"} }
           >
             <ImagePicker
-              images={ imageList.map((image, i) => ({src: image, value: i})) }
+              images={ imageList.map((image, i) => ({src: image, value: i, selected: defaultImageUrl === image})) }
               onPick={ this.onPick }
             />
           </div>
