@@ -756,9 +756,7 @@ class WelcomePage extends React.Component<Props, State> {
   private onAutocompleteChange = (_event: React.ChangeEvent<{}>, value: AutocompleteItem | null) => {
     const { formValues } = this.state;
     this.setFieldValue("location", value?.value || null);
-    this.setState({
-      autocompleteValue: value || undefined,
-    });
+    this.setState({ autocompleteValue: value || undefined });
   }
 
   
