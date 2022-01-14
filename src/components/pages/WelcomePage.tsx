@@ -744,10 +744,7 @@ class WelcomePage extends React.Component<Props, State> {
    * @param newInputValue new input value
    */
   private onAutocompleteInputChange = (_event: React.ChangeEvent<{}>, newInputValue: string) => {
-    this.setState({
-      autocompleteInput: newInputValue
-    });
-
+    this.setState({ autocompleteInput: newInputValue });
   }
 
   /**
