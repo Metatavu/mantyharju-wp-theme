@@ -5,6 +5,9 @@ import { Done } from '@material-ui/icons';
 import styles from "../../styles/image-picker";
 import classNames from 'classnames';
 
+/**
+ * Component properties
+ */
 interface Props extends WithStyles<typeof styles> {
   images: Image[];
   onPick: (image: Image) => void
