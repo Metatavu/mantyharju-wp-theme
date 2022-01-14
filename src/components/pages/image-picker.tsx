@@ -58,4 +58,4 @@ class ImagePicker extends React.Component<Props> {
 
 }
 
-export default withStyles(styles)(ImagePicker)
+export default withStyles(styles)(ImagePicker);
