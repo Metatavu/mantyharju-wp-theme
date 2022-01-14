@@ -724,7 +724,7 @@ class WelcomePage extends React.Component<Props, State> {
           value={ autocompleteValue }
           getOptionLabel={ option => option.label }
           onChange={ this.onAutocompleteChange }
-          renderInput={(params) =>
+          renderInput={ params =>
             <TextField
               style={{ border: "0.5px rgba(0,0,0,0.5) solid" }}
               variant="outlined"
