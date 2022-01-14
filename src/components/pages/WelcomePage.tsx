@@ -728,8 +728,8 @@ class WelcomePage extends React.Component<Props, State> {
             <TextField
               style={{ border: "0.5px rgba(0,0,0,0.5) solid" }}
               variant="outlined"
-              {...params}
               InputProps={{ ...params.InputProps }}
+              { ...params }
             /> 
           }
         />
