@@ -29,6 +29,9 @@ class ImagePicker extends React.Component<Props> {
     );
   }
 
+  /**
+   * Component render method
+   */
   public render = () => {
     const { classes, images, onPick } = this.props;
 
