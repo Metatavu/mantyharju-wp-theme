@@ -1066,9 +1066,7 @@ class WelcomePage extends React.Component<Props, State> {
 
     const autocompleteOptions = this.convertPlaces(placeData);
 
-    this.setState({
-      autocompleteOptions: autocompleteOptions
-    })
+    this.setState({ autocompleteOptions: autocompleteOptions })
   }
 
   /**
