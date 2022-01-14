@@ -10,6 +10,9 @@ interface Props extends WithStyles<typeof styles> {
   onPick: (image: Image) => void
 }
 
+/**
+ * Image picker component
+ */
 class ImagePicker extends React.Component<Props> {
   constructor(props: Props) {
     super(props)
