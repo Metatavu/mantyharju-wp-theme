@@ -1266,6 +1266,7 @@ class WelcomePage extends React.Component<Props, State> {
           return (
             <a className={ classes.event_link } href={ "/event/" + event.id }>
               <Paper
+                style={{ flex: 1 }}
                 key={ index }
                 className={ classes.card }
               >
@@ -1275,7 +1276,7 @@ class WelcomePage extends React.Component<Props, State> {
                       { moment(event.start_time).format("DD.MM.YYYY") }
                     </Typography>
                     <div className={ classes.statusBar } style={{ backgroundColor: this.compareDates(event.start_time) ? "#FFCF4E" : "#1068B3" }}/>
-                    <Typography gutterBottom variant="caption">
+                    <Typography gutterBottom variant="body1">
                       { event.name.fi }
                     </Typography>
                   </div>
