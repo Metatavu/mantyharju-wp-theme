@@ -31,7 +31,7 @@ class ImagePicker extends React.Component<Props> {
     const { classes } = this.props;
 
     return (
-      <div className={ classNames(classes.imagePickerResponsive, image.selected && classes.imagePickerResponsiveSelected) }
+      <div className={ classNames(classes.imagePickerResponsive, { [classes.imagePickerResponsiveSelected]: image.selected }) }
         onClick={ onImagePick }>
         <img
           src={ image.src }
