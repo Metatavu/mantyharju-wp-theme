@@ -604,7 +604,7 @@ class WelcomePage extends React.Component<Props, State> {
             style={ this.state.showDefaultImages && !imageUrl ? {display:"block"} : {display:"none"} }
           >
             <ImagePicker
-              images={ imageList.map((image, i) => ({src: image, value: i, selected: defaultImageUrl === image})) }
+              images={ imageList.map((image, i) => ({ src: image, value: i, selected: defaultImageUrl === image })) }
               onPick={ this.onPick }
             />
           </div>
