@@ -35,7 +35,7 @@ class ImagePicker extends React.Component<Props> {
         onClick={ onImagePick }>
         <img
           src={ image.src }
-          className={ classNames(classes.imagePickerResponsiveThumbnail, image.selected && classes.imagePickerSelected) }
+          className={ classNames(classes.imagePickerResponsiveThumbnail, { [classes.imagePickerSelected]: image.selected }) }
           style={{ width: 150, height: 150, objectFit: "cover" }}
         />
       </div>
