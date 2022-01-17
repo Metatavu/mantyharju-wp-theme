@@ -18,7 +18,7 @@ interface Props extends WithStyles<typeof styles> {
  */
 class ImagePicker extends React.Component<Props> {
   constructor(props: Props) {
-    super(props)
+    super(props);
   }
 
   /**
