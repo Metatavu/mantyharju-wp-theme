@@ -620,8 +620,8 @@ class WelcomePage extends React.Component<Props, State> {
               initialImageUrl={ imageUrl }
             />
           </div>
-          {
-            (!imageUrl && !defaultImageUrl) && <Typography variant="body2" style={{ color: "red" }}>
+          { !imageUrl && !defaultImageUrl && 
+            <Typography variant="body2" style={{ color: "red" }}>
               { strings.requiredFieldMissing }
             </Typography>
           }
