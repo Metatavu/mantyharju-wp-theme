@@ -599,7 +599,7 @@ class WelcomePage extends React.Component<Props, State> {
           <input type="checkbox" onChange={ this.showDefaultImages }/>
           <div
             className={ classes.reactAddLocationWrapper }
-            style={ showDefaultImages && !imageUrl ? {display:"block"} : {display:"none"} }
+            style={{ display: showDefaultImages && !imageUrl ? "block" : "none" }}
           >
             <ImagePicker
               images={ imageList.map((image, i) => ({ src: image, value: i, selected: defaultImageUrl === image })) }
