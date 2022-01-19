@@ -9,7 +9,6 @@ import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ReactHtmlParser from "react-html-parser";
 import ImagePicker from "./image-picker";
-import "react-image-picker/dist/index.css";
 import { CustomizeField, CustomPost, Page, Post } from "../../generated/client/src";
 import strings from "../../localization/strings";
 import { announcementIconSvgPath, currentNewsIconSvgPath, jobsIconSvgPath } from "../../resources/icons/svgIcons";
@@ -728,7 +727,6 @@ class WelcomePage extends React.Component<Props, State> {
             <TextField
               style={{ border: "0.5px rgba(0,0,0,0.5) solid" }}
               variant="outlined"
-              InputProps={{ ...params.InputProps }}
               { ...params }
             /> 
           }
@@ -1328,6 +1326,7 @@ class WelcomePage extends React.Component<Props, State> {
           return (
             <a className={ classes.event_link } href={ "/event/" + event.id }>
               <Paper
+                style={{ flex: 1 }}
                 key={ index }
                 className={ classes.card }
               >
@@ -1337,7 +1336,7 @@ class WelcomePage extends React.Component<Props, State> {
                       { moment(event.start_time).format("DD.MM.YYYY") }
                     </Typography>
                     <div className={ classes.statusBar } style={{ backgroundColor: this.compareDates(event.start_time) ? "#FFCF4E" : "#1068B3" }}/>
-                    <Typography gutterBottom variant="caption">
+                    <Typography gutterBottom variant="body1">
                       { event.name.fi }
                     </Typography>
                   </div>
