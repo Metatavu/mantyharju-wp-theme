@@ -148,7 +148,7 @@
         {
           "title": "Sähköpostiosoite",
           "name": "provider-email",
-          "type": "email",
+          "type": "text",
           "required": false
         }
       ]
@@ -176,7 +176,7 @@
         {
           "title": "Sähköpostiosoite",
           "name": "responsible-email",
-          "type": "email",
+          "type": "text",
           "required": true
         }
       ]

@@ -50,7 +50,6 @@ interface State {
   posts: CustomPost[],
   form: Metaform,
   placeForm: Metaform,
-  requiredFieldsMissing: boolean,
   formValues: Dictionary<FieldValue>;
   placeFormValues: Dictionary<FieldValue>;
   linkedEventsPost?: Post,
@@ -133,7 +132,6 @@ class WelcomePage extends React.Component<Props, State> {
       scrollPosition: 0,
       siteMenuVisible: false,
       siteSearchVisible: false,
-      requiredFieldsMissing: false,
       announcementsCategoryId: 4,
       newsCategoryId: 5,
       customizeFields: [],
@@ -462,11 +460,12 @@ class WelcomePage extends React.Component<Props, State> {
    */
   private renderForm = () => {
     const { classes } = this.props;
-    const { requiredFieldsMissing, form } = this.state;
+    const { form } = this.state;
 
     return (
       <div className={ classes.metaformWrapper }>
         <MetaformComponent
+          showRequiredFieldsMissingError
           form={ form }
           formReadOnly={ false }
           onSubmit={ this.onSubmit }
@@ -477,7 +476,6 @@ class WelcomePage extends React.Component<Props, State> {
           setFieldValue={ this.setFieldValue }
           datetimePicker={ this.datetimePicker }
           renderBeforeField={ this.renderBeforeField }
-          showRequiredFieldsMissingError={ requiredFieldsMissing }
           requiredFieldsMissingError={ strings.requiredFieldMissing }
           renderAutocomplete={ this.renderAutoComplete }
           onFileDelete={ () => {} }
@@ -592,7 +590,8 @@ class WelcomePage extends React.Component<Props, State> {
    */
   private renderBeforeField = (fieldName?: string) => {
     const { classes } = this.props;
-    const { imageUrl, defaultImageUrl } = this.state;
+    const { imageUrl, defaultImageUrl, showDefaultImages } = this.state;
+
     const imageTextLabel = strings.eventAdd.addImage;
     if (fieldName === "default-image-url") {
       return (
@@ -600,14 +599,14 @@ class WelcomePage extends React.Component<Props, State> {
           <input type="checkbox" onChange={ this.showDefaultImages }/>
           <div
             className={ classes.reactAddLocationWrapper }
-            style={ this.state.showDefaultImages && !imageUrl ? {display:"block"} : {display:"none"} }
+            style={{ display: showDefaultImages && !imageUrl ? "block" : "none" }}
           >
             <ImagePicker
               images={ imageList.map((image, i) => ({ src: image, value: i, selected: defaultImageUrl === image })) }
               onPick={ this.onPick }
             />
           </div>
-          <div style={ this.state.showDefaultImages && imageUrl ? {display: "block"} : {display: "none"} }>
+          <div style={{ display: showDefaultImages && imageUrl ? "block" : "none" }}>
             <Typography variant="body2">
               { strings.eventAdd.deleteOwnPicture }
             </Typography>
@@ -621,6 +620,11 @@ class WelcomePage extends React.Component<Props, State> {
               initialImageUrl={ imageUrl }
             />
           </div>
+          { !imageUrl && !defaultImageUrl && 
+            <Typography variant="body2" style={{ color: "red" }}>
+              { strings.requiredFieldMissing }
+            </Typography>
+          }
         </div>
       )
     }
@@ -1202,17 +1206,6 @@ class WelcomePage extends React.Component<Props, State> {
    * Method for previewing event
    */
   private onPreviewEvent = async () =>  {
-    if (!this.isFormValid()) {
-      this.setState({
-        requiredFieldsMissing: true
-      });
-      return;
-    } else {
-      this.setState({
-        requiredFieldsMissing: false
-      });
-    }
-
     this.setState({
       previewOpen: true,
       modalOpen: false
