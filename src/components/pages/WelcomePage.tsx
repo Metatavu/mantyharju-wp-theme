@@ -606,7 +606,7 @@ class WelcomePage extends React.Component<Props, State> {
               onPick={ this.onPick }
             />
           </div>
-          <div style={ showDefaultImages && imageUrl ? {display: "block"} : {display: "none"} }>
+          <div style={{ display: showDefaultImages && imageUrl ? "block" : "none" }}>
             <Typography variant="body2">
               { strings.eventAdd.deleteOwnPicture }
             </Typography>
