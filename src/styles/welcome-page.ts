@@ -238,6 +238,8 @@ export default createStyles({
     },
   },
   event_link: {
+    display: "flex",
+    flex: 1,
     textDecoration: "none",
     "&:link": {
       color: "#000"
@@ -449,13 +451,13 @@ export default createStyles({
       gridGap: theme.spacing(2),
     },
     [breakpoints.up("md")]: {
-      gridTemplateColumns: "repeat(3, 1fr)",
+      gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
     },
     [breakpoints.up("lg")]: {
-      gridTemplateColumns: "repeat(6, 1fr)",
+      gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
     },
     [breakpoints.up("xl")]: {
-      gridTemplateColumns: "repeat(6, 1fr)",
+      gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
     }
   },
   events_item_universal: {
@@ -667,11 +669,12 @@ export default createStyles({
   },
 
   centered: {
-    height: 150,
+    padding: theme.spacing(3),
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "column",
+    textAlign: "center"
   },
 
   imageUploadWrapper: {
@@ -686,8 +689,7 @@ export default createStyles({
   statusBar: {
     height: 6,
     width: 120,
-    marginRight: "1rem",
-    marginBottom: 12
+    marginBottom: theme.spacing(2)
   },
 
   card: {

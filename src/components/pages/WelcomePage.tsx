@@ -1,4 +1,5 @@
-import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Icon, Paper, SvgIcon, Typography, WithStyles, withStyles } from "@material-ui/core";
+import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Icon, Paper, SvgIcon, TextField, Typography, WithStyles, withStyles } from "@material-ui/core";
+import { Autocomplete } from "@material-ui/lab";
 import AddIcon from "@material-ui/icons/Add";
 import fi from "date-fns/esm/locale/fi";
 import { FieldValue, IconName, Metaform, MetaformComponent } from "metaform-react";
@@ -7,8 +8,7 @@ import * as React from "react";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ReactHtmlParser from "react-html-parser";
-import ImagePicker from "react-image-picker";
-import "react-image-picker/dist/index.css";
+import ImagePicker from "./image-picker";
 import { CustomizeField, CustomPost, Page, Post } from "../../generated/client/src";
 import strings from "../../localization/strings";
 import { announcementIconSvgPath, currentNewsIconSvgPath, jobsIconSvgPath } from "../../resources/icons/svgIcons";
@@ -19,6 +19,20 @@ import ApiUtils from "../../utils/ApiUtils";
 import BasicLayout from "../BasicLayout";
 import ImageUpload from "./image-upload";
 
+const metaformStrings = {
+  fileField: {
+    deleteFileButton: "",
+    showFileButton: ""
+  },
+  tableField: {
+    addNewRow: ""
+  }
+}
+
+/**
+ * Autocomplete item
+ */
+type AutocompleteItem = { label: string, value: string };
 const INITIAL_EVENT_PAGE_SIZE = 6;
 
 /**
@@ -36,9 +50,8 @@ interface State {
   posts: CustomPost[],
   form: Metaform,
   placeForm: Metaform,
-  requiredFieldsMissing: boolean,
-  formValues: Dictionary<string | number | null>
-  placeFormValues: Dictionary<string | number | null>
+  formValues: Dictionary<FieldValue>;
+  placeFormValues: Dictionary<FieldValue>;
   linkedEventsPost?: Post,
   loading: boolean,
   popularPages: PageWithImgUrl[],
@@ -60,8 +73,9 @@ interface State {
   announcements?: PostItem[],
   jobsLink?: string,
   jobs?: PostItem[],
-  fetchData: Place[]
-  fethingData: boolean,
+  autocompleteOptions: AutocompleteItem[];
+  autocompleteInput: string;
+  autocompleteValue?: AutocompleteItem;
   events?: any,
   loadMoreEventsDisabled: boolean;
   loadMoreEventsVisible: boolean;
@@ -118,7 +132,6 @@ class WelcomePage extends React.Component<Props, State> {
       scrollPosition: 0,
       siteMenuVisible: false,
       siteSearchVisible: false,
-      requiredFieldsMissing: false,
       announcementsCategoryId: 4,
       newsCategoryId: 5,
       customizeFields: [],
@@ -128,8 +141,8 @@ class WelcomePage extends React.Component<Props, State> {
       showDefaultImages: false,
       addPlaceVisibility: false,
       imageUrl: "",
-      fetchData: [],
-      fethingData: false,
+      autocompleteInput: "",
+      autocompleteOptions: [],
       loadMoreEventsDisabled: false,
       loadMoreEventsVisible: true,
       eventPageSize: INITIAL_EVENT_PAGE_SIZE
@@ -208,6 +221,7 @@ class WelcomePage extends React.Component<Props, State> {
     this.getJobs();
     this.getAnnouncements();
     this.getLinkedEvents();
+    this.getAutocompleteOptions();
 
     const eventData = await this.fetchEvents(INITIAL_EVENT_PAGE_SIZE);
 
@@ -446,11 +460,12 @@ class WelcomePage extends React.Component<Props, State> {
    */
   private renderForm = () => {
     const { classes } = this.props;
-    const { requiredFieldsMissing, form } = this.state;
+    const { form } = this.state;
 
     return (
       <div className={ classes.metaformWrapper }>
         <MetaformComponent
+          showRequiredFieldsMissingError
           form={ form }
           formReadOnly={ false }
           onSubmit={ this.onSubmit }
@@ -461,9 +476,11 @@ class WelcomePage extends React.Component<Props, State> {
           setFieldValue={ this.setFieldValue }
           datetimePicker={ this.datetimePicker }
           renderBeforeField={ this.renderBeforeField }
-          setAutocompleteOptions={ this.setAutocompleteOptions }
-          showRequiredFieldsMissingError={ requiredFieldsMissing }
           requiredFieldsMissingError={ strings.requiredFieldMissing }
+          renderAutocomplete={ this.renderAutoComplete }
+          onFileDelete={ () => {} }
+          onFileShow={ () => {} }
+          strings={ metaformStrings }
         />
       </div>
     );
@@ -517,11 +534,10 @@ class WelcomePage extends React.Component<Props, State> {
    * Renders preview form
    */
   private renderPreviewForm = () => {
-    const { fetchData } = this.state;
+    const { autocompleteValue } = this.state;
 
-    const locationName = fetchData.find(dataEntry => dataEntry.id === this.getFieldValue("location"))?.name.fi;
-    const startDate = this.getFieldValue("start-date-time") && moment(this.getFieldValue("start-date-time"), "x").format("DD.MM.YYYY");
-    const endDate = this.getFieldValue("end-date-time") && moment(this.getFieldValue("end-date-time"), "x").format("DD.MM.YYYY");
+    const startDate = this.getFieldValue("start-date-time") && moment(this.getFieldValue("start-date-time") as number, "x").format("DD.MM.YYYY");
+    const endDate = this.getFieldValue("end-date-time") && moment(this.getFieldValue("end-date-time") as number, "x").format("DD.MM.YYYY");
 
     return (
       <Box>
@@ -539,17 +555,17 @@ class WelcomePage extends React.Component<Props, State> {
             { strings.event.eventInformation }
           </Typography>
         </Box>
-        { this.renderDataCell(locationName) }
+        { this.renderDataCell(autocompleteValue?.label) }
         <Box justifyContent="space-between">
           { this.renderDataCell(startDate, strings.event.start) }
           { this.renderDataCell(endDate, strings.event.end) }
         </Box>
         <Box mt={ 2 } mb={ 2 }>
-          { this.renderDataCell(this.getFieldValue("provider-fi"), strings.event.provider) }
-          { this.renderDataCell(this.getFieldValue("provider-phone"), strings.event.phone) }
-          { this.renderDataCell(this.getFieldValue("provider-email"), strings.event.email) }
-          { this.renderDataCell(this.getFieldValue("price-fi"), strings.event.priceInfo) }
-          { this.renderDataCell(this.getFieldValue("price-url"), strings.event.link) }
+          { this.renderDataCell(this.getFieldValue("provider-fi") as string, strings.event.provider) }
+          { this.renderDataCell(this.getFieldValue("provider-phone") as string, strings.event.phone) }
+          { this.renderDataCell(this.getFieldValue("provider-email") as string, strings.event.email) }
+          { this.renderDataCell(this.getFieldValue("price-fi") as string, strings.event.priceInfo) }
+          { this.renderDataCell(this.getFieldValue("price-url") as string, strings.event.link) }
         </Box>
         { this.getFieldValue('registration-fi') || this.getFieldValue('registration_url') &&
           <>
@@ -559,7 +575,7 @@ class WelcomePage extends React.Component<Props, State> {
             </Typography>
           </>
         }
-        { this.renderDataCell(this.getFieldValue("registration-fi")) }
+        { this.renderDataCell(this.getFieldValue("registration-fi") as string) }
         <Typography variant="body2">
           <a href={ this.getFieldValue("registration_url")?.toString() || "" }>
             { this.getFieldValue("registration_url") }
@@ -574,7 +590,8 @@ class WelcomePage extends React.Component<Props, State> {
    */
   private renderBeforeField = (fieldName?: string) => {
     const { classes } = this.props;
-    const { imageUrl } = this.state;
+    const { imageUrl, defaultImageUrl, showDefaultImages } = this.state;
+
     const imageTextLabel = strings.eventAdd.addImage;
     if (fieldName === "default-image-url") {
       return (
@@ -582,14 +599,14 @@ class WelcomePage extends React.Component<Props, State> {
           <input type="checkbox" onChange={ this.showDefaultImages }/>
           <div
             className={ classes.reactAddLocationWrapper }
-            style={ this.state.showDefaultImages && !imageUrl ? {display:"block"} : {display:"none"} }
+            style={{ display: showDefaultImages && !imageUrl ? "block" : "none" }}
           >
             <ImagePicker
-              images={ imageList.map((image, i) => ({src: image, value: i})) }
+              images={ imageList.map((image, i) => ({ src: image, value: i, selected: defaultImageUrl === image })) }
               onPick={ this.onPick }
             />
           </div>
-          <div style={ this.state.showDefaultImages && imageUrl ? {display: "block"} : {display: "none"} }>
+          <div style={{ display: showDefaultImages && imageUrl ? "block" : "none" }}>
             <Typography variant="body2">
               { strings.eventAdd.deleteOwnPicture }
             </Typography>
@@ -603,6 +620,11 @@ class WelcomePage extends React.Component<Props, State> {
               initialImageUrl={ imageUrl }
             />
           </div>
+          { !imageUrl && !defaultImageUrl && 
+            <Typography variant="body2" style={{ color: "red" }}>
+              { strings.requiredFieldMissing }
+            </Typography>
+          }
         </div>
       )
     }
@@ -624,9 +646,12 @@ class WelcomePage extends React.Component<Props, State> {
                 datePicker={ this.datePicker }
                 datetimePicker={ this.datetimePicker }
                 uploadFile={ this.uploadFile }
-                setAutocompleteOptions={ this.setAutocompleteOptions }
+                renderAutocomplete={ this.renderAutoComplete }
                 renderIcon={ this.renderIcon }
                 onSubmit={ this.onSubmit }
+                onFileDelete={ () => {} }
+                onFileShow={ () => {} }
+                strings={ metaformStrings }
               />
             </div>
           </div>
@@ -682,6 +707,61 @@ class WelcomePage extends React.Component<Props, State> {
     );
   }
 
+    /**
+   * Method for setting autocomplete options
+   *
+   * @param path path
+   */
+    private renderAutoComplete = () => {
+      const {
+        autocompleteOptions,
+        autocompleteInput,
+        autocompleteValue
+      } = this.state;
+
+      return (
+        <Autocomplete<AutocompleteItem>
+          options={ autocompleteOptions }
+          inputValue={ autocompleteInput }
+          onInputChange={ this.onAutocompleteInputChange }
+          value={ autocompleteValue }
+          getOptionLabel={ option => option.label }
+          onChange={ this.onAutocompleteChange }
+          renderInput={ params =>
+            <TextField
+              style={{ border: "0.5px rgba(0,0,0,0.5) solid" }}
+              variant="outlined"
+              { ...params }
+            /> 
+          }
+        />
+      );
+    }
+
+
+  /**
+   * Event handler for autocomplete input change
+   * 
+   * @param _event event
+   * @param newInputValue new input value
+   */
+  private onAutocompleteInputChange = (_event: React.ChangeEvent<{}>, newInputValue: string) => {
+    this.setState({ autocompleteInput: newInputValue });
+  }
+
+  /**
+   * Event handler for autocomplete change
+   * 
+   * @param _event event
+   * @param value new value
+   */
+  private onAutocompleteChange = (_event: React.ChangeEvent<{}>, value: AutocompleteItem | null) => {
+    const { formValues } = this.state;
+    this.setFieldValue("location", value?.value || null);
+    this.setState({ autocompleteValue: value || undefined });
+  }
+
+  
   /**
    * Fetch PopularPages featured image URL
    */
@@ -939,7 +1019,7 @@ class WelcomePage extends React.Component<Props, State> {
    * @param onChange on change callback for setting date
    */
   private datePicker = (fieldName: string, onChange: (date: Date) => void) => {
-    const value = this.getFieldValue(fieldName);
+    const value = this.getFieldValue(fieldName) as number;
     return (
       <DatePicker
         selected={ value ? new Date(value) : null }
@@ -956,7 +1036,7 @@ class WelcomePage extends React.Component<Props, State> {
    * @param onChange on change callback for setting datetime
    */
   private datetimePicker = (fieldName: string, onChange: (date: Date) => void) => {
-    const value = this.getFieldValue(fieldName);
+    const value = this.getFieldValue(fieldName) as number;
     return (
       <DatePicker
         selected={ value ? new Date(value) : null }
@@ -983,40 +1063,23 @@ class WelcomePage extends React.Component<Props, State> {
    *
    * @param path path
    */
-  private setAutocompleteOptions = async (input: string) => {
+  private getAutocompleteOptions = async () => {
+    const placeData = await this.fetchPlaces();
 
-    const { fethingData, fetchData } = this.state;
-    // Handle place autocomplete
-    if (!input) {
-      return [];
-    }
+    const autocompleteOptions = this.convertPlaces(placeData);
 
-    if (Object.keys(fetchData).length === 0 && !fethingData || input === "searchAgain") {
-      this.setState({
-        fethingData: true
-      });
-      const data = await this.fetchPlaces();
-      this.setState({
-        fetchData: data,
-        fethingData: false
-      });
-      await this.returnPlaces();
-    }
-    return this.returnPlaces();
+    this.setState({ autocompleteOptions: autocompleteOptions })
   }
 
   /**
    * Return list of places
    */
-  private returnPlaces = async () => {
-    const { fetchData } = this.state;
-
-    return await fetchData.map(place => {
-      return {
-        name: place.name && place.name.fi ? place.name.fi : place.id,
+  private convertPlaces = (placeData: Place[]) => {
+    return placeData.map(place => ({
+        label: place.name && place.name.fi ? place.name.fi : place.id,
         value: place.id
-      };
-    });
+      })
+    );
   }
 
   /**
@@ -1122,6 +1185,8 @@ class WelcomePage extends React.Component<Props, State> {
       if (!copy) {
         this.setState({
           formValues: {},
+          autocompleteInput: "",
+          autocompleteValue: undefined,
           modalOpen: false,
           previewOpen: false
         });
@@ -1141,17 +1206,6 @@ class WelcomePage extends React.Component<Props, State> {
    * Method for previewing event
    */
   private onPreviewEvent = async () =>  {
-    if (!this.isFormValid()) {
-      this.setState({
-        requiredFieldsMissing: true
-      });
-      return;
-    } else {
-      this.setState({
-        requiredFieldsMissing: false
-      });
-    }
-
     this.setState({
       previewOpen: true,
       modalOpen: false
@@ -1181,7 +1235,6 @@ class WelcomePage extends React.Component<Props, State> {
   
           api.postWpV2Event({ event: placeFormValues });
           this.setState({placeFormValues: {}});
-          this.setAutocompleteOptions("searchAgain")
         } catch (error) {
             alert(strings.eventAdd.errorWhenAddingPlace);
         }
@@ -1266,6 +1319,7 @@ class WelcomePage extends React.Component<Props, State> {
           return (
             <a className={ classes.event_link } href={ "/event/" + event.id }>
               <Paper
+                style={{ flex: 1 }}
                 key={ index }
                 className={ classes.card }
               >
@@ -1275,7 +1329,7 @@ class WelcomePage extends React.Component<Props, State> {
                       { moment(event.start_time).format("DD.MM.YYYY") }
                     </Typography>
                     <div className={ classes.statusBar } style={{ backgroundColor: this.compareDates(event.start_time) ? "#FFCF4E" : "#1068B3" }}/>
-                    <Typography gutterBottom variant="caption">
+                    <Typography gutterBottom variant="body1">
                       { event.name.fi }
                     </Typography>
                   </div>

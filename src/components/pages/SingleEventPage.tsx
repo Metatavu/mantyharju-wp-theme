@@ -101,6 +101,7 @@ class SingleEventPage extends React.Component<Props, State> {
                     { fetchedContent ? fetchedContent.name.fi || "Event" : "Event" }
                   </Typography>
                   <Typography
+                    style={{ whiteSpace: "pre-line" }}
                     dangerouslySetInnerHTML={{
                     __html: fetchedContent.description.fi
                     }}
