@@ -536,8 +536,8 @@ class WelcomePage extends React.Component<Props, State> {
   private renderPreviewForm = () => {
     const { autocompleteValue } = this.state;
 
-    const startDate = this.getFieldValue("start-date-time") && moment(this.getFieldValue("start-date-time") as number, "x").format("DD.MM.YYYY");
-    const endDate = this.getFieldValue("end-date-time") && moment(this.getFieldValue("end-date-time") as number, "x").format("DD.MM.YYYY");
+    const startDate = moment(this.getFieldValue("start-date-time") as string, "YYYY-MM-DD").format("DD.MM.YYYY");
+    const endDate = moment(this.getFieldValue("end-date-time") as string, "YYYY-MM-DD").format("DD.MM.YYYY");
 
     return (
       <Box>
