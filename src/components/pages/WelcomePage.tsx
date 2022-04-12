@@ -536,8 +536,10 @@ class WelcomePage extends React.Component<Props, State> {
   private renderPreviewForm = () => {
     const { autocompleteValue } = this.state;
 
-    const startDate = moment(this.getFieldValue("start-date-time") as string, "YYYY-MM-DD").format("DD.MM.YYYY");
-    const endDate = moment(this.getFieldValue("end-date-time") as string, "YYYY-MM-DD").format("DD.MM.YYYY");
+    const isAllDayEvent = !!this.getFieldValue("all-day");
+
+    const startDate = this.getFieldValue("start-date-time") ? moment.utc(this.getFieldValue("start-date-time") as string, "YYYY-MM-DDThh:mm").local() : null;
+    const endDate = this.getFieldValue("end-date-time") ? moment.utc(this.getFieldValue("end-date-time") as string, "YYYY-MM-DDThh:mm").local() : null;
 
     return (
       <Box>
@@ -557,8 +559,8 @@ class WelcomePage extends React.Component<Props, State> {
         </Box>
         { this.renderDataCell(autocompleteValue?.label) }
         <Box justifyContent="space-between">
-          { this.renderDataCell(startDate, strings.event.start) }
-          { this.renderDataCell(endDate, strings.event.end) }
+          { this.renderDataCell(isAllDayEvent ? startDate?.format("DD.MM.YYYY") : startDate?.format("DD.MM.YYYY kk:mm"), strings.event.start) }
+          { this.renderDataCell(isAllDayEvent ? endDate?.format("DD.MM.YYYY") : endDate?.format("DD.MM.YYYY kk:mm"), strings.event.end) }
         </Box>
         <Box mt={ 2 } mb={ 2 }>
           { this.renderDataCell(this.getFieldValue("provider-fi") as string, strings.event.provider) }
