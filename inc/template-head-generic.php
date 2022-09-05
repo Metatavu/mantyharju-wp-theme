@@ -3,7 +3,7 @@
 <meta property="og:locale" content="<?php echo get_locale();?>" />
 <meta property="og:url" content="https://www.mantyharju.fi/" />
 <meta property="og:title" content="Mäntyharju" />
-<meta property="og:description" content="Luontoa, kulttuuria, elämää!"/>
+<meta property="og:description" content="<?php echo get_option('hero_title');?>" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,600&family=Rubik&display=swap" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="<?php bloginfo('template_url') ?>/inc/styles.css" />
