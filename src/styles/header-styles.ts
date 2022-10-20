@@ -204,6 +204,17 @@ export default createStyles({
       }
     }
   },
+  searchLabel: {
+    [theme.breakpoints.up("md")]: {
+      display: "none"
+    }
+  },
+  searchInput: {
+    border: "1px solid #595959",
+    borderRadius: "4px",
+    borderTopRightRadius: 0,
+    borderBottomRightRadius: 0
+  },
   searchIconWrapper: {
     height: 40,
     width: 40,
@@ -223,16 +234,23 @@ export default createStyles({
     }
   },
   topMenu: {
-    display: "flex"
+    display: "flex",
+    flexDirection: "column",
+    [theme.breakpoints.up("md")]: {
+      flexDirection: "row",
+    }
   },
   topMenuItem: {
     padding: "0.5rem 1rem",
     color: theme.palette.primary.main,
-    fontSize: 14,
+    fontSize: 18,
     textTransform: "uppercase",
     "&:hover": {
       textDecoration: "none",
       backgroundColor: hoverHighlight
+    },
+    [theme.breakpoints.up("md")]: {
+      fontSize: 14,
     }
   }
 });

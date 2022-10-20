@@ -1,9 +1,10 @@
 import * as React from "react";
-import { Link, WithStyles, withStyles, Fade, IconButton, Accordion, AccordionSummary, AccordionDetails } from "@material-ui/core";
+import { Divider, Link, WithStyles, withStyles, Fade, IconButton, Accordion, AccordionSummary, AccordionDetails } from "@material-ui/core";
 import ApiUtils from "../../utils/ApiUtils";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import CloseIcon from "@material-ui/icons/CloseSharp";
 import styles from "../../styles/mobile-menu";
+import theme from "../../styles/theme";
 
 /**
  * Interface representing component properties
@@ -12,6 +13,7 @@ interface Props extends WithStyles<typeof styles> {
   visible: boolean;
   slug: string;
   searchBar: JSX.Element;
+  topMenu: JSX.Element | null;
   onClose(): void;
 }
 
@@ -54,7 +56,7 @@ class MobileMenu extends React.Component<Props, State> {
    * Component did mount life-cycle handler
    */
   public componentDidMount = async () => {
-    const { slug } = this.props;
+    const { slug } = this.props;
 
     this.setState({
       loading: true
@@ -74,7 +76,7 @@ class MobileMenu extends React.Component<Props, State> {
    * Component render method
    */
   public render() {
-    const { classes, searchBar } = this.props;
+    const { classes, searchBar, topMenu } = this.props;
     const { menu } = this.state;
     if (!menu) {
       return null;
@@ -104,7 +106,7 @@ class MobileMenu extends React.Component<Props, State> {
               color="primary"
               onClick={ () => this.props.onClose() }
             >
-              <CloseIcon fontSize="default" />
+              <CloseIcon fontSize="large" />
             </IconButton>
           </div>
           <div className={ classes.searchBar }>
@@ -118,6 +120,8 @@ class MobileMenu extends React.Component<Props, State> {
               this.renderMenuItemsGroupWithoutChildren(itemsWithoutChildren)
             }
           </div>
+          <Divider style={{ marginBottom: theme.spacing(2) }}/>
+          { topMenu }
         </div>
       </Fade>
     );
@@ -155,7 +159,7 @@ class MobileMenu extends React.Component<Props, State> {
    */
   private renderMenuItem = (item: Menu) => {
     const { classes } = this.props;
-    if (!item || item.post_status !== "publish") {
+    if (!item || item.post_status !== "publish") {
       return null;
     }
 
@@ -189,7 +193,7 @@ class MobileMenu extends React.Component<Props, State> {
    * @param item menu
    */
   private renderMenuSubItem = (item?: Menu) => {
-    if (!item || item.post_status !== "publish") {
+    if (!item || item.post_status !== "publish") {
       return null;
     }
     const { classes } = this.props;
