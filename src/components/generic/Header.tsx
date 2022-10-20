@@ -9,6 +9,7 @@ import * as classNames from "classnames";
 import { searchIconVectorPath } from "../../resources/icons/svgIcons";
 import HamburgerIcon from "@material-ui/icons/MenuSharp";
 import MobileMenu from "./MobileMenu";
+import strings from "../../localization/strings";
 
 /**
  * Facebook-logo license: https://commons.wikimedia.org/wiki/File:Facebook_William_Aditya_Sarana.png
@@ -35,7 +36,7 @@ interface State {
   searchString: string;
   results: SearchResult[];
   mobileMenuVisible: boolean;
-  scrollPosition: number,
+  scrollPosition: number;
 }
 
 /**
@@ -76,7 +77,7 @@ class Header extends React.Component<Props, State> {
    * Component render
    */
   public render() {
-    const { classes } = this.props;
+    const { classes, localeMenu } = this.props;
     const { searchString, results, menuVisibility, scrollPosition } = this.state;
 
     const menuStyle: React.CSSProperties = {
@@ -86,12 +87,15 @@ class Header extends React.Component<Props, State> {
       position: "absolute",
       overflowY: "auto",
       maxHeight: 320,
-      zIndex: 1000,
+      zIndex: 1000
     };
 
     const searchBar: JSX.Element = (
       <React.Fragment>
         <Autocomplete
+          wrapperStyle={{
+            width: "100%"
+          }}
           getItemValue={ this.getItemValue }
           items={ results }
           renderItem={ this.renderItem }
@@ -100,10 +104,14 @@ class Header extends React.Component<Props, State> {
           onSelect={ this.selectItem }
           menuStyle={ menuStyle }
           renderInput={params => (
-            <input
-              {...params}
-              title="Haku"
-            /> 
+            <div style={{ display: "flex", flexDirection:"column" }}>
+              <label className={ classes.searchLabel }>{ strings.searchSite }</label>
+              <input
+                { ...params }
+                className={ classes.searchInput }
+                title={ strings.searchSite }
+              /> 
+            </div>
           )}
         />
         <div className={ classes.searchIconWrapper }>
@@ -143,7 +151,7 @@ class Header extends React.Component<Props, State> {
               color="primary"
               onClick={ this.showMobileMenu }
             >
-              <HamburgerIcon fontSize="default" />
+              <HamburgerIcon fontSize="large"/>
             </IconButton>
           </div>
           <Hidden smDown implementation="css">
@@ -162,6 +170,7 @@ class Header extends React.Component<Props, State> {
           onClose={ () => this.setState({ mobileMenuVisible: false }) }
           visible={ this.state.mobileMenuVisible }
           searchBar={ searchBar }
+          topMenu={ this.renderTopMenu() }
         />
       </>
     );
@@ -193,10 +202,10 @@ class Header extends React.Component<Props, State> {
     const { classes } = this.props;
     return (
       <Link
-      variant="h6"
-      key={ item.db_id }
-      href={ item.url }
-      className={ classes.navLink }
+        variant="h6"
+        key={ item.db_id }
+        href={ item.url }
+        className={ classes.navLink }
       >
         {
           item.title

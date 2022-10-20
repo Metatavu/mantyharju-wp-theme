@@ -9,7 +9,10 @@ export default createStyles({
     top: 0,
     bottom: 0,
     width: "100vw",
-    padding: "0 20px",
+    paddingTop: 0,
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
     height: "100vh",
     zIndex: 1000,
     backgroundColor: "#fff",
@@ -21,16 +24,21 @@ export default createStyles({
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
-    height: "40px",
-    marginTop: 80,
+    alignItems: "flex-end",
+    marginTop: 60,
     "& input": {
-      height: "100%"
+      height: 40
+    }
+  },
+  searchLabel: {
+    [theme.breakpoints.up("md")]: {
+      display: "none"
     }
   },
   menuContent: {
     display: "flex",
     flexDirection: "column",
-    marginTop: 15
+    marginTop: theme.spacing(2)
   },
   menuGroup: {
     display: "flex",
@@ -44,17 +52,21 @@ export default createStyles({
   link: {
   },
   subLink: {
-    marginBottom: "1rem",
     fontFamily: theme.typography.body1.fontFamily,
-    lineHeight: 1.2,
-    marginLeft: "1rem"
+    lineHeight: "1rem",
+    fontSize: "1rem",
+    paddingBottom: theme.spacing(2),
+    paddingTop: theme.spacing(2),
+    paddingLeft: theme.spacing(2),
   },
   subLinkOfSubLink: {
-    marginBottom: "1rem",
     fontFamily: theme.typography.body1.fontFamily,
     fontWeight: 300,
-    lineHeight: 1.2,
-    marginLeft: "2rem"
+    lineHeight: "1rem",
+    fontSize: "1rem",
+    paddingBottom: theme.spacing(2),
+    paddingTop: theme.spacing(2),
+    paddingLeft: theme.spacing(4)
   },
   controlContainer: {
     display: "flex",
@@ -67,5 +79,27 @@ export default createStyles({
     display: "flex",
     justifyContent: "center",
     alignItems: "center"
+  },
+  nav: {
+    display: "flex",
+    flexDirection: "column"
+  },
+  navLink: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    textDecoration: "none",
+    fontFamily: theme.typography.body1.fontFamily,
+    color: theme.palette.text.secondary,
+    fontWeight: theme.typography.body1.fontWeight,
+    fontSize: 16,
+    cursor: "pointer",
+    paddingBottom: "1rem",
+    borderBottom: "4px solid rgba(0,0,0,0)",
+    transition: "border-bottom-color 0.2s ease-out",
+    margin: "0 5px",
+    "&.highlight": {
+      borderBottomColor: theme.palette.primary.main
+    }
   },
 });
