@@ -432,7 +432,13 @@ class PostPage extends React.Component<Props, State> {
       const childNode = node.children && node.children.length ? node.children[0] : null;
       if (childNode) {
         return (
-          <Button onClick={ this.addEvent } className={ classes.button } color="primary" variant="outlined" startIcon={ <Add /> }>
+          <Button
+            onClick={ this.addEvent }
+            className={ classes.button }
+            color="primary"
+            variant="outlined"
+            startIcon={ <Add /> }
+          >
             { this.getElementTextContent(childNode) }
           </Button>
         );
