@@ -17,6 +17,7 @@ import hero from "../../resources/img/postHeader.jpg";
 import ReadSpeaker from "../generic/ReadSpeaker";
 import Movies from "../movies/movies";
 import Premiers from "../movies/premiers";
+import { Add } from "@material-ui/icons";
 
 /**
  * Interface representing component properties
@@ -425,8 +426,24 @@ class PostPage extends React.Component<Props, State> {
       });
     }
 
-    // Find any buttons and replace them with Material UI button
-    if (classNames.indexOf("wp-block-button") > -1) {
+    // Find any add new event buttons and make them trigger add event dialog
+    // TODO: move add event dialog into separate component from WelcomePage.tsx that can be launched from anywhere
+    if (classNames.indexOf("new-event-button") > -1) {
+      const childNode = node.children && node.children.length ? node.children[0] : null;
+      if (childNode) {
+        return (
+          <Button
+            onClick={ this.addEvent }
+            className={ classes.button }
+            color="primary"
+            variant="outlined"
+            startIcon={ <Add /> }
+          >
+            { this.getElementTextContent(childNode) }
+          </Button>
+        );
+      }  // Find any buttons and replace them with Material UI button
+    }  else if (classNames.indexOf("wp-block-button") > -1) {
       const childNode = node.children && node.children.length ? node.children[0] : null;
       if (childNode) {
         return (
@@ -440,6 +457,14 @@ class PostPage extends React.Component<Props, State> {
     }
 
     return convertNodeToElement(node, index, this.transformContent);
+  }
+
+  /**
+   * Open add event dialog method
+   * TODO: open add event dialog when it has been separated from the WelcomePage.tsx
+   */
+  private addEvent = () => {
+    alert("Open add event dialog!")
   }
 }
 export default withStyles(styles)(PostPage);
