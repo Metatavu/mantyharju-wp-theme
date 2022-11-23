@@ -137,13 +137,10 @@ class Header extends React.Component<Props, State> {
             {/* Hide this part of the header when on small screens */}
             <Hidden smDown implementation="css">
               <div className={ classes.headerRight }>
-                <div className={ classes.localeMenu }>
-                  { this.renderLocale() }
+                { this.renderTopMenu() }
+                <div className={ classes.searchBar }>
+                  { searchBar }
                 </div>
-                  { this.renderTopMenu() }
-                  <div className={ classes.searchBar }>
-                    { searchBar }
-                  </div>
               </div>
             </Hidden>
             <IconButton
