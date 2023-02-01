@@ -5,7 +5,6 @@ import ApiUtils from "../utils/ApiUtils";
 import styles from "../styles/basic-layout";
 import Header from "./generic/Header";
 import Footer from "./generic/Footer";
-import CookieConsent from "react-cookie-consent";
 
 /**
  * Interface representing component properties
@@ -71,16 +70,6 @@ class BasicLayout extends React.Component<Props, State> {
 
     return (
       <div className={ classes.root }>
-        <CookieConsent
-        location="bottom"
-        buttonText="Sulje"
-        cookieName="GDPRcookie"
-        style={{ background: "#1068B3" }}
-        buttonStyle={{ background: "#fff",  color: "#000", fontSize: "16px" }}
-        expires={150}
-        >
-          Käytämme sivustollamme evästeitä. Jatkamalla sivuston käyttöä, hyväksyt evästeiden tallentamisen laitteellesi. Lisätietoja evästeiden käytöstä löydät <a href="/sivut/asiointi-paatoksenteko/asiointi/evasteet" style={{color:"white"}}>täältä</a>
-        </CookieConsent>
         <Header
           slug={ this.props.slug }
           lang={ this.props.lang }
