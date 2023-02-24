@@ -1,5 +1,6 @@
 <?php
-  require_once(__DIR__ . '/../common.php');
+  $paths = $data->paths;
+  include_once $paths["common"];
 
   $serviceChannel = $data->serviceChannel;
   $phoneNumbers = $serviceChannel ["phoneNumbers"];
