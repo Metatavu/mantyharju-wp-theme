@@ -48,20 +48,20 @@ class Footer extends React.Component<Props, State> {
 
     return (
       <footer className={ classes.root }>
-        <div className = { classes.footerContent }>
-          <div className = { classes.footerLogo}>
-            <img alt = "Mäntyharju-logo" className={ classes.logo } src={ logo }/>
+        <div className={ classes.footerContent }>
+          <div className={ classes.footerLogo}>
+            <img alt="Mäntyharju-logo" className={ classes.logo } src={ logo }/>
           </div>
 
-          <div className = { classes.footerAdressInfo}>
-            <p className = { classes.footerContentItem }>Mäntyharjun kunta</p>
-            <p className = { classes.footerContentItem }>Asematie 3, PL 76</p>
-            <p className = { classes.footerContentItem }>52701, Mäntyharju</p>
+          <div className={ classes.footerAdressInfo}>
+            <p className={ classes.footerContentItem }>Mäntyharjun kunta</p>
+            <p className={ classes.footerContentItem }>Asematie 3, PL 76</p>
+            <p className={ classes.footerContentItem }>52701, Mäntyharju</p>
           </div>
 
-          <div className = { classes.footerContactInfo }>
-            <p className = { classes.footerContentItem }>Puh: +358 (0)44 7707 346</p>
-            <p className = { classes.footerContentItem }>email: kirjaamo@mantyharju.fi</p>
+          <div className={ classes.footerContactInfo }>
+            <a className={ classes.footerContentItem } href="tel:+358447707346">Puh: +358 (0)44 7707 346</a>
+            <a className={ classes.footerContentItem } href="mailto:kirjaamo@mantyharju.fi">Email: kirjaamo@mantyharju.fi</a>
           </div>
 
           <div className = { classes.footerSocialInfo}>

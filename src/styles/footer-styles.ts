@@ -62,11 +62,13 @@ export default createStyles({
         marginLeft: 5,
     },
     footerContentItem: {
-        "& p": {
-            color: "#fff",
-            fontFamily: theme.typography.body1.fontFamily,
-            textDecoration: "none",
-            margin: 0
+        display: "block",
+        color: "#fff",
+        fontFamily: theme.typography.body1.fontFamily,
+        textDecoration: "none",
+        margin: "1em 0",
+        "&:hover": {
+            textDecoration: "underline"
         }
     },
     logo: {
