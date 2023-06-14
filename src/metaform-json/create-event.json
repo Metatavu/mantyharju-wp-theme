@@ -298,7 +298,7 @@
         {
           "name": "submit-help",
           "type": "html",
-          "html": "<div class='help-container'><p>Mikäli tapahtuman lisääminen ei onnistu, voit olla yhteydessä: kulttuuri@mantyharju.fi</p></div>"
+          "html": "<div class='help-container'><p>Mikäli tapahtuman lisääminen ei onnistu, voit olla yhteydessä: tapahtumakalenteri@mantyharju.fi</p></div>"
         }
       ]
     }
