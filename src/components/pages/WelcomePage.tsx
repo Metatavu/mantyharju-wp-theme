@@ -98,12 +98,12 @@ interface PageWithImgUrl extends Page {
 }
 
 const imageList = [
-  "https://static.metatavu.io/mantyharju/linkedevents/images/defaultimage1.jpg",
-  "https://static.metatavu.io/mantyharju/linkedevents/images/defaultimage2.jpg",
-  "https://static.metatavu.io/mantyharju/linkedevents/images/defaultimage3.jpg",
-  "https://static.metatavu.io/mantyharju/linkedevents/images/defaultimage4.jpg",
-  "https://static.metatavu.io/mantyharju/linkedevents/images/defaultimage5.jpg",
-  "https://static.metatavu.io/mantyharju/linkedevents/images/defaultimage6.jpg"
+  "https://static.metatavu.io/mantyharju/linkedevents/images/eventimage1.png",
+  "https://static.metatavu.io/mantyharju/linkedevents/images/eventimage2.png",
+  "https://static.metatavu.io/mantyharju/linkedevents/images/eventimage3.png",
+  "https://static.metatavu.io/mantyharju/linkedevents/images/eventimage4.png",
+  "https://static.metatavu.io/mantyharju/linkedevents/images/eventimage5.png",
+  "https://static.metatavu.io/mantyharju/linkedevents/images/eventimage6.png"
 ];
 
 /**
