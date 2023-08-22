@@ -146,7 +146,6 @@
                 'post_content' => !empty($links_html) ? $links_html : '<p></p>'
             ));
         }
-
     }
   }, 10, 3);
 
