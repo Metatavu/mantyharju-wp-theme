@@ -34,21 +34,5 @@
     return $links_html;
   }
 
-  function update_company_menu_order($category_term_id) {
-    global $wpdb;
-
-    // Run the SQL query to update menu_order for all company posts in a specific category
-    $query = "
-        UPDATE {$wpdb->posts} p
-        JOIN {$wpdb->term_relationships} tr ON p.ID = tr.object_id
-        SET p.menu_order = @menu_order := @menu_order + 1
-        WHERE p.post_type = 'company'
-        AND tr.term_taxonomy_id = %d
-        ORDER BY p.post_title ASC;
-    ";
-
-    // Run the query with the category term ID as a parameter
-    $wpdb->query($wpdb->prepare($query, $category_term_id));
-  }
-
+  const COMPANIES_PAGE = 'sivut/tyo-yrittaminen/yrityspalvelut/yritykset/';
 ?>

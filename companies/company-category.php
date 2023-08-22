@@ -35,10 +35,10 @@
         $term = get_term($term_id, $taxonomy);
         $page_slug = $term->slug;
         $page_title = $term->name;
-        $parent_page = 'sivut/tyo-yrittaminen/yrityspalvelut/yritykset'; // Update this with the actual parent page slug
+        $parent_page = \Company\Utils\COMPANIES_PAGE; // Update this with the actual parent page slug
 
         // Check if the page already exists
-        $existing_page = get_page_by_path($parent_page . '/' . $page_slug);
+        $existing_page = get_page_by_path($parent_page . $page_slug);
 
         if (!$existing_page) {
             $parent_page_id = get_page_by_path($parent_page)->ID;
@@ -76,7 +76,7 @@
         $term = get_term($term_id, $taxonomy);
         $page_slug = $term->slug;
         $page_title = $term->name;
-        $parent_page = 'sivut/tyo-yrittaminen/yrityspalvelut/yritykset'; // Update this with the actual parent page slug
+        $parent_page = \Company\Utils\COMPANIES_PAGE; // Update this with the actual parent page slug
 
         // Get the stored page ID from term's metadata
         $stored_page_id = get_term_meta($term_id, 'taxonomy_page_id', true);
@@ -89,7 +89,6 @@
                 'post_name'   => $page_slug,
             );
             wp_update_post($page_update_args);
-
             $parent_page_id = get_page_by_path($parent_page)->ID;
             
             $links_html = \Company\Utils\build_child_links($parent_page_id, $stored_page_id);
@@ -107,7 +106,7 @@
     if ($taxonomy === 'company_category') {
         $term = get_term($term_id, $taxonomy);
         $page_slug = $term->slug;
-        $parent_page = 'sivut/tyo-yrittaminen/yrityspalvelut/yritykset'; // Update this with the actual parent page slug
+        $parent_page = \Company\Utils\COMPANIES_PAGE; // Update this with the actual parent page slug
 
         // Get the corresponding page ID based on term name
         $args = array(

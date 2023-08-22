@@ -41,7 +41,7 @@
             $term_slug = get_term_field('slug', $term_id, 'company_category');
 
             // Build the parent page path
-            $parent_page_path = 'sivut/tyo-yrittaminen/yrityspalvelut/yritykset/' . $term_slug;
+            $parent_page_path = \Company\Utils\COMPANIES_PAGE . $term_slug;
 
             // Check if the parent page exists
             $parent_page_id = get_page_by_path($parent_page_path)->ID;
@@ -59,7 +59,7 @@
                         wp_delete_post($existing_page_id, true);
 
                         $old_term_slug = get_term_field('slug', $old_term_id, 'company_category');
-                        $old_parent_page_path = 'sivut/tyo-yrittaminen/yrityspalvelut/yritykset/' . $old_term_slug;
+                        $old_parent_page_path = \Company\Utils\COMPANIES_PAGE . $old_term_slug;
                         $old_parent_page_id = get_page_by_path($old_parent_page_path)->ID;
 
                         $links_html = \Company\Utils\build_child_links($old_parent_page_id);
@@ -103,7 +103,6 @@
                 }
             }
 
-            \Company\Utils\update_company_menu_order($term_id);
         }
     }
   }, 10, 3);
@@ -118,7 +117,7 @@
           $term_slug = get_term_field('slug', $term_id, 'company_category');
 
           // Build the parent page path
-          $parent_page_path = 'sivut/tyo-yrittaminen/yrityspalvelut/yritykset/' . $term_slug;
+          $parent_page_path = \Company\Utils\COMPANIES_PAGE . $term_slug;
 
           // Get the parent page by path
           $parent_page = get_page_by_path($parent_page_path);
