@@ -2,7 +2,7 @@ import * as React from "react";
 import BasicLayout from "../BasicLayout";
 import { WithStyles, withStyles, Button, Breadcrumbs, Link, Grid, FormControl, Select, MenuItem, Input, InputLabel } from "@material-ui/core";
 import styles from "../../styles/page-content";
-import { Page, Post, PostTitle, CustomPage, PostWpV2PostsStatusEnum, CompanyCategory, PostStatusEnum, PostWpV2PagesStatusEnum } from "../../../src/generated/client/src";
+import { Page, Post, PostTitle, CustomPage, CompanyCategory } from "../../../src/generated/client/src";
 import ReactHtmlParser, { convertNodeToElement } from "react-html-parser";
 import { DomElement } from "domhandler";
 import strings from "../../localization/strings";
