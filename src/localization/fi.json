@@ -26,7 +26,13 @@
   "somethingWentWrong": "Jokin meni pieleen. Ota yhteyttä sivuston ylläpitoon.",
   "whoops": "Hups!",
   "requiredFieldMissing": "Pakollinen tieto",
-  "popularPages": "Suosituimmat sivut",
+  "popularPages": "Suosituimmat sivut",  
+  "companies": {
+    "companyName": "Yrityksen nimi",
+    "companyInformation": "Tiedot",
+    "companyCategory": "Kategoria",
+    "companySubmit": "Lähetä"
+  },
   "event": {
     "eventInformation": "Tapahtuman tiedot",
     "start": "Aloituspäivämäärä",

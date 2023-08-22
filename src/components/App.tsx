@@ -13,6 +13,7 @@ import { ThemeProvider } from "@material-ui/styles";
 import mantyharjuTheme from "../styles/theme";
 import * as qs from "query-string";
 import strings from "../localization/strings";
+import CompanyForm from "./pages/company-form";
 
 /**
  * Interface representing component properties
@@ -108,6 +109,17 @@ class App extends React.Component<Props, State> {
             >
               <Redirect to="/" />
             </Route>
+            <Route
+              path="/sivut/tyo-yrittaminen/yrityspalvelut/lisaa-yrityksesi"
+              render={ (props) => (
+                <CompanyForm
+                  lang={ language }
+                  slug={ this.pathToSlug(props.location.pathname) }
+                  mainPageSlug={ this.pathToTitle(props.location.pathname) }
+                  locationPath={ props.location.pathname }
+                />
+              )}
+            />
             <Route
               path="/sivut/:page"
               exact={ true }

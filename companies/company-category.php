@@ -26,7 +26,8 @@
         'show_admin_column' => true,
         'query_var' => true,
         'rewrite' => array('slug' => 'company-category'),
-        'show_in_menu' => 'edit.php?post_type=company'
+        'show_in_menu' => 'edit.php?post_type=company',
+        'show_in_rest' => true
     ));
   });
 
@@ -76,13 +77,11 @@
         $term = get_term($term_id, $taxonomy);
         $page_slug = $term->slug;
         $page_title = $term->name;
-        $parent_page = \Company\Utils\COMPANIES_PAGE; // Update this with the actual parent page slug
+        $parent_page = \Company\Utils\COMPANIES_PAGE;
 
-        // Get the stored page ID from term's metadata
         $stored_page_id = get_term_meta($term_id, 'taxonomy_page_id', true);
 
         if ($stored_page_id) {
-            // Update the page title with the updated taxonomy name
             $page_update_args = array(
                 'ID'         => $stored_page_id,
                 'post_title' => $page_title,
@@ -93,7 +92,6 @@
             
             $links_html = \Company\Utils\build_child_links($parent_page_id, $stored_page_id);
 
-            // Update the category parent page content with the links HTML
             wp_update_post(array(
                 'ID' => $parent_page_id,
                 'post_content' => !empty($links_html) ? $links_html : '<p></p>'
@@ -106,9 +104,8 @@
     if ($taxonomy === 'company_category') {
         $term = get_term($term_id, $taxonomy);
         $page_slug = $term->slug;
-        $parent_page = \Company\Utils\COMPANIES_PAGE; // Update this with the actual parent page slug
+        $parent_page = \Company\Utils\COMPANIES_PAGE;
 
-        // Get the corresponding page ID based on term name
         $args = array(
             'name'        => $page_slug,
             'post_type'   => 'page',
@@ -126,21 +123,17 @@
               'post_type' => 'page'
             ));
 
-            // Delete the child company pages
             foreach ($child_pages as $child_page) {
               wp_delete_post($child_page->ID, true);
             }
-            // Delete the corresponding page
             wp_delete_post($page_id, true);
 
-            // Delete the stored page ID from term's metadata
             delete_term_meta($term_id, 'taxonomy_page_id');
 
             $parent_page_id = get_page_by_path($parent_page)->ID;
             
             $links_html = \Company\Utils\build_child_links($parent_page_id);
 
-            // Update the category parent page content with the links HTML
             wp_update_post(array(
                 'ID' => $parent_page_id,
                 'post_content' => !empty($links_html) ? $links_html : '<p></p>'

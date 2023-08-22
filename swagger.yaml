@@ -388,6 +388,53 @@ paths:
               schema:
                 $ref: "#/components/schemas/error"
       operationId: PostWpV2Posts
+  /companies/create-company:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/company"
+      security:
+        - cookieAuth: []
+      responses:
+        "200":
+          description: successful operation
+        "201":
+          description: successful operation
+        default:
+          description: error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error"
+      operationId: PostWpV2Company
+  /wp/v2/company_category:
+    get:
+      security:
+        - cookieAuth: []
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/company-category"
+        "201":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/company-category"
+        default:
+          description: error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error"
+      operationId: GetWPV2CompanyCategories
   "/wp/v2/posts/{id}":
     get:
       parameters:
@@ -6447,3 +6494,27 @@ components:
             type: integer
         featured_image_url:
           type: string
+    company:
+      type: object
+      required:
+        - companyName
+        - companyInformation
+        - companyCategory
+      properties:
+        companyName: 
+          type: string
+        companyInformation: 
+          type: string
+        companyCategory: 
+          type: number
+    
+    company-category:
+      type: object
+      required:
+        - name
+        - id
+      properties:
+        name: 
+          type: string
+        id: 
+          type: number

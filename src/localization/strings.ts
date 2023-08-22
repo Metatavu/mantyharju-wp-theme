@@ -29,6 +29,12 @@ export interface IStrings extends LocalizedStringsMethods {
   whoops: string,
   requiredFieldMissing: string,
   popularPages: string,
+  companies: {
+    companyName: string,
+    companyInformation: string,
+    companyCategory: string,
+    companySubmit: string
+  },
   event: {
     eventInformation: string;
     phone: string;

@@ -26,7 +26,13 @@
   "somethingWentWrong": "Something went wrong. Contact site administrator.",
   "whoops": "Whoops!",
   "requiredFieldMissing": "Required field",
-  "popularPages": "Popular pages",
+  "popularPages": "Popular pages",  
+  "companies": {
+    "companyName": "Company name",
+    "companyInformation": "Information",
+    "companyCategory": "Category",
+    "companySubmit": "Submit"
+  },
   "event": {
     "eventInformation": "Event information",
     "start": "Start",
