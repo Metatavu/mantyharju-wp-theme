@@ -36,14 +36,12 @@
         $term = get_term($term_id, $taxonomy);
         $page_slug = $term->slug;
         $page_title = $term->name;
-        $parent_page = \Company\Utils\COMPANIES_PAGE; // Update this with the actual parent page slug
+        $parent_page = \Company\Utils\COMPANIES_PAGE;
 
-        // Check if the page already exists
         $existing_page = get_page_by_path($parent_page . $page_slug);
 
         if (!$existing_page) {
             $parent_page_id = get_page_by_path($parent_page)->ID;
-            // Page doesn't exist, create a new page
             $new_page = array(
                 'post_title'    => $page_title,
                 'post_name'     => $page_slug,
@@ -53,16 +51,13 @@
                 'post_parent'   => get_page_by_path($parent_page)->ID,
             );
 
-            // Insert the page and get its ID
             $page_id = wp_insert_post($new_page);
 
             if ($page_id) {
-                // Update the term's description to store the created page ID for reference
                 update_term_meta($term_id, 'taxonomy_page_id', $page_id);
 
                 $links_html = \Company\Utils\build_child_links($parent_page_id, $page_id);
 
-                // Update the category parent page content with the links HTML
                 wp_update_post(array(
                     'ID' => $parent_page_id,
                     'post_content' => !empty($links_html) ? $links_html : '<p></p>'
