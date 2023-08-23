@@ -90,6 +90,7 @@ class CompanyForm extends React.Component<Props, State> {
   async componentDidMount(): Promise<void> {
     this.setState({ loading: true });
     const foundCategories = await ApiUtils.getApi().getWPV2CompanyCategories();
+    this.hidePageLoader();
     this.setState({ loading: false, categories: foundCategories });
   }
 
@@ -296,6 +297,19 @@ class CompanyForm extends React.Component<Props, State> {
       return noContentError;
     } else {
       return "";
+    }
+  }
+
+  /**
+   * Hide page loader
+   */
+  private hidePageLoader() {
+    const loaderElement = document.getElementById("pageLoader");
+    if (loaderElement) {
+      loaderElement.style.opacity = "0";
+      setTimeout(() => {
+        loaderElement.style.display = "none";
+      }, 500);
     }
   }
 

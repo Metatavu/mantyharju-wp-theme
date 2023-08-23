@@ -124,6 +124,7 @@ class App extends React.Component<Props, State> {
               path="/sivut/:page"
               exact={ true }
               render={ (props) => (
+                !props.location.pathname.includes("lisaa-yrityksesi") &&
                 <PostsPage
                   lang={ language }
                   slug={ this.pathToSlug(props.location.pathname) }
@@ -135,6 +136,7 @@ class App extends React.Component<Props, State> {
             <Route
               path="/sivut/:page/:page"
               render={ (props) => (
+                !props.location.pathname.includes("lisaa-yrityksesi") &&
                 <PostPage
                   lang={ language }
                   slug={ this.pathToSlug(props.location.pathname) }
