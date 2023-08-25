@@ -36,6 +36,54 @@ export interface Company {
      * @memberof Company
      */
     company_category: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Company
+     */
+    company_contact_person_name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Company
+     */
+    company_contact_person_email?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Company
+     */
+    company_address?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Company
+     */
+    company_postal_code?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Company
+     */
+    company_city?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Company
+     */
+    company_phone_numbers: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Company
+     */
+    company_email?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Company
+     */
+    company_website?: string;
 }
 
 export function CompanyFromJSON(json: any): Company {
@@ -48,9 +96,17 @@ export function CompanyFromJSONTyped(json: any, ignoreDiscriminator: boolean): C
     }
     return {
         
-        'company_name': json['companyName'],
-        'company_information': json['companyInformation'],
-        'company_category': json['companyCategory'],
+        'company_name': json['company_name'],
+        'company_information': json['company_information'],
+        'company_category': json['company_category'],
+        'company_contact_person_name': !exists(json, 'company_contact_person_name') ? undefined : json['company_contact_person_name'],
+        'company_contact_person_email': !exists(json, 'company_contact_person_email') ? undefined : json['company_contact_person_email'],
+        'company_address': !exists(json, 'company_address') ? undefined : json['company_address'],
+        'company_postal_code': !exists(json, 'company_postal_code') ? undefined : json['company_postal_code'],
+        'company_city': !exists(json, 'company_city') ? undefined : json['company_city'],
+        'company_phone_numbers': json['company_phone_numbers'],
+        'company_email': !exists(json, 'company_email') ? undefined : json['company_email'],
+        'company_website': !exists(json, 'company_website') ? undefined : json['company_website'],
     };
 }
 
@@ -63,9 +119,17 @@ export function CompanyToJSON(value?: Company | null): any {
     }
     return {
         
-        'companyName': value.company_name,
-        'companyInformation': value.company_information,
-        'companyCategory': value.company_category,
+        'company_name': value.company_name,
+        'company_information': value.company_information,
+        'company_category': value.company_category,
+        'company_contact_person_name': value.company_contact_person_name,
+        'company_contact_person_email': value.company_contact_person_email,
+        'company_address': value.company_address,
+        'company_postal_code': value.company_postal_code,
+        'company_city': value.company_city,
+        'company_phone_numbers': value.company_phone_numbers,
+        'company_email': value.company_email,
+        'company_website': value.company_website,
     };
 }
 

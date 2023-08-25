@@ -29,10 +29,18 @@
   "popularPages": "Suosituimmat sivut",  
   "companies": {
     "companyName": "Yrityksen nimi",
-    "companyInformation": "Tiedot",
+    "companyInformation": "Tuotteiden / palveluiden kuvaus",
     "companyCategory": "Kategoria",
+    "companyContactPersonName": "Henkilön nimi",
+    "companyContactPersonEmail": "Kontaktihenkilön sähköposti",
+    "companyAddress": "Yrityksen osoite",
+    "companyPostalCode": "Postinumero",
+    "companyCity": "Postitoimipaikka",
+    "companyPhoneNumbers": "Yrityksen puhelinnumerot",
+    "companyEmail": "Yrityksen sähköposti",
+    "companyWebsite": "Yrityksen www-sivu",
     "companySubmit": "Lähetä"
-  },
+  },  
   "event": {
     "eventInformation": "Tapahtuman tiedot",
     "start": "Aloituspäivämäärä",

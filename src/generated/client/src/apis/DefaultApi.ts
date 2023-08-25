@@ -1571,6 +1571,34 @@ export class DefaultApi extends runtime.BaseAPI {
 
     /**
      */
+    async getWPV2CompaniesRaw(): Promise<runtime.ApiResponse<Array<Company>>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-WP-Nonce"] = this.configuration.apiKey("X-WP-Nonce"); // cookieAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/companies/list`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(CompanyFromJSON));
+    }
+
+    /**
+     */
+    async getWPV2Companies(): Promise<Array<Company>> {
+        const response = await this.getWPV2CompaniesRaw();
+        return await response.value();
+    }
+
+    /**
+     */
     async getWPV2CompanyCategoriesRaw(): Promise<runtime.ApiResponse<Array<CompanyCategory>>> {
         const queryParameters: runtime.HTTPQuery = {};
 

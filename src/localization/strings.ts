@@ -33,6 +33,14 @@ export interface IStrings extends LocalizedStringsMethods {
     companyName: string,
     companyInformation: string,
     companyCategory: string,
+    companyContactPersonName: string,
+    companyContactPersonEmail: string,
+    companyAddress: string,
+    companyPostalCode: string,
+    companyCity: string,
+    companyPhoneNumbers: string,
+    companyEmail: string,
+    companyWebsite: string,
     companySubmit: string
   },
   event: {

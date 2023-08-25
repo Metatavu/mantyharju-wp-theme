@@ -29,10 +29,17 @@
   "popularPages": "Popular pages",  
   "companies": {
     "companyName": "Company name",
-    "companyInformation": "Information",
+    "companyInformation": "Describe products / services",
     "companyCategory": "Category",
+    "companyContactPersonName": "Contact person's name",
+    "companyAddress": "Address",
+    "companyPostalCode": "Postal code",
+    "companyCity": "City",
+    "companyPhoneNumbers": "Phone numbers",
+    "companyEmail": "Email",
+    "companyWebsite": "Website",
     "companySubmit": "Submit"
-  },
+  },  
   "event": {
     "eventInformation": "Event information",
     "start": "Start",

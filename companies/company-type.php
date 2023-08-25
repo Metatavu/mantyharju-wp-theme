@@ -31,25 +31,42 @@
   });
 
   add_action('rest_api_init', function () {
+    // Create a company
     register_rest_route('/companies', '/create-company', array(
         'methods' => 'POST',
         'callback' => function ($request) {
-          $params = $request->get_json_params();
-      
-          $company_name = sanitize_text_field($params['companyName']);
-          $company_information = wp_kses_post($params['companyInformation']);
-          $company_category = absint($params['companyCategory']);
-      
-          $post_id = wp_insert_post(array(
-              'post_title' => $company_name,
-              'post_type' => 'company',
-              'post_status' => 'draft',
-          ));
-      
-          update_field('company_category', $company_category, $post_id);
-          update_field('company_information', $company_information, $post_id);
-      },
-      'permission_callback' => '__return_true',
+            $params = $request->get_json_params();
+          
+            $company_name = sanitize_text_field($params['company_name']);
+            $company_information = wp_kses_post($params['company_information']);
+            $company_category = absint($params['company_category']);
+            $contact_person_name = sanitize_text_field($params['company_contact_person_name']);
+            $contact_person_email = sanitize_email($params['company_contact_person_email']);
+            $company_address = sanitize_text_field($params['company_address']);
+            $company_postal_code = sanitize_text_field($params['company_postal_code']);
+            $company_city = sanitize_text_field($params['company_city']);
+            $company_phone_numbers = sanitize_text_field($params['company_phone_numbers']);
+            $company_email = sanitize_email($params['company_email']);
+            $company_website = esc_url_raw($params['company_website']);
+            
+            $post_id = wp_insert_post(array(
+                'post_title' => $company_name,
+                'post_type' => 'company',
+                'post_status' => 'draft',
+            ));
+          
+            update_field('company_category', $company_category, $post_id);
+            update_field('company_information', $company_information, $post_id);
+            update_field('company_contact_person_name', $contact_person_name, $post_id);
+            update_field('company_contact_person_email', $contact_person_email, $post_id);
+            update_field('company_address', $company_address, $post_id);
+            update_field('company_postal_code', $company_postal_code, $post_id);
+            update_field('company_city', $company_city, $post_id);
+            update_field('company_phone_numbers', $company_phone_numbers, $post_id);
+            update_field('company_email', $company_email, $post_id);
+            update_field('company_website', $company_website, $post_id);
+        },
+        'permission_callback' => '__return_true',
     ));
   });
 
@@ -83,14 +100,43 @@
                     }
                 }
 
-                $company_information = get_field('company_information', $post_id);
+              $company_title = esc_html($post->post_title);
+              $company_category = get_field('company_category', $post_id);
+              $company_information = esc_html(get_field('company_information', $post_id));
+              $company_contact_person_name = esc_html(get_field('company_contact_person_name', $post_id));
+              $company_address = esc_html(get_field('company_address', $post_id));
+              $company_postal_code = esc_html(get_field('company_postal_code', $post_id));
+              $company_city = esc_html(get_field('company_city', $post_id));
+              $company_phone_numbers = esc_html(get_field('company_phone_numbers', $post_id));
+              $company_email = esc_html(get_field('company_email', $post_id));
+              $company_website = esc_url(get_field('company_website', $post_id));
+
+              if ($company_contact_person_name) {
+                $content .= $company_contact_person_name . "\n";
+              }
+              if ($company_address) {
+                  $content .= $company_address . "\n";
+              }
+              if ($company_postal_code && $company_city) {
+                  $content .= $company_postal_code . ' ' . $company_city . "\n";
+              }
+              if ($company_phone_numbers) {
+                  $content .= $company_phone_numbers . "\n";
+              }
+              if ($company_email) {
+                  $content .= $company_email . "\n";
+              }
+              if ($company_website) {
+                  $content .= $company_website . "\n";
+              }
+              $content .= '<p>' . $company_information . '</p>';
                 $page_attributes = array(
                     'post_title'    => $post->post_title,
                     'post_name'     => $post->post_name,
                     'post_status'   => 'publish',
                     'post_type'     => 'page',
                     'post_parent'   => $parent_page_id,
-                    'post_content' => $company_information
+                    'post_content' => $content
                 );
 
                 $page_id = wp_insert_post($page_attributes);
