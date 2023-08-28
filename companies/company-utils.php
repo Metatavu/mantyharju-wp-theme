@@ -28,5 +28,6 @@
     return $links_html;
   }
 
-  const COMPANIES_PAGE = 'sivut/tyo-yrittaminen/yrityspalvelut/yritykset/';
+  const COMPANIES_DISPLAY_PAGE = 'sivut/tyo-yrittaminen/yrityspalvelut/yritykset/';
+  const COMPANIES_PARENT_PAGE  = 'yritys-kategoriat/';
 ?>

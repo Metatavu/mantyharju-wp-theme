@@ -34,17 +34,16 @@
   add_action('create_term', function ($term_id, $tt_id, $taxonomy) {
     if ($taxonomy === 'company_category') {
         $term = get_term($term_id, $taxonomy);
-        $page_slug = $term->slug;
         $page_title = $term->name;
-        $parent_page = \Company\Utils\COMPANIES_PAGE;
+        $parent_page = \Company\Utils\COMPANIES_PARENT_PAGE;
 
-        $existing_page = get_page_by_path($parent_page . $page_slug);
+        $existing_page = get_page_by_path($parent_page . $page_title);
 
         if (!$existing_page) {
             $parent_page_id = get_page_by_path($parent_page)->ID;
             $new_page = array(
                 'post_title'    => $page_title,
-                'post_name'     => $page_slug,
+                'post_name'     => $page_title,
                 'post_content'  => '<p></p>',
                 'post_status'   => 'publish',
                 'post_type'     => 'page',
@@ -58,8 +57,11 @@
 
                 $links_html = \Company\Utils\build_child_links($parent_page_id, $page_id);
 
+
+                $display_page = \Company\Utils\COMPANIES_DISPLAY_PAGE;
+                $display_page_id = get_page_by_path($display_page)->ID;
                 wp_update_post(array(
-                    'ID' => $parent_page_id,
+                    'ID' => $display_page_id,
                     'post_content' => !empty($links_html) ? $links_html : '<p></p>'
                 ));
             }
@@ -70,9 +72,8 @@
   add_action('edited_term', function ($term_id, $tt_id, $taxonomy) {
     if ($taxonomy === 'company_category') {
         $term = get_term($term_id, $taxonomy);
-        $page_slug = $term->slug;
         $page_title = $term->name;
-        $parent_page = \Company\Utils\COMPANIES_PAGE;
+        $parent_page = \Company\Utils\COMPANIES_PARENT_PAGE;
 
         $stored_page_id = get_term_meta($term_id, 'taxonomy_page_id', true);
 
@@ -80,38 +81,40 @@
             $page_update_args = array(
                 'ID'         => $stored_page_id,
                 'post_title' => $page_title,
-                'post_name'   => $page_slug,
+                'post_name'   => $page_title,
             );
             wp_update_post($page_update_args);
             $parent_page_id = get_page_by_path($parent_page)->ID;
-            
+            $this_page_links_html = \Company\Utils\build_child_links($stored_page_id);
+            wp_update_post(array(
+              'ID'         => $stored_page_id,
+              'post_content' => !empty($this_page_links_html) ? $this_page_links_html : '<p></p>'
+            ));
             $links_html = \Company\Utils\build_child_links($parent_page_id, $stored_page_id);
 
+            $display_page = \Company\Utils\COMPANIES_DISPLAY_PAGE;
+            $display_page_id = get_page_by_path($display_page)->ID;
             wp_update_post(array(
-                'ID' => $parent_page_id,
+                'ID' => $display_page_id,
                 'post_content' => !empty($links_html) ? $links_html : '<p></p>'
             ));
         }
     }
   }, 10, 3);
 
-  add_action('delete_term', function ($term_id, $tt_id, $taxonomy) {
+  add_action('pre_delete_term', function ($term_id, $taxonomy) {
     if ($taxonomy === 'company_category') {
-        $term = get_term($term_id, $taxonomy);
-        $page_slug = $term->slug;
-        $parent_page = \Company\Utils\COMPANIES_PAGE;
+        $page_title = $term->name;
+        $stored_page_id = get_term_meta($term_id, 'taxonomy_page_id', true);
+        $parent_page = \Company\Utils\COMPANIES_PARENT_PAGE;
 
         $args = array(
-            'name'        => $page_slug,
-            'post_type'   => 'page',
-            'post_status' => 'any',
-            'numberposts' => 1,
-            'post_parent' => get_page_by_path($parent_page)->ID,
+            'ID' => $stored_page_id
         );
-        $page = get_posts($args);
+        $page = get_post($stored_page_id);
 
         if (!empty($page)) {
-            $page_id = $page[0]->ID;
+            $page_id = $page->ID;
 
             $child_pages = get_children(array(
               'post_parent' => $page_id,
@@ -129,8 +132,10 @@
             
             $links_html = \Company\Utils\build_child_links($parent_page_id);
 
+            $display_page = \Company\Utils\COMPANIES_DISPLAY_PAGE;
+            $display_page_id = get_page_by_path($display_page)->ID;
             wp_update_post(array(
-                'ID' => $parent_page_id,
+                'ID' => $display_page_id,
                 'post_content' => !empty($links_html) ? $links_html : '<p></p>'
             ));
         }

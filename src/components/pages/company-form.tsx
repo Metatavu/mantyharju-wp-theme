@@ -132,7 +132,7 @@ private submitCompany = async () => {
     updatedInfo
   } = this.state;
 
-  if (!companyName || !companyInformation || !companyCategory || !companyPhoneNumbers) {
+  if (!companyName || !companyInformation || !companyCategory || !companyPhoneNumbers || !companyPostalCode || !companyAddress || !companyCity) {
     return;
   }
 
@@ -267,21 +267,21 @@ private submitCompany = async () => {
                       onChange={event => this.setState({ companyContactPersonEmail: event.target.value })}
                     />
                   </FormControl>
-                  <FormControl fullWidth margin="normal">
+                  <FormControl required fullWidth margin="normal">
                     <InputLabel>{strings.companies.companyAddress}</InputLabel>
                     <Input
                       value={this.state.companyAddress}
                       onChange={event => this.setState({ companyAddress: event.target.value })}
                     />
                   </FormControl>
-                  <FormControl fullWidth margin="normal">
+                  <FormControl required fullWidth margin="normal">
                     <InputLabel>{strings.companies.companyPostalCode}</InputLabel>
                     <Input
                       value={this.state.companyPostalCode}
                       onChange={event => this.setState({ companyPostalCode: event.target.value })}
                     />
                   </FormControl>
-                  <FormControl fullWidth margin="normal">
+                  <FormControl required fullWidth margin="normal">
                     <InputLabel>{strings.companies.companyCity}</InputLabel>
                     <Input
                       value={this.state.companyCity}

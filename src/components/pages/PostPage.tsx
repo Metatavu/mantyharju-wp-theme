@@ -102,6 +102,7 @@ class PostPage extends React.Component<Props, State> {
    */
   public render() {
     const { classes, lang, slug, locationPath } = this.props;
+    console.log("Location length, ", locationPath.length);
     const { sideContent, currentPage, postThumbnail, postThumbnailLoading } = this.state;
     const loactionPathnameArrayRaw = (locationPath ? locationPath.replace(/\//g, " ") || "" : "").split(" ");
     const loacationPathnameArray = loactionPathnameArrayRaw.splice(1, (loactionPathnameArrayRaw.length -1 ) - 1);
@@ -135,7 +136,7 @@ class PostPage extends React.Component<Props, State> {
             </div>
             <div id="readthis" className={ classes.columns }>
               <Grid container spacing={ 0 }>
-                {!(locationPath.includes("yritykset") && locationPath.length > 48) &&
+                {!locationPath.includes("yritys-kategoriat") &&
                   <Grid item xs={ 12 } md={ 3 } lg={ 2 } key={ "123" }>
                     <div className="rs_skip">
                       <TreeView slug={ slug }/>

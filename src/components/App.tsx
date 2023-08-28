@@ -109,10 +109,27 @@ class App extends React.Component<Props, State> {
             >
               <Redirect to="/" />
             </Route>
+            <Route  
+              path="/yritys-kategoriat/"
+              exact={ true }
+              >
+                <Redirect to="/" />
+            </Route>
             <Route
               path="/sivut/tyo-yrittaminen/yrityspalvelut/lisaa-yrityksesi"
               render={ (props) => (
                 <CompanyForm
+                  lang={ language }
+                  slug={ this.pathToSlug(props.location.pathname) }
+                  mainPageSlug={ this.pathToTitle(props.location.pathname) }
+                  locationPath={ props.location.pathname }
+                />
+              )}
+            />
+            <Route
+              path="/yritys-kategoriat/:page"
+              render={ (props) => (
+                <PostPage
                   lang={ language }
                   slug={ this.pathToSlug(props.location.pathname) }
                   mainPageSlug={ this.pathToTitle(props.location.pathname) }
@@ -149,7 +166,7 @@ class App extends React.Component<Props, State> {
               path="/:page"
               render={ (props) => {
                 // Check for special pages
-                if (/^\/event\/|\/announcements\/$|^\/news\/$|^\/jobs\/$|^\/movies$|^\/premiers$|^\/sivut\//.test(props.location.pathname)) {
+                if (/^\/event\/|\/announcements\/$|^\/news\/$|^\/jobs\/$|^\/movies$|^\/premiers$|^\/sivut\/$|^\/yritys-kategoriat\//.test(props.location.pathname)) {
                   return null;
                 }
 
