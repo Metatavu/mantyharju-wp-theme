@@ -32,14 +32,15 @@
     "companyInformation": "Tuotteiden / palveluiden kuvaus",
     "companyCategory": "Kategoria",
     "companyContactPersonName": "Henkilön nimi",
-    "companyContactPersonEmail": "Kontaktihenkilön sähköposti",
+    "companyContactPersonEmail": "Yrityksen edustajan sähköposti (sähköposti näkyy vain ylläpitäjille)",
     "companyAddress": "Yrityksen osoite",
     "companyPostalCode": "Postinumero",
     "companyCity": "Postitoimipaikka",
     "companyPhoneNumbers": "Yrityksen puhelinnumerot",
     "companyEmail": "Yrityksen sähköposti",
     "companyWebsite": "Yrityksen www-sivu",
-    "companySubmit": "Lähetä"
+    "companySubmit": "Lähetä",
+    "requiredFields": "Pakolliset kentät merkitty tähdellä"
   },  
   "event": {
     "eventInformation": "Tapahtuman tiedot",

@@ -117,6 +117,7 @@ class App extends React.Component<Props, State> {
             </Route>
             <Route
               path="/sivut/tyo-yrittaminen/yrityspalvelut/lisaa-yrityksesi"
+              exact={ true }
               render={ (props) => (
                 <CompanyForm
                   lang={ language }
@@ -166,7 +167,7 @@ class App extends React.Component<Props, State> {
               path="/:page"
               render={ (props) => {
                 // Check for special pages
-                if (/^\/event\/|\/announcements\/$|^\/news\/$|^\/jobs\/$|^\/movies$|^\/premiers$|^\/sivut\/$|^\/yritys-kategoriat\//.test(props.location.pathname)) {
+                if (/^(\/event\/|\/announcements\/$|^\/news\/$|^\/jobs\/$|^\/movies$|^\/premiers$|^\/sivut\/|\/yritys-kategoriat\/)/.test(props.location.pathname)) {
                   return null;
                 }
 

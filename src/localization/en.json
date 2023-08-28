@@ -34,11 +34,13 @@
     "companyContactPersonName": "Contact person's name",
     "companyAddress": "Address",
     "companyPostalCode": "Postal code",
+    "companyContactPersonEmail": "Company contact person email (will be shown only to administrators)",
     "companyCity": "City",
     "companyPhoneNumbers": "Phone numbers",
     "companyEmail": "Email",
     "companyWebsite": "Website",
-    "companySubmit": "Submit"
+    "companySubmit": "Submit",
+    "requiredFields": "Required field marked with a star"
   },  
   "event": {
     "eventInformation": "Event information",

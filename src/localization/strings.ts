@@ -41,7 +41,8 @@ export interface IStrings extends LocalizedStringsMethods {
     companyPhoneNumbers: string,
     companyEmail: string,
     companyWebsite: string,
-    companySubmit: string
+    companySubmit: string,
+    requiredFields: string
   },
   event: {
     eventInformation: string;
