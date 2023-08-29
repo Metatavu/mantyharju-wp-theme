@@ -30,4 +30,5 @@
 
   const COMPANIES_DISPLAY_PAGE = 'sivut/tyo-yrittaminen/yrityspalvelut/yritykset/';
   const COMPANIES_PARENT_PAGE  = 'yritys-kategoriat/';
+  const COMPANIES_DISPLAY_PAGE_TEXT = 'Tervetuloa Mäntyharjun kunnan hallinnoimaan yritysluetteloon, josta löydät paikalliset toimijat toimialoittain.';
 ?>
