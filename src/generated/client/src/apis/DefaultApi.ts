@@ -23,6 +23,12 @@ import {
     Comment,
     CommentFromJSON,
     CommentToJSON,
+    Company,
+    CompanyFromJSON,
+    CompanyToJSON,
+    CompanyCategory,
+    CompanyCategoryFromJSON,
+    CompanyCategoryToJSON,
     CustomPage,
     CustomPageFromJSON,
     CustomPageToJSON,
@@ -617,6 +623,10 @@ export interface PostWpV2CommentsByIdRequest {
     post?: number;
     status?: string;
     meta?: string;
+}
+
+export interface PostWpV2CompanyRequest {
+    company?: Company;
 }
 
 export interface PostWpV2EventRequest {
@@ -1556,6 +1566,62 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async getTreeMenu(requestParameters: GetTreeMenuRequest): Promise<TreeMenu> {
         const response = await this.getTreeMenuRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     */
+    async getWPV2CompaniesRaw(): Promise<runtime.ApiResponse<Array<Company>>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-WP-Nonce"] = this.configuration.apiKey("X-WP-Nonce"); // cookieAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/companies/list`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(CompanyFromJSON));
+    }
+
+    /**
+     */
+    async getWPV2Companies(): Promise<Array<Company>> {
+        const response = await this.getWPV2CompaniesRaw();
+        return await response.value();
+    }
+
+    /**
+     */
+    async getWPV2CompanyCategoriesRaw(): Promise<runtime.ApiResponse<Array<CompanyCategory>>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-WP-Nonce"] = this.configuration.apiKey("X-WP-Nonce"); // cookieAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/wp/v2/company_category`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(CompanyCategoryFromJSON));
+    }
+
+    /**
+     */
+    async getWPV2CompanyCategories(): Promise<Array<CompanyCategory>> {
+        const response = await this.getWPV2CompanyCategoriesRaw();
         return await response.value();
     }
 
@@ -4154,6 +4220,36 @@ export class DefaultApi extends runtime.BaseAPI {
     async postWpV2CommentsById(requestParameters: PostWpV2CommentsByIdRequest): Promise<Comment> {
         const response = await this.postWpV2CommentsByIdRaw(requestParameters);
         return await response.value();
+    }
+
+    /**
+     */
+    async postWpV2CompanyRaw(requestParameters: PostWpV2CompanyRequest): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["X-WP-Nonce"] = this.configuration.apiKey("X-WP-Nonce"); // cookieAuth authentication
+        }
+
+        const response = await this.request({
+            path: `/companies/create-company`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CompanyToJSON(requestParameters.company),
+        });
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async postWpV2Company(requestParameters: PostWpV2CompanyRequest): Promise<void> {
+        await this.postWpV2CompanyRaw(requestParameters);
     }
 
     /**

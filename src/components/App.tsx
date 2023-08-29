@@ -13,6 +13,7 @@ import { ThemeProvider } from "@material-ui/styles";
 import mantyharjuTheme from "../styles/theme";
 import * as qs from "query-string";
 import strings from "../localization/strings";
+import CompanyForm from "./pages/company-form";
 
 /**
  * Interface representing component properties
@@ -108,10 +109,40 @@ class App extends React.Component<Props, State> {
             >
               <Redirect to="/" />
             </Route>
+            <Route  
+              path="/yritys-kategoriat/"
+              exact={ true }
+              >
+                <Redirect to="/" />
+            </Route>
+            <Route
+              path="/sivut/tyo-yrittaminen/yrityspalvelut/lisaa-yrityksesi"
+              exact={ true }
+              render={ (props) => (
+                <CompanyForm
+                  lang={ language }
+                  slug={ this.pathToSlug(props.location.pathname) }
+                  mainPageSlug={ this.pathToTitle(props.location.pathname) }
+                  locationPath={ props.location.pathname }
+                />
+              )}
+            />
+            <Route
+              path="/yritys-kategoriat/:page"
+              render={ (props) => (
+                <PostPage
+                  lang={ language }
+                  slug={ this.pathToSlug(props.location.pathname) }
+                  mainPageSlug={ this.pathToTitle(props.location.pathname) }
+                  locationPath={ props.location.pathname }
+                />
+              )}
+            />
             <Route
               path="/sivut/:page"
               exact={ true }
               render={ (props) => (
+                !props.location.pathname.includes("lisaa-yrityksesi") &&
                 <PostsPage
                   lang={ language }
                   slug={ this.pathToSlug(props.location.pathname) }
@@ -123,6 +154,7 @@ class App extends React.Component<Props, State> {
             <Route
               path="/sivut/:page/:page"
               render={ (props) => (
+                !props.location.pathname.includes("lisaa-yrityksesi") &&
                 <PostPage
                   lang={ language }
                   slug={ this.pathToSlug(props.location.pathname) }
@@ -135,7 +167,7 @@ class App extends React.Component<Props, State> {
               path="/:page"
               render={ (props) => {
                 // Check for special pages
-                if (/^\/event\/|\/announcements\/$|^\/news\/$|^\/jobs\/$|^\/movies$|^\/premiers$|^\/sivut\//.test(props.location.pathname)) {
+                if (/^(\/event\/|\/announcements\/$|^\/news\/$|^\/jobs\/$|^\/movies$|^\/premiers$|^\/sivut\/|\/yritys-kategoriat\/)/.test(props.location.pathname)) {
                   return null;
                 }
 

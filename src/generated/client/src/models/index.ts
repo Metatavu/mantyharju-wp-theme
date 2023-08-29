@@ -5,6 +5,8 @@ export * from './Category';
 export * from './Comment';
 export * from './CommentAuthorAvatarUrls';
 export * from './CommentContent';
+export * from './Company';
+export * from './CompanyCategory';
 export * from './CustomPage';
 export * from './CustomPost';
 export * from './CustomTaxonomy';

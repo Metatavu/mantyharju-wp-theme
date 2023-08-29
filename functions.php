@@ -15,6 +15,7 @@
   require_once(__DIR__ . "/wp-rest-api-endpoints/posts.php");
   require_once(__DIR__ . "/vendor/autoload.php");
   require_once(__DIR__ . "/linkedevents/event-rest-handler.php");
+  require_once(__DIR__ . "/companies/companies.php");
 
   function create_ACF_meta_in_REST() {
     $postypes_to_exclude = ['acf-field-group','acf-field'];

@@ -26,7 +26,22 @@
   "somethingWentWrong": "Jokin meni pieleen. Ota yhteyttä sivuston ylläpitoon.",
   "whoops": "Hups!",
   "requiredFieldMissing": "Pakollinen tieto",
-  "popularPages": "Suosituimmat sivut",
+  "popularPages": "Suosituimmat sivut",  
+  "companies": {
+    "companyName": "Yrityksen nimi",
+    "companyInformation": "Tuotteiden / palveluiden kuvaus",
+    "companyCategory": "Kategoria",
+    "companyContactPersonName": "Henkilön nimi",
+    "companyContactPersonEmail": "Yrityksen edustajan sähköposti (sähköposti näkyy vain ylläpitäjille)",
+    "companyAddress": "Yrityksen osoite",
+    "companyPostalCode": "Postinumero",
+    "companyCity": "Postitoimipaikka",
+    "companyPhoneNumbers": "Yrityksen puhelinnumerot",
+    "companyEmail": "Yrityksen sähköposti",
+    "companyWebsite": "Yrityksen www-sivu",
+    "companySubmit": "Lähetä",
+    "requiredFields": "Pakolliset kentät merkitty tähdellä"
+  },  
   "event": {
     "eventInformation": "Tapahtuman tiedot",
     "start": "Aloituspäivämäärä",

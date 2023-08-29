@@ -26,7 +26,22 @@
   "somethingWentWrong": "Something went wrong. Contact site administrator.",
   "whoops": "Whoops!",
   "requiredFieldMissing": "Required field",
-  "popularPages": "Popular pages",
+  "popularPages": "Popular pages",  
+  "companies": {
+    "companyName": "Company name",
+    "companyInformation": "Describe products / services",
+    "companyCategory": "Category",
+    "companyContactPersonName": "Contact person's name",
+    "companyAddress": "Address",
+    "companyPostalCode": "Postal code",
+    "companyContactPersonEmail": "Company contact person email (will be shown only to administrators)",
+    "companyCity": "City",
+    "companyPhoneNumbers": "Phone numbers",
+    "companyEmail": "Email",
+    "companyWebsite": "Website",
+    "companySubmit": "Submit",
+    "requiredFields": "Required field marked with a star"
+  },  
   "event": {
     "eventInformation": "Event information",
     "start": "Start",
