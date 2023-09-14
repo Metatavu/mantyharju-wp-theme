@@ -30,11 +30,16 @@ export interface IStrings extends LocalizedStringsMethods {
   requiredFieldMissing: string,
   popularPages: string,
   companies: {
+    companySelectNew: string,
+    companySelectUpdated: string,
+    companyCategoryInformation: string,
+    companyCategoryHint: string,
     companyName: string,
     companyInformation: string,
     companyCategory: string,
     companyContactPersonName: string,
     companyContactPersonEmail: string,
+    companyContactPersonEmailHint: string,
     companyAddress: string,
     companyPostalCode: string,
     companyCity: string,
@@ -42,6 +47,7 @@ export interface IStrings extends LocalizedStringsMethods {
     companyEmail: string,
     companyWebsite: string,
     companySubmit: string,
+    companySubmitSuccess: string,
     requiredFields: string
   },
   event: {

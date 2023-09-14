@@ -11,7 +11,7 @@ export default createMuiTheme({
       main: "#1068B3",
       dark: "#1076cc"
     },
-    secondary: { 
+    secondary: {
       main: "#fff",
       dark: "#eee"
     },
@@ -76,7 +76,10 @@ export default createMuiTheme({
     subtitle2: {
       fontFamily: "Rubik, sans-serif",
       fontWeight: 600
-    }
+    },
+    caption: {
+      fontSize: "0.9rem"
+    },
   },
   overrides: {
     MuiBreadcrumbs: {

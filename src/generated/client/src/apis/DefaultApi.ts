@@ -193,6 +193,10 @@ export interface GetTreeMenuRequest {
     slug: string;
 }
 
+export interface GetWPV2CompanyCategoriesRequest {
+    per_page?: number;
+}
+
 export interface GetWpV2BlockRendererByNameRequest {
     name: string;
     name2?: string;
@@ -1599,8 +1603,12 @@ export class DefaultApi extends runtime.BaseAPI {
 
     /**
      */
-    async getWPV2CompanyCategoriesRaw(): Promise<runtime.ApiResponse<Array<CompanyCategory>>> {
+    async getWPV2CompanyCategoriesRaw(requestParameters: GetWPV2CompanyCategoriesRequest): Promise<runtime.ApiResponse<Array<CompanyCategory>>> {
         const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.per_page !== undefined) {
+            queryParameters['per_page'] = requestParameters.per_page;
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -1620,8 +1628,8 @@ export class DefaultApi extends runtime.BaseAPI {
 
     /**
      */
-    async getWPV2CompanyCategories(): Promise<Array<CompanyCategory>> {
-        const response = await this.getWPV2CompanyCategoriesRaw();
+    async getWPV2CompanyCategories(requestParameters: GetWPV2CompanyCategoriesRequest): Promise<Array<CompanyCategory>> {
+        const response = await this.getWPV2CompanyCategoriesRaw(requestParameters);
         return await response.value();
     }
 
