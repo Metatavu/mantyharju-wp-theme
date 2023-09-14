@@ -19,7 +19,7 @@
         'not_found'          => "Yritystä ei löytynyt",
         'not_found_in_trash' => "Yritystä ei löytynyt roskakorista",
         'menu_name'          => "Yritykset",
-        'all_items'          => "Yritykset"
+        'all_items'          => "Yritysluettelo"
       ),
       'menu_icon' => 'dashicons-bank',
       'public' => true,

@@ -1,6 +1,6 @@
 import * as React from "react";
 import BasicLayout from "../BasicLayout";
-import { WithStyles, withStyles, Button, Breadcrumbs, Link, Grid, FormControl, Select, MenuItem, Input, InputLabel, RadioGroup, Radio, FormControlLabel, Typography } from "@material-ui/core";
+import { WithStyles, withStyles, Button, Breadcrumbs, Link, Grid, FormControl, Select, MenuItem, Input, InputLabel, RadioGroup, Radio, FormControlLabel, Typography, Box } from "@material-ui/core";
 import styles from "../../styles/page-content";
 import { Page, Post, PostTitle, CustomPage, CompanyCategory } from "../../../src/generated/client/src";
 import ReactHtmlParser, { convertNodeToElement } from "react-html-parser";
@@ -16,6 +16,7 @@ import Movies from "../movies/movies";
 import Premiers from "../movies/premiers";
 import { Add } from "@material-ui/icons";
 import ApiUtils from "../../utils/ApiUtils";
+import { Alert } from "@material-ui/lab";
 
 /**
  * Interface representing component properties
@@ -58,6 +59,8 @@ interface State {
   companyWebsite: string;
   updatedInfo: boolean;
   fieldError: boolean;
+  categoryInformationShow: boolean;
+  formSubmitSuccess: boolean;
 }
 
 
@@ -104,13 +107,15 @@ class CompanyForm extends React.Component<Props, State> {
       companyEmail: "",
       companyWebsite: "",
       updatedInfo: false,
-      fieldError: false
+      fieldError: false,
+      categoryInformationShow: false,
+      formSubmitSuccess: false,
     };
   }
 
   async componentDidMount(): Promise<void> {
     this.setState({ loading: true });
-    const foundCategories = await ApiUtils.getApi().getWPV2CompanyCategories();
+    const foundCategories = await ApiUtils.getApi().getWPV2CompanyCategories({"per_page":100});
     this.hidePageLoader();
     this.setState({ loading: false, categories: foundCategories });
   }
@@ -135,7 +140,10 @@ private submitCompany = async () => {
   } = this.state;
 
   if (!companyName || !companyInformation || !companyCategory || !companyPhoneNumbers || !companyPostalCode || !companyAddress || !companyCity || !companyContactPersonEmail) {
-    this.setState({ fieldError: true });
+    this.setState({ 
+      fieldError: true,
+      formSubmitSuccess: false
+    });
     return;
   }
 
@@ -170,7 +178,9 @@ private submitCompany = async () => {
     companyPhoneNumbers: "",
     companyEmail: "",
     companyWebsite: "",
-    fieldError: false
+    fieldError: false,
+    categoryInformationShow: false,
+    formSubmitSuccess: true,
   });
 }
 
@@ -185,6 +195,10 @@ private submitCompany = async () => {
     const isContent = (checkContent ? (checkContent[0] === 0 ? false : true) : false);
     const heroDivStyle = postThumbnailLoading ? { background: "#eee"  } : { backgroundImage: `url(${ postThumbnail ? postThumbnail : hero })` };
 
+    const toggleCategoryInformation = (event:React.MouseEvent) : void => {
+      this.setState({categoryInformationShow: !this.state.categoryInformationShow});
+      event.preventDefault();
+    }
     return (
       <BasicLayout
         lang={ lang }
@@ -218,40 +232,40 @@ private submitCompany = async () => {
                   </div>
                 </Grid>
                 <Grid item xs={ 12 } md={ 6 } lg={ 7 } key={ "456" }>
-                <div className={ classes.contentarea }>
-                  <FormControl component="fieldset">
-                    <RadioGroup
-                      value={this.state.updatedInfo.toString()}
-                      onChange={event => this.setState({ updatedInfo: event.target.value === "true" })}
-                      defaultValue={"false"}
-                    >
-                      <FormControlLabel
-                        value={"false"}
-                        control={<Radio color="primary"/>}
-                        label="Uusi yritys"
-                      />
-                      <FormControlLabel
-                        value={"true"}
-                        control={<Radio color="primary"/>}
-                        label="Muuttuneet tiedot"
-                      />
-                    </RadioGroup>
-                  </FormControl>
-                  <Typography style={{ marginTop: 10 }}>{strings.companies.requiredFields}</Typography>
-                  <FormControl required fullWidth margin="normal">
-                      <InputLabel style={{ color: this.state.fieldError && !this.state.companyName ? "red" : undefined }}>
-                        {strings.companies.companyName}
-                      </InputLabel>
-                      <Input
-                        value={this.state.companyName}
-                        onChange={(event) => this.setState({ companyName: event.target.value })}
-                      />
-                  </FormControl>
-                  <FormControl required fullWidth margin="normal">
+                  <div className={ classes.contentarea }>
+                    <FormControl component="fieldset">
+                      <RadioGroup
+                        value={this.state.updatedInfo.toString()}
+                        onChange={event => this.setState({ updatedInfo: event.target.value === "true" })}
+                        defaultValue={"false"}
+                      >
+                        <FormControlLabel
+                          value={"false"}
+                          control={<Radio color="primary"/>}
+                          label={strings.companies.companySelectNew}
+                        />
+                        <FormControlLabel
+                          value={"true"}
+                          control={<Radio color="primary"/>}
+                          label={strings.companies.companySelectUpdated}
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                    <Typography style={{ marginTop: 10 }}>{strings.companies.requiredFields}</Typography>
+                    <FormControl required fullWidth margin="normal">
+                        <InputLabel style={{ color: this.state.fieldError && !this.state.companyName ? "red" : undefined }}>
+                          {strings.companies.companyName}
+                        </InputLabel>
+                        <Input
+                          value={this.state.companyName}
+                          onChange={(event) => this.setState({ companyName: event.target.value })}
+                        />
+                    </FormControl>
+                    <FormControl required fullWidth margin="normal">
                       <InputLabel style={{ color: this.state.fieldError && !this.state.companyCategory ? "red" : undefined }}>
                         {strings.companies.companyCategory}
                       </InputLabel>
-                      <Select
+                      <Select 
                         name="selectedCategory"
                         value={this.state.companyCategory}
                         onChange={(event) => this.setState({ companyCategory: event.target.value as string })}
@@ -263,8 +277,18 @@ private submitCompany = async () => {
                         ))}
                       </Select>
                     </FormControl>
-
-                    <FormControl fullWidth margin="normal">
+                    <Typography variant="caption">
+                      <Link href="#" onClick={toggleCategoryInformation}>{strings.companies.companyCategoryHint}</Link>
+                      { 
+                        this.state.categoryInformationShow ?
+                        <>
+                          <br/>
+                          {strings.companies.companyCategoryInformation}
+                        </>
+                        : ""
+                      }
+                    </Typography>
+                    <FormControl>
                       <InputLabel>
                         {strings.companies.companyContactPersonName}
                       </InputLabel>
@@ -273,7 +297,6 @@ private submitCompany = async () => {
                         onChange={(event) => this.setState({ companyContactPersonName: event.target.value })}
                       />
                     </FormControl>
-
                     <FormControl required fullWidth margin="normal">
                       <InputLabel style={{ color: this.state.fieldError && !this.state.companyContactPersonEmail ? "red" : undefined }}>
                         {strings.companies.companyContactPersonEmail}
@@ -283,7 +306,7 @@ private submitCompany = async () => {
                         onChange={(event) => this.setState({ companyContactPersonEmail: event.target.value })}
                       />
                     </FormControl>
-
+                    <Typography variant="caption">{strings.companies.companyContactPersonEmailHint}</Typography>
                     <FormControl required fullWidth margin="normal">
                       <InputLabel style={{ color: this.state.fieldError && !this.state.companyAddress ? "red" : undefined }}>
                         {strings.companies.companyAddress}
@@ -355,10 +378,13 @@ private submitCompany = async () => {
                         multiline
                       />
                     </FormControl>                    
-                  <Button onClick={ this.submitCompany } type="submit" variant="contained" color="primary">
-                    {strings.companies.companySubmit}
-                  </Button>
-                </div>
+                    <Button onClick={ this.submitCompany } type="submit" variant="contained" color="primary">
+                      {strings.companies.companySubmit}
+                    </Button>
+                    { this.state.formSubmitSuccess ? 
+                      <Alert severity="success" style={{marginTop: "10px"}}>{strings.companies.companySubmitSuccess}</Alert> : ""
+                    }
+                  </div>
                 </Grid>
                 <Grid item xs={ 12 } md={ 3 } lg={ 3 } key={ "789" }>
                   { sideContent &&
