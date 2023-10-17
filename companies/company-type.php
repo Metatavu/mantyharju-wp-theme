@@ -75,9 +75,10 @@
         $term_id = get_field('company_category', $post_id);
 
         if ($term_id) {
-            $term_name = get_term_field('name', $term_id, 'company_category');
-            $parent_page_path = \Company\Utils\COMPANIES_PARENT_PAGE . $term_name;
+            $term_slug = get_term_field('slug', $term_id, 'company_category');
+            $parent_page_path = \Company\Utils\COMPANIES_PARENT_PAGE . $term_slug;
             $parent_page_id = get_page_by_path($parent_page_path)->ID;
+            $term_description = get_term_field('description', $term_id);
 
             if ($parent_page_id) {
                 $existing_page_id = get_post_meta($post_id, 'company_page_id', true);
@@ -95,7 +96,7 @@
 
                         wp_update_post(array(
                           'ID' => $old_parent_page_id,
-                          'post_content' => !empty($links_html) ? $links_html : '<p></p>'
+                          'post_content' => $term_description . $links_html
                       ));
                     }
                 }
@@ -124,10 +125,15 @@
                   $content .= $company_phone_numbers . "\n";
               }
               if ($company_email) {
-                  $content .= $company_email . "\n";
+                  $content .= '<a href="' . esc_url( 'mailto:' . $company_email) . '">';
+                  $content .= $company_email;
+                  $content .= "</a>" . "\n";
               }
               if ($company_website) {
-                  $content .= $company_website . "\n";
+
+                  $content .= '<a href="' . $company_website . '">';
+                  $content .= $company_website;
+                  $content .= '</a>';
               }
               $content .= '<p>' . $company_information . '</p>';
                 $page_attributes = array(
@@ -150,7 +156,7 @@
 
                     wp_update_post(array(
                         'ID' => $parent_page_id,
-                        'post_content' => !empty($links_html) ? $links_html : '<p></p>'
+                        'post_content' => $term_description . $links_html
                     ));
                 }
             }
@@ -164,11 +170,12 @@
       $term_id = get_field('company_category', $post_id);
 
       if ($term_id) {
-          $term_name = get_term_field('name', $term_id, 'company_category');
+          $term_slug = get_term_field('slug', $term_id, 'company_category');
 
-          $parent_page_path = \Company\Utils\COMPANIES_PARENT_PAGE . $term_name;
+          $parent_page_path = \Company\Utils\COMPANIES_PARENT_PAGE . $term_slug;
 
           $parent_page = get_page_by_path($parent_page_path);
+          $term_description = get_term_field('description', $term_id);
 
           if ($parent_page) {
               $company_slug = get_post_field('post_name', $post_id);
@@ -182,7 +189,7 @@
 
                   wp_update_post(array(
                       'ID' => $parent_page_id,
-                      'post_content' => !empty($links_html) ? $links_html : '<p></p>'
+                      'post_content' => $term_description . $links_html
                   ));
               }
           }

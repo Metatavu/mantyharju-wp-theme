@@ -54,15 +54,15 @@
 
             if ($page_id) {
                 update_term_meta($term_id, 'taxonomy_page_id', $page_id);
-
-                $links_html = '<p>' . \Company\Utils\COMPANIES_DISPLAY_PAGE_TEXT . '</p><br/>' . \Company\Utils\build_child_links($parent_page_id, $page_id);
+                
+                $links_html = '<p>' . $term->description . '</p><br/>' . \Company\Utils\build_child_links($parent_page_id, $page_id);
 
 
                 $display_page = \Company\Utils\COMPANIES_DISPLAY_PAGE;
                 $display_page_id = get_page_by_path($display_page)->ID;
                 wp_update_post(array(
                     'ID' => $display_page_id,
-                    'post_content' => !empty($links_html) ? $links_html : '<p>' . \Company\Utils\COMPANIES_DISPLAY_PAGE_TEXT . '</p>'
+                    'post_content' => $links_html
                 ));
             }
         }
@@ -85,10 +85,10 @@
             );
             wp_update_post($page_update_args);
             $parent_page_id = get_page_by_path($parent_page)->ID;
-            $this_page_links_html = '<p>' . \Company\Utils\COMPANIES_DISPLAY_PAGE_TEXT . '</p><br/>' . \Company\Utils\build_child_links($stored_page_id);
+            $this_page_links_html = '<p>' . $term->description . '</p><br/>' . \Company\Utils\build_child_links($stored_page_id);
             wp_update_post(array(
               'ID'         => $stored_page_id,
-              'post_content' => !empty($this_page_links_html) ? $this_page_links_html : '<p>' . \Company\Utils\COMPANIES_DISPLAY_PAGE_TEXT . '</p>'
+              'post_content' => $this_page_links_html
             ));
             $links_html = '<p>' . \Company\Utils\COMPANIES_DISPLAY_PAGE_TEXT . '</p><br/>' . \Company\Utils\build_child_links($parent_page_id, $stored_page_id);
 
@@ -96,7 +96,7 @@
             $display_page_id = get_page_by_path($display_page)->ID;
             wp_update_post(array(
                 'ID' => $display_page_id,
-                'post_content' => !empty($links_html) ? $links_html : '<p>' . \Company\Utils\COMPANIES_DISPLAY_PAGE_TEXT . '</p>'
+                'post_content' => $links_html
             ));
         }
     }
