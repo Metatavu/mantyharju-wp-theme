@@ -125,10 +125,15 @@
                   $content .= $company_phone_numbers . "\n";
               }
               if ($company_email) {
-                  $content .= $company_email . "\n";
+                  $content .= '<a href="' . esc_url( 'mailto:' . $company_email) . '">';
+                  $content .= $company_email;
+                  $content .= "</a>" . "\n";
               }
               if ($company_website) {
-                  $content .= $company_website . "\n";
+
+                  $content .= '<a href="' . $company_website . '">';
+                  $content .= $company_website;
+                  $content .= '</a>';
               }
               $content .= '<p>' . $company_information . '</p>';
                 $page_attributes = array(
