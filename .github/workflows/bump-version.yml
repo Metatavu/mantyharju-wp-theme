@@ -2,7 +2,7 @@ name: Bump version
 on:
   push:
     branches:
-      - main
+      - master
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,18 +25,18 @@ jobs:
           git add style.css
           git commit -m "Updated version to style.css"
           git checkout develop
-          git merge main
+          git merge master
       - name: Push version changes to develop
         uses: ad-m/github-push-action@v0.6.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: develop
-      - name: Push version changes to main
+      - name: Push version changes to master
         uses: ad-m/github-push-action@v0.6.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
-      - name: Resolve latest main commit
+          branch: master
+      - name: Resolve latest master commit
         id: get_commit_sha
         run: echo "::set-output name=commit_sha::$(git rev-parse HEAD)"
       - name: Bump version and push tag
