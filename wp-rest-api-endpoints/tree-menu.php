@@ -78,7 +78,7 @@ function register_tree_menu_endpoint() {
             'label' => $page->post_title,
             'link' => get_page_link($page->ID),
             'current' => $page->ID === $currentPageId,
-            'nodes' => build_tree_layer($page->ID, $currentPageId, $all_pages, $isAcademyPage)
+            'nodes' => build_tree_layer($page->ID, $currentPageId, $all_pages)
           )
         );
       }
