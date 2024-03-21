@@ -3,6 +3,7 @@ import { WithStyles, withStyles } from "@material-ui/core";
 import { MenuLocationData, CustomPage } from "../generated/client/src";
 import ApiUtils from "../utils/ApiUtils";
 import styles from "../styles/basic-layout";
+import Askem from "./generic/Askem";
 import Header from "./generic/Header";
 import Footer from "./generic/Footer";
 
@@ -13,6 +14,7 @@ interface Props extends WithStyles<typeof styles> {
   slug: string;
   lang: string;
   title?: string;
+  askem: boolean;
 }
 
 /**
@@ -80,9 +82,21 @@ class BasicLayout extends React.Component<Props, State> {
         >
         </Header>
         { this.props.children }
+        { this.renderAskem() }
         <Footer />
       </div>
     );
+  }
+
+  /**
+   * Render Askem component
+   */
+  private renderAskem = () => {
+    if (this.props.askem) {
+      return <Askem />;
+    }
+    
+    return null;
   }
 }
 

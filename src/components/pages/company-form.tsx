@@ -204,6 +204,7 @@ private submitCompany = async () => {
         lang={ lang }
         slug={ slug }
         title={ this.setTitleSource() }
+        askem={ true }
       >
         <div className={ classes.heroImageDiv } style={ heroDivStyle }>
           <h1 className={ classes.heroText }>

@@ -58,7 +58,7 @@ class SingleEventPage extends React.Component<Props, State> {
     const { fetchedContent } = this.state;
 
     return (
-      <BasicLayout lang={ lang } slug={ slug }>
+      <BasicLayout lang={ lang } slug={ slug } askem={ true }>
         <div id="readthis">
           <div className={ classes.heroImageDiv }>
             <div className={ classes.heroContent }>
