@@ -26,6 +26,8 @@
     echo '<a href="?page=company-tools&action=regenerate_company_pages" class="button">Regenerate Company Pages</a>';
     echo "&nbsp;";
     echo '<a href="?page=company-tools&action=regenerate_category_page_contents" class="button">Regenerate Category Page Contents</a>';
+    echo "&nbsp;";
+    echo '<a href="?page=company-tools&action=regenerate_categories_list_page_contents" class="button">Regenerate Categories List Page Contents</a>';
     echo '</p>';
 
     if (isset($_GET['action']) && $_GET['action'] === 'regenerate_company_category_pages') {
@@ -38,6 +40,10 @@
 
     if (isset($_GET['action']) && $_GET['action'] === 'regenerate_category_page_contents') {
       regenerate_category_page_contents();
+    }
+
+    if (isset($_GET['action']) && $_GET['action'] === 'regenerate_categories_list_page_contents') {
+      regenerate_categories_list_page_contents();
     }
 
     echo '</div>';
@@ -219,6 +225,13 @@
     }
 
     echo "</tbody>";
+  }
+
+  /**
+   * Regenerate categories list page contents.
+   */
+  function regenerate_categories_list_page_contents() {
+    \Company\Utils\regenerate_company_category_page_contents();
   }
 
   add_action('admin_menu', 'register_company_tools_page');

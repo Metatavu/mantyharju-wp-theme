@@ -30,6 +30,35 @@
   }
 
   /**
+   * Build company category list page contents
+   * 
+   * @return string page contents
+   */
+  function build_company_category_list_page_contents() {
+    $categories_page = get_page_by_path(\Company\Utils\COMPANIES_PARENT_PAGE);
+    $category_pages = get_children(array(
+      'post_parent' => $categories_page->ID,
+      'post_type' => 'page',
+      'post_status' => 'publish'
+    ));
+
+    $links = array();
+
+    foreach ($category_pages as $category_page) {
+        $links[$category_page->post_title] = get_permalink($category_page->ID);
+    }
+
+    ksort($links);
+
+    $links_html = '';
+    foreach ($links as $link_text => $link_url) {
+        $links_html .= '<a href="' . $link_url . '">' . esc_html($link_text) . '</a><br>';
+    }
+
+    return '<p>' . \Company\Utils\COMPANIES_DISPLAY_PAGE_TEXT . '</p><br/>' . $links_html; 
+  }
+
+  /**
    * Build company category page contents
    * 
    * @param WP_Term $term company category term
@@ -178,6 +207,20 @@
           'post_content' => $category_page_content
       ));
     }
+  }
+
+  /**
+   * Regenerate company category page contents
+   */
+  function regenerate_company_category_page_contents() {
+    $company_category_list_page = get_page_by_path(\Company\Utils\COMPANIES_DISPLAY_PAGE);
+    $company_category_list_page_id = $company_category_list_page->ID;
+    $company_category_list_page_contents = \Company\Utils\build_company_category_list_page_contents();
+
+    wp_update_post(array(
+      'ID' => $company_category_list_page_id,
+      'post_content' => $company_category_list_page_contents
+    ));
   }
 
   const COMPANIES_DISPLAY_PAGE = 'sivut/tyo-yrittaminen/yrityspalvelut/yritykset/';
