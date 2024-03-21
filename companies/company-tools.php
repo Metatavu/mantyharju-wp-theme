@@ -210,7 +210,7 @@
         )
       ));
 
-      $page_contents = \Company\Utils\build_company_category_page_contents($term, $term_page);
+      $page_contents = \Company\Utils\build_company_category_page_contents($term, $term_page_id);
 
       wp_update_post(array(
         'ID' => $term_page_id,
