@@ -81,7 +81,7 @@
         $category_page = \Company\Utils\create_company_category_page($term);
       }
 
-      \Company\Utils\regenerate_company_category_page_contents($term, $category_page);
+      \Company\Utils\regenerate_company_category_page_contents();
     }
   }, 10, 3);
 

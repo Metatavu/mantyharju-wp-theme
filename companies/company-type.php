@@ -70,96 +70,45 @@
     ));
   });
 
-  add_action('save_post', function ($post_id, $post, $update) {
-    if ($post->post_type === 'company' && ($post->post_status === 'publish' || ($update && $post->post_status === 'publish'))) {
-        $term_id = get_field('company_category', $post_id);
+  add_action('save_post', function ($company_id, $company, $update) {
+    if ($company->post_type === 'company' && $company->post_status === 'publish') {
+      $company_category_term_id = get_field('company_category', $company_id);
+      $company_category_term = get_term($company_category_term_id);
+      $category_page_id = get_term_meta($company_category_term_id, 'taxonomy_page_id', true);
+      $category_page = get_post($category_page_id);
 
-        if ($term_id) {
-            $term_slug = get_term_field('slug', $term_id, 'company_category');
-            $parent_page_path = \Company\Utils\COMPANIES_PARENT_PAGE . $term_slug;
-            $parent_page_id = get_page_by_path($parent_page_path)->ID;
-            $term_description = get_term_field('description', $term_id);
+      $company_page_id = get_post_meta($company_id, 'company_page_id', true);
+      $company_page = get_post($company_page_id);
 
-            if ($parent_page_id) {
-                $existing_page_id = get_post_meta($post_id, 'company_page_id', true);
-                $old_term_id = get_post_meta($post_id, '_company_old_term_id', true);
+      if (!$company_page || $company_page->post_status != 'publish') {
+        \Company\Utils\create_company_page($company_id, $company_category_term_id);
+      } else {
+        \Company\Utils\update_company_page($company_id, $company_category_term_id);
+      }
 
-                if ($existing_page_id) {
-                    if ($old_term_id && $term_id !== $old_term_id) {
-                        wp_delete_post($existing_page_id, true);
+      if (!$category_page || $category_page->post_status != 'publish') {
+        $category_page = \Company\Utils\create_company_category_page($company_category_term);
+      } else {
+        \Company\Utils\update_company_category_page($company_category_term, $category_page);
+      }
 
-                        $old_term_name = get_term_field('name', $old_term_id, 'company_category');
-                        $old_parent_page_path = \Company\Utils\COMPANIES_PARENT_PAGE . $old_term_name;
-                        $old_parent_page_id = get_page_by_path($old_parent_page_path)->ID;
+      \Company\Utils\regenerate_company_category_page_contents();
+    } elseif ($company->post_type === 'company' && $company->post_status === 'trash') {
+      $company_page_id = get_post_meta($company_id, 'company_page_id', true);
 
-                        $links_html = \Company\Utils\build_child_links($old_parent_page_id);
+      if ($company_page_id) {
+        wp_delete_post($company_page_id);
+      }
 
-                        wp_update_post(array(
-                          'ID' => $old_parent_page_id,
-                          'post_content' => $term_description . $links_html
-                      ));
-                    }
-                }
+      $company_category_term_id = get_field('company_category', $company_id);
+      $company_category_term = get_term($company_category_term_id);
+      $category_page_id = get_term_meta($company_category_term_id, 'taxonomy_page_id', true);
+      $category_page = get_post($category_page_id);
 
-                $content = \Company\Utils\build_company_page_contents($post_id);
-                $page_attributes = array(
-                    'post_title'    => $post->post_title,
-                    'post_name'     => $post->post_name,
-                    'post_status'   => 'publish',
-                    'post_type'     => 'page',
-                    'post_parent'   => $parent_page_id,
-                    'post_content' => $content
-                );
-
-                $page_id = wp_insert_post($page_attributes);
-
-                if ($page_id) {
-                    update_post_meta($post_id, 'company_page_id', $page_id);
-
-                    update_post_meta($post_id, '_company_old_term_id', $term_id);
-
-                    $links_html = \Company\Utils\build_child_links($parent_page_id, $page_id);
-
-                    wp_update_post(array(
-                        'ID' => $parent_page_id,
-                        'post_content' => $term_description . $links_html
-                    ));
-                }
-            }
-
-        }
+      if ($category_page && $category_page->post_status == 'publish') {
+        \Company\Utils\update_company_category_page($company_category_term, $category_page);
+      }
     }
   }, 10, 3);
 
-  add_action('pre_trash_post', function ($post_id) {
-    if (get_post_type($post_id) === 'company') {
-      $term_id = get_field('company_category', $post_id);
-
-      if ($term_id) {
-          $term_slug = get_term_field('slug', $term_id, 'company_category');
-
-          $parent_page_path = \Company\Utils\COMPANIES_PARENT_PAGE . $term_slug;
-
-          $parent_page = get_page_by_path($parent_page_path);
-          $term_description = get_term_field('description', $term_id);
-
-          if ($parent_page) {
-              $company_slug = get_post_field('post_name', $post_id);
-              $company_page_name = $parent_page_path . '/' . $company_slug;
-              $company_page = get_page_by_path($company_page_name, OBJECT, 'page');
-              if ($company_page) {
-                  wp_delete_post($company_page->ID, true);
-
-                  $parent_page_id = $parent_page->ID;
-                  $links_html = \Company\Utils\build_child_links($parent_page_id);
-
-                  wp_update_post(array(
-                      'ID' => $parent_page_id,
-                      'post_content' => $term_description . $links_html
-                  ));
-              }
-          }
-        }
-      }
-  });
 ?>

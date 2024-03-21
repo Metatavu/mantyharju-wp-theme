@@ -184,10 +184,13 @@
   function update_company_category_page($term, $category_page) {
     $category_page_id = $category_page->ID;
     $category_page_content = \Company\Utils\build_company_category_page_contents($term, $category_page_id);
+    $page_title = $term->name;
 
     wp_update_post(array(
-      'ID' => $category_page_id,
-      'post_content' => $category_page_content
+      'ID'            => $category_page_id,
+      'post_title'    => $page_title,
+      'post_name'     => $page_title,
+      'post_content'  => $category_page_content
     ));
   }
 
@@ -224,6 +227,31 @@
           'post_content' => $category_page_content
       ));
     }
+  }
+
+  /**
+   * Update company page based on company
+   * 
+   * @param int $company_id company id
+   * @param int $term_id company category term id
+   */
+  function update_company_page($company_id, $term_id) {
+    $company = get_post($company_id);
+    $term = get_term($term_id);
+    $term_page_id = get_term_meta($term_id, 'taxonomy_page_id', true);
+    
+    $company_page_contents = \Company\Utils\build_company_page_contents($company);
+    $company_page_id = get_post_meta($company_id, 'company_page_id', true);
+
+    wp_update_post(array(
+      'ID'            => $company_page_id,
+      'post_title'    => $company->post_title,
+      'post_name'     => $company->post_name,
+      'post_status'   => 'publish',
+      'post_type'     => 'page',
+      'post_parent'   => $term_page_id,
+      'post_content'  => $company_page_contents
+    ));
   }
 
   /**
