@@ -3,12 +3,11 @@
   include_once $paths["common"];
   
   $serviceChannel = $data->serviceChannel;
-  $phoneNumbers = $serviceChannel["phoneNumbers"];
-
-
-  if (!$phoneNumbers) {
+  if (!isset($data->serviceChannel["phoneNumbers"])) {
     return;
   }
+
+  $phoneNumbers = $serviceChannel["phoneNumbers"];
   echo "<p>";
   
   foreach ($phoneNumbers as $phoneNumber) {
