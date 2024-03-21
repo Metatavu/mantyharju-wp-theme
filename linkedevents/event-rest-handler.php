@@ -75,7 +75,7 @@ if (!class_exists( '\Metatavu\LinkedEvents\Rest\RestHandler' ) ) {
           echo $placeCreateResult;
         } 
         catch (\Metatavu\MantyharjuTheme\LinkedEvents\ApiException $e) {
-          $custom_msg = json_decode($e->get_body()){'responseBody'};
+          $custom_msg = json_decode($e->get_body())['responseBody'];
           return new \WP_REST_Response("Error creating place",$custom_msg, 400);
         }
       }

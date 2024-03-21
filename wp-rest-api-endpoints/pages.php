@@ -7,9 +7,13 @@ function register_pages_endpoint() {
       $parentSlug = $request->get_param('parent_slug');
       if ($parentSlug) {
         $parentPage = get_parent_page($parentSlug);
-        $pages = get_wp_page_children($parentPage->ID);
-        $pages = array_map('map_additional_page_properties', $pages);
-        return $pages;
+        if ($parentPage) {
+          $pages = get_wp_page_children($parentPage->ID);
+          $pages = array_map('map_additional_page_properties', $pages);
+          return $pages;
+        } else {
+          return [];
+        }
       }
     }
   ));
@@ -18,13 +22,19 @@ add_action('rest_api_init', 'register_pages_endpoint');
 
 function get_parent_page($slug) {
   if ($slug) {
-    return get_posts(
+    $posts = get_posts(
       array(
         'name' => $slug,
         'post_type' => 'page'
       )
     );
+
+    if (count($posts) > 0) {
+      return $posts[0];
+    }
   }
+
+  return null;
 }
 
 function get_wp_page_children($parentId) {
