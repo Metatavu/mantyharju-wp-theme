@@ -77,6 +77,12 @@
       $category_page_id = get_term_meta($company_category_term_id, 'taxonomy_page_id', true);
       $category_page = get_post($category_page_id);
 
+      if (!$category_page || $category_page->post_status != 'publish') {
+        $category_page = \Company\Utils\create_company_category_page($company_category_term);
+      }
+
+      \Company\Utils\regenerate_company_category_page_contents();
+
       $company_page_id = get_post_meta($company_id, 'company_page_id', true);
       $company_page = get_post($company_page_id);
 
@@ -86,13 +92,7 @@
         \Company\Utils\update_company_page($company_id, $company_category_term_id);
       }
 
-      if (!$category_page || $category_page->post_status != 'publish') {
-        $category_page = \Company\Utils\create_company_category_page($company_category_term);
-      } else {
-        \Company\Utils\update_company_category_page($company_category_term, $category_page);
-      }
-
-      \Company\Utils\regenerate_company_category_page_contents();
+      \Company\Utils\update_company_category_page($company_category_term, $category_page);
     } elseif ($company->post_type === 'company' && $company->post_status === 'trash') {
       $company_page_id = get_post_meta($company_id, 'company_page_id', true);
 
