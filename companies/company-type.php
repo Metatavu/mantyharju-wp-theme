@@ -75,7 +75,58 @@
         $term_id = get_field('company_category', $post_id);
 
         if ($term_id) {
-          \Company\Utils\update_company_page($post_id, $term_id);
+            $term_slug = get_term_field('slug', $term_id, 'company_category');
+            $parent_page_path = \Company\Utils\COMPANIES_PARENT_PAGE . $term_slug;
+            $parent_page_id = get_page_by_path($parent_page_path)->ID;
+            $term_description = get_term_field('description', $term_id);
+
+            if ($parent_page_id) {
+                $existing_page_id = get_post_meta($post_id, 'company_page_id', true);
+                $old_term_id = get_post_meta($post_id, '_company_old_term_id', true);
+
+                if ($existing_page_id) {
+                    if ($old_term_id && $term_id !== $old_term_id) {
+                        wp_delete_post($existing_page_id, true);
+
+                        $old_term_name = get_term_field('name', $old_term_id, 'company_category');
+                        $old_parent_page_path = \Company\Utils\COMPANIES_PARENT_PAGE . $old_term_name;
+                        $old_parent_page_id = get_page_by_path($old_parent_page_path)->ID;
+
+                        $links_html = \Company\Utils\build_child_links($old_parent_page_id);
+
+                        wp_update_post(array(
+                          'ID' => $old_parent_page_id,
+                          'post_content' => $term_description . $links_html
+                      ));
+                    }
+                }
+
+                $content = \Company\Utils\build_company_page_contents($post_id);
+                $page_attributes = array(
+                    'post_title'    => $post->post_title,
+                    'post_name'     => $post->post_name,
+                    'post_status'   => 'publish',
+                    'post_type'     => 'page',
+                    'post_parent'   => $parent_page_id,
+                    'post_content' => $content
+                );
+
+                $page_id = wp_insert_post($page_attributes);
+
+                if ($page_id) {
+                    update_post_meta($post_id, 'company_page_id', $page_id);
+
+                    update_post_meta($post_id, '_company_old_term_id', $term_id);
+
+                    $links_html = \Company\Utils\build_child_links($parent_page_id, $page_id);
+
+                    wp_update_post(array(
+                        'ID' => $parent_page_id,
+                        'post_content' => $term_description . $links_html
+                    ));
+                }
+            }
+
         }
     }
   }, 10, 3);

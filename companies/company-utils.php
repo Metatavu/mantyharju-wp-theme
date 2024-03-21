@@ -173,6 +173,23 @@
 
     return get_post($category_page_id);
   }
+  
+  /**
+   * Update company category page
+   * 
+   * @param WP_Term $term company category term
+   * @param WP_Post $category_page company category page
+   * @return WP_Post updated page
+   */
+  function update_company_category_page($term, $category_page) {
+    $category_page_id = $category_page->ID;
+    $category_page_content = \Company\Utils\build_company_category_page_contents($term, $category_page_id);
+
+    wp_update_post(array(
+      'ID' => $category_page_id,
+      'post_content' => $category_page_content
+    ));
+  }
 
   /**
    * Creates a new company page based on company

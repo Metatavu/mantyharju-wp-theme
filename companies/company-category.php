@@ -71,34 +71,17 @@
 
   add_action('edited_term', function ($term_id, $tt_id, $taxonomy) {
     if ($taxonomy === 'company_category') {
-        $term = get_term($term_id, $taxonomy);
-        $page_title = $term->name;
-        $parent_page = \Company\Utils\COMPANIES_PARENT_PAGE;
+      $term = get_term($term_id, $taxonomy);
+      $category_page_id = get_term_meta($term_id, 'taxonomy_page_id', true);
+      $category_page = get_post($category_page_id);
 
-        $stored_page_id = get_term_meta($term_id, 'taxonomy_page_id', true);
+      if ($category_page) {
+        $category_page = \Company\Utils\update_company_category_page($term, $category_page);        
+      } else {
+        $category_page = \Company\Utils\create_company_category_page($term);
+      }
 
-        if ($stored_page_id) {
-            $page_update_args = array(
-                'ID'         => $stored_page_id,
-                'post_title' => $page_title,
-                'post_name'   => $page_title,
-            );
-            wp_update_post($page_update_args);
-            $parent_page_id = get_page_by_path($parent_page)->ID;
-            $this_page_links_html = '<p>' . $term->description . '</p><br/>' . \Company\Utils\build_child_links($stored_page_id);
-            wp_update_post(array(
-              'ID'         => $stored_page_id,
-              'post_content' => $this_page_links_html
-            ));
-            $links_html = '<p>' . \Company\Utils\COMPANIES_DISPLAY_PAGE_TEXT . '</p><br/>' . \Company\Utils\build_child_links($parent_page_id, $stored_page_id);
-
-            $display_page = \Company\Utils\COMPANIES_DISPLAY_PAGE;
-            $display_page_id = get_page_by_path($display_page)->ID;
-            wp_update_post(array(
-                'ID' => $display_page_id,
-                'post_content' => $links_html
-            ));
-        }
+      \Company\Utils\regenerate_company_category_page_contents($term, $category_page);
     }
   }, 10, 3);
 
