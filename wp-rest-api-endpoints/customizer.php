@@ -292,7 +292,26 @@
       )
     );
     /*-----END FOOTER CUSTOMIZER-----*/
+
+    $wp_customize->add_section('askem_api_settings', array(
+      'title'    => 'Askem API Settings',
+      'priority' => 120
+    ));
+
+    $wp_customize->add_setting('askem_api_key', array(
+        'default'   => '',
+        'transport' => 'refresh',
+    ));
+
+    $wp_customize->add_control('askem_api_key_control', array(
+        'label'    => 'Askem API Key',
+        'section'  => 'askem_api_settings',
+        'settings' => 'askem_api_key',
+        'type'     => 'text',
+    ));
+
   }
+  
   add_action('customize_register', 'custom_customizer_register');
 
   function customizer () {

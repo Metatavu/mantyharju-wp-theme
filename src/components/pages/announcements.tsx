@@ -53,7 +53,7 @@ class Announcements extends React.Component<Props, State> {
     const { lang, classes, slug } = this.props;
 
     return (
-      <BasicLayout lang={ lang } slug={ slug }>
+      <BasicLayout lang={ lang } slug={ slug } askem={ true }>
         <div className={ classes.heroImageDiv }>
           <div className={ classes.heroContent }>
             <Typography variant="h1" className={ classes.heroText }>

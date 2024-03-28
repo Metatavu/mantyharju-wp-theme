@@ -63,7 +63,7 @@ class ArticlePage extends React.Component<Props, State> {
     return (       
       <> 
       { !this.state.loading &&
-      <BasicLayout lang={ lang } slug={ slug }>
+      <BasicLayout lang={ lang } slug={ slug } askem={ true }>
           <div className={classes.heroImageDiv} style={{ backgroundImage: `url(${postThumbnail ? postThumbnail : hero})` }}>
             <div className={classes.heroContent}>
               <Typography variant="h1" className={classes.heroText}>
