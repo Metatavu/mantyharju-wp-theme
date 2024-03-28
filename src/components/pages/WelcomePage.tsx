@@ -273,7 +273,7 @@ class WelcomePage extends React.Component<Props, State> {
     const addEventImageStyle = {backgroundImage: `url(${ showcaseImage })`};
 
     return (
-      <BasicLayout lang={ lang } slug={ slug }>
+      <BasicLayout lang={ lang } slug={ slug } askem={ false }>
         <div className={ classes.heroImageDiv } style={ heroBackgroundImage }>
           <img className={ classes.heroLogo } src={ heroLogoImage } alt="Mäntyharju" />
           <h2 className={ classes.heroText }>{ heroTitle }</h2>

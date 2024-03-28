@@ -103,7 +103,7 @@ class PostsPage extends React.Component<Props, State> {
     const { currentPage, postThumbnail, postThumbnailLoading } = this.state;
     const heroDivStyle = postThumbnailLoading ? { background: "#eee"  } : { backgroundImage: `url(${ postThumbnail ? postThumbnail : hero })` };
     return (
-      <BasicLayout lang={ lang } slug={ slug } title={ this.setTitleSource() }>
+      <BasicLayout lang={ lang } slug={ slug } title={ this.setTitleSource() } askem={ true }>
         <div className={ classes.heroImageDiv } style={heroDivStyle}>
           <h1 className={ classes.heroText }>{ currentPage ? ReactHtmlParser(currentPage.title ? currentPage.title.rendered || "" : "") : "..." }</h1>
         </div>
