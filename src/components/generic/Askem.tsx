@@ -28,9 +28,16 @@ class Askem extends React.Component<Props, State> {
     this.state = {};
   }
 
+  /**
+   * Component did mount life-cycle handler
+   */
   public componentDidMount = () => {
     if ((window as any).askem) {
-      (window as any).askem.reset();
+      try {
+        (window as any).askem.reset();
+      } catch (e) {
+        console.error("Askem reset failed", e);
+      }
     }
   }
 
