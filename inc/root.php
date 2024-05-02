@@ -12,4 +12,17 @@
     document.body.appendChild(s);
   }());
 </script>
-<script type="text/javascript" src="<?php echo get_template_directory_uri() ?>/dist/bundle.js"></script>
+<?
+ $theme_version = "0";
+ try {
+   $theme = wp_get_theme();
+   if ($theme) {
+     $theme_version = $theme->get('Version');
+   }
+  } catch (Exception $e) {
+  }
+
+  $bundle_url = get_template_directory_uri() . '/dist/bundle.js' . '?v=' . $theme_version;
+?>
+
+<script type="text/javascript" src="<?php echo $bundle_url ?>"></script>
