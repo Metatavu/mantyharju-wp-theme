@@ -55,7 +55,7 @@ class Footer extends React.Component<Props, State> {
 
           <div className={ classes.footerAdressInfo}>
             <p className={ classes.footerContentItem }>Mäntyharjun kunta</p>
-            <p className={ classes.footerContentItem }>Asematie 3, PL 76</p>
+            <p className={ classes.footerContentItem }>Pentinpolku 1, PL 76</p>
             <p className={ classes.footerContentItem }>52701, Mäntyharju</p>
           </div>
 
