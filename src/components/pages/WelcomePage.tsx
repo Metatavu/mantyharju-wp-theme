@@ -33,7 +33,8 @@ const metaformStrings = {
  * Autocomplete item
  */
 type AutocompleteItem = { label: string, value: string };
-const INITIAL_EVENT_PAGE_SIZE = 6;
+const INITIAL_EVENT_PAGE_SIZE = 5;
+const EXPANDED_PAGE_SIZE = 25;
 
 /**
  * Interface representing component properties
@@ -1430,15 +1431,13 @@ class WelcomePage extends React.Component<Props, State> {
    * Action handler for "Show more" Linked events button
    */
   private expandLinkedEvents = async () => {
-    const { eventPageSize, events } = this.state;
-
-    const updatedEventPageSize = eventPageSize + INITIAL_EVENT_PAGE_SIZE;
+    const { events } = this.state;
 
     this.setState({
-      eventPageSize: updatedEventPageSize 
+      eventPageSize: EXPANDED_PAGE_SIZE
     })
 
-    const eventData = await this.fetchEvents(updatedEventPageSize);
+    const eventData = await this.fetchEvents(EXPANDED_PAGE_SIZE);
 
     if(!eventData || !events) {
       return;
