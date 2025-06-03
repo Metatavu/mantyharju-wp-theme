@@ -78,8 +78,6 @@ interface State {
   autocompleteInput: string;
   autocompleteValue?: AutocompleteItem;
   events?: any,
-  loadMoreEventsDisabled: boolean;
-  loadMoreEventsVisible: boolean;
   eventPageSize: number;
 }
 
@@ -144,8 +142,6 @@ class WelcomePage extends React.Component<Props, State> {
       imageUrl: "",
       autocompleteInput: "",
       autocompleteOptions: [],
-      loadMoreEventsDisabled: false,
-      loadMoreEventsVisible: true,
       eventPageSize: INITIAL_EVENT_PAGE_SIZE
     };
 
@@ -231,8 +227,7 @@ class WelcomePage extends React.Component<Props, State> {
     }
 
     this.setState({
-      events: eventData?.events,
-      loadMoreEventsVisible: eventData.eventsMeta && eventData.eventsMeta.next !== null
+      events: eventData?.events
     })
   }
 
@@ -255,9 +250,7 @@ class WelcomePage extends React.Component<Props, State> {
       linkedEventsPost,
       news,
       announcements,
-      jobs,
-      loadMoreEventsDisabled,
-      loadMoreEventsVisible
+      jobs
     } = this.state;
     const showcaseImage = this.getCustomizerValue("showcase_image");
     const showcaseTitle = this.getCustomizerValue("showcase_title");
@@ -385,14 +378,23 @@ class WelcomePage extends React.Component<Props, State> {
           }
           <div className={ classes.eventsButtonRow }>
             {
-              loadMoreEventsVisible &&
+              this.state.events?.length <= INITIAL_EVENT_PAGE_SIZE &&
               <Button
                 className={ classes.allEventsButton }
                 title= { strings.showMoreEvents }
-                onClick={ this.expandLinkedEvents }
-                disabled={ loadMoreEventsDisabled }
+                onClick={ this.toggleLinkedEventsExpansion }
               >
                 { strings.showMore }
+              </Button>
+            }
+            {
+              this.state.events?.length > INITIAL_EVENT_PAGE_SIZE &&
+              <Button
+                className={ classes.allEventsButton }
+                title= { strings.hideEvents }
+                onClick={ this.toggleLinkedEventsExpansion }
+              >
+                { strings.hideEvents }
               </Button>
             }
             <Button
@@ -1428,23 +1430,23 @@ class WelcomePage extends React.Component<Props, State> {
   }
 
   /**
-   * Action handler for "Show more" Linked events button
+   * Action handler for "Show more" and "Hide events" Linked events buttons
    */
-  private expandLinkedEvents = async () => {
-    const { events } = this.state;
+  private toggleLinkedEventsExpansion = async () => {
+    const { events, eventPageSize } = this.state;
 
+    const newPageSize = eventPageSize == INITIAL_EVENT_PAGE_SIZE ? EXPANDED_PAGE_SIZE : INITIAL_EVENT_PAGE_SIZE;
     this.setState({
-      eventPageSize: EXPANDED_PAGE_SIZE
+      eventPageSize: newPageSize
     })
 
-    const eventData = await this.fetchEvents(EXPANDED_PAGE_SIZE);
+    const eventData = await this.fetchEvents(newPageSize);
 
     if(!eventData || !events) {
       return;
     }
       this.setState({
         events: eventData.events,
-        loadMoreEventsDisabled: eventData.eventsMeta && eventData.eventsMeta.next === null ? true : false
     })
   }
 }

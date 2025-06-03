@@ -24,7 +24,7 @@ export interface IStrings extends LocalizedStringsMethods {
   past: string,
   searchSite: string,
   showMore: string,
-  hide: string,
+  hideEvents: string,
   showMoreEvents: string,
   somethingWentWrong: string,
   whoops: string,
