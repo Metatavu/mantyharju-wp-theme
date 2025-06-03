@@ -79,6 +79,9 @@ interface State {
   autocompleteValue?: AutocompleteItem;
   events?: any,
   eventPageSize: number;
+  eventsPage: number;
+  nextEventsPageExists: boolean;
+  newLinkedEventsLoading: boolean;
 }
 
 interface Dictionary<T> {
@@ -142,7 +145,10 @@ class WelcomePage extends React.Component<Props, State> {
       imageUrl: "",
       autocompleteInput: "",
       autocompleteOptions: [],
-      eventPageSize: INITIAL_EVENT_PAGE_SIZE
+      eventPageSize: INITIAL_EVENT_PAGE_SIZE,
+      eventsPage: 1,
+      nextEventsPageExists: false,
+      newLinkedEventsLoading: false,
     };
 
     this.onPick = this.onPick.bind(this);
@@ -220,14 +226,15 @@ class WelcomePage extends React.Component<Props, State> {
     this.getLinkedEvents();
     this.getAutocompleteOptions();
 
-    const eventData = await this.fetchEvents(INITIAL_EVENT_PAGE_SIZE);
+    const eventData = await this.fetchEvents(INITIAL_EVENT_PAGE_SIZE, this.state.eventsPage);
 
     if(!eventData) {
       return
     }
 
     this.setState({
-      events: eventData?.events
+      events: eventData?.events,
+      nextEventsPageExists: eventData.eventsMeta && eventData.eventsMeta.next !== null
     })
   }
 
@@ -366,17 +373,27 @@ class WelcomePage extends React.Component<Props, State> {
               <Typography variant="subtitle1">{strings.coming}</Typography>
             </div>
           </div>
-          { linkedEventsPost &&
+          { linkedEventsPost && !this.state.newLinkedEventsLoading &&
             <div className={ classes.wrapper }>
               { this.renderLinkedEvents() }
             </div>
           }
-          { !linkedEventsPost &&
+          { (!linkedEventsPost || this.state.newLinkedEventsLoading) &&
             <div style={{ display: "flex" }}>
                 <CircularProgress style={{ margin: "auto" }} />
             </div>
           }
           <div className={ classes.eventsButtonRow }>
+            {
+              this.state.eventsPage > 1 &&
+              <Button
+                className={ classes.allEventsButton }
+                title= { strings.previousPage }
+                onClick={ this.loadPreviousEventsPage }
+              >
+                { strings.previousPage }
+              </Button>
+            }
             {
               this.state.events?.length <= INITIAL_EVENT_PAGE_SIZE &&
               <Button
@@ -404,6 +421,16 @@ class WelcomePage extends React.Component<Props, State> {
             >
               { strings.addEvent }
             </Button>
+            {
+              this.state.nextEventsPageExists &&
+              <Button
+                className={ classes.allEventsButton }
+                title= { strings.nextPage }
+                onClick={ this.loadNextEventsPage }
+              >
+                { strings.nextPage }
+              </Button>
+            }
           </div>
         </div>
         <div ref={ this.popularPagesSection } className={ classes.bottom_section }>
@@ -1113,10 +1140,10 @@ class WelcomePage extends React.Component<Props, State> {
   /**
    * Fetching method for fetching events
    */
-  private fetchEvents = async (eventPageSize: number) => {
+  private fetchEvents = async (eventPageSize: number, eventsPage: number) => {
     try {
       let startDate = moment().utcOffset(0, true).format()
-      let fetchAddress = `https://mantyharju.linkedevents.fi/v1/event/?&page_size=${eventPageSize}&page=1&sort=start_time&start=${startDate}`;
+      let fetchAddress = `https://mantyharju.linkedevents.fi/v1/event/?&page_size=${eventPageSize}&page=${eventsPage}&sort=start_time&start=${startDate}`;
 
       const apiData = await fetch(fetchAddress)
       const response = await apiData.json();
@@ -1433,20 +1460,75 @@ class WelcomePage extends React.Component<Props, State> {
    * Action handler for "Show more" and "Hide events" Linked events buttons
    */
   private toggleLinkedEventsExpansion = async () => {
-    const { events, eventPageSize } = this.state;
+    const { events, eventPageSize, eventsPage } = this.state;
 
     const newPageSize = eventPageSize == INITIAL_EVENT_PAGE_SIZE ? EXPANDED_PAGE_SIZE : INITIAL_EVENT_PAGE_SIZE;
     this.setState({
-      eventPageSize: newPageSize
+      eventPageSize: newPageSize,
+      newLinkedEventsLoading: true
     })
 
-    const eventData = await this.fetchEvents(newPageSize);
+    const eventData = await this.fetchEvents(newPageSize, eventsPage);
 
     if(!eventData || !events) {
       return;
     }
-      this.setState({
+
+    this.setState({
         events: eventData.events,
+        newLinkedEventsLoading: false,
+    })
+  }
+
+  private loadPreviousEventsPage = async () => {
+    const { events, eventPageSize, eventsPage } = this.state;
+
+    if (eventsPage < 2) {
+      return;
+    }
+
+    const newEventsPage = eventsPage - 1;
+    this.setState({
+      eventsPage: newEventsPage,
+      newLinkedEventsLoading: true,
+    })
+
+    const eventData = await this.fetchEvents(eventPageSize, newEventsPage);
+
+    if(!eventData || !events) {
+      return;
+    }
+    
+    this.setState({
+        events: eventData.events,
+        nextEventsPageExists: eventData.eventsMeta && eventData.eventsMeta.next !== null,
+        newLinkedEventsLoading: false,
+    })
+  }
+
+  private loadNextEventsPage = async () => {
+    const { events, eventPageSize, eventsPage, nextEventsPageExists } = this.state;
+
+    if (!nextEventsPageExists) {
+      return;
+    }
+
+    const newEventsPage = eventsPage + 1;
+    this.setState({
+      eventsPage: newEventsPage,
+      newLinkedEventsLoading: true,
+    })
+
+    const eventData = await this.fetchEvents(eventPageSize, newEventsPage);
+
+    if(!eventData || !events) {
+      return;
+    }
+    
+    this.setState({
+        events: eventData.events,
+        nextEventsPageExists: eventData.eventsMeta && eventData.eventsMeta.next !== null,
+        newLinkedEventsLoading: false,
     })
   }
 }
