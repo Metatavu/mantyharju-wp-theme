@@ -339,25 +339,20 @@ class Events extends React.Component<Props, State> {
   }
 
   /**
-   * Render post content method
+   * Render event buttons
    */
-  private renderPostContent = () => {
+
+  private renderEventButtons = () => {
     const { classes, lang } = this.props;
     moment.locale(lang);
     return (
-      <div className={
-        classNames(classes.htmlContainer,
-        this.state.isArticle && "article")
-        }
-      >
-
-        <div>
-
+        <div className={classes.eventButtons}>
           {
             this.state.page > 1 &&
             <Button
               title={ strings.previousPage }
               onClick={ this.loadPreviousPage }
+              className={classes.previousEventButton}
             >
               { strings.previousPage }
             </Button>
@@ -367,19 +362,41 @@ class Events extends React.Component<Props, State> {
             <Button
               title={ strings.nextPage }
               onClick={ this.loadNextPage }
+              className={classes.nextEventButton}
             >
               { strings.nextPage }
             </Button>
           }
         </div>
+    )
+  }
+
+  /**
+   * Render post content method
+   */
+
+  private renderPostContent = () => {
+    const { classes, lang } = this.props;
+    moment.locale(lang);
+    return (
+            <div className={
+                classNames(classes.htmlContainer, 
+                this.state.isArticle && "article")
+                }
+            >    
+        {this.renderEventButtons()}
+
         { this.state.loading && 
           <div className={ classes.loadingIconContainer }>
             <CircularProgress />
           </div>
         }
-        { !this.state.loading &&
+        <div className={classes.eventsContent}>
+        { !this.state.loading &&  
           this.state.events.map(this.renderEvent)
         }
+        </div>
+        {this.renderEventButtons()}
       </div>
     );
   }
