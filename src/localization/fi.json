@@ -27,6 +27,8 @@
   "whoops": "Hups!",
   "requiredFieldMissing": "Pakollinen tieto",
   "popularPages": "Suosituimmat sivut",
+  "nextPage": "Seuraava sivu",
+  "previousPage": "Edellinen sivu",
   "companies": {
     "companySelectNew": "Uusi yritys",
     "companySelectUpdated": "Muuttuneet tiedot",

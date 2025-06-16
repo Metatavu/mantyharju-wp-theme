@@ -14,6 +14,7 @@ import mantyharjuTheme from "../styles/theme";
 import * as qs from "query-string";
 import strings from "../localization/strings";
 import CompanyForm from "./pages/company-form";
+import Events from "./pages/events";
 
 /**
  * Interface representing component properties
@@ -116,6 +117,18 @@ class App extends React.Component<Props, State> {
                 <Redirect to="/" />
             </Route>
             <Route
+              path="/sivut/asuminen-ymparisto/info/tapahtumat/"
+              exact={ true }
+              render={ (props) => (
+                <Events
+                  lang={ language }
+                  slug={ this.pathToSlug(props.location.pathname) }
+                  mainPageSlug={ this.pathToTitle(props.location.pathname) }
+                  locationPath={ props.location.pathname }
+                />
+              )}
+            />
+            <Route
               path="/sivut/tyo-yrittaminen/yrityspalvelut/lisaa-yrityksesi"
               exact={ true }
               render={ (props) => (
@@ -142,7 +155,7 @@ class App extends React.Component<Props, State> {
               path="/sivut/:page"
               exact={ true }
               render={ (props) => (
-                !props.location.pathname.includes("lisaa-yrityksesi") &&
+                !props.location.pathname.includes("info/tapahtumat") && !props.location.pathname.includes("lisaa-yrityksesi") &&
                 <PostsPage
                   lang={ language }
                   slug={ this.pathToSlug(props.location.pathname) }
@@ -154,7 +167,7 @@ class App extends React.Component<Props, State> {
             <Route
               path="/sivut/:page/:page"
               render={ (props) => (
-                !props.location.pathname.includes("lisaa-yrityksesi") &&
+                !props.location.pathname.includes("info/tapahtumat") && !props.location.pathname.includes("lisaa-yrityksesi") &&
                 <PostPage
                   lang={ language }
                   slug={ this.pathToSlug(props.location.pathname) }

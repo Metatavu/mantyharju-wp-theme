@@ -27,6 +27,8 @@
   "whoops": "Whoops!",
   "requiredFieldMissing": "Required field",
   "popularPages": "Popular pages",  
+  "nextPage": "Next page",
+  "previousPage": "Previous page",
   "companies": {
     "companyName": "Company name",
     "companyInformation": "Describe products / services",

@@ -29,6 +29,8 @@ export interface IStrings extends LocalizedStringsMethods {
   whoops: string,
   requiredFieldMissing: string,
   popularPages: string,
+  nextPage: string,
+  previousPage: string,
   companies: {
     companySelectNew: string,
     companySelectUpdated: string,
