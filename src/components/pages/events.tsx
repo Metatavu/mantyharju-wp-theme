@@ -2,7 +2,6 @@ import * as React from "react";
 import BasicLayout from "../BasicLayout";
 import { Container, WithStyles, withStyles, Button, Breadcrumbs, Link, Grid, CircularProgress, Typography, Paper, Box } from "@material-ui/core";
 import styles from "../../styles/page-content";
-import ApiUtils from "../../../src/utils/ApiUtils";
 import { Page, Post, PostTitle, CustomPage } from "../../../src/generated/client/src";
 import ReactHtmlParser, { convertNodeToElement } from "react-html-parser";
 import { DomElement } from "domhandler";
@@ -13,7 +12,6 @@ import * as moment from "moment";
 import "../../../node_modules/react-simple-tree-menu/dist/main.css";
 import TreeView from "../generic/TreeView";
 import RightSideBar from "../generic/RightSideBar";
-import hero from "../../resources/img/postHeader.jpg";
 import ReadSpeaker from "../generic/ReadSpeaker";
 import Movies from "../movies/movies";
 import Premiers from "../movies/premiers";
@@ -37,14 +35,11 @@ interface State {
   post?: Post;
   title: string;
   loading: boolean;
-  isArticle: boolean;
   pageTitle?: PostTitle;
   breadcrumb: Breadcrumb[];
   mainContent?: React.ReactElement;
   sideContent?: React.ReactElement;
   pages: CustomPage[];
-  postThumbnail: string;
-  postThumbnailLoading: boolean;
   isMoviePage?: boolean;
   page: number;
   events: any;
@@ -74,13 +69,10 @@ class Events extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      isArticle: false,
       loading: false,
       breadcrumb: [],
       title: "",
       pages: [],
-      postThumbnail: "",
-      postThumbnailLoading: false,
       page: 1,
       events: [],
       eventsMeta: null
@@ -91,17 +83,7 @@ class Events extends React.Component<Props, State> {
    * Component did mount life-cycle handler
    */
   public componentDidMount = () => {
-    this.loadContent();
     this.loadEvents(1);
-  }
-
-  /**
-   * Component did update life-cycle handler
-   */
-  public componentDidUpdate = (prevProps: Props) => {
-    if (prevProps.slug !== this.props.slug) {
-      this.loadContent();
-    }
   }
 
   /**
@@ -109,10 +91,10 @@ class Events extends React.Component<Props, State> {
    */
   public render() {
     const { classes, lang, slug, locationPath } = this.props;
-    const { sideContent, currentPage, postThumbnail, postThumbnailLoading } = this.state;
+    const { sideContent, currentPage } = this.state;
     const checkContent = React.Children.map(sideContent, child => child ? child.props.children.length : 0);
     const isContent = (checkContent ? (checkContent[0] === 0 ? false : true) : false);
-    const heroDivStyle = postThumbnailLoading ? { background: "#eee"  } : { backgroundImage: `url(${ postThumbnail ? postThumbnail : hero })` };
+    const heroDivStyle = { background: "#eee"  };
     return (
       <BasicLayout
         lang={ lang }
@@ -215,7 +197,7 @@ class Events extends React.Component<Props, State> {
 
     const page = this.state.currentPage;
     return (
-      <Container className={ classNames( classes.root, this.state.isArticle && "article") }>
+      <Container className={ classNames( classes.root ) }>
         { !isMoviePage &&
           <h2>
             { page ? ReactHtmlParser(page.title ? page.title.rendered || "" : "") : null }
@@ -224,52 +206,6 @@ class Events extends React.Component<Props, State> {
         { this.renderPostContent() }
       </Container>
     );
-  }
-
-  /**
-   * Loads page or post content
-   */
-  private loadContent = async () => {
-    this.setState({
-      loading: true,
-      postThumbnailLoading: true
-    });
-
-    const lang = this.props.lang;
-    const slugParts = this.props.slug.split("/");
-    const slug = slugParts.pop() || slugParts.pop();
-    if (!slug) {
-      // TODO: handle error
-      return;
-    }
-    this.hidePageLoader();    
-    const api = ApiUtils.getApi();
-
-    Promise.all([
-      api.getWpV2Pages({ lang: [ lang ], slug: [ slug ] }),
-      api.getWpV2Posts({ lang: [ lang ], slug: [ slug ] })
-    ]).then(([pagesRes, postsRes]) => {
-      const post = postsRes[0];
-      this.setState({ loading: false, currentPage: pagesRes[0], post: post, isArticle: !!post });
-      
-    });
-
-    Promise.all([
-      api.getWpV2Pages({ lang: [ lang ], slug: [ this.props.mainPageSlug ] }),
-      api.getWpV2Posts({ lang: [ lang ], slug: [ this.props.mainPageSlug ] })
-    ]).then(([pages, posts]) => {
-      const pageTitle = pages[0].title || posts[0].title;
-      this.setState({ pageTitle });
-    });
-
-    ApiUtils.cachedGetCustomPages(api, "posts").then((pages) => {
-      this.setState({ pages });
-      this.breadcrumbPath(pages);
-    });
-
-    api.getPostThumbnail({ slug: slug }).then((postThumbnail) => {
-      this.setState({ postThumbnail, postThumbnailLoading: false });
-    });
   }
 
   /**
@@ -380,8 +316,7 @@ class Events extends React.Component<Props, State> {
     moment.locale(lang);
     return (
             <div className={
-                classNames(classes.htmlContainer, 
-                this.state.isArticle && "article")
+                classNames(classes.htmlContainer)
                 }
             >    
         {this.renderEventButtons()}
