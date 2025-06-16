@@ -29,6 +29,44 @@ export default createStyles({
       }
     }
   },
+  event_link: {
+    display: "flex",
+    flex: 1,
+    textDecoration: "none",
+    "&:link": {
+      color: "#000"
+    },
+    "&:visited": {
+      color: "#000"
+    },
+    "&:hover": {
+      color: "#000"
+    },
+    "&:active": {
+      color: "#000"
+    },
+    [breakpoints.down("lg")]: {
+      marginBottom: theme.spacing(2)
+    }
+  },
+  card: {
+    "&:hover": {
+      boxShadow: "7px 8px 12px 0px rgba(0,0,0,0.1)",
+    },
+  },
+  centered: {
+    padding: theme.spacing(3),
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+    textAlign: "center"
+  },
+  statusBar: {
+    height: 6,
+    width: 120,
+    marginBottom: theme.spacing(2)
+  },
   loadingIconContainer: {
     flex: 1,
     display: "flex",
@@ -239,6 +277,49 @@ export default createStyles({
       width: "auto",
     }
   },
+
+  eventsContent: {
+    display: "grid",
+    gridTemplateColumns: "33% 33% 33%",
+    backgroundColor: "#f7f7f7",
+    [breakpoints.down("md")]: {
+      gridTemplateColumns: "50% 50%",
+    },
+    [breakpoints.down("sm")]: {
+      gridTemplateColumns: "100%",
+    },
+    "& >a": {
+    margin: "0.5rem",
+    }
+  },
+  
+  eventButtons: {
+    display: "grid",
+    gridTemplateColumns: "50% 50%",
+    marginTop: "2rem",
+    marginBottom: "2rem"
+  },
+
+  previousEventButton: {
+    backgroundColor: "#1068B3",
+    textTransform: "uppercase",
+    color: "#fff",
+    width: "fit-content",
+    gridColumn: 1,
+    justifySelf: "end",
+    marginRight: "1rem",
+  },
+
+  nextEventButton: {
+    backgroundColor: "#1068B3",
+    textTransform: "uppercase",
+    color: "#fff",
+    width: "fit-content",
+    gridColumn: 2,
+    justifySelf: "start",
+    marginLeft: "1rem",
+  },
+
   errorText: {},
   /**
    * Post page hero styles
