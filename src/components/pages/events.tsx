@@ -83,6 +83,13 @@ class Events extends React.Component<Props, State> {
    * Component did mount life-cycle handler
    */
   public componentDidMount = () => {
+    const loaderElement = document.getElementById("pageLoader");
+      if (loaderElement) {
+        loaderElement.style.opacity = "0";
+        setTimeout(() => {
+          loaderElement.style.display = "none";
+        }, 500);
+    }
     this.loadEvents(1);
   }
 
