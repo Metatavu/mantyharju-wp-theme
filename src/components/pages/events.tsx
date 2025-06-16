@@ -16,7 +16,7 @@ import ReadSpeaker from "../generic/ReadSpeaker";
 import Movies from "../movies/movies";
 import Premiers from "../movies/premiers";
 import { Add } from "@material-ui/icons";
-
+import ApiUtils from "../../../src/utils/ApiUtils";
 /**
  * Interface representing component properties
  */
@@ -32,7 +32,7 @@ interface Props extends WithStyles<typeof styles> {
  */
 interface State {
   currentPage?: Page;
-  post?: Post;
+  post?: Page;
   title: string;
   loading: boolean;
   pageTitle?: PostTitle;
@@ -44,6 +44,8 @@ interface State {
   page: number;
   events: any;
   eventsMeta: any;
+  postThumbnail: string;
+  postThumbnailLoading: boolean;
 }
 
 /**
@@ -75,7 +77,9 @@ class Events extends React.Component<Props, State> {
       pages: [],
       page: 1,
       events: [],
-      eventsMeta: null
+      eventsMeta: null,
+      postThumbnail: "",
+      postThumbnailLoading: false
     };
   }
 
@@ -83,12 +87,18 @@ class Events extends React.Component<Props, State> {
    * Component did mount life-cycle handler
    */
   public componentDidMount = () => {
+    const api = ApiUtils.getApi();
+    this.setState({ postThumbnailLoading: true });
+    api.getPostThumbnail({ slug: "tapahtumat" }).then((postThumbnail) => {
+      this.setState({ postThumbnail, postThumbnailLoading: false });
+    });
+
     const loaderElement = document.getElementById("pageLoader");
       if (loaderElement) {
         loaderElement.style.opacity = "0";
         setTimeout(() => {
           loaderElement.style.display = "none";
-        }, 500);
+      }, 500);
     }
     this.loadEvents(1);
   }
@@ -98,10 +108,10 @@ class Events extends React.Component<Props, State> {
    */
   public render() {
     const { classes, lang, slug, locationPath } = this.props;
-    const { sideContent, currentPage } = this.state;
+    const { sideContent, currentPage, postThumbnail, postThumbnailLoading } = this.state;
     const checkContent = React.Children.map(sideContent, child => child ? child.props.children.length : 0);
     const isContent = (checkContent ? (checkContent[0] === 0 ? false : true) : false);
-    const heroDivStyle = { background: "#eee"  };
+    const heroDivStyle = postThumbnailLoading ? { background: "#eee"  } : { backgroundImage: `url(${ postThumbnail })` };
     return (
       <BasicLayout
         lang={ lang }
@@ -111,7 +121,7 @@ class Events extends React.Component<Props, State> {
       >
         <div className={ classes.heroImageDiv } style={ heroDivStyle }>
           <h1 className={ classes.heroText }>
-            { currentPage ? ReactHtmlParser(currentPage.title ? currentPage.title.rendered || "" : "") : "..." }
+            { strings.eventsPageTitle }
           </h1>
         </div>
         <div className={ classes.wrapper }>
@@ -321,11 +331,19 @@ class Events extends React.Component<Props, State> {
   private renderPostContent = () => {
     const { classes, lang } = this.props;
     moment.locale(lang);
+
     return (
-            <div className={
-                classNames(classes.htmlContainer)
-                }
-            >    
+      <div className={ classNames(classes.htmlContainer) }>    
+        <h2 style={{ 
+            fontFamily: "Open Sans, sans serif", 
+            fontSize: 24, 
+            fontWeight: 700, 
+            marginBottom: 10 }}>{ strings.eventsPageTitle }</h2>
+        <p style={{  marginBottom: 10, marginTop: 0}} >{ strings.eventsPageText }</p>
+        <ul style={{  marginBottom: 10, marginTop: 0}}>
+          <li><em>{ ReactHtmlParser(strings.eventsPageItem1) }</em></li>
+          <li><em>{ strings.eventsPageItem2 }</em></li>
+        </ul>
         {this.renderEventButtons()}
 
         { this.state.loading && 
@@ -399,19 +417,6 @@ class Events extends React.Component<Props, State> {
    */
   private getElementTextContent = (node: DomElement) => {
     return node.children && node.children[0] ? node.children[0].data as string : "";
-  }
-
-  /**
-   * Hide page loader
-   */
-  private hidePageLoader() {
-    const loaderElement = document.getElementById("pageLoader");
-    if (loaderElement) {
-      loaderElement.style.opacity = "0";
-      setTimeout(() => {
-        loaderElement.style.display = "none";
-      }, 500);
-    }
   }
 
   /**
