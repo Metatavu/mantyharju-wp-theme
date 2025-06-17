@@ -969,5 +969,5 @@ export default createStyles({
   },
 ".TreeView-treeWrapper-71:focus": {
     outline: "2px solid black"
-  }
+  },
 });

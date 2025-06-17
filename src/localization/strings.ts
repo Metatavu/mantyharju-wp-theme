@@ -101,7 +101,11 @@ export interface IStrings extends LocalizedStringsMethods {
     ageLimits: string;
     coming: string;
     kinoName: string;
-  }
+  },
+  eventsPageTitle: string;
+  eventsPageText: string;
+  eventsPageItem1: string;
+  eventsPageItem2: string;
 }
 
 const strings: IStrings = new LocalizedStrings({
