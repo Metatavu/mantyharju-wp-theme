@@ -99,5 +99,9 @@
     "ageLimits": "Ikärajat",
     "coming": "Tulossa",
     "kinoName": "Elokuvateatteri Kino"
-  }
+  },
+  "eventsPageTitle": "Mäntyharjun tapahtumia",
+  "eventsPageText": "Mäntyharjun kunnassa on monenlaista nähtävää, kuultavaa ja koettavaa!",
+  "eventsPageItem1": "Tapahtumajärjestäjä: Voit lisätä uuden tapahtuman <a href='https://www.mäntyharju.fi'>Etusivun</a> alalaidassa klikkaamalla “Lisää tapahtuma” -painiketta. Tapahtuma julkaistaan, kun se on ensin hyväksytty. Huomioithan tapahtumaa lisätessäsi, että kuvatiedoston nimessä ei voi olla “ääkkösiä”",
+  "eventsPageItem2": "Jatkuvat tapahtumat suositellaan lisättäväksi jokainen kokoontumiskerta omana tapahtumanaan."
 }
