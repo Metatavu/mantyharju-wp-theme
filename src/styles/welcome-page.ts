@@ -321,6 +321,31 @@ export default createStyles({
       marginTop: "2rem",
     }
   },
+  jobsButtonContainer: {
+    display: "flex",
+    flexDirection: "column",
+    marginTop: "1rem",
+    "& > *": {
+      marginBottom: theme.spacing(1.5)
+    },
+    "& > *:last-child": {
+      marginBottom: 0
+    },
+    [breakpoints.up("sm")]: {
+      marginTop: "2rem"
+    }
+  },
+  jobButton: {
+    color: "#fff !important",
+    backgroundColor: "#1068B3",
+    textTransform: "uppercase",
+    "&:link, &:visited, &:hover, &:active": {
+      color: "#fff"
+    },
+    "& .MuiButton-label": {
+      color: "inherit"
+    }
+  },
 
   /**
    * LinkedEvents section styles
