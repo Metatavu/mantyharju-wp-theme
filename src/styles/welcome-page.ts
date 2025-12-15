@@ -324,6 +324,7 @@ export default createStyles({
   jobsButtonContainer: {
     display: "flex",
     flexDirection: "column",
+    alignItems: "center",
     marginTop: "1rem",
     "& > *": {
       marginBottom: theme.spacing(1.5)
@@ -339,6 +340,8 @@ export default createStyles({
     color: "#fff !important",
     backgroundColor: "#1068B3",
     textTransform: "uppercase",
+    width: 220,
+    maxWidth: "100%",
     "&:link, &:visited, &:hover, &:active": {
       color: "#fff"
     },
