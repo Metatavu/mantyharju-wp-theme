@@ -71,8 +71,6 @@ interface State {
   news?: PostItem[],
   announcementsPageLink?: string,
   announcements?: PostItem[],
-  jobsLink?: string,
-  jobs?: PostItem[],
   autocompleteOptions: AutocompleteItem[];
   autocompleteInput: string;
   autocompleteValue?: AutocompleteItem;
@@ -218,7 +216,6 @@ class WelcomePage extends React.Component<Props, State> {
     });
 
     this.getNews();
-    this.getJobs();
     this.getAnnouncements();
     this.getLinkedEvents();
     this.getAutocompleteOptions();
@@ -250,14 +247,14 @@ class WelcomePage extends React.Component<Props, State> {
     const {
       announcementsPageLink,
       newsPageLink,
-      jobsLink,
       linkedEventsPost,
       news,
       announcements,
-      jobs,
       loadMoreEventsDisabled,
       loadMoreEventsVisible
     } = this.state;
+    const tyomarkkinatoriUrl = "https://tyomarkkinatori.fi/henkiloasiakkaat/avoimet-tyopaikat/?ae=NOW&f=NOW&m=507&p=0&ps=30";
+    const kuntarekryUrl = "https://www.kuntarekry.fi/fi/tyopaikat/?&desc=m%C3%A4ntyharju";
     const showcaseImage = this.getCustomizerValue("showcase_image");
     const showcaseTitle = this.getCustomizerValue("showcase_title");
     const showcaseText = this.getCustomizerValue("showcase_text");
@@ -346,17 +343,24 @@ class WelcomePage extends React.Component<Props, State> {
               </SvgIcon>
               <Typography variant="h1">{strings.jobs}</Typography>
             </div>
-            { !jobs &&
-              <div className={ classes.loadingIconContainer }>
-                <CircularProgress />
-              </div>
-            }
-            { jobs &&
-              <div className={ classes.allPosts }>
-                { this.renderPostItems(jobs) }
-              </div>
-            }
-            <Button className={ classes.postColumnButton } onClick={ this.navigateTo(jobsLink || window.location.href) }>katso kaikki</Button>
+            <div className={ classes.jobsButtonContainer }>
+              <Button
+                className={ classes.jobButton }
+                href={ tyomarkkinatoriUrl }
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Työmarkkinatori
+              </Button>
+              <Button
+                className={ classes.jobButton }
+                href={ kuntarekryUrl }
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Kuntarekry
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -820,26 +824,6 @@ class WelcomePage extends React.Component<Props, State> {
   }
 
   /**
-   * Method for getting jobs
-   */
-  private getJobs = () => {
-    const api = ApiUtils.getApi();
-    api.getWpV2Posts({ slug: [ "jobs" ], per_page: 1 }).then((postArray) => {
-      const post = postArray.length ? postArray[0] : undefined;
-      if (post) {
-        const postContent = post.content ? post.content.rendered : undefined;
-        if (postContent) {
-          const jobs = this.parseJobs(postContent);
-          this.setState({
-            jobsLink: post.link,
-            jobs: jobs
-          });
-        }
-      }
-    });
-  }
-
-  /**
    * Method for getting linked events
    */
   private getLinkedEvents = () => {
@@ -878,33 +862,6 @@ class WelcomePage extends React.Component<Props, State> {
           content: content ? ReactHtmlParser(content) : undefined,
           date: dateString ? moment(dateString) : undefined
         };
-        return postItem;
-      });
-      return postItems;
-    }
-    return [];
-  }
-
-  /**
-   * Method for parsing jobs
-   *
-   * @param postContent post content
-   * @returns post item array
-   */
-  parseJobs = (postContent: string): PostItem[] => {
-    const postContentWithoutLinebreaks = postContent.replace(/\n/g, '<br>');
-    const articles = postContentWithoutLinebreaks.match(/<article.*?>.*?<\/article>/g); // Match <article> tags and their content
-    if (articles) {
-      const postItems = articles.map(article => {
-        const title = article.replace(/^.*?<strong.*?>|<\/strong>.*$/g, ""); // Replace everything but <strong> tag content
-        const link = article.replace(/^.*?<a.*?href="|".*$/g, ""); // Replace everything but <a> tag link
-        const dateMatch = article.match(/\d?\d.\d?\d.\d\d\d\d(?!.*\d?\d.\d?\d.\d\d\d\d)/g); // Matches latest DD.MM.YYYY or D.M.YYYY formated date
-        const date = dateMatch ? new Date(this.convertToISO(dateMatch[0])) : undefined;
-        const postItem = {
-          title: title,
-          link: link,
-          date: date ? moment(date) : undefined
-        }
         return postItem;
       });
       return postItems;
@@ -1381,16 +1338,6 @@ class WelcomePage extends React.Component<Props, State> {
    */
   private navigateTo = (url: string) => () => {
     window.location.href = url;
-  }
-
-  /**
-   * Method for converting dd.mm.yyyy to yyyy-mm-dd
-   *
-   * @param str string
-   */
-  private convertToISO = (str: string) => {
-    const [day, month, year] = str.split(".");
-    return `${year}-${month.length > 1 ? month : `0${month}`}-${day.length > 1 ? day : `0${day}`}`;
   }
 
   /**
